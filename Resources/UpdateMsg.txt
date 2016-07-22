@@ -1,0 +1,196 @@
+﻿Welcome to Cantus (Previously Calculatorˣ) Version {ver} (Alpha)!
+By Alex Yu 2015-16
+
+
+*********************************************************************************************
+What's New
+*********************************************************************************************
+-Minor fixes
+
+*********************************************************************************************
+New From 2.0.0.75:
+*********************************************************************************************
+-Greatly reduced flickering on launch
+-Minor fixes
+
+*********************************************************************************************
+New From 2.0.0.68:
+*********************************************************************************************
+-New expression evaluator, featuring Python-like
+  syntax, tuples, matrices, sets/dictionaries, complex numbers, etc.
+
+-Old functions and variables from Calculatorˣ are cleared on this
+  upgrade as the formats are no longer compatible
+
+-New dialog: Insert Function
+  The prevans button to the left of ans has been changed to "f(x)".
+  Click this new button to choose a function from all defined
+  functions.
+
+-Almost everything is now asynchroneous and non-blocking, each
+  evaluation is done on a different thread,
+  and graphics is drawn on a different thread in the graphing
+  calculator
+
+-Added Increment/Decrement/Operator AND assign operators 
+  (++, --, +=, -=, etc.)
+-Operator = now supports both assignment and comparison
+  Use == to force comparison or := to force assignment
+-Chain assignment with = or := like a=b=c=3 now possible
+-Tuple assignment like a,b=b,a or a,b,c=1
+
+-Self-referring notation: [1,2,3].add(3) or a.removeat(4) etc.
+-Tuple self-referring notation: (a,b).min()
+
+-Indexing: a[0], {"hello":2}["hello"], ""
+'Slicing: a[0:1], a[0:]
+
+-String escape sequences "\n\xA" "\""
+-Single quoted strings and raw strings: r""
+
+-Comments: # this is a comment. 
+  All characters after # are ignored
+
+-Various new constants (overridable) like
+ i h hbar A(avogadro's number)
+ To reload defaults use reloadconstants() 
+  or allclear() (will delete everything!)
+
+-A note on case sensitivity: Cantus is partially case sensitive.
+  Internal functions like sin and statements like if are case INSENSITIVE.
+  However, user-defined variables and functions are case SENSITIVE.
+
+-If many items with the same name are defined, then resolves in this order:
+  Variables > User Functions > Internal Functions
+
+-Variable resolution: left to right, longest before shortest (abc->ab*c before a*b*c)
+-Function resolution: longest from right side, all to left treated as variables
+
+*********************************************************************************************
+New Internal Functions:
+*********************************************************************************************
+
+-run() runs/evaluates a script with the path given
+       on a new thread
+-runwait() runs the script on the same thread
+
+-start() starts a new process from the file at the path
+         given
+-startwait() starts a new process from the file at the path
+             given and waits for completion
+
+-async() or $() runs the expression on a new thread 
+                (result saved to result)
+
+-each(collection, expr) do something to each item in 
+        the collection (refer to each item as 'this'
+        in expr, or call functions with ".[function]")
+        e.g. [1,2,3].each("this+=2") returns [3,4,5]
+        e.g. [0,pi/2,pi].each("a+=.sin()") adds 1 to a
+
+-isprime() primality check
+-regexmatch(), regexmatchall(), regexismatch() regex stuff
+-wildcardmatch() match wildcards
+
+-Hash() IntHash() MD5Hash() SHA1Hash() SHA2Hash() hashing
+
+-EncryptAES() DecryptAES() AES/Rijndael symmetric key encryption
+
+-ListDir() ListFiles() ListDirs()
+  DeleteFile() DeleteDir() MoveFile() MoveDir()
+  RenameFile() RenameDir() FileExists() DirExists()
+  JoinPath() GetFileName() GetDirName() BaseDir() CantusPath()
+  (New filesystem and path functions)
+
+*********************************************************************************************
+Statements in New Evaluator:
+*********************************************************************************************
+
+-Blocks are similar to those in python and evaluated with indentation.
+  However, you don't add ':' after statements
+
+-A random block example:
+ if filename="1.txt"
+    renamefile(joinpath(basedir(),filename), "2.txt")
+ else
+    alert("Good")
+    
+
+-A list of all blocks
+  if <cond> 
+    elif <cond> 
+    else
+
+  for <name> in <collection>
+  for <name>,<name2>,... in <collection>
+  for <name>=<initial value> to <bound, excl.> step <step>
+
+  while <cond>
+  until <cond>
+  repeat <number>
+  run
+
+  try
+    catch
+    catch <name>
+    finally
+
+  with <name> # refer to variable as 'this' or run functions like
+              # .add(x) without a variable name
+
+  continue/break/return <any>
+
+  'Then' chaining:  Run Then Repeat 2 Then Repeat 3
+                       DoStuff()
+
+  Declare Functions:
+  function [name]([param1], [param2], ...)
+       DoSomething()
+
+  Declare Scoped Variables (overrides higher scope):
+  let a=b 
+  # Note: you can also do a=b but if a is declared in
+  # a higher scope then this will assign to that variable
+
+  Declare Global Variables
+  global a=b
+ 
+*********************************************************************************************
+New Types:
+*********************************************************************************************
+
+Matrices
+-Create matrices: [1,2,3], [[1,2],[3,4]], [[1,,],[,2,]] (blanks become zeros)
+                  or matrix(2,2) (creates 2x2 matrix filled with zeros)
+-Matrix functions: transpose() inverse() determinant() multiply(,) scale(,)
+                   pow(,) rref() append() add() remove() removeat() reverse() 
+                   shuffle() column() row() columns() rows() len() length()
+                   height() width() index() indexcircular() cycle() etc. etc.
+-Matrix operators: * (scalar mul. or matrix mul) + - / (scalar div.)
+
+Vectors
+-Create column vectors (actually matrices): [1,2,3,4,5]
+-Column vector-specific functions: dot() cross()
+-Vector operators: * (dot product) ** (cross product) + - * /
+-Most matrix functions can also be used
+
+Sets
+-Create set: {1,2,3,4,5}
+-Set functions: union() intersection() difference() 
+                symmetricdifference() add() remove() len()
+-Set operators: * (intersection) + (union) - (difference) ^^ (symm. diff.)
+
+Dictionaries
+-Create dictionary: {"a":"b", "b","c"}
+-Same functions and operators as set, but items can be accessed like dict["name"]
+
+Tuples
+-Create tuple: (1,2,3) or just 1,2,3
+-Tuples have no related functions, they are meant to be used internally or in
+  tuple assignments a,b=b,a or in self-referring calls (a,b).func()
+
+Complex Numbers
+-Create complex: complex(real, [imaginary]) or frompolar(magnitude, phase)
+-You can also just use the 'i' (imaginary unit) constant: (1+2i)
+-Complex-specific functions: real() imag() conjugate() phase() magnitude()
+-Most normal functions (e.g. trig) and operators work for complex as well
