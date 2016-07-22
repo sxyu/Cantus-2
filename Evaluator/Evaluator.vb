@@ -115,12 +115,18 @@ Namespace Calculator.Evaluator
         Private _curLine As Integer
 
         ''' <summary>
-        ''' If true, all newly defined functions should be considered outside declarations
+        ''' If true, all newly defined functions should be considered outside declarations 
+        ''' and not written onto the predefined script
         ''' </summary>
         Private _externalExec As Boolean
 #End Region
 
 #Region "Events"
+        ''' <summary>
+        ''' Event raised when any async evauation is complete.
+        ''' </summary>
+        ''' <param name="sender">The evaluator that sent this result.</param>
+        ''' <param name="result">The value of the result</param>
         Public Event EvalComplete(sender As Object, result As Object)
 #End Region
 
@@ -580,8 +586,8 @@ Namespace Calculator.Evaluator
         Public Function Include(path As String, Optional asInternal As Boolean = False) As String
             If Not asInternal Then _externalExec = True
             Dim res As String = InternalFunctions.O(EvalRaw(IO.File.ReadAllText(path)))
+            _externalExec = False
             Return res
-            If Not asInternal Then _externalExec = False
         End Function
 
         ''' <summary>
@@ -806,7 +812,7 @@ Namespace Calculator.Evaluator
                                                           "one of: " & String.Join(",", tmp), " the ''" & tmp(0) & "'' statement"))
                             End If
                             Dim res As Object = EvalExprRaw(l, True)
-                                If Not (TypeOf res Is Double AndAlso Double.IsNaN(CDbl(res))) AndAlso
+                            If Not (TypeOf res Is Double AndAlso Double.IsNaN(CDbl(res))) AndAlso
                                Not (TypeOf res Is BigDecimal AndAlso DirectCast(res, BigDecimal).IsUndefined) Then
                                 lastVal = res
                             End If
@@ -1091,8 +1097,8 @@ Namespace Calculator.Evaluator
             ' beginning has no operator
             lst.AddOperator(Nothing)
 
-                Dim idx As Integer = 0
-                Dim value As Boolean = False
+            Dim idx As Integer = 0
+            Dim value As Boolean = False
 
             For i As Integer = 0 To expr.Length - 1
                 For j As Integer = Math.Min(expr.Length, i + OperatorRegistar.MAX_OPERATOR_LENGTH) To i Step -1
@@ -1269,7 +1275,7 @@ Namespace Calculator.Evaluator
 
             ' add remaining bit at the end
             If Not expr.Substring(idx, expr.Length - idx).Trim() = "" Then
-                    Dim eo As ObjectTypes.EvalObjectBase = ObjectTypes.StrDetectType(expr.Substring(idx, expr.Length - idx).Trim())
+                Dim eo As ObjectTypes.EvalObjectBase = ObjectTypes.StrDetectType(expr.Substring(idx, expr.Length - idx).Trim())
 
                 ' if the object we get is an identifier, we try to break it into variables which are resolved using ResolveVariables
                 If ObjectTypes.Identifier.IsType(eo) Then
@@ -1310,15 +1316,15 @@ Namespace Calculator.Evaluator
                     End If
                 Else ' otherwise we just add it
                     lst.AddObject(eo)
-                        While lst.OperatorCount < lst.ObjectCount
-                            lst.AddOperator(OperatorRegistar.DefaultOperator, "*")
-                        End While
-                    End If
+                    While lst.OperatorCount < lst.ObjectCount
+                        lst.AddOperator(OperatorRegistar.DefaultOperator, "*")
+                    End While
                 End If
+            End If
 
-                lst.BalanceLists()
+            lst.BalanceLists()
 
-                Return lst
+            Return lst
         End Function
 
         ''' <summary>
@@ -1751,11 +1757,20 @@ Namespace Calculator.Evaluator
                 Dim argnames As List(Of String) = _userFunctionArgs(name)
                 If args.Count = argnames.Count Then
                     For i As Integer = 0 To args.Count - 1
-                        SetVariable(argnames(i), args(i))
+                        ' if the function was declared outside main initialization
+                        If _userFunctionExtern.ContainsKey(name) AndAlso
+                            _userFunctionExtern(name) Then
+                            _externalExec = True ' save this variable as external as well
+                            SetVariable(argnames(i), args(i))
+                            _externalExec = False
+                        Else
+                            SetVariable(argnames(i), args(i))
+                        End If
                     Next
                 Else
                     Throw New EvaluatorException(name & ": " & argnames.Count & " parameter(s) expected")
                 End If
+
                 Dim result As Object = EvalRaw(_userFunctions(name))
                 RestoreVariableBackup()
                 Return result
@@ -1772,7 +1787,7 @@ Namespace Calculator.Evaluator
         Public Function ToScript() As String
             Dim serialized As New StringBuilder()
             serialized.AppendLine("# Cantus " & Application.ProductVersion &
-                                  " Auto-generated initialization script")
+                                  " auto-generated initialization script")
             serialized.AppendLine("# Use caution when modifying manually").Append(vbNewLine)
             serialized.AppendLine("# Modes")
 
