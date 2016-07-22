@@ -5,6 +5,9 @@ By Alex Yu 2015-16
 *********************************************************************************************
 What's New
 *********************************************************************************************
+-Changed buttons on bottom of left keyboard
+-Fixed crash when using clipboard() function
+-Applied fix to prevent internalization of functions and variables declared in other files
 -Minor fixes
 
 *********************************************************************************************

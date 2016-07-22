@@ -66,7 +66,11 @@ Namespace Calculator
             For Each file As String In initScripts
                 Try
                     ' Evaluate each file. On error, ignore.
-                    Globals.Evaluator.Eval(IO.File.ReadAllText(file))
+                    If file = "init.can" Then
+                        Globals.Evaluator.Include(file, True)
+                    Else
+                        Globals.Evaluator.Include(file)
+                    End If
                 Catch
                 End Try
             Next

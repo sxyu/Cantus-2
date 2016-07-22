@@ -50,19 +50,19 @@
         End Sub
 
         Private Sub btnFileLine_Click(sender As Object, e As EventArgs) Handles btnFileLine.Click
-            WriteFunction("fileline(,)")
+            WriteFunction(" comb ")
         End Sub
 
         Private Sub btnFile_Click(sender As Object, e As EventArgs) Handles btnFile.Click
-            WriteFunction("file()")
+            WriteFunction("write()")
         End Sub
 
         Private Sub btnClip_Click(sender As Object, e As EventArgs) Handles btnClip.Click
-            WriteFunction("clipboard")
+            WriteFunction("clipboard()")
         End Sub
 
         Private Sub btnFileAppend_Click(sender As Object, e As EventArgs) Handles btnFileAppend.Click
-            WriteFunction("fileappend()")
+            WriteFunction("read()")
         End Sub
 
         Private Sub OskLeft_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing

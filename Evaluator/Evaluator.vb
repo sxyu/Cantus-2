@@ -86,6 +86,10 @@ Namespace Calculator.Evaluator
         Private _vars As New Dictionary(Of String, ObjectTypes.Reference)
 
         ''' <summary>
+        ''' Records if the variable with the name is declared in an outside file
+        ''' </summary>
+        Private _varExtern As New Dictionary(Of String, Object)
+        ''' <summary>
         ''' List of user function definitions
         ''' </summary>
         Private _userFunctions As New Dictionary(Of String, String)
@@ -96,6 +100,11 @@ Namespace Calculator.Evaluator
         Private _userFunctionArgs As New Dictionary(Of String, List(Of String))
 
         ''' <summary>
+        ''' Records if the user function with the name is declared in an outside file
+        ''' </summary>
+        Private _userFunctionExtern As New Dictionary(Of String, Boolean)
+
+        ''' <summary>
         ''' Get the line number the evaluator started from
         ''' </summary>
         Private _baseLine As Integer
@@ -104,6 +113,11 @@ Namespace Calculator.Evaluator
         ''' Get the line number the evaluator is currently processing
         ''' </summary>
         Private _curLine As Integer
+
+        ''' <summary>
+        ''' If true, all newly defined functions should be considered outside declarations
+        ''' </summary>
+        Private _externalExec As Boolean
 #End Region
 
 #Region "Events"
@@ -556,6 +570,18 @@ Namespace Calculator.Evaluator
         ''' <param name="script">The script to evaluate</param>
         Public Function Eval(script As String) As String
             Return InternalFunctions.O(EvalRaw(script))
+        End Function
+
+        ''' <summary>
+        ''' Evauate the file at the path
+        ''' </summary>
+        ''' <param name="path">Path of the script to evaluate</param>
+        ''' <param name="asInternal">if true, the script is exceuted as if it were in the evaluator.</param>
+        Public Function Include(path As String, Optional asInternal As Boolean = False) As String
+            If Not asInternal Then _externalExec = True
+            Dim res As String = InternalFunctions.O(EvalRaw(IO.File.ReadAllText(path)))
+            Return res
+            If Not asInternal Then _externalExec = False
         End Function
 
         ''' <summary>
@@ -1505,6 +1531,7 @@ Namespace Calculator.Evaluator
         ''' <param name="name">Name of the variable</param>
         ''' <param name="ref">Value of the variable as a Reference</param>
         Public Sub SetVariable(ByVal name As String, ByVal ref As ObjectTypes.Reference)
+            If _externalExec Then _varExtern(name) = ref.Resolve()
             If String.IsNullOrWhiteSpace(name) Then Throw New EvaluatorException("Variable name cannot be empty")
             If name.Trim() = DEFAULT_VAR_NAME Then Throw New EvaluatorException("Variable name ''" & DEFAULT_VAR_NAME & "'' is reserved")
             If Not IsValidVariableName(name) Then Throw New EvaluatorException("Invalid Variable Name: " & name)
@@ -1520,6 +1547,7 @@ Namespace Calculator.Evaluator
             If String.IsNullOrWhiteSpace(name) Then Throw New EvaluatorException("Variable name cannot be empty")
             If name.Trim() = DEFAULT_VAR_NAME Then Throw New EvaluatorException("Variable name ''" & DEFAULT_VAR_NAME & "'' is reserved")
             If Not IsValidVariableName(name) Then Throw New EvaluatorException("Invalid Variable Name: " & name)
+            If _externalExec Then _varExtern(name) = value.GetValue()
             _vars(name) = New ObjectTypes.Reference(value)
         End Sub
 
@@ -1529,6 +1557,7 @@ Namespace Calculator.Evaluator
         ''' <param name="name">Name of the variable</param>
         ''' <param name="value">Value of the variable as a system object</param>
         Public Sub SetVariable(ByVal name As String, ByVal value As Object)
+            If _externalExec Then _varExtern(name) = value
             If String.IsNullOrWhiteSpace(name) Then Throw New EvaluatorException("Variable name cannot be empty")
             If name.Trim() = DEFAULT_VAR_NAME Then Throw New EvaluatorException("Variable name ''" & DEFAULT_VAR_NAME & "'' is reserved")
             If Not IsValidVariableName(name) Then Throw New EvaluatorException("Invalid Variable Name: " & name)
@@ -1633,6 +1662,7 @@ Namespace Calculator.Evaluator
                 If Not IsValidVariableName(args(i)) Then Throw New EvaluatorException("Invalid Argument Name: " & args(i))
             Next
             _userFunctionArgs(name) = args
+            _userFunctionExtern(name) = _externalExec
         End Sub
 
         ''' <summary>
@@ -1754,8 +1784,8 @@ Namespace Calculator.Evaluator
 
             serialized.AppendLine().AppendLine("# Function Definitions")
             For Each func As KeyValuePair(Of String, List(Of String)) In _userFunctionArgs
-                If HasUserFunction(func.Key) Then
-                    serialized.Append("Function ").Append(func.Key).Append("(")
+                If HasUserFunction(func.Key) AndAlso Not _userFunctionExtern(func.Key) Then
+                    serialized.Append("function ").Append(func.Key).Append("(")
                     serialized.Append(String.Join(", ", func.Value)).Append(")").Append(vbNewLine)
                     serialized.AppendLine(GetUserFunction(func.Key).TrimEnd())
                 End If
@@ -1767,7 +1797,11 @@ Namespace Calculator.Evaluator
 
                 If Not def Is Nothing AndAlso (
                     Not TypeOf def Is ObjectTypes.Number OrElse Not Double.IsNaN(CDbl(def.GetValue()))) AndAlso
-                     Not TypeOf def Is ObjectTypes.Reference Then ' note: cannot save references
+                     Not TypeOf def Is ObjectTypes.Reference AndAlso
+                    Not var.Key = DEFAULT_VAR_NAME AndAlso
+                    Not (_varExtern.ContainsKey(var.Key) AndAlso
+                    _varExtern(var.Key).GetType() = var.Value.GetType() AndAlso
+                    _varExtern(var.Key).ToString() = var.Value.ToString()) Then ' note: cannot save references
 
                     Dim defs As String = def.ToString()
                     serialized.Append(var.Key).Append("=").Append(defs).Append(vbNewLine)

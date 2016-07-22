@@ -388,15 +388,15 @@
             Me.btnFileLine.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnFileLine.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnFileLine.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFileLine.Font = New System.Drawing.Font("Segoe UI Light", 8.25!)
+            Me.btnFileLine.Font = New System.Drawing.Font("Segoe UI Light", 7.0!)
             Me.btnFileLine.ForeColor = System.Drawing.Color.White
-            Me.btnFileLine.Location = New System.Drawing.Point(11, 374)
+            Me.btnFileLine.Location = New System.Drawing.Point(99, 330)
             Me.btnFileLine.Margin = New System.Windows.Forms.Padding(2)
             Me.btnFileLine.Name = "btnFileLine"
             Me.btnFileLine.Size = New System.Drawing.Size(40, 40)
             Me.btnFileLine.TabIndex = 20
             Me.btnFileLine.TabStop = False
-            Me.btnFileLine.Text = "[]"
+            Me.btnFileLine.Text = "comb"
             Me.btnFileLine.UseVisualStyleBackColor = False
             '
             'btnFile
@@ -407,6 +407,7 @@
             Me.btnFile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnFile.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.btnFile.Font = New System.Drawing.Font("Segoe UI Light", 9.0!)
             Me.btnFile.ForeColor = System.Drawing.Color.White
             Me.btnFile.Location = New System.Drawing.Point(99, 374)
             Me.btnFile.Margin = New System.Windows.Forms.Padding(2)
@@ -414,7 +415,7 @@
             Me.btnFile.Size = New System.Drawing.Size(40, 40)
             Me.btnFile.TabIndex = 21
             Me.btnFile.TabStop = False
-            Me.btnFile.Text = "file"
+            Me.btnFile.Text = "write"
             Me.btnFile.UseVisualStyleBackColor = False
             '
             'btnClip
@@ -426,7 +427,7 @@
             Me.btnClip.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnClip.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnClip.ForeColor = System.Drawing.Color.White
-            Me.btnClip.Location = New System.Drawing.Point(99, 330)
+            Me.btnClip.Location = New System.Drawing.Point(11, 374)
             Me.btnClip.Margin = New System.Windows.Forms.Padding(2)
             Me.btnClip.Name = "btnClip"
             Me.btnClip.Size = New System.Drawing.Size(40, 40)
@@ -534,7 +535,7 @@
             Me.btnFileAppend.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnFileAppend.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnFileAppend.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFileAppend.Font = New System.Drawing.Font("Segoe UI Light", 8.25!)
+            Me.btnFileAppend.Font = New System.Drawing.Font("Segoe UI Light", 9.0!)
             Me.btnFileAppend.ForeColor = System.Drawing.Color.White
             Me.btnFileAppend.Location = New System.Drawing.Point(55, 374)
             Me.btnFileAppend.Margin = New System.Windows.Forms.Padding(2)
@@ -542,7 +543,7 @@
             Me.btnFileAppend.Size = New System.Drawing.Size(40, 40)
             Me.btnFileAppend.TabIndex = 25
             Me.btnFileAppend.TabStop = False
-            Me.btnFileAppend.Text = "file apnd"
+            Me.btnFileAppend.Text = "read"
             Me.btnFileAppend.UseVisualStyleBackColor = False
             '
             'btnZ

@@ -6,7 +6,7 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        Me._featureList = featureList
+        Me._featureList = featureList.Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).Replace(vbLf, vbNewLine)
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click

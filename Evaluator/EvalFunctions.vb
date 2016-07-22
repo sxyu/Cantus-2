@@ -91,8 +91,11 @@ Namespace Calculator.Evaluator
             If obj Is Nothing Then
                 Dim result As Object = Double.NaN
                 Dim th As New Thread(Sub()
-                                         result = ObjectTypes.StrDetectType(My.Computer.Clipboard.GetText(),
+                                         Try
+                                             result = ObjectTypes.StrDetectType(My.Computer.Clipboard.GetText(),
                                                                            _eval, True, False).GetValue()
+                                         Catch
+                                         End Try
                                      End Sub)
                 th.SetApartmentState(ApartmentState.STA)
                 th.Start()
@@ -100,7 +103,14 @@ Namespace Calculator.Evaluator
                 Return result
             Else
                 Dim th As New Thread(Sub()
-                                         My.Computer.Clipboard.SetText(obj.ToString())
+                                         Try
+                                             If String.IsNullOrEmpty(obj.ToString()) Then
+                                                 My.Computer.Clipboard.Clear()
+                                             Else
+                                                 My.Computer.Clipboard.SetText(obj.ToString())
+                                             End If
+                                         Catch
+                                         End Try
                                      End Sub)
                 th.SetApartmentState(ApartmentState.STA)
                 th.Start()
