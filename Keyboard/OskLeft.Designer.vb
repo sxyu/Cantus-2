@@ -415,7 +415,7 @@
             Me.btnFile.Size = New System.Drawing.Size(40, 40)
             Me.btnFile.TabIndex = 21
             Me.btnFile.TabStop = False
-            Me.btnFile.Text = "write"
+            Me.btnFile.Text = "alert"
             Me.btnFile.UseVisualStyleBackColor = False
             '
             'btnClip
@@ -426,6 +426,7 @@
             Me.btnClip.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnClip.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnClip.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.btnClip.Font = New System.Drawing.Font("Segoe UI Light", 7.0!)
             Me.btnClip.ForeColor = System.Drawing.Color.White
             Me.btnClip.Location = New System.Drawing.Point(11, 374)
             Me.btnClip.Margin = New System.Windows.Forms.Padding(2)
@@ -433,7 +434,7 @@
             Me.btnClip.Size = New System.Drawing.Size(40, 40)
             Me.btnClip.TabIndex = 22
             Me.btnClip.TabStop = False
-            Me.btnClip.Text = "cp"
+            Me.btnClip.Text = "clip" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "board"
             Me.btnClip.UseVisualStyleBackColor = False
             '
             'pnl
@@ -543,7 +544,7 @@
             Me.btnFileAppend.Size = New System.Drawing.Size(40, 40)
             Me.btnFileAppend.TabIndex = 25
             Me.btnFileAppend.TabStop = False
-            Me.btnFileAppend.Text = "read"
+            Me.btnFileAppend.Text = "input"
             Me.btnFileAppend.UseVisualStyleBackColor = False
             '
             'btnZ

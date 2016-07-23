@@ -54,7 +54,7 @@
         End Sub
 
         Private Sub btnFile_Click(sender As Object, e As EventArgs) Handles btnFile.Click
-            WriteFunction("write()")
+            WriteFunction("alert()")
         End Sub
 
         Private Sub btnClip_Click(sender As Object, e As EventArgs) Handles btnClip.Click
@@ -62,7 +62,7 @@
         End Sub
 
         Private Sub btnFileAppend_Click(sender As Object, e As EventArgs) Handles btnFileAppend.Click
-            WriteFunction("read()")
+            WriteFunction("input()")
         End Sub
 
         Private Sub OskLeft_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
