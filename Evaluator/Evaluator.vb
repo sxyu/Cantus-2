@@ -27,170 +27,157 @@ Namespace Calculator.Evaluator
         End Enum
 #End Region
 
-#Region "Declarations"
-#Region "Constants"
-        ''' <summary>
-        ''' Comment pattern: The (script) evaluator ignores all characters in each line after this pattern is found
-        ''' </summary>
-        Public Const COMMENT_START_PTN As String = "#"
+#Region "Structs"
+        Public Structure UserFunction
+            ''' <summary>
+            ''' The name of the function
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property Name As String
 
-        ''' <summary>
-        ''' The default variable name used when none is specified (when using self-referring functions)
-        ''' </summary>
-        Public Const DEFAULT_VAR_NAME As String = "this"
-#End Region
-#Region "Variables"
-        ' modes
-        ''' <summary>
-        ''' The output mode of the evaluator
-        ''' </summary>
-        ''' <returns></returns>
-        Public Property OMode As IOMode
+            ''' <summary>
+            ''' The body of the function
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property Body As String
 
-        ''' <summary>
-        ''' The angle representation mode of the evaluator (radians, degrees, gradians)
-        ''' </summary>
-        ''' <returns></returns>
-        Public Property AngleRepMode As AngleRep
+            ''' <summary>
+            ''' Modifiers, such as public, applied to the function (NI)
+            ''' </summary>
+            Public Property Modifiers As String
 
-        ''' <summary>
-        ''' The number of spaces that would represent a tab. Default is 4.
-        ''' </summary>
-        ''' <returns></returns>
-        Public Property SpacesPerTab As Integer
+            ''' <summary>
+            '''  Return type of the function (NI)
+            ''' </summary>
+            Public Property ReturnType As String
 
-        ''' <summary>
-        ''' A list of previous answers (last item is the last answer)
-        ''' </summary>
-        Public ReadOnly Property PrevAns As New List(Of ObjectTypes.EvalObjectBase)
+            ''' <summary>
+            ''' Names of the function arguments
+            ''' </summary>
+            Public Property Args As List(Of String)
 
-        ' composition
-        ''' <summary>
-        ''' Object for registering and accessing operators (like +, -, *) usable in the evaluator
-        ''' </summary>
-        Friend ReadOnly Property OperatorRegistar As OperatorRegistar
+            ''' <summary>
+            ''' Types of the function arguments (NI)
+            ''' </summary>
+            Public Property ArgTypes As List(Of String)
 
-        ''' <summary>
-        ''' Object for registering and accessing statements (like if, else, while, function) usable in the evaluator
-        ''' </summary>
-        Friend ReadOnly Property StatementRegistar As StatementRegistar
+            ''' <summary>
+            ''' Scope in which this function was declared
+            ''' </summary>
+            Public Property DeclaringScope As String
 
-        ''' <summary>
-        ''' Object containing pre-defined functions usable in the evaluator
-        ''' </summary>
-        Friend ReadOnly Property InternalFunctions As InternalFunctions
+            ''' <summary>
+            ''' Create a new user function
+            ''' </summary>
+            Public Sub New(name As String, body As String,
+                           args As List(Of String), declaredScope As String,
+                            Optional modifiers As String = "",
+                           Optional argTypes As List(Of String) = Nothing,
+                           Optional returnType As String = "")
+                Me.Modifiers = modifiers
+                Me.Name = name
+                Me.Body = body
+                Me.Args = args
+                Me.DeclaringScope = declaredScope
+                Me.ArgTypes = argTypes
+                If Me.ArgTypes Is Nothing Then
+                    Me.ArgTypes = New List(Of String)
+                    For Each a As String In Me.Args
+                        Me.ArgTypes.Add("")
+                    Next
+                End If
+                Me.ReturnType = returnType
+            End Sub
+            ''' <summary>
+            ''' Get the full definition of this function as a string
+            ''' </summary>
+            Public Overrides Function ToString() As String
+                Dim result As New StringBuilder("function ")
+                result.Append(Name).Append("(").
+                Append(String.Join(", ", Args)).AppendLine(")")
+                result.Append(Body)
+                Return result.ToString()
+            End Function
+        End Structure
+        Public Structure Variable
+            ''' <summary>
+            ''' The name of the variable
+            ''' </summary>
+            Public Property Name As String
 
-        ''' <summary>
-        ''' Dictionary for storing variables
-        ''' </summary>
-        Private _vars As New Dictionary(Of String, ObjectTypes.Reference)
+            ''' <summary>
+            ''' Gets or sets a reference to the value of the variable
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property Reference As ObjectTypes.Reference
 
-        ''' <summary>
-        ''' Records if the variable with the name is declared in an outside file
-        ''' </summary>
-        Private _varExtern As New Dictionary(Of String, Object)
-        ''' <summary>
-        ''' List of user function definitions
-        ''' </summary>
-        Private _userFunctions As New Dictionary(Of String, String)
+            ''' <summary>
+            ''' Gets or sets the value of the variable without changing refernce
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property Value As Object
+                Get
+                    Return Reference.ResolveRef().GetValue()
+                End Get
+                Set(value As Object)
+                    Reference.ResolveRef().SetValue(value)
+                End Set
+            End Property
 
-        ''' <summary>
-        ''' List of argument names of user functions
-        ''' </summary>
-        Private _userFunctionArgs As New Dictionary(Of String, List(Of String))
+            ''' <summary>
+            ''' The scope in which this variable was last assigned to
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property DeclaringScope As String
 
-        ''' <summary>
-        ''' Records if the user function with the name is declared in an outside file
-        ''' </summary>
-        Private _userFunctionExtern As New Dictionary(Of String, Boolean)
+            ''' <summary>
+            ''' Create a empty variable (internal)
+            ''' </summary>
+            Private Sub New(name As String, declaringScope As String)
+                Me.Name = name
+                Me.DeclaringScope = declaringScope
+            End Sub
 
-        ''' <summary>
-        ''' Get the line number the evaluator started from
-        ''' </summary>
-        Private _baseLine As Integer
+            ''' <summary>
+            ''' Create a new variable from a value
+            ''' </summary>
+            Public Sub New(name As String, value As Object, declaringScope As String)
+                Me.New(name, declaringScope)
+                Me.Reference = New ObjectTypes.Reference(value)
+            End Sub
 
-        ''' <summary>
-        ''' Get the line number the evaluator is currently processing
-        ''' </summary>
-        Private _curLine As Integer
+            ''' <summary>
+            ''' Create a new variable from an evaluator object
+            ''' </summary>
+            Public Sub New(name As String, value As ObjectTypes.EvalObjectBase,
+                           declaringScope As String)
+                Me.New(name, declaringScope)
+                Me.Reference = New ObjectTypes.Reference(value)
+            End Sub
 
-        ''' <summary>
-        ''' If true, all newly defined functions should be considered outside declarations 
-        ''' and not written onto the predefined script
-        ''' </summary>
-        Private _externalExec As Boolean
-#End Region
-
-#Region "Events"
-        ''' <summary>
-        ''' Event raised when any async evauation is complete.
-        ''' </summary>
-        ''' <param name="sender">The evaluator that sent this result.</param>
-        ''' <param name="result">The value of the result</param>
-        Public Event EvalComplete(sender As Object, result As Object)
-#End Region
-
-#Region "Evaluator Constants"
-        ''' <summary>
-        ''' List of predefined constants, format: {{name 1, name 2, value},}
-        ''' By default this includes some often used math, physics, and chemistry constants. 
-        ''' </summary>
-        ''' <returns></returns>
-        Private Shared ReadOnly Property _default As Object(,) =
-        {
-            {"e", Nothing, Math.E},
-            {"pi", "π", Math.PI},
-            {"phi", "φ", 1.61803398875},
-            {"avogadro", "A", 6.0221409E+23},
-            {"G", "gravity", 0.0000000000667408},
-            {"g", Nothing, 9.807},
-            {"i", "imaginaryone", Numerics.Complex.ImaginaryOne},
-            {"c", "lightspeed", 299792458.0},
-            {"h", "planck", 6.6260755E-34},
-            {"hbar", "planckreduced", 1.05457266E-34},
-            {"e0", "permittivity", 0.000000000008854187817},
-            {"mu0", "permeability", 4.0 * Math.PI * 0.0000001},
-            {"F", "faraday", 96485.3329},
-            {"me", "electronmass", 9.10938356E-31},
-            {"mp", "protonmass", 1.6726219E-27},
-            {"q", "elemcharge", 1.60217662E-19},
-            {"soundspeed", "vs", 343.2},
-            {"R", "gas", 8.3144598},
-            {"cmperinch", Nothing, 2.54},
-            {"torrsperatm", Nothing, 760.0},
-            {"torrsperkpa", Nothing, 7.50062}
-        }
-
-        ''' <summary>
-        ''' Reload the default constants into variable storage (accessible via Reload() in execution)
-        ''' </summary>
-        Public Sub ReloadDefault()
-            For i As Integer = 0 To _default.GetLength(0) - 1
-                For j As Integer = 0 To _default.GetLength(1) - 2
-                    If Not _default(i, j) Is Nothing Then
-                        SetVariable(_default(i, j).ToString(), _default(i, _default.GetLength(1) - 1))
-                    End If
-                Next
-            Next
-        End Sub
-#End Region
-#End Region
-
-#Region "Evaluator Logic"
+            ''' <summary>
+            ''' Create a new variable from an existing reference
+            ''' </summary>
+            Public Sub New(name As String, ref As ObjectTypes.Reference,
+                           declaringScope As String)
+                Me.New(name, declaringScope)
+                Me.Reference = ref
+            End Sub
+        End Structure
 
         ''' <summary>
         ''' Represents a segment in the expression obtained after it is tokenized, consisting of 
         ''' an object and an operator
         ''' If either is unavailable they are set to null.
         ''' </summary>
-        Private Class Token
+        Private Structure Token
             Public [Object] As ObjectTypes.EvalObjectBase
             Public [Operator] As OperatorRegistar.Operator
             Public Sub New(evalObject As ObjectTypes.EvalObjectBase, operatorBefore As OperatorRegistar.Operator)
                 Me.Object = evalObject
                 Me.Operator = operatorBefore
             End Sub
-        End Class
+        End Structure
 
         ''' <summary>
         ''' A special data structure used to store tokens
@@ -526,6 +513,143 @@ Namespace Calculator.Evaluator
                 Return str.ToString()
             End Function
         End Class
+#End Region
+
+#Region "Declarations"
+#Region "Constants"
+        ''' <summary>
+        ''' Comment pattern: The (script) evaluator ignores all characters in each line after this pattern is found
+        ''' </summary>
+        Public Const COMMENT_START_PTN As String = "#"
+
+        ''' <summary>
+        ''' The default variable name used when none is specified (when using self-referring functions)
+        ''' </summary>
+        Public Const DEFAULT_VAR_NAME As String = "this"
+#End Region
+#Region "Variables"
+        ' modes
+        ''' <summary>
+        ''' The output mode of the evaluator
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property OMode As IOMode
+
+        ''' <summary>
+        ''' The angle representation mode of the evaluator (radians, degrees, gradians)
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property AngleRepMode As AngleRep
+
+        ''' <summary>
+        ''' The number of spaces that would represent a tab. Default is 4.
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property SpacesPerTab As Integer
+
+        ''' <summary>
+        ''' A list of previous answers (last item is the last answer)
+        ''' </summary>
+        Public ReadOnly Property PrevAns As New List(Of ObjectTypes.EvalObjectBase)
+
+        ' composition
+        ''' <summary>
+        ''' Object for registering and accessing operators (like +, -, *) usable in the evaluator
+        ''' </summary>
+        Friend ReadOnly Property OperatorRegistar As OperatorRegistar
+
+        ''' <summary>
+        ''' Object for registering and accessing statements (like if, else, while, function) usable in the evaluator
+        ''' </summary>
+        Friend ReadOnly Property StatementRegistar As StatementRegistar
+
+        ''' <summary>
+        ''' Object containing pre-defined functions usable in the evaluator
+        ''' </summary>
+        Friend ReadOnly Property InternalFunctions As InternalFunctions
+
+        ''' <summary>
+        ''' Dictionary for storing variables
+        ''' </summary>
+        Private _vars As New Dictionary(Of String, Variable)
+
+        ''' <summary>
+        ''' List of user function definitions
+        ''' </summary>
+        Private _userFunctions As New Dictionary(Of String, UserFunction)
+
+        ''' <summary>
+        ''' Get the line number the evaluator started from, used for error reporting
+        ''' </summary>
+        Private _baseLine As Integer
+
+        ''' <summary>
+        ''' Get the line number the evaluator is currently processing, used for error reporting
+        ''' </summary>
+        Private _curLine As Integer
+
+        ''' <summary>
+        ''' Records the current scope of this evaluator
+        ''' </summary>
+        Private _scope As String
+#End Region
+
+#Region "Events"
+        ''' <summary>
+        ''' Event raised when any async evauation is complete.
+        ''' </summary>
+        ''' <param name="sender">The evaluator that sent this result.</param>
+        ''' <param name="result">The value of the result</param>
+        Public Event EvalComplete(sender As Object, result As Object)
+#End Region
+
+#Region "Evaluator Constants"
+        ''' <summary>
+        ''' List of predefined constants, format: {{name 1, name 2, value},}
+        ''' By default this includes some often used math, physics, and chemistry constants. 
+        ''' </summary>
+        ''' <returns></returns>
+        Private Shared ReadOnly Property _default As Object(,) =
+        {
+            {"e", Nothing, Math.E},
+            {"pi", "π", Math.PI},
+            {"phi", "φ", 1.61803398875},
+            {"avogadro", "A", 6.0221409E+23},
+            {"G", "gravity", 0.0000000000667408},
+            {"g", Nothing, 9.807},
+            {"i", "imaginaryone", Numerics.Complex.ImaginaryOne},
+            {"c", "lightspeed", 299792458.0},
+            {"h", "planck", 6.6260755E-34},
+            {"hbar", "planckreduced", 1.05457266E-34},
+            {"e0", "permittivity", 0.000000000008854187817},
+            {"mu0", "permeability", 4.0 * Math.PI * 0.0000001},
+            {"F", "faraday", 96485.3329},
+            {"me", "electronmass", 9.10938356E-31},
+            {"mp", "protonmass", 1.6726219E-27},
+            {"q", "elemcharge", 1.60217662E-19},
+            {"soundspeed", "vs", 343.2},
+            {"R", "gas", 8.3144598},
+            {"cmperinch", Nothing, 2.54},
+            {"torrsperatm", Nothing, 760.0},
+            {"torrsperkpa", Nothing, 7.50062}
+        }
+
+        ''' <summary>
+        ''' Reload the default constants into variable storage (accessible via Reload() in execution)
+        ''' </summary>
+        Public Sub ReloadDefault()
+            For i As Integer = 0 To _default.GetLength(0) - 1
+                For j As Integer = 0 To _default.GetLength(1) - 2
+                    If Not _default(i, j) Is Nothing Then
+                        SetVariable(_default(i, j).ToString(), _default(i, _default.GetLength(1) - 1))
+                    End If
+                Next
+            Next
+        End Sub
+#End Region
+#End Region
+
+#Region "Evaluator Logic"
 
         ''' <summary>
         ''' Not publicly accessible, for internal initialization only
@@ -547,15 +671,16 @@ Namespace Calculator.Evaluator
         ''' <param name="prevAns">List of previous answers</param>
         ''' <param name="vars">Dictioanry of variable definitions</param>
         ''' <param name="userFunctions">Dictioanry of user function definitions</param>
-        ''' <param name="userFunctionArgs">Dictioanry of user function arguments</param>
+        ''' <param name="baseLine">The line number that this evaluator started at, used for error reporting</param>
+        ''' <param name="scope">The name of the scope of this evaluator</param>
         Public Sub New(Optional oMode As IOMode = IOMode.MathO,
                        Optional angleRepMode As AngleRep = AngleRep.Radian,
                        Optional spacesPerTab As Integer = 4,
                        Optional prevAns As List(Of ObjectTypes.EvalObjectBase) = Nothing,
-                       Optional vars As Dictionary(Of String, ObjectTypes.Reference) = Nothing,
-                       Optional userFunctions As Dictionary(Of String, String) = Nothing,
-                       Optional userFunctionArgs As Dictionary(Of String, List(Of String)) = Nothing,
-                       Optional baseLine As Integer = 0)
+                       Optional vars As Dictionary(Of String, Variable) = Nothing,
+                       Optional userFunctions As Dictionary(Of String, UserFunction) = Nothing,
+                       Optional baseLine As Integer = 0,
+                       Optional scope As String = "cantus")
             Me.New()
             Me.OMode = oMode
             Me.AngleRepMode = angleRepMode
@@ -564,10 +689,10 @@ Namespace Calculator.Evaluator
             If Not prevAns Is Nothing Then Me.PrevAns = prevAns
             If Not vars Is Nothing Then Me._vars = vars
             If Not userFunctions Is Nothing Then Me._userFunctions = userFunctions
-            If Not userFunctionArgs Is Nothing Then Me._userFunctionArgs = userFunctionArgs
 
             Me._baseLine = baseLine
             Me._curLine = baseLine
+            Me._scope = scope
         End Sub
 
         ''' <summary>
@@ -584,9 +709,14 @@ Namespace Calculator.Evaluator
         ''' <param name="path">Path of the script to evaluate</param>
         ''' <param name="asInternal">if true, the script is exceuted as if it were in the evaluator.</param>
         Public Function Include(path As String, Optional asInternal As Boolean = False) As String
-            If Not asInternal Then _externalExec = True
+            Dim _oldScope As String = _scope
+            If Not asInternal Then
+                _scope = path.Replace("/", ".").Replace("\", ".")
+                If _scope.EndsWith(".can") Then _scope = _scope.Remove(_scope.Length - 4)
+            End If
+
             Dim res As String = InternalFunctions.O(EvalRaw(IO.File.ReadAllText(path)))
-            _externalExec = False
+            _scope = _oldScope
             Return res
         End Function
 
@@ -840,6 +970,7 @@ Namespace Calculator.Evaluator
                 End If
 
             Catch ex As Exception
+                MsgBox(ex.ToString)
                 Throw New EvaluatorException(ex.Message, _curLine + 1)
             End Try
         End Function
@@ -1514,7 +1645,7 @@ Namespace Calculator.Evaluator
         Friend Function GetVariableRef(ByVal name As String) As ObjectTypes.Reference
             If name = "ans" Then Return New ObjectTypes.Reference(GetLastAns())
             If Not VariableExists(name) Then SetVariable(name, Double.NaN)
-            Return _vars(name)
+            Return _vars(name).Reference
         End Function
 
         ''' <summary>
@@ -1526,8 +1657,8 @@ Namespace Calculator.Evaluator
             If name = "ans" Then Return GetLastAns()
 
             If Not VariableExists(name) Then Return Double.NaN
-            If _vars(name) Is Nothing Then Return Double.NaN
-            Dim value As ObjectTypes.EvalObjectBase = _vars(name)
+            If _vars(name).Reference Is Nothing Then Return Double.NaN
+            Dim value As ObjectTypes.Reference = _vars(name).Reference
             Return value.GetValue()
         End Function
 
@@ -1536,12 +1667,14 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="name">Name of the variable</param>
         ''' <param name="ref">Value of the variable as a Reference</param>
-        Public Sub SetVariable(ByVal name As String, ByVal ref As ObjectTypes.Reference)
-            If _externalExec Then _varExtern(name) = ref.Resolve()
+        Public Sub SetVariable(ByVal name As String, ByVal ref As ObjectTypes.Reference,
+                               Optional ByVal scope As String = "")
+            ' set declaring scope
             If String.IsNullOrWhiteSpace(name) Then Throw New EvaluatorException("Variable name cannot be empty")
             If name.Trim() = DEFAULT_VAR_NAME Then Throw New EvaluatorException("Variable name ''" & DEFAULT_VAR_NAME & "'' is reserved")
             If Not IsValidVariableName(name) Then Throw New EvaluatorException("Invalid Variable Name: " & name)
-            _vars(name) = ref
+            If scope = "" Then scope = _scope
+            Dim var As New Variable(name, ref, scope)
         End Sub
 
         ''' <summary>
@@ -1549,12 +1682,14 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="name">Name of the variable</param>
         ''' <param name="value">Value of the variable as an IEvalObject</param>
-        Public Sub SetVariable(ByVal name As String, ByVal value As ObjectTypes.EvalObjectBase)
+        Public Sub SetVariable(ByVal name As String,
+                               ByVal value As ObjectTypes.EvalObjectBase,
+                               Optional ByVal scope As String = "")
             If String.IsNullOrWhiteSpace(name) Then Throw New EvaluatorException("Variable name cannot be empty")
             If name.Trim() = DEFAULT_VAR_NAME Then Throw New EvaluatorException("Variable name ''" & DEFAULT_VAR_NAME & "'' is reserved")
             If Not IsValidVariableName(name) Then Throw New EvaluatorException("Invalid Variable Name: " & name)
-            If _externalExec Then _varExtern(name) = value.GetValue()
-            _vars(name) = New ObjectTypes.Reference(value)
+            If scope = "" Then scope = _scope
+            _vars(name) = New Variable(name, value, scope)
         End Sub
 
         ''' <summary>
@@ -1562,12 +1697,13 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="name">Name of the variable</param>
         ''' <param name="value">Value of the variable as a system object</param>
-        Public Sub SetVariable(ByVal name As String, ByVal value As Object)
-            If _externalExec Then _varExtern(name) = value
+        Public Sub SetVariable(ByVal name As String, ByVal value As Object,
+                               Optional ByVal scope As String = "")
             If String.IsNullOrWhiteSpace(name) Then Throw New EvaluatorException("Variable name cannot be empty")
             If name.Trim() = DEFAULT_VAR_NAME Then Throw New EvaluatorException("Variable name ''" & DEFAULT_VAR_NAME & "'' is reserved")
             If Not IsValidVariableName(name) Then Throw New EvaluatorException("Invalid Variable Name: " & name)
-            SetVariable(name, ObjectTypes.DetectType(value, True))
+            If scope = "" Then scope = _scope
+            SetVariable(name, ObjectTypes.DetectType(value, True), scope)
         End Sub
 
         ''' <summary>
@@ -1575,7 +1711,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="ref">Value of the variable as a Reference</param>
         Friend Sub SetDefaultVariable(ByVal ref As ObjectTypes.Reference)
-            _vars(DEFAULT_VAR_NAME) = ref
+            _vars(DEFAULT_VAR_NAME) = New Variable(DEFAULT_VAR_NAME, ref, _scope)
         End Sub
 
         ''' <summary>
@@ -1583,27 +1719,27 @@ Namespace Calculator.Evaluator
         ''' </summary>
         Friend Function GetDefaultVariableRef() As ObjectTypes.Reference
             If _vars.ContainsKey("") Then
-                Return _vars(DEFAULT_VAR_NAME)
+                Return _vars(DEFAULT_VAR_NAME).Reference
             Else
                 ' default variable not set, we'll complain about the variable name
                 Throw New EvaluatorException("Variable name cannot be empty")
             End If
         End Function
 
-        Private _varBackup As New Dictionary(Of String, ObjectTypes.Reference)
+        Private _varBackup As New Dictionary(Of String, Variable)
 
         ''' <summary>
         ''' Make a backup of current variables. Restore with RestoreVariableBackup()
         ''' </summary>
         Private Sub BackupVariables()
-            _varBackup = New Dictionary(Of String, ObjectTypes.Reference)(_vars)
+            _varBackup = New Dictionary(Of String, Variable)(_vars)
         End Sub
 
         ''' <summary>
         ''' Restore the last variable backup made with BackupVariables()
         ''' </summary>
         Private Sub RestoreVariableBackup()
-            _vars = New Dictionary(Of String, ObjectTypes.Reference)(_varBackup)
+            _vars = New Dictionary(Of String, Variable)(_varBackup)
         End Sub
 
         ''' <summary>
@@ -1657,18 +1793,18 @@ Namespace Calculator.Evaluator
         ''' <param name="name">The name of the function</param>
         ''' <param name="args">A list of argument names</param>
         ''' <param name="def">The function definition</param>
-        Public Sub AddUserFunction(name As String, ByVal args As List(Of String), def As String)
+        Public Sub AddUserFunction(name As String, ByVal args As List(Of String),
+                                   def As String)
             If name.Length = 0 OrElse Not IsValidVariableName(name(0)) Then
                 Throw New EvaluatorException("Error: Invalid Function Name")
             End If
 
-            _userFunctions(name) = def
             For i As Integer = 0 To args.Count - 1
                 args(i) = args(i).Trim()
                 If Not IsValidVariableName(args(i)) Then Throw New EvaluatorException("Invalid Argument Name: " & args(i))
             Next
-            _userFunctionArgs(name) = args
-            _userFunctionExtern(name) = _externalExec
+
+            _userFunctions(name) = New UserFunction(name, def, args, _scope)
         End Sub
 
         ''' <summary>
@@ -1709,26 +1845,14 @@ Namespace Calculator.Evaluator
         Public Sub RemUserFunction(name As String)
             If (_userFunctions.ContainsKey(name)) Then
                 _userFunctions.Remove(name)
-                _userFunctionArgs.Remove(name)
             End If
         End Sub
 
         ''' <summary>
-        ''' Return the definition of the user function with the given name
+        ''' Get the user function with the name
         ''' </summary>
-        ''' <param name="name"></param>
-        ''' <returns></returns>
-        Public Function GetUserFunction(name As String) As String
+        Public Function GetUserFunction(name As String) As UserFunction
             Return _userFunctions(name)
-        End Function
-
-        ''' <summary>
-        ''' Return the arguments of the user function with the given name
-        ''' </summary>
-        ''' <param name="name"></param>
-        ''' <returns></returns>
-        Public Function GetUserFunctionArgs(name As String) As String()
-            Return _userFunctionArgs(name).ToArray()
         End Function
 
         ''' <summary>
@@ -1754,15 +1878,14 @@ Namespace Calculator.Evaluator
         Public Function ExecUserFunction(name As String, args As List(Of Object)) As Object
             If (_userFunctions.ContainsKey(name)) Then
                 BackupVariables()
-                Dim argnames As List(Of String) = _userFunctionArgs(name)
+                Dim uf As UserFunction = _userFunctions(name)
+                Dim argnames As List(Of String) = uf.Args
                 If args.Count = argnames.Count Then
                     For i As Integer = 0 To args.Count - 1
-                        ' if the function was declared outside main initialization
-                        If _userFunctionExtern.ContainsKey(name) AndAlso
-                            _userFunctionExtern(name) Then
-                            _externalExec = True ' save this variable as external as well
-                            SetVariable(argnames(i), args(i))
-                            _externalExec = False
+                        ' if the function was declared outside main initialization, then the argument
+                        ' should also be in that scope
+                        If IsExternalScope(uf.DeclaringScope) Then
+                            SetVariable(argnames(i), args(i), uf.DeclaringScope)
                         Else
                             SetVariable(argnames(i), args(i))
                         End If
@@ -1771,12 +1894,36 @@ Namespace Calculator.Evaluator
                     Throw New EvaluatorException(name & ": " & argnames.Count & " parameter(s) expected")
                 End If
 
-                Dim result As Object = EvalRaw(_userFunctions(name))
+                Dim _oldScope As String = _scope
+                _scope = uf.DeclaringScope
+                Dim result As Object = EvalRaw(uf.Body)
+                _scope = _oldScope
+
                 RestoreVariableBackup()
                 Return result
             Else
                 Throw New EvaluatorException("User Function " & name & " is Undefined")
             End If
+        End Function
+
+        ''' <summary>
+        ''' Gets the base scope of the current scope: for cantus.foo.bar
+        ''' that would be cantus
+        ''' </summary>
+        Private Function GetScopeBase(scope As String) As String
+            If scope.Contains(".") Then
+                Return scope.Remove(scope.IndexOf(".")).Trim()
+            Else
+                Return scope.Trim()
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Checks if the specified scope is 'external' (that is, 
+        ''' does not have the same base scope) as the current scope.
+        ''' </summary>
+        Private Function IsExternalScope(scope As String) As Boolean
+            Return GetScopeBase(_scope) <> GetScopeBase(scope)
         End Function
 
         ''' <summary>
@@ -1798,25 +1945,24 @@ Namespace Calculator.Evaluator
             serialized.Append("SpacesPerTab(").Append(SpacesPerTab.ToString()).Append(")").Append(vbNewLine)
 
             serialized.AppendLine().AppendLine("# Function Definitions")
-            For Each func As KeyValuePair(Of String, List(Of String)) In _userFunctionArgs
-                If HasUserFunction(func.Key) AndAlso Not _userFunctionExtern(func.Key) Then
-                    serialized.Append("function ").Append(func.Key).Append("(")
-                    serialized.Append(String.Join(", ", func.Value)).Append(")").Append(vbNewLine)
-                    serialized.AppendLine(GetUserFunction(func.Key).TrimEnd())
+            For Each func As KeyValuePair(Of String, UserFunction) In _userFunctions
+                ' Do not output if it is from an external scope -- it is already saved there somewhere
+                If HasUserFunction(func.Key) AndAlso
+                    Not IsExternalScope(func.Value.DeclaringScope) Then
+                    serialized.AppendLine(func.Value.ToString())
                 End If
             Next
 
             serialized.AppendLine().AppendLine("# Variable Definitions")
-            For Each var As KeyValuePair(Of String, ObjectTypes.Reference) In _vars.ToArray()
-                Dim def As ObjectTypes.EvalObjectBase = var.Value.ResolveObj()
+            '
+            For Each var As KeyValuePair(Of String, Variable) In _vars.ToArray()
+                Dim def As ObjectTypes.EvalObjectBase = var.Value.Reference.ResolveObj()
 
                 If Not def Is Nothing AndAlso (
                     Not TypeOf def Is ObjectTypes.Number OrElse Not Double.IsNaN(CDbl(def.GetValue()))) AndAlso
                      Not TypeOf def Is ObjectTypes.Reference AndAlso
                     Not var.Key = DEFAULT_VAR_NAME AndAlso
-                    Not (_varExtern.ContainsKey(var.Key) AndAlso
-                    _varExtern(var.Key).GetType() = var.Value.GetType() AndAlso
-                    _varExtern(var.Key).ToString() = var.Value.ToString()) Then ' note: cannot save references
+                    Not (IsExternalScope(var.Value.DeclaringScope)) Then
 
                     Dim defs As String = def.ToString()
                     serialized.Append(var.Key).Append("=").Append(defs).Append(vbNewLine)
@@ -1833,12 +1979,17 @@ Namespace Calculator.Evaluator
         ''' Create a copy of the evaluator containing the same user functions, variables, and functions starting at the current line
         ''' </summary>
         ''' <returns></returns>
-        Public Function ScopedEvaluator() As Evaluator
-            Dim varsCopy As New Dictionary(Of String, ObjectTypes.Reference)(Me._vars)
-            Dim funcCopy As New Dictionary(Of String, String)(Me._userFunctions)
-            Dim funcargsCopy As New Dictionary(Of String, List(Of String))(Me._userFunctionArgs)
-            Return New Evaluator(Me.OMode, Me.AngleRepMode, Me.SpacesPerTab, Me.PrevAns, varsCopy, funcCopy,
-                                         funcargsCopy, Me._curLine)
+        Public Function ScopedEvaluator(Optional ByVal subScopeName As String = "") As Evaluator
+            Dim varsCopy As New Dictionary(Of String, Variable)
+            Dim tmp As KeyValuePair(Of String, Variable)() = Me._vars.ToArray()
+            For i As Integer = 0 To tmp.Count - 1
+                varsCopy(tmp(i).Key) = tmp(i).Value
+            Next
+            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me._userFunctions)
+            If subScopeName = "" Then subScopeName = New Guid().ToString()
+            Return New Evaluator(Me.OMode, Me.AngleRepMode,
+                                 Me.SpacesPerTab, Me.PrevAns, varsCopy, funcCopy,
+                                          Me._curLine, _scope & "." & subScopeName)
         End Function
 
         ''' <summary>
@@ -1846,19 +1997,22 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <returns></returns>
         Public Function Clone() As Evaluator
-            Dim varsCopy As New Dictionary(Of String, ObjectTypes.Reference)
+            Dim varsCopy As New Dictionary(Of String, Variable)
             Try
-                For Each k As KeyValuePair(Of String, ObjectTypes.Reference) In _vars.ToArray()
-                    varsCopy.Add(k.Key, DirectCast(k.Value.DeepCopy(), ObjectTypes.Reference))
+                For Each k As KeyValuePair(Of String, Variable) In
+                    _vars.ToArray()
+                    varsCopy.Add(k.Key, New Variable(k.Key, DirectCast(k.Value.
+                                                     Reference.DeepCopy(),
+                                 ObjectTypes.Reference), k.Value.DeclaringScope))
                 Next
             Catch
             End Try
 
-            Dim funcCopy As New Dictionary(Of String, String)(Me._userFunctions)
-            Dim funcargsCopy As New Dictionary(Of String, List(Of String))(Me._userFunctionArgs)
+            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me._userFunctions)
 
-            Return New Evaluator(Me.OMode, Me.AngleRepMode, Me.SpacesPerTab, Me.PrevAns, varsCopy, funcCopy,
-                                         funcargsCopy, Me._baseLine)
+            Return New Evaluator(Me.OMode, Me.AngleRepMode, Me.SpacesPerTab,
+                                 Me.PrevAns, varsCopy, funcCopy,
+                                         Me._baseLine, Me._scope)
         End Function
 
         ''' <summary>

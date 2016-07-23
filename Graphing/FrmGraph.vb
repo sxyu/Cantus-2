@@ -140,7 +140,9 @@ Namespace Calculator.Graphing
         Private Sub SetT(t As Object, Optional useEval2 As Boolean = False)
             If useEval2 Then
                 _eval2.SetVariable("t"c, ObjectTypes.DetectType(t))
+                _eval2.SetVariable("θ"c, ObjectTypes.DetectType(t))
             Else
+                _eval.SetVariable("t"c, ObjectTypes.DetectType(t))
                 _eval.SetVariable("θ"c, ObjectTypes.DetectType(t))
             End If
         End Sub
@@ -306,7 +308,7 @@ Namespace Calculator.Graphing
             End Select
         End Function
 
-        Private Sub DrawFunc(fnid As Integer, g As Graphics, center As Coord, Optional ByVal preview As Boolean = False)
+        Private Sub DrawFunc(fnid As Integer, g As Graphics, image As Bitmap, center As Coord, Optional ByVal preview As Boolean = False)
             Try
                 Dim prevt As Object
                 g.SmoothingMode = SmoothingMode.HighQuality
@@ -319,81 +321,164 @@ Namespace Calculator.Graphing
                 Dim p As New Pen(ColorFromFuncId(fnid), 1)
                 Select Case _functiontype(fnid)
                     Case FunctionType.Cartesian
-                        Dim prevx As Object
-                        prevx = GetX()
+                        Dim prevx As Object = GetX()
                         Dim hstep As Double = selectScale(_scaleBackup.X)
-                        Dim i As Double = (center.X + WID / 2) Mod (hstep * SCREENFACT / _scaleBackup.X)
+                        Dim i As Double = 0
                         Dim prev As Double = Double.NaN
                         Dim delta As Double = 0.5
+
                         While i <= WID
                             SetX(ccfx(i, True))
                             Dim res As Double = Eval(fn)
-                            If Not Double.IsNaN(res) AndAlso Not Double.IsNaN(prev) Then
-                                If preview Then
-                                    delta = CSng(Math.Max(1 / (Math.Log(0.1 * Math.Max(Math.Abs(res - prev) / delta, 0.05) / Math.Log(10))), 1))
-                                Else
-                                    delta = CSng(Math.Max(1 / (Math.Log(10 * Math.Max(Math.Abs(res - prev) / delta, 0.5) / Math.Log(1.5))), 0.5))
-                                End If
-                                i += delta
-                            Else
-                                If preview Then
-                                    delta = 4.0F
-                                    i += 4.0F
-                                Else
-                                    delta = 0.5F
-                                    i += 0.5F
-                                End If
-                            End If
                             Dim y As Double = cfcy(res, True)
-                            If Double.IsInfinity(res) OrElse Double.IsNaN(res) OrElse y < -1000 OrElse y > 2500 OrElse Math.Abs(res - prev) > 1000 Then
+                            Dim x As Double = i
+                            If Double.IsNaN(prev) OrElse
+                                Double.IsNaN(res) OrElse y < 0 OrElse y > HIGH Then
+                                If preview Then
+                                    delta = 20
+                                    i += 21.5F
+                                Else
+                                    delta = 10
+                                    i += 10.0F
+                                End If
                                 If pts.Count > 1 Then
                                     g.DrawLines(p, pts.ToArray())
                                 End If
                                 pts.Clear()
+
+                                If i > 0 Then
+                                    delta = 0.01
+                                    prev = y
+                                    Dim origI As Double = i
+                                    Dim origPrev As Double = prev
+                                    SetX(ccfx(i + delta, True))
+                                    res = Eval(fn)
+                                    y = cfcy(res, True)
+                                    If preview Then
+                                        delta = Math.Max(15 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 1)
+                                    Else
+                                        delta = Math.Max(6 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 1)
+                                    End If
+                                    y = prev
+                                    For j As Integer = 0 To 60
+                                        If Double.IsNaN(prev) Then
+                                            Exit For
+                                        End If
+                                        prev = y
+                                        SetX(ccfx(i, True))
+                                        res = Eval(fn)
+                                        y = cfcy(res, True)
+
+                                        x = i
+                                        If preview Then
+                                            delta = Math.Max(30 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
+                                        Else
+                                            delta = Math.Max(12 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
+                                        End If
+                                        pts.Insert(0, New PointF(CSng(x), CSng(y)))
+                                        i -= delta
+                                        If y < 0 OrElse y > HIGH Then Exit For
+                                    Next
+                                    i = origI
+                                    prev = origPrev
+                                    y = origPrev
+
+                                End If
                             Else
-                                pts.Add(New PointF(CSng(i - 1.0F), CSng(y)))
+                                If preview Then
+                                    delta = Math.Max(35 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
+                                Else
+                                    delta = Math.Max(12 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
+                                End If
+                                If y < HIGH / 4 OrElse y > HIGH / 4 * 3 Then
+                                    delta = Math.Max(delta, 2)
+                                End If
+                                i += delta
+                                pts.Add(New PointF(CSng(x), CSng(y)))
                             End If
-                            prev = res
+                                prev = y
                         End While
                         SetX(prevx)
                     Case FunctionType.Inverse
-                        Dim prevy As Object
-                        prevy = GetY()
+                        Dim prevy As Object = GetY()
                         Dim vstep As Double = selectScale(_scaleBackup.Y)
-                        Dim i As Double = CSng((center.Y - HIGH / 2) Mod (vstep * SCREENFACT / _scaleBackup.Y))
+                        Dim i As Double = 0
                         Dim prev As Double = Double.NaN
                         Dim delta As Double = 0.5
+
                         While i <= HIGH
                             SetY(ccfy(i, True))
                             Dim res As Double = Eval(fn)
-                            If Not Double.IsNaN(res) AndAlso Not Double.IsNaN(prev) Then
+                            Dim x As Double = cfcx(res, True)
+                            Dim y As Double = i
+                            If Double.IsNaN(prev) OrElse
+                                Double.IsNaN(res) OrElse x < 0 OrElse x > WID Then
                                 If preview Then
-                                    delta = CSng(Math.Max(1 / (Math.Log(0.1 * Math.Max(Math.Abs(res - prev) / delta, 0.05) / Math.Log(10))), 1))
+                                    delta = 20
+                                    i += 21.5F
                                 Else
-                                    delta = CSng(Math.Max(1 / (Math.Log(10 * Math.Max(Math.Abs(res - prev) / delta, 0.5) / Math.Log(1.5))), 0.5))
+                                    delta = 10
+                                    i += 10.0F
                                 End If
-                                i += delta
-                            Else
-                                If preview Then
-                                    delta = 4.0F
-                                    i += 4.0F
-                                Else
-                                    delta = 0.5F
-                                    i += 0.5F
-                                End If
-                            End If
-                            Dim x As Double = cfcy(res, True)
-                            If Double.IsInfinity(res) OrElse Double.IsNaN(res) OrElse x < -2500 OrElse x > 5000 OrElse Math.Abs(res - prev) > 1000 Then
                                 If pts.Count > 1 Then
                                     g.DrawLines(p, pts.ToArray())
                                 End If
                                 pts.Clear()
+
+                                If i > 0 Then
+                                    delta = 0.01
+                                    prev = x
+                                    Dim origI As Double = i
+                                    Dim origPrev As Double = prev
+                                    SetY(ccfy(i + delta, True))
+                                    res = Eval(fn)
+                                    x = cfcx(res, True)
+                                    If preview Then
+                                        delta = Math.Max(15 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 1)
+                                    Else
+                                        delta = Math.Max(6 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 1)
+                                    End If
+                                    x = prev
+                                    For j As Integer = 0 To 60
+                                        If Double.IsNaN(prev) Then
+                                            Exit For
+                                        End If
+                                        prev = x
+                                        SetY(ccfy(i, True))
+                                        res = Eval(fn)
+                                        x = cfcx(res, True)
+
+                                        y = i
+                                        If preview Then
+                                            delta = Math.Max(30 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
+                                        Else
+                                            delta = Math.Max(12 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
+                                        End If
+                                        pts.Insert(0, New PointF(CSng(x), CSng(y)))
+                                        i -= delta
+                                        If x < 0 OrElse x > WID Then Exit For
+                                    Next
+                                    i = origI
+                                    prev = origPrev
+                                    x = origPrev
+
+                                End If
                             Else
-                                pts.Add(New PointF(CSng(x), CSng(i - 1.0F)))
+                                If preview Then
+                                    delta = Math.Max(35 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
+                                Else
+                                    delta = Math.Max(12 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
+                                End If
+                                If x < WID / 4 OrElse x > WID / 4 * 3 Then
+                                    delta = Math.Max(delta, 2)
+                                End If
+                                i += delta
+                                pts.Add(New PointF(CSng(x), CSng(y)))
                             End If
-                            prev = res
+                            prev = x
                         End While
-                        SetY(prevy)
+                        SetX(prevy)
+
                     Case FunctionType.Parametric
                         If Not fn.Contains("<"c) OrElse Not fn.Contains(">"c) OrElse fn.IndexOf(","c) > fn.LastIndexOf(">"c) OrElse
                         fn.IndexOf(","c) < fn.IndexOf("<"c) Then Return ' no range specified or invalid format
@@ -418,6 +503,7 @@ Namespace Calculator.Graphing
                         Else
                             Return ' invalid range format
                         End If
+
                         Dim i As Double = tstart
                         Dim fnx As String = fn.Remove(fn.IndexOf(","c)).Trim({" "c, "<"c})
                         Dim fny As String = fn.Remove(fn.LastIndexOf(">"c)).Substring(fn.IndexOf(","c) + 1).Trim()
@@ -426,14 +512,14 @@ Namespace Calculator.Graphing
                             Dim resx As Double = Eval(fnx)
                             Dim resy As Double = Eval(fny)
                             If preview Then
-                                i += (tend - tstart) / 1000
+                                i += (tend - tstart) / 250
                             Else
-                                i += (tend - tstart) / 4000
+                                i += (tend - tstart) / 2000
                             End If
-                            Dim y As Double = cfcy(resy, True)
                             Dim x As Double = cfcx(resx, True)
-                            If Double.IsInfinity(resx) OrElse Double.IsNaN(resx) OrElse Double.IsInfinity(resy) OrElse
-                            Double.IsNaN(resy) OrElse y < -5000 OrElse y > 5000 OrElse x < -5000 OrElse x > 5000 Then
+                            Dim y As Double = cfcy(resy, True)
+                            If Double.IsNaN(resx) OrElse Double.IsInfinity(resy) OrElse
+                            Double.IsNaN(resy) OrElse y < 0 OrElse y > HIGH OrElse x < 0 OrElse x > WID Then
                                 If pts.Count > 1 Then
                                     g.DrawLines(p, pts.ToArray())
                                 End If
@@ -442,6 +528,9 @@ Namespace Calculator.Graphing
                                 pts.Add(New PointF(CSng(x), CSng(y)))
                             End If
                         End While
+                        If pts.Count > 1 Then
+                            g.DrawLines(p, pts.ToArray())
+                        End If
                     Case FunctionType.Polar
                         If Not fn.Contains("["c) OrElse Not fn.Contains("]"c) Then Return ' no range specified
                         Dim range As String = fn.Remove(fn.LastIndexOf("]"c)).Substring(fn.LastIndexOf("["c) + 1)
@@ -471,9 +560,9 @@ Namespace Calculator.Graphing
                             Dim resx As Double = resr * Math.Cos(i)
                             Dim resy As Double = resr * Math.Sin(i)
                             If preview Then
-                                i += (tend - tstart) / 1000 / Math.Min(Math.Max(Math.Log10((tend - tstart) / 2 / Math.PI), 0.5), 5)
+                                i += (tend - tstart) / 500 / Math.Min(Math.Max(Math.Log10((tend - tstart) / 2 / Math.PI), 0.5), 5)
                             Else
-                                i += (tend - tstart) / 5000 / Math.Min(Math.Max(Math.Log10((tend - tstart) / 2 / Math.PI), 1), 25)
+                                i += (tend - tstart) / 2500 / Math.Min(Math.Max(Math.Log10((tend - tstart) / 2 / Math.PI), 1), 25)
                             End If
                             Dim y As Double = cfcy(resy, True)
                             Dim x As Double = cfcx(resx, True)
@@ -551,18 +640,18 @@ Namespace Calculator.Graphing
                 Using b As New SolidBrush(Color.FromArgb(100, 100, 100))
                     Dim sui As New Font("Segoe UI", 15)
 
-                    Dim hstep As Double = selectScale(_scale.X)
+                    Dim hstep As Double = selectScale(_scaleBackup.X)
 
-                    Dim offset As Double = center.X Mod (hstep * SCREENFACT / _scale.X)
-                    For i As Double = 0 To WID \ 2 Step hstep * SCREENFACT / _scale.X
+                    Dim offset As Double = center.X Mod (hstep * SCREENFACT / _scaleBackup.X)
+                    For i As Double = 0 To WID \ 2 Step hstep * SCREENFACT / _scaleBackup.X
                         g.DrawLine(p, CSng(WID / 2 + offset + i), 0, CSng(WID / 2 + offset + i), HIGH)
                         g.DrawLine(p, CSng(WID / 2 + offset - i), 0, CSng(WID / 2 + offset - i), HIGH)
                     Next
 
-                    Dim vstep As Double = selectScale(_scale.Y)
+                    Dim vstep As Double = selectScale(_scaleBackup.Y)
 
-                    offset = center.Y Mod (vstep * SCREENFACT / _scale.Y)
-                    For i As Double = 0 To HIGH \ 2 Step vstep * SCREENFACT / _scale.Y
+                    offset = center.Y Mod (vstep * SCREENFACT / _scaleBackup.Y)
+                    For i As Double = 0 To HIGH \ 2 Step vstep * SCREENFACT / _scaleBackup.Y
                         g.DrawLine(p, 0, CSng(HIGH / 2 - offset + i), WID, CSng(HIGH / 2 - offset + i))
                         g.DrawLine(p, 0, CSng(HIGH / 2 - offset - i), WID, CSng(HIGH / 2 - offset - i))
                     Next
@@ -572,8 +661,8 @@ Namespace Calculator.Graphing
                     If Math.Abs(center.X) <= WID / 2 Then
                         g.DrawLine(p, CSng(WID / 2 + center.X), 0, CSng(WID / 2 + center.X), HIGH)
                         If Math.Abs(center.Y) <= HIGH / 2 Then
-                            g.DrawString(hstep.ToString, sui, b, CSng(WID / 2 + center.X + hstep * SCREENFACT / _scale.X - 3), CSng(HIGH / 2 - center.Y - 4))
-                            g.DrawString(vstep.ToString, sui, b, CSng(WID / 2 + center.X) + 2, CSng(HIGH / 2 - center.Y - vstep * SCREENFACT / _scale.Y - 16))
+                            g.DrawString(hstep.ToString, sui, b, CSng(WID / 2 + center.X + hstep * SCREENFACT / _scaleBackup.X - 3), CSng(HIGH / 2 - center.Y - 4))
+                            g.DrawString(vstep.ToString, sui, b, CSng(WID / 2 + center.X) + 2, CSng(HIGH / 2 - center.Y - vstep * SCREENFACT / _scaleBackup.Y - 16))
                         End If
                     End If
                     If Math.Abs(center.Y) <= HIGH / 2 Then
@@ -583,7 +672,30 @@ Namespace Calculator.Graphing
             End Using
         End Sub
 
+        Dim _zmfact As Double = 1
+
         Private Sub Redraw(Optional ByVal preview As Boolean = False)
+            If Math.Round(_zmfact, 13) <> 1 Then
+                ' zoom
+                Dim p As Point = canvas.PointToClient(Cursor.Position)
+
+                Dim origfx As Double = ccfx(cscx(p.X))
+                Dim origfy As Double = ccfy(cscy(p.Y))
+                Dim nsx As Double = _scale.X * _zmfact
+                Dim nsy As Double = _scale.Y * _zmfact
+                If nsx < MINSCALE OrElse nsy < MINSCALE OrElse nsx > MAXSCALE OrElse nsx > MAXSCALE Then Exit Sub
+                _scale.X = nsx
+                _scale.Y = nsy
+                Dim newcx As Double = cscx(p.X)
+                Dim newcy As Double = cscy(p.Y)
+                Dim origcx As Double = cfcx(origfx)
+                Dim origcy As Double = cfcy(origfy)
+
+                _loc.X -= origcx - newcx
+                _loc.Y += origcy - newcy
+                _zmfact = 1
+            End If
+
             Dim g As Graphics = Graphics.FromImage(_tmpbuffer)
 
             g.Clear(canvas.BackColor)
@@ -597,9 +709,11 @@ Namespace Calculator.Graphing
             PaintAxes(g, _centerBackup)
 
             For i As Integer = 0 To _functions.Count - 1
-                DrawFunc(i, g, _centerBackup, preview)
+                DrawFunc(i, g, _tmpbuffer, _centerBackup, preview)
             Next
             _center = _centerBackup
+            '_scale = _scaleBackup
+            '_loc = New Coord(_center.X, _center.Y)
         End Sub
 
         Private Sub GetPtCartesian(ByRef x As Double, ByRef y As Double, ByRef d As Double, ByRef ptname As String)
@@ -770,6 +884,12 @@ Namespace Calculator.Graphing
             End Try
         End Function
 
+        Private Function SigFig(ByVal value As Double, Optional ByVal digits As Integer = 1) As Double
+            Return Math.Sign(value) *
+                Math.Round(Math.Abs(value) / 10 ^ Math.Ceiling(Math.Log10(Math.Abs(value))),
+                           digits) * 10 ^ Math.Ceiling(Math.Log10(Math.Abs(value)))
+        End Function
+
         Private Sub canvas_Paint(sender As Object, e As PaintEventArgs) Handles canvas.Paint
             Dim lf As Double = cscx(0)
             Dim tp As Double = cscy(0)
@@ -792,15 +912,16 @@ Namespace Calculator.Graphing
 
             Using cb As New SolidBrush(ColorFromFuncId(_curfn))
                 Using b As New SolidBrush(Color.FromArgb(100, 100, 100))
+                    ' end of screen range displays
                     Dim sui As New Font("Segoe UI", 14)
-                    Dim s As String = Math.Round(ccfx(cscx(canvas.Width)), PRECISION).ToString
+                    Dim s As String = SigFig(ccfx(cscx(canvas.Width)), PRECISION).ToString
                     Dim sz As SizeF
-                    g.DrawString(Math.Round(ccfx(cscx(0)), PRECISION).ToString, sui, b, 1, CSng(canvas.Height / 2) - 2)
+                    g.DrawString(SigFig(ccfx(cscx(0)), PRECISION).ToString, sui, b, 1, CSng(canvas.Height / 2) - 2)
                     sz = g.MeasureString(s, sui)
                     g.DrawString(s, sui, b, canvas.Width - sz.Width - 1, CSng(canvas.Height / 2) - 2)
 
-                    s = Math.Round(ccfy(cscy(canvas.Height)), PRECISION).ToString
-                    g.DrawString(Math.Round(ccfy(cscy(0)), PRECISION).ToString,
+                    s = SigFig(ccfy(cscy(canvas.Height)), PRECISION).ToString
+                    g.DrawString(sigfig(ccfy(cscy(0)), PRECISION).ToString,
                                  sui, b, CSng(canvas.Width / 2) - 2, 1)
                     sz = g.MeasureString(s, sui)
                     g.DrawString(s, sui, b, CSng(canvas.Width / 2) - 2, canvas.Height - sz.Height - 1)
@@ -911,6 +1032,7 @@ Namespace Calculator.Graphing
                                                 End If
                                             End If
                                     End Select
+
                                     If (cy > canvas.Height OrElse cy < 0) AndAlso (cx > canvas.Height OrElse cx < 0) Then Return
                                     g.FillEllipse(cb, CSng(cx - 3), CSng(cy - 3), 6, 6)
                                     g.DrawString(ptname & coords,
@@ -1080,22 +1202,7 @@ Namespace Calculator.Graphing
         End Sub
 
         Private Sub canvas_MouseWheel(sender As Object, e As MouseEventArgs) Handles canvas.MouseWheel, tb.MouseWheel
-            Dim zmfact As Double = 1 - (e.Delta * SCALESPEED)
-            Dim p As Point = canvas.PointToClient(Cursor.Position)
-            Dim origfx As Double = ccfx(cscx(p.X))
-            Dim origfy As Double = ccfy(cscy(p.Y))
-            Dim nsx As Double = _scale.X * CSng(zmfact)
-            Dim nsy As Double = _scale.Y * CSng(zmfact)
-            If nsx < MINSCALE OrElse nsy < MINSCALE OrElse nsx > MAXSCALE OrElse nsx > MAXSCALE Then Exit Sub
-            _scale.X = nsx
-            _scale.Y = nsy
-            Dim newcx As Double = cscx(p.X)
-            Dim newcy As Double = cscy(p.Y)
-            Dim origcx As Double = cfcx(origfx)
-            Dim origcy As Double = cfcy(origfy)
-
-            _loc.X -= origcx - newcx
-            _loc.Y += origcy - newcy
+            _zmfact = 1 - (e.Delta * SCALESPEED)
 
             If pnlWindow.Visible Then
                 btnWCancel.PerformClick()
@@ -1309,6 +1416,7 @@ Namespace Calculator.Graphing
             End Try
             SetT(prevt, True)
         End Sub
+
         Private Sub TraceDifferential()
             Try
                 Dim prevx As Object = GetX(True)
@@ -2129,7 +2237,6 @@ Namespace Calculator.Graphing
 
         Private Sub DrawWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles DrawWorker.ProgressChanged
             Dim tmp As Bitmap = _buffer
-            canvas.Invalidate()
             _buffer = _tmpbuffer
             _tmpbuffer = tmp
             canvas.Invalidate()

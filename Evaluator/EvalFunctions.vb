@@ -74,13 +74,26 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Read the definition of a User Functions
         ''' </summary>
-        ''' <param name="nm"></param>
+        ''' <param name="name"></param>
         ''' <returns></returns>
-        Public Function RecallUF(nm As String) As String
+        Public Function RecallUF(name As String) As String
             Try
-                Return _eval.GetUserFunction(nm)(0)
+                Return _eval.GetUserFunction(name).ToString()
             Catch
-                Return "Function Not Defined"
+                Return "Function ''" & name & "'' is undefined"
+            End Try
+        End Function
+
+        ''' <summary>
+        ''' Copy onto the clipboard the definition of a User Functions
+        ''' </summary>
+        ''' <param name="name"></param>
+        ''' <returns></returns>
+        Public Function CopyUF(name As String) As Object
+            Try
+                Return Clipboard(_eval.GetUserFunction(name).ToString())
+            Catch
+                Return "Function ''" & name & "''is undefined"
             End Try
         End Function
 
@@ -714,8 +727,10 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Round the number to the specified number of significant figures
         ''' </summary>
-        Public Function SigFig(ByVal value As Double, Optional ByVal digits As Double = 0) As Double
-            Return Math.Round(value / 10 ^ Math.Ceiling(Math.Log10(value)), Int(digits)) * 10 ^ Math.Ceiling(Math.Log10(value))
+        Public Function SigFig(ByVal value As Double, Optional ByVal digits As Double = 1) As Double
+            Return Math.Sign(value) *
+                Math.Round(Math.Abs(value) / 10 ^ Math.Ceiling(Math.Log10(Math.Abs(value))),
+                           Int(digits)) * 10 ^ Math.Ceiling(Math.Log10(Math.Abs(value)))
         End Function
 
         Public Function Sgn(ByVal value As Double) As Double
@@ -3677,7 +3692,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="path"></param>
         ''' <returns></returns>
-        Public Function Read(ByVal path As String) As String
+        Public Function ReadFile(ByVal path As String) As String
             Try
                 Return FileIO.FileSystem.ReadAllText(path)
             Catch 'ex As Exception
@@ -3702,7 +3717,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Overwrite a file; or, if append is true, appends to the file
         ''' </summary>
-        Public Function Write(ByVal path As String, ByVal content As Object, Optional ByVal append As Boolean = False) As String
+        Public Function WriteFile(ByVal path As String, ByVal content As Object, Optional ByVal append As Boolean = False) As String
             Try
                 FileIO.FileSystem.WriteAllText(path, content.ToString(), append)
                 Return "Write Success"
@@ -3714,7 +3729,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Write to the specified line in the file
         ''' </summary>
-        Public Function WriteLine(ByVal path As String, ByVal line As Integer, ByVal content As Object) As String
+        Public Function WriteFileLine(ByVal path As String, ByVal line As Integer, ByVal content As Object) As String
             Try
                 Dim lines As String() = IO.File.ReadAllLines(path)
                 lines(CInt(line - 1)) = content.ToString()
@@ -3729,7 +3744,7 @@ Namespace Calculator.Evaluator
         ''' Append to file, equal to Write(path, content, true)
         ''' </summary>
         Public Function AppendFile(ByVal path As String, ByVal content As Object) As String
-            Return Write(path, content, True)
+            Return WriteFile(path, content, True)
         End Function
 
         ''' <summary>
@@ -4003,7 +4018,7 @@ Namespace Calculator.Evaluator
         ''' Kill all subthreads spawned from the evaluator
         ''' </summary>
         Public Function StopAll() As Boolean
-            _eval.StatementRegistar.KillAll()
+            _eval.StatementRegistar.StopAll()
             Return True
         End Function
 

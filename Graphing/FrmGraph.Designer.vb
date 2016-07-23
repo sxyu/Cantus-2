@@ -132,7 +132,7 @@
             Me.split.Panel2.Controls.Add(Me.pnlInput)
             Me.split.Panel2.Controls.Add(Me.lbFx)
             Me.split.Size = New System.Drawing.Size(984, 661)
-            Me.split.SplitterDistance = 621
+            Me.split.SplitterDistance = 622
             Me.split.SplitterWidth = 3
             Me.split.TabIndex = 0
             '
@@ -462,7 +462,7 @@
             Me.canvas.Dock = System.Windows.Forms.DockStyle.Fill
             Me.canvas.Location = New System.Drawing.Point(0, 0)
             Me.canvas.Name = "canvas"
-            Me.canvas.Size = New System.Drawing.Size(984, 621)
+            Me.canvas.Size = New System.Drawing.Size(984, 622)
             Me.canvas.TabIndex = 0
             Me.canvas.TabStop = False
             '
@@ -899,7 +899,7 @@
             '
             'TmrHighQuality
             '
-            Me.TmrHighQuality.Interval = 200
+            Me.TmrHighQuality.Interval = 2000
             '
             'FrmGraph
             '

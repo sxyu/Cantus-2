@@ -340,6 +340,25 @@ Namespace Calculator.Evaluator
             If Not [default] Is Nothing Then newEval.SetDefaultVariable([default])
             Return DirectCast(newEval.EvalRaw(expr, True), StatementResult)
         End Function
+
+        ''' <summary>
+        ''' Given a line of text, finds the level of indentation. 
+        ''' </summary>
+        ''' <returns></returns>
+        Private Function LineIndentLevel(line As String) As Integer
+            Dim res As Integer = 0
+            For i As Integer = 0 To line.Length - 1
+                If line(i) = " " Then
+                    res += 1
+                ElseIf line(i) = ControlChars.Tab Then
+                    res += _eval.SpacesPerTab
+                Else
+                    Return res
+                End If
+            Next
+            Return 0
+        End Function
+
 #End Region
 
         ' statement definitions here
@@ -512,11 +531,12 @@ Namespace Calculator.Evaluator
                 If arg.ToLowerInvariant.Contains(" step ") AndAlso
                     arg.ToLowerInvariant().IndexOf(" to ") < arg.ToLowerInvariant().IndexOf(" step ") Then
 
-                    delta = New Number(arg.Substring(arg.ToLowerInvariant().IndexOf(" step ") + 6)).BigDecValue()
-                    lim = New Number(arg.Remove(arg.ToLowerInvariant().IndexOf(" step ")).
-                                        Substring(arg.ToLowerInvariant().IndexOf(" to ") + 4)).BigDecValue()
+                    delta = New Number(CType(_eval.EvalExprRaw(arg.Substring(arg.ToLowerInvariant().IndexOf(" step ") + 6), True), BigDecimal)).BigDecValue()
+                    lim = New Number(CType(_eval.EvalExprRaw(arg.Remove(arg.ToLowerInvariant().IndexOf(" step ")).
+                                        Substring(arg.ToLowerInvariant().IndexOf(" to ") + 4), True), BigDecimal)).BigDecValue()
                 Else
-                    lim = New Number(arg.Substring(arg.ToLowerInvariant().IndexOf(" to ") + 4)).BigDecValue()
+                    lim = New Number(CType(_eval.EvalExprRaw(arg.Substring(arg.ToLowerInvariant().IndexOf(" to ") + 4), True), BigDecimal)).
+                        BigDecValue()
                 End If
 
                 If delta = 0 Then Throw New SyntaxException("Step of 0 not allowed")
@@ -662,16 +682,40 @@ Namespace Calculator.Evaluator
 
         Private Function StatementDeclareFunction(blocks As List(Of Block)) As StatementResult
             _eval.AddUserFunction(blocks(0).Argument, blocks(0).Content)
-            Return New StatementResult("Function " & blocks(0).Argument & " : ...", ExecCode.resume)
+            If String.IsNullOrWhiteSpace(blocks(0).Content) Then
+                Return New StatementResult(blocks(0).Keyword & " " &
+                       blocks(0).Argument & " : undefined", ExecCode.resume)
+            Else
+                Return New StatementResult(blocks(0).Keyword & " " &
+                       blocks(0).Argument & " : ...", ExecCode.resume)
+            End If
         End Function
 
+        Private Function StatementDeclareVoid(blocks As List(Of Block)) As StatementResult
+            Dim baseIndent As Integer = LineIndentLevel(blocks(0).Content.
+                Trim({ControlChars.Lf, ControlChars.Cr}))
+            _eval.AddUserFunction(blocks(0).Argument, blocks(0).Content)
+            If String.IsNullOrWhiteSpace(blocks(0).Content) Then
+                Return New StatementResult(blocks(0).Keyword & " " &
+                       blocks(0).Argument & " : undefined", ExecCode.resume)
+            Else
+                Return New StatementResult(blocks(0).Keyword & " " &
+                       blocks(0).Argument & " : ...", ExecCode.resume)
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Stop all threads and disallow spawning of new ones
+        ''' </summary>
         Public Sub Dispose() Implements IDisposable.Dispose
             Me._die = True
-            Me._keywords.Clear()
-            Me._mainKeywords.Clear()
+            Threading.Thread.Sleep(50)
         End Sub
 
-        Public Sub KillAll()
+        ''' <summary>
+        ''' Stop all threads and continue
+        ''' </summary>
+        Public Sub StopAll()
             Me._die = True
             Threading.Thread.Sleep(50)
             Me._die = False

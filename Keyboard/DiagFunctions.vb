@@ -1,5 +1,6 @@
 ﻿Imports System.Text
 Imports Cantus.Calculator.Evaluator
+Imports Cantus.Calculator.Evaluator.Evaluator
 
 Public Class DiagFunctions
 
@@ -41,8 +42,8 @@ Public Class DiagFunctions
                         tag.Append(",")
                     End If
                     types.Append(", ")
-                    Else
-                        init = False
+                Else
+                    init = False
                 End If
 
                 Dim typeName As String = p.ParameterType.Name().Replace("Double", "Number").Replace("BigDecimal", "Number").Replace("String", "Text").
@@ -101,22 +102,23 @@ Public Class DiagFunctions
         Next
 
         ' add user functions
-        For Each uf As String In Globals.Evaluator.ListUserFunctions()
+        For Each ufname As String In Globals.Evaluator.ListUserFunctions()
             Try
-                If Not Globals.Evaluator.InternalFunctions.Contains(uf.ToLowerInvariant(),
+                If Not Globals.Evaluator.InternalFunctions.Contains(ufname.ToLowerInvariant(),
                                                                 filter.ToLowerInvariant()) Then Continue For
             Catch
             End Try
 
-            Dim name As New StringBuilder(uf)
-            Dim tag As New StringBuilder(uf)
+            Dim uf As UserFunction = Globals.Evaluator.GetUserFunction(ufname)
+            Dim name As New StringBuilder(ufname)
+            Dim tag As New StringBuilder(ufname)
             Dim types As New StringBuilder()
 
             Dim init As Boolean = True
             tag.Append("(")
             name.Append(" (")
 
-            For Each p As String In Globals.Evaluator.GetUserFunctionArgs(uf)
+            For Each p As String In uf.Args
                 If Not init Then
                     tag.Append(",")
                     types.Append(", ")
@@ -173,7 +175,7 @@ Public Class DiagFunctions
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Me.DialogResult = DialogResult.Cancel
-        Me.result = ""
+        Me.Result = ""
         Me.Close()
     End Sub
 

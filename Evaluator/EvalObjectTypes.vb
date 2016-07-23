@@ -156,7 +156,7 @@ Namespace Calculator.Evaluator
                 Return TypeOf obj Is Number Or TypeOf obj Is Double Or TypeOf obj Is Integer Or TypeOf obj Is BigDecimal
             End Function
             Public Shared Function StrIsType(str As String) As Boolean
-                Return str = "NaN" OrElse str = "Undefined" OrElse Double.TryParse(str.Trim(), Nothing) OrElse str.Contains("e") AndAlso
+                Return str.ToLower() = "null" OrElse str.ToLower() = "undefined" OrElse Double.TryParse(str.Trim(), Nothing) OrElse str.Contains("e") AndAlso
                     Double.TryParse(str.Remove(str.IndexOf("e")).Trim(), Nothing) AndAlso
                     Double.TryParse(str.Substring(str.IndexOf("e") + 1).Trim(), Nothing)
             End Function
@@ -177,7 +177,9 @@ Namespace Calculator.Evaluator
             End Sub
             Public Sub New(str As String)
                 str = str.ToLowerInvariant()
-                If str.Contains("e") Then
+                If str.ToLower() = "undefined" Then
+                    Me.value = BigDecimal.Undefined
+                ElseIf str.Contains("e") Then
                     Me.value = New BigDecimal(Double.Parse(str.Remove(str.IndexOf("e")))) * BigDecimal.Pow(10,
                                               Double.Parse(str.Substring(str.IndexOf("e") + 1)))
                 Else
