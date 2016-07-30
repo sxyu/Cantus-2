@@ -37,12 +37,13 @@ Run the downloaded program, and type in the expression in the main textbox to se
 *Sidenote: The evaluation is done asynchroneously, so you can keep working while it evaluates*
 
 * To change settings, click the gear button the on the right
-    *  AngleRep: Angle Representation (`Ctrl`+`A`): 
-    	*  Deg (`Ctrl`+`D`), Rad (`Ctrl`+`R`), Grad (`Ctrl`+`G`)
-    *  *  OMode: Output mode (`Ctrl`+`O`)
-        *  MathO (`Ctrl`+`M`): Output fractions, roots, and multiples of PI
-        *  LineO (`Ctrl`+`L`): Output numbers
-        *  SciO (`Ctrl`+`S`): Output scientic notation
+    *  AngleRepr: Angle Representation (`Ctrl`+`Alt`+`P`): 
+    	*  Deg (`Ctrl`+`Alt`+`D`), Rad (`Ctrl`+`Alt`+`R`), Grad (`Ctrl`+`Alt`+`G`)
+    *  Output format: (`Ctrl`+`Alt`+`O`)
+        *  MathO (`Ctrl`+`Alt`+`M`): Output fractions, roots, and multiples of PI
+        *  LineO (`Ctrl`+`Alt`+`L`): Output numbers
+        *  SciO (`Ctrl`+`Alt`+`S`): Output scientic notation
+	*  Explicit (`Ctrl`+`Alt`+`T`): Force explicit variable declarations
     * You can also use functions to change these modes (discuss that later)
     * Click the version number to see the update log
     * To change settings, click the gear button the on the right or press `Alt`+`S`
@@ -178,9 +179,7 @@ Sorting is done with the `sort(lst)` function. You can use `reverse(lst)` after 
 
 **Regular Expressions**		
 `contains()` `startswith()` `endswith()` `replace()` `find()` `findend()` `regexismatch()` `regexmatch()` `regexmatchall()`		
-What's so special about these Cantus functions?		
-(Spoiler alert: they all make use *regex (regular expressions)*.)	
-Remember, regex is also used in the *explore functions* window.
+All use regular expressions to match text.
 
 If you are not familiar with Regex, [here's a good Tutorial](http://code.tutsplus.com/tutorials/you-dont-know-anything-about-regular-expressions-a-complete-guide--net-7869)
 
@@ -197,6 +196,28 @@ A very standard basic function declaration:
 (See the section below about blocks for more details on how the `if` `else` `return` etc. work.)
 
 Now you can use `myFunction()` in the evaluator. This function should also appear at the top of the explore window mentioned above.
+
+**Lambda Functions and Function Pointers**
+Another way to define a function is using backticks like this:
+`foo=\`1\`` or `foo=\`x=>x+1\``
+This is called a lambda expression. With this you can use functions like sigma:
+`sigma(`i=>i^2`,1,5)`
+
+You can write a multiline lambda expression like this:
+```myFunction=\`x=>
+	if x>0
+		return x+1
+	\`
+```
+
+All normal functions can also be used in this way. When no arguments are supplied,
+they act as function pointers and can be assigned.
+
+For example: 
+```b=sind(x)
+   return b(30) # returns 0.5
+```
+*Tip: You can also do cool things like dydx(sin). Try drawing this in the graphing window.*
 
 #### Writing a Full Script: Statements and Blocks
 You have seen an example of a script with blocks in the variable declaration section. The function declaration above is also really a block.
@@ -241,7 +262,7 @@ As in Python, blocks are formatted using indentation. However, unlike Python, bl
 ```
 * This will create a infinite loop. Try it (trust me, your computer won't explode). No answer will be displayed.
 * Fortunately for you Cantus runs these expressions on separate threads so the main program won't crash. However, this will take a lot of CPU resources for nothing and also if you do this several time the program may end up getting very slow / freezing / failing to close.
-* Use the `stopall()` Function (you can just type in `stopall`) to stop these threads and recover resouces. You may (rarely, but occasionally) need to call this more than once if some threads aren't responding.
+* Use the `_stopall()` Function` to stop these threads and recover resouces. You may (rarely, but occasionally) need to call this more than once if some threads aren't responding.
 
 #### Running Scripts
 After writing a script, save it as a .can (Cantus Script) file. You can do this by pressing `F12` in the editor.
@@ -264,14 +285,58 @@ Normally, this file contains some auto-generated code storing the variables, fun
 
 Be careful **never** to change the end comment (that might mess up the file when the editor re-generates the settings).
 
-**The init Directory**	
-All .can files under the init directory (and all subdirectories) under the base directory will also be ran at startup. Configuration from these files will *override* that in the main script.
-
 **The plugin Directory**	
-The same is true for the plugin directory. Configuration from scripts in this directory will *be overriden* that in the main script and in the init directory scripts.
+The plugin/ directory is used for storing plugins, as the name implies.
+All .can files under the init directory (and all subdirectories) under the base directory will be loaded at startup, but
+are not imported.
+
+**Importing and loading**
+Loading a file with the `load` statement makes it available to the evaluator. Functions and variables declared in the scope will become
+visible their original namespace.
+
+Importing a file with the `import` statement makes the contents of the file directly accessible in the evaluator
+
+Both of these statements can either be supplied with a full path, a relative path from the executing directory 
+(using . as separator), or a path inside the include directory.
+
+**The include Directory**	
+Files in this directory are not loaded on startup. However, all .can files in the include directory may be
+easily imported into the evaluator with an import statement.
+
+For example,
+`import a.b` will import the file at include/a/b.can if available
+
+**The init Directory**	
+The init directory is for placing additional initialization scripts. They are run after the main initialization file and override
+items declared in the main evaluation file.
 
 **Run another program**		
 The `start(path)` and `startwait(path)` functions facilitate adding new functionality by allowing you to call other programs from within Cantus. For `start(path)`, the output from the program is saved to the variable called "result" by default. For `startwait(path)`, the output is returned.
+
+### Object-Oriented Programming
+
+Cantus also supports basic OOP: you can create classes and use inheritance.
+Example of some classes:
+class pet
+	name = ""
+	function init(name)
+		this.name = name
+	function text()
+		return "Pet name: " + name
+
+class cat : pet
+	function init(name)
+		this.name = name
+	function speak()
+		return "Meow!"
+	function text()
+		return "Cat name: " + name
+
+myCat = cat("Alex")
+alert(myCat) # alerts Cat name: Alex
+alert(myCat.speak()) # alerts Meow!
+
+
 
 ### License
 

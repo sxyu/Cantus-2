@@ -26,8 +26,6 @@ Namespace Calculator.Keyboards
                 Dim spl() As String = My.Settings.RightKbdPos.Split(","c)
                 Me.Left = CInt(spl(0))
                 Me.Top = CInt(spl(1))
-                If Me.Left >= -100 And Me.Top >= 0 And Me.Right <= Screen.PrimaryScreen.WorkingArea.Width + 100 And
-                Me.Bottom <= Screen.PrimaryScreen.WorkingArea.Height + 500 Then Exit Sub
             Else
                 Me.Left = FrmCalc.Right - Me.Width
                 Me.Top = FrmCalc.Bottom
@@ -44,7 +42,7 @@ Namespace Calculator.Keyboards
             Dim btn As Button = DirectCast(sender, Button)
             FrmCalc.tb.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength)
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
             FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, btn.Text)
             FrmCalc.tb.SelectionStart = start + btn.Text.Length
         End Sub
@@ -57,7 +55,7 @@ Namespace Calculator.Keyboards
         Private Sub WriteFunction(ByVal s As String, Optional ByVal sep As String = "(")
             FrmCalc.tb.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength).Insert(start, s)
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart).Insert(start, s)
 
             If s.Contains(sep) Then
                 FrmCalc.tb.SelectionStart = start + s.IndexOf(sep) + 1
@@ -88,14 +86,14 @@ Namespace Calculator.Keyboards
 
         Private Sub btnEnd_Click(sender As Object, e As EventArgs) Handles btnEnd.Click
             FrmCalc.tb.Focus()
-            FrmCalc.tb.SelectionLength = 0
+            FrmCalc.tb.SelectionEnd = 0
             FrmCalc.tb.SelectionStart = FrmCalc.tb.Text.Length
             FrmCalc.VerticalScroll.Value = FrmCalc.VerticalScroll.Maximum
         End Sub
         Private Sub btnRet_Click(sender As Object, e As EventArgs) Handles btnRet.Click
             FrmCalc.tb.Focus()
             FrmCalc.tb.SelectionStart = 0
-            FrmCalc.tb.SelectionLength = 0
+            FrmCalc.tb.SelectionEnd = 0
             FrmCalc.VerticalScroll.Value = 0
         End Sub
 
@@ -113,9 +111,9 @@ Namespace Calculator.Keyboards
             FrmCalc.tb.Focus()
             If FrmCalc.tb.Text.Length > 0 Then
                 Dim start As Integer = FrmCalc.tb.SelectionStart
-                If FrmCalc.tb.SelectionLength > 0 Then
+                If FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart > 0 Then
                     FrmCalc.tb.Text = FrmCalc.tb.Text.Substring(0, FrmCalc.tb.SelectionStart) &
-                        FrmCalc.tb.Text.Substring(FrmCalc.tb.SelectionStart + FrmCalc.tb.SelectionLength)
+                        FrmCalc.tb.Text.Substring(FrmCalc.tb.SelectionStart + FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
                     FrmCalc.tb.SelectionStart = start
                 ElseIf FrmCalc.tb.SelectionStart > 0 Then
                     FrmCalc.tb.Text = FrmCalc.tb.Text.Substring(0, FrmCalc.tb.SelectionStart - 1) &
@@ -144,8 +142,8 @@ Namespace Calculator.Keyboards
         End Sub
 
         Private Sub btnFn_Click(sender As Object, e As EventArgs) Handles btnAsin.Click, btnAcos.Click,
-            btnSin.Click, btnCos.Click, btnTan.Click, btnAtan.Click, btnLn.Click,
-            btnConfirm.Click, btnYesNo.Click, btnAlert.Click, btnInput.Click, btnAvg.Click, btnMedian.Click
+            btnSin.Click, btnCos.Click, btnTan.Click, btnAtan.Click, btnLn.Click, btnRand.Click,
+            btnAlert.Click, btnInput.Click, btnAvg.Click, btnMedian.Click
 
             WriteFunction(DirectCast(sender, Button).Text & "()")
         End Sub
@@ -281,12 +279,11 @@ Namespace Calculator.Keyboards
                 End If
             Next
 
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength).Insert(start, startSign)
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart).Insert(start, startSign)
             If ct >= 0 Then
                 FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start + 1, endSign)
             End If
             FrmCalc.tb.SelectionStart = start + 1
-            FrmCalc.tb.ScrollToCaret()
         End Sub
 
         Private Sub btnBrRt_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrRt.MouseUp
@@ -303,7 +300,7 @@ Namespace Calculator.Keyboards
             End If
 
             Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength)
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
 
             Dim insertStart As Boolean = True
             For i As Integer = Math.Min(start, FrmCalc.tb.Text.Length - 1) To 0 Step -1
@@ -329,8 +326,8 @@ Namespace Calculator.Keyboards
                 FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, closeBr)
             End If
 
-            FrmCalc.tb.Select(start + 2, 0)
-            FrmCalc.tb.ScrollToCaret()
+            FrmCalc.tb.SelectionStart = start + 2
+            FrmCalc.tb.SelectionEnd = start + 2
         End Sub
 
         Private Sub btnln_MouseUp(sender As Object, e As MouseEventArgs) Handles btnlog.MouseUp
@@ -360,7 +357,7 @@ Namespace Calculator.Keyboards
         End Sub
 
         Private Sub btnDyDx_Click(sender As Object, e As EventArgs) Handles btnDyDx.Click
-            WriteFunction("derivativeat(,,)")
+            WriteFunction("dydx(,)")
         End Sub
 
         Private Sub btnIf_Click(sender As Object, e As EventArgs) Handles btnIf.Click
@@ -383,8 +380,12 @@ Namespace Calculator.Keyboards
             WriteFunction(" choose ")
         End Sub
 
-        Private Sub btnRand_Click(sender As Object, e As EventArgs) Handles btnRand.Click
-            WriteFunction("rand()")
+        Private Sub btnConfirm_Click(sender As Object, e As EventArgs) Handles btnConfirm.Click
+            WriteFunction("confirm()")
+        End Sub
+
+        Private Sub btnYesNo_Click(sender As Object, e As EventArgs) Handles btnYesNo.Click
+            WriteFunction("yesno()")
         End Sub
     End Class
 End Namespace

@@ -19,14 +19,12 @@
             If My.Settings.LeftKbdPos <> "" Then
                 Dim spl() As String = My.Settings.LeftKbdPos.Split(","c)
                 Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
-                If Me.Left >= -100 And Me.Top >= 0 And Me.Right <= Screen.PrimaryScreen.WorkingArea.Width + 100 And
-                Me.Bottom <= Screen.PrimaryScreen.WorkingArea.Height + 500 Then Exit Sub
+            Else
+                Me.Left = FrmCalc.Left
+                Me.Top = FrmCalc.Bottom
+                My.Settings.LeftKbdPos = Me.Left & "," & Me.Top
+                My.Settings.Save()
             End If
-            Me.Left = FrmCalc.Left
-            Me.Top = FrmCalc.Bottom
-            Me.Width = btn3.Right + 12
-            My.Settings.LeftKbdPos = Me.Left & "," & Me.Top
-            My.Settings.Save()
         End Sub
 
         Private Sub btnT_Click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btn9.Click, btn8.Click, btn7.Click,
@@ -35,7 +33,7 @@
             Dim btn As Button = DirectCast(sender, Button)
             'pnl.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength)
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
             FrmCalc.tb.Focus()
             FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, btn.Text)
             FrmCalc.tb.SelectionStart = start + btn.Text.Length
@@ -43,7 +41,7 @@
         Private Sub WriteFunction(ByVal s As String)
             FrmCalc.tb.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength).Insert(start, s)
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart).Insert(start, s)
             If s.Contains("(") Then
                 FrmCalc.tb.SelectionStart = start + s.IndexOf("(") + 1
             Else

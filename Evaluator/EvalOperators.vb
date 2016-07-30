@@ -1156,7 +1156,7 @@ Namespace Calculator.Evaluator
             Dim lv As Object = left.GetValue()
             Dim rv As Object = right.GetValue()
             If ObjectTypes.Number.IsType(left) And ObjectTypes.Number.IsType(right) Then
-                Return New ObjectTypes.Number(_eval.InternalFunctions.Comb(CLng(lv), CLng(rv)))
+                Return New ObjectTypes.Number(_eval.InternalFunctions.Comb(CDbl(lv), CDbl(rv)))
             Else
                 Throw New SyntaxException("Invalid types for the choose (combinations) operator")
             End If

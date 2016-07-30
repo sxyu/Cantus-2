@@ -133,7 +133,7 @@
     <value>117, 17</value>
   </metadata>
   <data name="btnExplicit.ToolTip" xml:space="preserve">
-    <value>Toggle explicit mode (Ctrl+T)
+    <value>Toggle explicit mode (Ctrl+Alt+T)
 On (orange): Variables must be declared 
                        with let/global/private/public
                        before being used

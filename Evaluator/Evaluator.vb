@@ -11,7 +11,6 @@ Imports Cantus.Calculator.Evaluator.StatementRegistar
 Namespace Calculator.Evaluator
     Public Module Globals
         Friend ReadOnly Property Evaluator As New Evaluator()
-        Friend ReadOnly Property RootThreadId As Integer = Thread.CurrentThread.ManagedThreadId
     End Module
 
     Public NotInheritable Class Evaluator
@@ -500,7 +499,7 @@ Namespace Calculator.Evaluator
                 Dim scope As String = Evaluator.RemoveRedundantScope(DeclaringScope, ignoreScope)
                 result.Append(scope.Trim())
                 If Not String.IsNullOrWhiteSpace(scope) Then result.Append(SCOPE_SEP)
-                result.AppendLine(Name)
+                result.Append(Name)
                 If Not BaseClasses.Count = 0 Then
                     result.Append(":")
                     Dim first As Boolean = True
@@ -509,6 +508,7 @@ Namespace Calculator.Evaluator
                         result.Append(Evaluator.RemoveRedundantScope(Evaluator.UserClasses(b).FullName, ignoreScope))
                     Next
                 End If
+                result.AppendLine()
 
                 result.Append(Body)
                 Return result.ToString()
@@ -1123,7 +1123,7 @@ Namespace Calculator.Evaluator
         ''' <param name="scope">The name of the scope of this evaluator</param>
         Public Sub New(Optional outputFormat As eOutputFormat = eOutputFormat.Math,
                        Optional angleRepr As eAngleRepresentation = eAngleRepresentation.Radian,
-                       Optional spacesPerTab As Integer = 2,
+                       Optional spacesPerTab As Integer = 4,
                        Optional explicit As Boolean = False,
                        Optional prevAns As List(Of ObjectTypes.EvalObjectBase) = Nothing,
                        Optional vars As Dictionary(Of String, Variable) = Nothing,
@@ -1236,9 +1236,12 @@ Namespace Calculator.Evaluator
             End If
 
             Dim tmpEval As Evaluator = DeepCopy(newScope)
+
+            Dim except As Exception = Nothing
             Try
                 tmpEval.EvalRaw(File.ReadAllText(path), noSaveAns:=True)
-            Catch
+            Catch ex As Exception
+                except = ex ' first ensure all things we currently have are loaded. Throw the error in the end.
             End Try
 
             ' load new user functions
@@ -1277,6 +1280,9 @@ Namespace Calculator.Evaluator
                 newScope = newScope.Remove(newScope.LastIndexOf(SCOPE_SEP))
                 Loaded.Add(newScope)
             End While
+
+            ' if there was an error, throw it now
+            If Not except Is Nothing Then Throw except
         End Sub
 
         ''' <summary>
@@ -3148,7 +3154,7 @@ Namespace Calculator.Evaluator
 
             If ExplicitMode Then
                 serialized.AppendLine().AppendLine("# Explicit mode switch")
-                serialized.Append("Explicit(").Append(ExplicitMode.ToString()).Append(")").Append(vbNewLine)
+                serialized.Append("_explicit(").Append(ExplicitMode.ToString()).Append(")").Append(vbNewLine)
             End If
 
             serialized.AppendLine().AppendLine("# End of Cantus auto-generated initialization script. DO NOT modify this comment.")

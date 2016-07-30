@@ -33,7 +33,7 @@
             Me.lbDlSize = New System.Windows.Forms.Label()
             Me.lbSpeed = New System.Windows.Forms.Label()
             Me.lbTSize = New System.Windows.Forms.Label()
-            Me.pb = New Cantus.Calculator.Assets.FlatProgressBar()
+            Me.pb = New Cantus.Calculator.UserControls.FlatProgressBar()
             CType(Me.logo, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SuspendLayout()
             '
@@ -187,7 +187,7 @@
 
         End Sub
         Friend WithEvents bw As System.ComponentModel.BackgroundWorker
-        Friend WithEvents pb As Calculator.Assets.FlatProgressBar
+        Friend WithEvents pb As Calculator.UserControls.FlatProgressBar
         Friend WithEvents btnCancel As System.Windows.Forms.Button
         Friend WithEvents lbStep As System.Windows.Forms.Label
         Friend WithEvents lbTitle As System.Windows.Forms.Label

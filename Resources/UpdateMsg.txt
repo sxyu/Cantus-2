@@ -1,8 +1,43 @@
 ﻿Welcome to Cantus (Previously Calculatorˣ) Version {ver} (Alpha)!
-By Alex Yu 2015-16
+
+Cantus is a powerful yet lightweight mathematical language and expression evaluator 
+created By Alex Yu 2015-16
+https://github.com/sxyu/Cantus-2
+
+*********************************************************************************************
+Credits
+*********************************************************************************************
+This project wouldn't have been possible without the following:
+
+Scintilla: Textbox with syntax matching, etc. by antoniolinares, johnsoonj, kapix93, 
+nyamatongwe, other contributors
+http://www.scintilla.org/
+License: http://www.scintilla.org/License.txt
+
+Scintilla.NET: .NET control, wrapper & bindings for Scintilla:  by Jacob Slusser (License: MIT)
+https://github.com/jacobslusser/ScintillaNET
+
+BigDecimal Class: .Net arbitrary precison library
+By Jan Christoph Bernack (contact: jc.bernack at googlemail.com)
+Found: http://stackoverflow.com/a/4524254
+
+EmbeddedAssembly Class: Class to simplify embedding dlls within the executable by Adriancs
+Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
 What's New
+*********************************************************************************************
+-Textbox with syntax highlighting, brace pairing, and line numbers using Scintilla.NET
+-Fixed a few buttons on the right on-screen keyboard
+-Choose operator no longer rounds operands to the nearest integer; 
+  Binomial coefficients now extended to negative numbers
+-Integration, differentiation, summation, and product functions
+  have been updated to use lambda expressions and function pointers!
+  TRY: dydx(sin) on the graphing window
+-Minor fixes
+
+*********************************************************************************************
+New from 2.1.0.85
 *********************************************************************************************
 -Wider, larger editor with more keyboard buttons
 

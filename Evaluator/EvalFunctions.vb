@@ -25,9 +25,23 @@ Namespace Calculator.Evaluator
         ' evaluator management
 
         ''' <summary>
+        ''' Exit the evaluator
+        ''' </summary>
+        Public Sub _Exit(Optional name As String = "")
+            Application.Exit()
+        End Sub
+
+        ''' <summary>
+        ''' Kill all subthreads (except this one) spawned from the evaluator
+        ''' </summary>
+        Public Sub _StopAll()
+            _eval.StopAll(Thread.CurrentThread.ManagedThreadId)
+        End Sub
+
+        ''' <summary>
         ''' Reload all constants, clears all variables and userfunctions, and clears imports
         ''' </summary>
-        Public Sub AllClear()
+        Public Sub _AllClear()
             _eval.Clear()
             _eval.ReloadDefault()
         End Sub
@@ -35,14 +49,14 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Reload default constants. if name is specified, reloads constant with that name only.
         ''' </summary>
-        Public Sub Reload(Optional name As String = "")
+        Public Sub _Reload(Optional name As String = "")
             _eval.ReloadDefault(name)
         End Sub
 
         ''' <summary>
         ''' Get the previous nth answer
         ''' </summary>
-        Public Function PrevAns(index As Double) As Object
+        Public Function _PrevAns(index As Double) As Object
             Return _eval.PrevAns(Int(_eval.PrevAns.Count - index - 1))
         End Function
 
@@ -127,7 +141,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="name"></param>
         ''' <returns></returns>
-        Public Function RecallUF(name As String) As String
+        Public Function _RecallUF(name As String) As String
             Try
                 Return _eval.UserFunctions(name).ToString(_eval.Scope)
             Catch
@@ -140,9 +154,9 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="name"></param>
         ''' <returns></returns>
-        Public Function CopyUF(name As String) As Object
+        Public Function _CopyUF(name As String) As Object
             Try
-                Return Clipboard(_eval.UserFunctions(name).ToString(_eval.Scope))
+                Return Clip(_eval.UserFunctions(name).ToString(_eval.Scope))
             Catch
                 Return "Function ''" & name & "''is undefined"
             End Try
@@ -151,7 +165,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Set or get the clipboard object
         ''' </summary>
-        Public Function Clipboard(Optional obj As Object = Nothing) As Object
+        Public Function Clip(Optional obj As Object = Nothing) As Object
             If obj Is Nothing Then
                 Dim result As Object = Double.NaN
                 Dim th As New Thread(Sub()
@@ -184,181 +198,181 @@ Namespace Calculator.Evaluator
         End Function
 
         ' convert degree, radians, gradians
-        Public Function DToR(ByVal v As Double) As Double
-            Return v * Math.PI / 180
+        Public Function DToR(ByVal x As Double) As Double
+            Return x * Math.PI / 180
         End Function
-        Public Function RToD(ByVal v As Double) As Double
-            Return v / Math.PI * 180
+        Public Function RToD(ByVal x As Double) As Double
+            Return x / Math.PI * 180
         End Function
-        Public Function RToG(ByVal v As Double) As Double
-            Return v / Math.PI * 200
+        Public Function RToG(ByVal x As Double) As Double
+            Return x / Math.PI * 200
         End Function
-        Public Function DToG(ByVal v As Double) As Double
-            Return v / 9 * 10
+        Public Function DToG(ByVal x As Double) As Double
+            Return x / 9 * 10
         End Function
-        Public Function GToD(ByVal v As Double) As Double
-            Return v / 10 * 9
+        Public Function GToD(ByVal x As Double) As Double
+            Return x / 10 * 9
         End Function
-        Public Function GToR(ByVal v As Double) As Double
-            Return v / 200 * Math.PI
+        Public Function GToR(ByVal x As Double) As Double
+            Return x / 200 * Math.PI
         End Function
 
         ' trig functions
-        Public Function Sin(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
+        Public Function Sin(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return SinD(CDbl(v))
+                        Return SinD(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return SinR(CDbl(v))
+                        Return SinR(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return SinG(CDbl(v))
+                        Return SinG(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
-            ElseIf TypeOf v Is Numerics.Complex
-                Return Numerics.Complex.Sin(CType(v, Numerics.Complex))
+            ElseIf TypeOf x Is Numerics.Complex
+                Return Numerics.Complex.Sin(CType(x, Numerics.Complex))
             Else
                 Return Double.NaN
             End If
         End Function
-        Public Function Cos(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
+        Public Function Cos(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return CosD(CDbl(v))
+                        Return CosD(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return CosR(CDbl(v))
+                        Return CosR(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return CosG(CDbl(v))
+                        Return CosG(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
-            ElseIf TypeOf v Is Numerics.Complex
-                Return Numerics.Complex.Cos(CType(v, Numerics.Complex))
+            ElseIf TypeOf x Is Numerics.Complex
+                Return Numerics.Complex.Cos(CType(x, Numerics.Complex))
             Else
                 Return Double.NaN
             End If
         End Function
-        Public Function Tan(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
+        Public Function Tan(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return TanD(CDbl(v))
+                        Return TanD(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return TanR(CDbl(v))
+                        Return TanR(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return TanG(CDbl(v))
+                        Return TanG(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
-            ElseIf TypeOf v Is Numerics.Complex
-                Return Numerics.Complex.Tan(CType(v, Numerics.Complex))
+            ElseIf TypeOf x Is Numerics.Complex
+                Return Numerics.Complex.Tan(CType(x, Numerics.Complex))
             Else
                 Return Double.NaN
             End If
         End Function
-        Public Function Cot(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
-                Return 1 / CDbl(Tan(CDbl(v)))
-            ElseIf TypeOf v Is Numerics.Complex
-                Return 1 / CDbl(Tan(CType(v, Numerics.Complex)))
+        Public Function Cot(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
+                Return 1 / CDbl(Tan(CDbl(x)))
+            ElseIf TypeOf x Is Numerics.Complex
+                Return 1 / CDbl(Tan(CType(x, Numerics.Complex)))
             Else
                 Return Double.NaN
             End If
         End Function
-        Public Function Sec(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
-                Return 1 / CDbl(Cos(CDbl(v)))
-            ElseIf TypeOf v Is Numerics.Complex
-                Return 1 / CDbl(Cos(CType(v, Numerics.Complex)))
+        Public Function Sec(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
+                Return 1 / CDbl(Cos(CDbl(x)))
+            ElseIf TypeOf x Is Numerics.Complex
+                Return 1 / CDbl(Cos(CType(x, Numerics.Complex)))
             Else
                 Return Double.NaN
             End If
         End Function
-        Public Function Csc(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
-                Return 1 / CDbl(Sin(CDbl(v)))
-            ElseIf TypeOf v Is Numerics.Complex
-                Return 1 / CDbl(Sin(CType(v, Numerics.Complex)))
+        Public Function Csc(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
+                Return 1 / CDbl(Sin(CDbl(x)))
+            ElseIf TypeOf x Is Numerics.Complex
+                Return 1 / CDbl(Sin(CType(x, Numerics.Complex)))
             Else
                 Return Double.NaN
             End If
         End Function
 
         ' specific trig functions
-        Public Function SinD(ByVal v As Double) As Double
-            Dim deg As Double = DToR(v)
+        Public Function SinD(ByVal x As Double) As Double
+            Dim deg As Double = DToR(x)
             deg = Math.Sin(deg)
             Return Math.Round(deg, 11)
         End Function
-        Public Function CosD(ByVal v As Double) As Double
-            Dim deg As Double = DToR(v)
+        Public Function CosD(ByVal x As Double) As Double
+            Dim deg As Double = DToR(x)
             deg = Math.Cos(deg)
             Return Math.Round(deg, 11)
         End Function
-        Public Function TanD(ByVal v As Double) As Double
-            Dim deg As Double = DToR(v)
+        Public Function TanD(ByVal x As Double) As Double
+            Dim deg As Double = DToR(x)
             deg = Math.Tan(deg)
             Return Math.Round(deg, 11)
         End Function
-        Public Function CotD(ByVal v As Double) As Double
-            Return 1 / TanD(v)
+        Public Function CotD(ByVal x As Double) As Double
+            Return 1 / TanD(x)
         End Function
-        Public Function SecD(ByVal v As Double) As Double
-            Return 1 / CosD(v)
+        Public Function SecD(ByVal x As Double) As Double
+            Return 1 / CosD(x)
         End Function
-        Public Function CscD(ByVal v As Double) As Double
-            Return 1 / SinD(v)
+        Public Function CscD(ByVal x As Double) As Double
+            Return 1 / SinD(x)
         End Function
-        Public Function SinR(ByVal v As Double) As Double
-            Return Math.Round(Math.Sin(v), 9)
+        Public Function SinR(ByVal x As Double) As Double
+            Return Math.Round(Math.Sin(x), 9)
         End Function
-        Public Function CosR(ByVal v As Double) As Double
-            Return Math.Round(Math.Cos(v), 9)
+        Public Function CosR(ByVal x As Double) As Double
+            Return Math.Round(Math.Cos(x), 9)
         End Function
-        Public Function TanR(ByVal v As Double) As Double
-            Return Math.Round(Math.Tan(v), 9)
+        Public Function TanR(ByVal x As Double) As Double
+            Return Math.Round(Math.Tan(x), 9)
         End Function
-        Public Function CotR(ByVal v As Double) As Double
-            Return 1 / TanR(v)
+        Public Function CotR(ByVal x As Double) As Double
+            Return 1 / TanR(x)
         End Function
-        Public Function SecR(ByVal v As Double) As Double
-            Return 1 / CosR(v)
+        Public Function SecR(ByVal x As Double) As Double
+            Return 1 / CosR(x)
         End Function
-        Public Function CscR(ByVal v As Double) As Double
-            Return 1 / SinR(v)
+        Public Function CscR(ByVal x As Double) As Double
+            Return 1 / SinR(x)
         End Function
-        Public Function SinG(ByVal v As Double) As Double
-            Return Math.Round(Math.Sin(GToR(v)), 11)
+        Public Function SinG(ByVal x As Double) As Double
+            Return Math.Round(Math.Sin(GToR(x)), 11)
         End Function
-        Public Function CosG(ByVal v As Double) As Double
-            Return Math.Round(Math.Cos(GToR(v)), 11)
+        Public Function CosG(ByVal x As Double) As Double
+            Return Math.Round(Math.Cos(GToR(x)), 11)
         End Function
-        Public Function TanG(ByVal v As Double) As Double
-            Return Math.Round(Math.Tan(GToR(v)), 11)
+        Public Function TanG(ByVal x As Double) As Double
+            Return Math.Round(Math.Tan(GToR(x)), 11)
         End Function
-        Public Function CotG(ByVal v As Double) As Double
-            Return 1 / TanG(v)
+        Public Function CotG(ByVal x As Double) As Double
+            Return 1 / TanG(x)
         End Function
-        Public Function SecG(ByVal v As Double) As Double
-            Return 1 / CosG(v)
+        Public Function SecG(ByVal x As Double) As Double
+            Return 1 / CosG(x)
         End Function
-        Public Function CscG(ByVal v As Double) As Double
-            Return 1 / SinG(v)
+        Public Function CscG(ByVal x As Double) As Double
+            Return 1 / SinG(x)
         End Function
 
-        Public Function Asin(ByVal v As Object) As Object
-            If TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Asin(CType(v, Numerics.Complex))
-            ElseIf TypeOf v Is Double
+        Public Function Asin(ByVal x As Object) As Object
+            If TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Asin(CType(x, Numerics.Complex))
+            ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return Asind(CDbl(v))
+                        Return Asind(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return Asinr(CDbl(v))
+                        Return Asinr(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return Asing(CDbl(v))
+                        Return Asing(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
@@ -367,17 +381,17 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
-        Public Function Acos(ByVal v As Object) As Object
-            If TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Acos(CType(v, Numerics.Complex))
-            ElseIf TypeOf v Is Double
+        Public Function Acos(ByVal x As Object) As Object
+            If TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Acos(CType(x, Numerics.Complex))
+            ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return Acosd(CDbl(v))
+                        Return Acosd(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return Acosr(CDbl(v))
+                        Return Acosr(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return Acosg(CDbl(v))
+                        Return Acosg(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
@@ -385,38 +399,38 @@ Namespace Calculator.Evaluator
                 Return Double.NaN
             End If
         End Function
-        Public Function Asind(ByVal v As Double) As Double
-            Dim deg As Double = Math.Asin(v) / Math.PI * 180
+        Public Function Asind(ByVal x As Double) As Double
+            Dim deg As Double = Math.Asin(x) / Math.PI * 180
             Return Math.Round(deg, 11)
         End Function
-        Public Function Acosd(ByVal v As Double) As Double
-            Dim deg As Double = Math.Acos(v) / Math.PI * 180
+        Public Function Acosd(ByVal x As Double) As Double
+            Dim deg As Double = Math.Acos(x) / Math.PI * 180
             Return Math.Round(deg, 11)
         End Function
-        Public Function Asinr(ByVal v As Double) As Double
-            Return Math.Round(Math.Asin(v), 11)
+        Public Function Asinr(ByVal x As Double) As Double
+            Return Math.Round(Math.Asin(x), 11)
         End Function
-        Public Function Acosr(ByVal v As Double) As Double
-            Return Math.Round(Math.Acos(v), 11)
+        Public Function Acosr(ByVal x As Double) As Double
+            Return Math.Round(Math.Acos(x), 11)
         End Function
-        Public Function Asing(ByVal v As Double) As Double
-            Return Math.Round(RToG(Math.Asin(v)), 11)
+        Public Function Asing(ByVal x As Double) As Double
+            Return Math.Round(RToG(Math.Asin(x)), 11)
         End Function
-        Public Function Acosg(ByVal v As Double) As Double
-            Return Math.Round(RToG(Math.Acos(v)), 11)
+        Public Function Acosg(ByVal x As Double) As Double
+            Return Math.Round(RToG(Math.Acos(x)), 11)
         End Function
 
-        Public Function Atan(ByVal v As Object) As Object
-            If TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Atan(CType(v, Numerics.Complex))
-            ElseIf TypeOf v Is Double
+        Public Function Atan(ByVal x As Object) As Object
+            If TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Atan(CType(x, Numerics.Complex))
+            ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return Atand(CDbl(v))
+                        Return Atand(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return Atanr(CDbl(v))
+                        Return Atanr(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return Atang(CDbl(v))
+                        Return Atang(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
@@ -424,46 +438,27 @@ Namespace Calculator.Evaluator
                 Return Double.NaN
             End If
         End Function
-        Public Function Atand(ByVal v As Double) As Double
-            Return Math.Atan(v) / Math.PI * 180
+        Public Function Atand(ByVal x As Double) As Double
+            Return Math.Atan(x) / Math.PI * 180
         End Function
-        Public Function Atanr(ByVal v As Double) As Double
-            Return Math.Atan(v)
+        Public Function Atanr(ByVal x As Double) As Double
+            Return Math.Atan(x)
         End Function
-        Public Function Atang(ByVal v As Double) As Double
-            Return RToG(Math.Atan(v))
-        End Function
-
-        Public Function Sinh(ByVal v As Object) As Object
-            If TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Sinh(CType(v, Numerics.Complex))
-            ElseIf TypeOf v Is Double
-                Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
-                        Return SinhD(CDbl(v))
-                    Case Evaluator.eAngleRepresentation.Radian
-                        Return SinhR(CDbl(v))
-                    Case Evaluator.eAngleRepresentation.Gradian
-                        Return SinhG(CDbl(v))
-                    Case Else
-                        Return Double.NaN
-                End Select
-            Else
-                Return Double.NaN
-            End If
+        Public Function Atang(ByVal x As Double) As Double
+            Return RToG(Math.Atan(x))
         End Function
 
-        Public Function Tanh(ByVal v As Object) As Object
-            If TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Tanh(CType(v, Numerics.Complex))
-            ElseIf TypeOf v Is Double
+        Public Function Sinh(ByVal x As Object) As Object
+            If TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Sinh(CType(x, Numerics.Complex))
+            ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return TanhD(CDbl(v))
+                        Return SinhD(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return TanhR(CDbl(v))
+                        Return SinhR(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return TanhG(CDbl(v))
+                        Return SinhG(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
@@ -472,17 +467,17 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
-        Public Function Cosh(ByVal v As Object) As Object
-            If TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Cosh(CType(v, Numerics.Complex))
-            ElseIf TypeOf v Is Double
+        Public Function Tanh(ByVal x As Object) As Object
+            If TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Tanh(CType(x, Numerics.Complex))
+            ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
                     Case Evaluator.eAngleRepresentation.Degree
-                        Return CoshD(CDbl(v))
+                        Return TanhD(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Radian
-                        Return CoshR(CDbl(v))
+                        Return TanhR(CDbl(x))
                     Case Evaluator.eAngleRepresentation.Gradian
-                        Return CoshG(CDbl(v))
+                        Return TanhG(CDbl(x))
                     Case Else
                         Return Double.NaN
                 End Select
@@ -490,93 +485,127 @@ Namespace Calculator.Evaluator
                 Return Double.NaN
             End If
         End Function
-        Public Function SinhD(ByVal v As Double) As Double
-            Return Math.Sinh(DToR(v))
+
+        Public Function Cosh(ByVal x As Object) As Object
+            If TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Cosh(CType(x, Numerics.Complex))
+            ElseIf TypeOf x Is Double
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
+                        Return CoshD(CDbl(x))
+                    Case Evaluator.eAngleRepresentation.Radian
+                        Return CoshR(CDbl(x))
+                    Case Evaluator.eAngleRepresentation.Gradian
+                        Return CoshG(CDbl(x))
+                    Case Else
+                        Return Double.NaN
+                End Select
+            Else
+                Return Double.NaN
+            End If
         End Function
-        Public Function TanhD(ByVal v As Double) As Double
-            Return Math.Tanh(DToR(v))
+        Public Function SinhD(ByVal x As Double) As Double
+            Return Math.Sinh(DToR(x))
         End Function
-        Public Function CoshD(ByVal v As Double) As Double
-            Return Math.Cosh(DToR(v))
+        Public Function TanhD(ByVal x As Double) As Double
+            Return Math.Tanh(DToR(x))
         End Function
-        Public Function SinhR(ByVal v As Double) As Double
-            Return Math.Sinh(v)
+        Public Function CoshD(ByVal x As Double) As Double
+            Return Math.Cosh(DToR(x))
         End Function
-        Public Function TanhR(ByVal v As Double) As Double
-            Return Math.Tanh(v)
+        Public Function SinhR(ByVal x As Double) As Double
+            Return Math.Sinh(x)
         End Function
-        Public Function CoshR(ByVal v As Double) As Double
-            Return Math.Cosh(v)
+        Public Function TanhR(ByVal x As Double) As Double
+            Return Math.Tanh(x)
         End Function
-        Public Function SinhG(ByVal v As Double) As Double
-            Return Math.Sinh(GToR(v))
+        Public Function CoshR(ByVal x As Double) As Double
+            Return Math.Cosh(x)
         End Function
-        Public Function TanhG(ByVal v As Double) As Double
-            Return Math.Tanh(GToR(v))
+        Public Function SinhG(ByVal x As Double) As Double
+            Return Math.Sinh(GToR(x))
         End Function
-        Public Function CoshG(ByVal v As Double) As Double
-            Return Math.Cosh(GToR(v))
+        Public Function TanhG(ByVal x As Double) As Double
+            Return Math.Tanh(GToR(x))
+        End Function
+        Public Function CoshG(ByVal x As Double) As Double
+            Return Math.Cosh(GToR(x))
         End Function
 
-        Public Function Exp(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
-                Return Math.Exp(CDbl(v))
-            ElseIf TypeOf v Is Numerics.Complex
-                Return Numerics.Complex.Exp(CType(v, Numerics.Complex))
+        ''' <summary>
+        ''' Raise e to the given power
+        ''' </summary>
+        Public Function Exp(ByVal power As Object) As Object
+            If TypeOf power Is Double Then
+                Return Math.Exp(CDbl(power))
+            ElseIf TypeOf power Is Numerics.Complex
+                Return Numerics.Complex.Exp(CType(power, Numerics.Complex))
             Else
-                Throw New EvaluatorException("Invalid exp")
+                Throw New EvaluatorException("Invalid types ofr exp")
             End If
         End Function
 
-        Public Function Pow(ByVal value1 As Object, ByVal value2 As Object) As Object
-            If TypeOf value1 Is Double AndAlso TypeOf value2 Is Double Then
-                Return BigDecimal.Pow(CDbl(value1), CDbl(value2))
+        ''' <summary>
+        ''' Get the first number raised to the second
+        ''' </summary>
+        Public Function Pow(ByVal base As Object, ByVal power As Object) As Object
+            If TypeOf base Is Double AndAlso TypeOf power Is Double Then
+                Return BigDecimal.Pow(CDbl(base), CDbl(power))
 
-            ElseIf TypeOf value1 Is Numerics.Complex
-                If TypeOf value2 Is BigDecimal OrElse TypeOf value2 Is Double Then value2 = New Numerics.Complex(CDbl(value2), 0)
-                Return Numerics.Complex.Pow(CType(value1, Numerics.Complex), CType(value2, Numerics.Complex))
+            ElseIf TypeOf base Is Numerics.Complex
+                If TypeOf power Is BigDecimal OrElse TypeOf power Is Double Then power = New Numerics.Complex(CDbl(power), 0)
+                Return Numerics.Complex.Pow(CType(base, Numerics.Complex), CType(power, Numerics.Complex))
 
-            ElseIf TypeOf value1 Is IEnumerable(Of Reference) AndAlso TypeOf value2 Is Double OrElse TypeOf value2 Is BigDecimal
-                Return New Matrix(DirectCast(value1, IEnumerable(Of Reference))).Expo(Int(CDbl(value2))).GetValue()
+            ElseIf TypeOf base Is IEnumerable(Of Reference) AndAlso TypeOf power Is Double OrElse TypeOf power Is BigDecimal
+                Return New Matrix(DirectCast(base, IEnumerable(Of Reference))).Expo(Int(CDbl(power))).GetValue()
 
             Else
                 Throw New EvaluatorException("Invalid pow")
             End If
         End Function
 
-        Public Function Sqrt(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
-                If CDbl(v) >= 0 Then
-                    Return Math.Sqrt(CDbl(v))
+        ''' <summary>
+        ''' Compute the square root of a number
+        ''' </summary>
+        Public Function Sqrt(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
+                If CDbl(x) >= 0 Then
+                    Return Math.Sqrt(CDbl(x))
                 Else
-                    Return New Numerics.Complex(0, Numerics.Complex.Sqrt(CDbl(v)).Imaginary)
+                    Return New Numerics.Complex(0, Numerics.Complex.Sqrt(CDbl(x)).Imaginary)
                 End If
-            ElseIf TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Sqrt(CType(v, Numerics.Complex))
+            ElseIf TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Sqrt(CType(x, Numerics.Complex))
             Else
                 Return Double.NaN
             End If
         End Function
 
-        Public Function Cbrt(ByVal v As Object) As Object
-            If TypeOf v Is Double Then
-                Return If(CDbl(v) < 0, -1, 1) * Math.Pow(Math.Abs(CDbl(v)), 1 / 3)
-            ElseIf TypeOf v Is Numerics.Complex Then
-                Return Numerics.Complex.Pow(CType(v, Numerics.Complex), 1 / 3)
+        ''' <summary>
+        ''' Compute the cube root of a number
+        ''' </summary>
+        Public Function Cbrt(ByVal x As Object) As Object
+            If TypeOf x Is Double Then
+                Return If(CDbl(x) < 0, -1, 1) * Math.Pow(Math.Abs(CDbl(x)), 1 / 3)
+            ElseIf TypeOf x Is Numerics.Complex Then
+                Return Numerics.Complex.Pow(CType(x, Numerics.Complex), 1 / 3)
             Else
                 Return Double.NaN
             End If
         End Function
 
-        Public Function Root(ByVal value1 As Object, ByVal value2 As Object) As Object
-            If TypeOf value1 Is Double AndAlso TypeOf value2 Is Double Then
-                If CmpDbl(CDbl(value2) Mod 2, 0) = 1 Then ' handle negative odd roots which are otherwise undefined
-                    Return If(CDbl(value1) < 0, -1, 1) * Math.Pow(Math.Abs(CDbl(value1)), 1 / CDbl(value2))
+        ''' <summary>
+        ''' Get the nth root of the value
+        ''' </summary>
+        Public Function Root(ByVal value As Object, ByVal n As Object) As Object
+            If TypeOf value Is Double AndAlso TypeOf n Is Double Then
+                If CmpDbl(CDbl(n) Mod 2, 0) = 1 Then ' handle negative odd roots which are otherwise undefined
+                    Return If(CDbl(value) < 0, -1, 1) * Math.Pow(Math.Abs(CDbl(value)), 1 / CDbl(n))
                 Else
-                    Return Math.Pow(CDbl(value1), 1 / CDbl(value2))
+                    Return Math.Pow(CDbl(value), 1 / CDbl(n))
                 End If
-            ElseIf TypeOf value1 Is Numerics.Complex And TypeOf value2 Is Double Then
-                Return Numerics.Complex.Pow(CType(value1, Numerics.Complex), 1 / CDbl(value2))
+            ElseIf TypeOf value Is Numerics.Complex And TypeOf n Is Double Then
+                Return Numerics.Complex.Pow(CType(value, Numerics.Complex), 1 / CDbl(n))
             Else
                 Return Double.NaN
             End If
@@ -684,21 +713,22 @@ Namespace Calculator.Evaluator
 
         ' combinatorics
         ''' <summary>
-        ''' Compute combinations
+        ''' Compute combinations / binomial coefficients
         ''' </summary>
         Public Function Comb(ByVal n As Double, ByVal r As Double) As Double
-            Dim sum As Double = 0
-            n = Math.Truncate(n)
             If CmpDbl(n, 0) = 0 AndAlso r < 1 AndAlso r >= 0 Then Return 1 ' (0 0) = 1
-            For i As Long = 0 To CLng(Math.Truncate(r - 1))
-                sum += Math.Log10(n - i)
-                sum -= Math.Log10(i + 1)
+
+            Dim sum As Double = 1
+            For i As Double = 0 To r - 1
+                sum *= n - i
+                sum /= i + 1
             Next
-            Return Math.Round(Math.Pow(10, sum))
+
+            Return sum
         End Function
 
         ''' <summary>
-        ''' Compute combinations
+        ''' Compute combinations / binomial coefficients
         ''' </summary>
         Public Function Choose(ByVal n As Double, ByVal k As Double) As Double
             Return Comb(n, k)
@@ -994,16 +1024,16 @@ Namespace Calculator.Evaluator
 
             count(0) = 0
             Dim highCount As Double = 0
-            For Each v As Double In lst
-                v = Math.Round(v, 10)
-                If Not count.ContainsKey(v) Then count(v) = 0
-                If Not countfreq.ContainsKey(count(v)) Then countfreq(count(v)) = 0
-                countfreq(count(v)) -= 1
-                count(v) += 1
-                If Not countfreq.ContainsKey(count(v)) Then countfreq(count(v)) = 0
-                countfreq(count(v)) += 1
-                If count(v) > count(highCount) Then
-                    highCount = v
+            For Each x As Double In lst
+                x = Math.Round(x, 10)
+                If Not count.ContainsKey(x) Then count(x) = 0
+                If Not countfreq.ContainsKey(count(x)) Then countfreq(count(x)) = 0
+                countfreq(count(x)) -= 1
+                count(x) += 1
+                If Not countfreq.ContainsKey(count(x)) Then countfreq(count(x)) = 0
+                countfreq(count(x)) += 1
+                If count(x) > count(highCount) Then
+                    highCount = x
                 End If
             Next
 
@@ -1057,17 +1087,14 @@ Namespace Calculator.Evaluator
 
 
         ' calculus
-        Public Function Dydx(ByVal func As Lambda) As Double
-            Return Derivative(func)
+        Public Function Dydx(ByVal func As Lambda, Optional ByVal x As Double = Double.NaN) As Double
+            If func.Args.Count <> 1 Then Throw New SyntaxException("Differentiated function must have one parameter")
+            If Double.IsNaN(x) Then x = CDbl(_eval.GetVariableRef(func.Args(0)).Resolve())
+            Return Derivative(func, x)
         End Function
-        Public Function DydxAt(ByVal func As Lambda, ByVal x As Double) As Double
-            Return DerivativeAt(func, x)
-        End Function
-        Public Function DNydxN(ByVal func As Lambda, ByVal n As Double, Optional ByVal delta As String = "x"c) As Double
-            Dim v As Double = CDbl(_eval.GetVariable(delta))
-            Return DNydxNAt(func, n, v)
-        End Function
-        Public Function DNydxNAt(ByVal func As Lambda, ByVal n As Double, ByVal x As Double) As Double
+        Public Function DNydxN(ByVal func As Lambda, ByVal n As Double, Optional ByVal x As Double = Double.NaN) As Double
+            If func.Args.Count <> 1 Then Throw New SyntaxException("Differentiated function must have one parameter")
+            If Double.IsNaN(x) Then x = CDbl(_eval.GetVariableRef(func.Args(0)).Resolve())
             If n > 0 Then
                 If CmpDbl(n, 1) > 0 Then
                     For i As Integer = 1 To Int(Math.Floor(n)) - 1
@@ -1081,134 +1108,109 @@ Namespace Calculator.Evaluator
                                           ControlChars.Quote & ")`")
                     Next
                 End If
-                Return DerivativeAt(func, x)
+                Return Derivative(func, x)
             Else
                 Return Double.NaN
             End If
         End Function
 
         ''' <summary>
-        ''' Take the derivative of a function at the current value of the variable
-        ''' </summary>
-        ''' <param name="func">The function, as a texting</param>
-        ''' <param name="delta">The variable to take the derivative of</param>
-        ''' <returns></returns>
-        Public Function Derivative(ByVal func As Lambda, Optional ByVal delta As String = "x"c) As Double
-            Dim v As Double = CDbl(_eval.GetVariable(delta))
-            Return DerivativeAt(func, v)
-        End Function
-
-        ''' <summary>
         ''' Take the derivative of a function at x
         ''' </summary>
-        Public Function DerivativeAt(ByVal func As Lambda, ByVal x As Double, Optional ByVal delta As String = "x"c) As Double
-            Dim oldx As Object = _eval.GetVariable("x"c)
-            _eval.SetVariable(delta, New ObjectTypes.Number(x - 0.0001))
-            Dim l As Double = CDbl(func.Execute(_eval, {}))
-            _eval.SetVariable(delta, New ObjectTypes.Number(x + 0.0001))
-            Dim r As Double = CDbl(func.Execute(_eval, {}))
-            _eval.SetVariable(delta, ObjectTypes.DetectType(oldx))
-            Return Math.Round((r - l) / 0.0002, 5)
+        Public Function Derivative(ByVal func As Lambda, Optional ByVal x As Double = Double.NaN) As Double
+            If func.Args.Count <> 1 Then Throw New SyntaxException("Differentiated function must have one parameter")
+            If Double.IsNaN(x) Then x = CDbl(_eval.GetVariableRef(func.Args(0)).Resolve())
+            Dim l As BigDecimal = CType(func.Execute(_eval, {x - 0.0001}), BigDecimal)
+            Dim r As BigDecimal = CType(func.Execute(_eval, {x + 0.0001}), BigDecimal)
+            Return Math.Round(CDbl(r - l) / 0.0002, 5)
         End Function
 
         ' integration
         ''' <summary>
         ''' Takes the definite integral of a function between a and b
         ''' </summary>
-        Public Function Integral(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
-                                 Optional ByVal delta As String = "x"c) As Double
+        Public Function Integral(ByVal func As Lambda, ByVal a As Double, Optional b As Double = Double.NaN) As Double
+            If func.Args.Count <> 1 Then Throw New SyntaxException("Integrated function must have one parameter")
             ' use simpson's rule by default
-            Return IntegralSimpson(func, a, b, delta)
-        End Function
-
-        ' integral from a certain point to the variable specified
-        ''' <summary>
-        ''' Takes the definite integral of a function between a and the current value of thevariable
-        ''' </summary>
-        Public Function IntegralFrom(ByVal func As Lambda, ByVal a As Double, Optional ByVal delta As String = "x"c) As Double
-            ' use simpson's rule by default
-            Return IntegralSimpson(func, a, CDbl(_eval.GetVariable(delta)), delta)
+            Return IntegralSimpson(func, a, b)
         End Function
 
         ''' <summary>
         '''  Integral estimation with simpson's rule
         ''' </summary>
-        Public Function IntegralSimpson(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralSimpson(ByVal func As Lambda, ByVal a As Double, Optional ByVal b As Double = Double.NaN) As Double
+            If func.Args.Count <> 1 Then Throw New SyntaxException("Integrated function must have one parameter")
+            If Double.IsNaN(b) Then b = CDbl(_eval.GetVariableRef(func.Args(0)).Resolve())
+
             If CmpDbl(a, b) = 0 Then Return 0
-            Dim oldx As Object = _eval.GetVariable(delta)
             Dim stepx As Decimal = CDec(b - a) / 2500
             Dim res As Decimal = 0
             Dim sw As Decimal = 1
-            _eval.SetVariable(delta, New ObjectTypes.Number(a))
             For cx As Decimal = CDec(a) To CDec(b) - stepx Step stepx
-                _eval.SetVariable(delta, New ObjectTypes.Number(cx))
-                res += sw * CDec(func.Execute(_eval, {}))
+                res += sw * CDec(func.Execute(_eval, {cx}))
                 If sw = 2 OrElse sw = 1 Then
                     sw = 4
                 Else
                     sw = 2
                 End If
             Next
-            _eval.SetVariable(delta, New ObjectTypes.Number(b))
-            res += CDec(func.Execute(_eval, {}))
-            _eval.SetVariable(delta, ObjectTypes.DetectType(oldx))
+            res += CDec(func.Execute(_eval, {b}))
             Return Math.Round(res / 3 * stepx, 5)
         End Function
 
         ''' <summary>
         '''  Integral estimation with trapezoid sums
         ''' </summary>
-        Public Function IntegralTrapezoid(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralTrapezoid(ByVal func As Lambda, ByVal a As Double, Optional b As Double = Double.NaN) As Double
+            If func.Args.Count <> 1 Then Throw New SyntaxException("Integrated function must have one parameter")
+            If Double.IsNaN(b) Then b = CDbl(_eval.GetVariableRef(func.Args(0)).Resolve())
+
             If CmpDbl(a, b) = 0 Then Return 0
-            Dim oldx As Object = _eval.GetVariable(delta)
             Dim stepx As Decimal = CDec(b - a) / 25000
             Dim res As Decimal = 0
-            _eval.SetVariable(delta, New ObjectTypes.Number(a))
-            Dim py As Decimal = CDec(func.Execute(_eval, {}))
+            Dim py As Decimal = CDec(func.Execute(_eval, {a}))
             For cx As Decimal = CDec(a) + stepx To CDec(b) Step stepx
-                _eval.SetVariable(delta, New ObjectTypes.Number(cx))
-                Dim cy As Decimal = CDec(func.Execute(_eval, {}))
+                Dim cy As Decimal = CDec(func.Execute(_eval, {cx}))
                 res += (py + (cy - py) / 2) * stepx
                 py = cy
             Next
-            _eval.SetVariable(delta, ObjectTypes.DetectType(oldx))
             Return Math.Round(res, 5)
         End Function
 
         ''' <summary>
         '''  Integral estimation with midpoint sums
         ''' </summary>
-        Public Function IntegralMidpoint(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
-            Return IntegralRiemann(func, a, b, 0, delta)
+        Public Function IntegralMidpoint(ByVal func As Lambda, ByVal a As Double, Optional b As Double = Double.NaN) As Double
+            Return IntegralRiemann(func, a, b, 0)
         End Function
+
         ''' <summary>
         ''' integral estimation with left riemann sums
         ''' </summary>
-        Public Function IntegralLeft(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
-            Return IntegralRiemann(func, a, b, -1, delta, 50000)
+        Public Function IntegralLeft(ByVal func As Lambda, ByVal a As Double, Optional b As Double = Double.NaN) As Double
+            Return IntegralRiemann(func, a, b, -1, 50000)
         End Function
+
         ''' <summary>
         ''' integral estimation with right riemann sums
         ''' </summary>
-        Public Function IntegralRight(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
-            Return IntegralRiemann(func, a, b, 1, delta, 50000)
+        Public Function IntegralRight(ByVal func As Lambda, ByVal a As Double, Optional b As Double = Double.NaN) As Double
+            Return IntegralRiemann(func, a, b, 1, 50000)
         End Function
 
         ''' <summary>
         ''' helper function for integral estimations with riemann sums
         ''' </summary>
         Private Function IntegralRiemann(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
-                             ByVal offset As Integer, Optional ByVal delta As String = "x"c, Optional ByVal intervals As Integer = 10000) As Double
+                             ByVal offset As Integer, Optional ByVal intervals As Integer = 10000) As Double
+            If Double.IsNaN(b) Then b = CDbl(_eval.GetVariableRef(func.Args(0)).Resolve())
+
             If CmpDbl(a, b) = 0 Then Return 0
-            Dim oldx As Object = _eval.GetVariable(delta)
             Dim stepx As Decimal = CDec(b - a) / intervals
             Dim res As Decimal = 0
-            _eval.SetVariable(delta, New ObjectTypes.Number(a))
             For cx As Decimal = CDec(a) + stepx / 2 * (offset + 1) To CDec(b) + stepx / 2 * (offset - 1) Step stepx
-                _eval.SetVariable(delta, New ObjectTypes.Number(cx))
-                res += stepx * CDec(func.Execute(_eval, {}))
+                res += stepx * CDec(func.Execute(_eval, {cx}))
             Next
-            _eval.SetVariable(delta, ObjectTypes.DetectType(oldx))
             Return Math.Round(res, 5)
         End Function
         ' end calculus
@@ -1217,19 +1219,17 @@ Namespace Calculator.Evaluator
         ''' Summation: takes the sum of expression over the range between a and b, inclusive
         ''' </summary>
         Public Function Sigma(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
-                              Optional ByVal [step] As Double = 1, Optional ByVal variable As String = "i") As BigDecimal
+                              Optional ByVal [step] As Double = 1) As BigDecimal
             Try
+
                 ' step cannot be 0 or in the reverse direction
                 If CmpDbl([step], 0) = 0 OrElse (b - a) / [step] < 0 OrElse
                 Double.IsInfinity([step]) OrElse Double.IsNaN([step]) Then Return Double.NaN
                 If b < a Then [step] = -1
-                Dim prevvar As EvalObjectBase = _eval.GetVariableRef(variable).GetRefObject()
                 Dim sum As BigDecimal = 0
                 For i As Double = a To b Step [step]
-                    _eval.SetVariable(variable, New ObjectTypes.Number(i))
-                    sum += CType(func.Execute(_eval, {}), BigDecimal)
+                    sum += CType(func.Execute(_eval, {i}), BigDecimal)
                 Next
-                _eval.SetVariable(variable, prevvar)
                 Return sum
             Catch
                 Return Double.NaN
@@ -1241,8 +1241,8 @@ Namespace Calculator.Evaluator
         ''' Alias for sigma()
         ''' </summary>
         Public Function Sum(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
-                            Optional ByVal [step] As Double = 1, Optional ByVal variable As String = "i") As BigDecimal
-            Return Sigma(func, a, b, [step], variable)
+                            Optional ByVal [step] As Double = 1) As BigDecimal
+            Return Sigma(func, a, b, [step])
         End Function
 
         ''' <summary>
@@ -1250,19 +1250,16 @@ Namespace Calculator.Evaluator
         ''' Alias for sigma()
         ''' </summary>
         Public Function product(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
-                                Optional ByVal [step] As Double = 1, Optional ByVal variable As String = "i") As BigDecimal
+                                Optional ByVal [step] As Double = 1) As BigDecimal
             Try
                 ' step cannot be 0 or in the reverse direction
                 If CmpDbl([step], 0) = 0 OrElse (b - a) / [step] < 0 OrElse
                 Double.IsInfinity([step]) OrElse Double.IsNaN([step]) Then Return Double.NaN
                 If b < a Then [step] = -1
-                Dim prevvar As EvalObjectBase = _eval.GetVariableRef(variable)
                 Dim prod As BigDecimal = 1
                 For i As Double = a To b Step [step]
-                    _eval.SetVariable(variable, New ObjectTypes.Number(i))
-                    prod *= CType(func.Execute(_eval, {}), BigDecimal)
+                    prod *= CType(func.Execute(_eval, {i}), BigDecimal)
                 Next
-                _eval.SetVariable(variable, prevvar)
                 Return prod
             Catch
                 Return Double.NaN
@@ -2472,14 +2469,14 @@ Namespace Calculator.Evaluator
             ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
                 loopLst.AddRange(ToList(DirectCast(lst, IDictionary(Of Reference, Reference))))
             End If
-            For Each v As Object In loopLst
-                _eval.SetDefaultVariable(New Reference(v))
-                If TypeOf v Is Reference() Then
-                    operation.Execute(_eval, DirectCast(v, Reference()))
-                ElseIf TypeOf v Is Reference
-                    operation.Execute(_eval, {DirectCast(v, Reference)})
+            For Each x As Object In loopLst
+                _eval.SetDefaultVariable(New Reference(x))
+                If TypeOf x Is Reference() Then
+                    operation.Execute(_eval, DirectCast(x, Reference()))
+                ElseIf TypeOf x Is Reference
+                    operation.Execute(_eval, {DirectCast(x, Reference)})
                 Else
-                    operation.Execute(_eval, {New Reference(v)})
+                    operation.Execute(_eval, {New Reference(x)})
                 End If
             Next
             Return lst
@@ -4523,16 +4520,18 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Show a confirmation box (Ok/Cancel) on the screen (if gui available)
         ''' </summary>
-        Public Function Confirm(ByVal text As Object, Optional ByVal title As Object = "Message") As Boolean
-            Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.OkCancel, title.ToString()) =
+        Public Function Confirm(ByVal text As Object, Optional ByVal title As Object = "Confirm") As Boolean
+            Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.OkCancel Or
+                         MsgBoxStyle.SystemModal Or MsgBoxStyle.MsgBoxSetForeground, title.ToString()) =
                 MsgBoxResult.Ok
         End Function
 
         ''' <summary>
         ''' Show a confirmation box (Yes/No) on the screen (if gui available)
         ''' </summary>
-        Public Function YesNo(ByVal text As Object, Optional ByVal title As Object = "Message") As Boolean
-            Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.YesNo, title.ToString()) =
+        Public Function YesNo(ByVal text As Object, Optional ByVal title As Object = "Confirm") As Boolean
+            Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.YesNo Or
+                          MsgBoxStyle.SystemModal Or MsgBoxStyle.MsgBoxSetForeground, title.ToString()) =
                 MsgBoxResult.Yes
         End Function
 
@@ -4614,13 +4613,6 @@ Namespace Calculator.Evaluator
             Process.Start(path, args)
             Return Double.NaN
         End Function
-
-        ''' <summary>
-        ''' Kill all subthreads (except this one) spawned from the evaluator
-        ''' </summary>
-        Public Sub StopAll()
-            _eval.StopAll(Thread.CurrentThread.ManagedThreadId)
-        End Sub
 
         ''' <summary>
         ''' Execute a script at the specified path, saves the result into var and executes runAfter

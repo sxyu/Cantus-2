@@ -1,4 +1,7 @@
-﻿Namespace Calculator.Assets
+﻿Namespace Calculator.UserControls
+    ''' <summary>
+    ''' A flat progress bar
+    ''' </summary>
     Public Class FlatProgressBar : Inherits ProgressBar
         ''' <summary>
         ''' the color of the progress bar

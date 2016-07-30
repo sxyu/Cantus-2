@@ -64,7 +64,7 @@ Namespace Calculator.Evaluator
                 ''' <summary>
                 ''' stop executing and break out of this level only 
                 ''' </summary>
-                [breakLevel] = 4
+                breakLevel = 4
             End Enum
 
             ''' <summary>
@@ -199,7 +199,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' If true, limits all loops to at most 10000 repetitions
         ''' </summary>
-        Public Property LimitLoops As Boolean = True
+        Public Property LimitLoops As Boolean = False
 
         Private _eval As Evaluator
         Private _keywords As Dictionary(Of String, Statement)
@@ -218,7 +218,6 @@ Namespace Calculator.Evaluator
             _keywords = New Dictionary(Of String, Statement)
             _mainKeywords = New Dictionary(Of String, Statement)
             RegisterStatements()
-            If Threading.Thread.CurrentThread.ManagedThreadId <> Globals.RootThreadId Then LimitLoops = False
         End Sub
 
         ''' <summary>
@@ -235,7 +234,7 @@ Namespace Calculator.Evaluator
             '                 AddressOf [definition], [block level?], 
             '                 [dictionary: argument expected for each keyword?], [declarative?]))
 
-            Register(New Statement({"if"}, {"elif", "else if", "else"}, AddressOf StatementIfElifElse))
+            Register(New Statement({"if"}, {"elif", "else"}, AddressOf StatementIfElifElse))
             Register(New Statement({"while"}, AddressOf StatementWhile))
             Register(New Statement({"until"}, AddressOf StatementUntil))
             Register(New Statement({"repeat"}, AddressOf StatementRepeat))

@@ -132,7 +132,7 @@
             Me.split.Panel2.Controls.Add(Me.pnlInput)
             Me.split.Panel2.Controls.Add(Me.lbFx)
             Me.split.Size = New System.Drawing.Size(984, 661)
-            Me.split.SplitterDistance = 622
+            Me.split.SplitterDistance = 623
             Me.split.SplitterWidth = 3
             Me.split.TabIndex = 0
             '
@@ -462,7 +462,7 @@
             Me.canvas.Dock = System.Windows.Forms.DockStyle.Fill
             Me.canvas.Location = New System.Drawing.Point(0, 0)
             Me.canvas.Name = "canvas"
-            Me.canvas.Size = New System.Drawing.Size(984, 622)
+            Me.canvas.Size = New System.Drawing.Size(984, 623)
             Me.canvas.TabIndex = 0
             Me.canvas.TabStop = False
             '
@@ -916,6 +916,7 @@
             Me.Name = "FrmGraph"
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
             Me.Text = "Cantus Graphing Calculator © Alex Yu 2015-16"
+            Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
             Me.split.Panel1.ResumeLayout(False)
             Me.split.Panel2.ResumeLayout(False)
             CType(Me.split, System.ComponentModel.ISupportInitialize).EndInit()

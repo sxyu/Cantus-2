@@ -1,4 +1,5 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.Reflection
+Imports System.Runtime.InteropServices
 Imports System.Text
 Imports Cantus.Calculator.Evaluator
 
@@ -45,15 +46,23 @@ Namespace Calculator
             End Try
         End Sub
 
-        Private Sub InitConsole()
-            AttachConsole(-1)
-        End Sub
-
-
         <STAThread>
         Public Sub Main()
+            EmbeddedAssembly.Load("Cantus.ScintillaNET.dll", "ScintillaNET.dll")
+            AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
 
-            ' add initialization, plugin scripts
+            ' setup folders, etc.
+            Dim requiredFolders As String() = {"plugin", "include", "init"}
+            For Each dir As String In requiredFolders
+                If Not IO.Directory.Exists(Dir) Then
+                    Try
+                        IO.Directory.CreateDirectory(Dir)
+                    Catch
+                    End Try
+                End If
+            Next
+
+            ' load initialization, plugin scripts
             Dim initScripts As New List(Of String)
             If IO.Directory.Exists("plugin") Then initScripts.AddRange(
                 IO.Directory.GetFiles("plugin", "*.can", IO.SearchOption.AllDirectories))
@@ -104,7 +113,7 @@ Namespace Calculator
                 If IO.File.Exists(s) Then ' run files
                     ' for first file, open console and write welcome message
                     If Not runFiles Then
-                        InitConsole()
+                        AttachConsole(-1)
                         runFiles = True
                         PrintWelcomeMessage()
                     End If
@@ -124,5 +133,9 @@ Namespace Calculator
                 Application.Run(FrmCalc)
             End If
         End Sub
+
+        Private Function CurrentDomain_AssemblyResolve(sender As Object, args As ResolveEventArgs) As Assembly
+            Return EmbeddedAssembly.Get(args.Name)
+        End Function
     End Module
 End Namespace

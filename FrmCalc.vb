@@ -1,8 +1,12 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Text
+Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports Cantus.Calculator.Evaluator
 Imports Cantus.Calculator.Evaluator.CommonTypes
+Imports Cantus.Calculator.Evaluator.Exceptions
+Imports Cantus.Calculator.ScintillaForCantus
+Imports ScintillaNET
 
 Namespace Calculator
     Public Class FrmCalc
@@ -40,14 +44,10 @@ Namespace Calculator
         ''' </summary>
         Private _displayUpdateMessage As Boolean = False
 
-        ' Win32 API to change tab width in textbox
-        Const EM_SETTABSTOPS As Integer = &HCB
-        <DllImport("user32.dll")>
-        Private Shared Function SendMessageA(ByVal TBHandle As IntPtr,
-                                              ByVal EM_SETTABSTOPS As Integer,
-                                              ByVal wParam As Integer,
-                                              ByRef lParam As Integer) As Boolean
-        End Function
+        ''' <summary>
+        ''' Custom lexer for scintilla
+        ''' </summary>
+        Private _cantusLexer As New CantusLexer()
 
 #End Region
 #Region "Form Events"
@@ -68,19 +68,14 @@ Namespace Calculator
             If (My.Settings.MainPos <> "") Then
                 Dim spl() As String = My.Settings.MainPos.Split(","c)
                 Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
-                If Not (Me.Left >= -100 And Me.Top >= -300 And Me.Right <= Screen.PrimaryScreen.WorkingArea.Width + 100 And
-                Me.Bottom <= Screen.PrimaryScreen.WorkingArea.Height) Then
-                    Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
-                    Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 4 - Me.Height / 3)
-                End If
             Else
                 Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
                 Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 4 - Me.Height / 3)
             End If
 
             ' setup evaluator
-            Me._eval = Evaluator.Globals.Evaluator
-            AddHandler Evaluator.Globals.Evaluator.EvalComplete, AddressOf EvalComplete
+            Me._eval = Globals.Evaluator
+            AddHandler Globals.Evaluator.EvalComplete, AddressOf EvalComplete
 
             ' process additional command line args involving UI
             Dim args As String() = Environment.GetCommandLineArgs()
@@ -113,6 +108,53 @@ Namespace Calculator
             Else
                 tb.Text = def
             End If
+
+            ' scintilla setup
+            tb.StyleResetDefault()
+
+            With tb.Styles(Style.Default)
+                .BackColor = Color.FromArgb(34, 34, 34)
+                .Font = "Consolas"
+                .Size = 13
+            End With
+
+            tb.StyleClearAll()
+            tb.WrapMode = WrapMode.Word
+
+            tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
+            tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
+            tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
+            tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
+            tb.Styles(CantusLexer.StyleNumber).ForeColor = Color.FromArgb(255, 205, 34)
+            tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
+            tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
+
+            tb.Lexer = Lexer.Container
+
+            tb.IndentWidth = 4
+
+            With tb.Styles(Style.LineNumber)
+                .BackColor = Color.FromArgb(34, 34, 34)
+                .ForeColor = Color.Gainsboro
+                .Size = 13
+            End With
+
+            tb.IndentationGuides = IndentView.Real
+
+            tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
+            tb.Styles(Style.BraceLight).BackColor = Color.LightGray
+
+            tb.Styles(Style.BraceBad).ForeColor = Color.White
+            tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
+
+            tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
+
+            Dim margin As Margin = tb.Margins(0)
+            margin.Width = 45
+
+            tb.TabWidth = 4
+
+            tb.ScrollWidth = tb.Width - 2 * margin.Width - 5
         End Sub
 
         Dim ct As Integer = 0
@@ -177,10 +219,6 @@ Namespace Calculator
             ' defaults
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
 
-            ' change tab size
-            Dim TabStop As Integer = 8
-            SendMessageA(tb.Handle, EM_SETTABSTOPS, 1, TabStop)
-
             ' set up modes
             If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math Then
                 btnOutputFormat.Text = "MathO"
@@ -196,6 +234,7 @@ Namespace Calculator
             Else
                 btnAngleRepr.Text = "Gradian"
             End If
+
 
             ' check for update
             If My.Settings.AutoUpdate Then
@@ -249,10 +288,21 @@ Namespace Calculator
                         diag.Filter = "Cantus Script (.can)|*.can"
                         diag.RestoreDirectory = True
                         diag.Multiselect = False
-                        diag.Title = "Load Script"
+                        diag.Title = "Open Script"
                         If diag.ShowDialog = DialogResult.OK Then
                             tb.Text = IO.File.ReadAllText(diag.FileName).Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).
                                 Replace(vbLf, vbNewLine) ' fix line endings
+                        End If
+                    End Using
+
+                ElseIf e.KeyCode = Keys.F6
+                    Using diag As New OpenFileDialog()
+                        diag.Filter = "Cantus Script (.can)|*.can"
+                        diag.RestoreDirectory = True
+                        diag.Multiselect = False
+                        diag.Title = "Import Script"
+                        If diag.ShowDialog = DialogResult.OK Then
+                            _eval.Load(diag.FileName, False, True)
                         End If
                     End Using
 
@@ -266,20 +316,20 @@ Namespace Calculator
                             _eval.EvalAsync(IO.File.ReadAllText(diag.FileName))
                         End If
                     End Using
-                ElseIf e.KeyCode = Keys.V AndAlso e.Control AndAlso e.Alt AndAlso e.Shift
-                    Dim sb As New StringBuilder
-                    For Each v As Evaluator.Evaluator.Variable In _eval.Variables.Values
-                        sb.Append(v.ToString).Append(vbNewLine)
-                    Next
-                    My.Computer.Clipboard.SetText(sb.ToString)
+                    'ElseIf e.KeyCode = Keys.V AndAlso e.Control AndAlso e.Alt AndAlso e.Shift
+                    '    Dim sb As New StringBuilder
+                    '    For Each v As Evaluator.Evaluator.Variable In _eval.Variables.Values
+                    '        sb.Append(v.ToString).Append(vbNewLine)
+                    '    Next
+                    '    'My.Computer.Clipboard.SetText(sb.ToString)
                 End If
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground, "File Read/Save Operation Failed")
             End Try
         End Sub
 
-        Private Sub FrmCalc_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
-            If e.Control Then
+        Private Sub FrmCalc_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, tb.KeyUp
+            If e.Control AndAlso e.Alt Then
                 If e.KeyCode = Keys.P Then
                     btnAngleRep_Click(btnAngleRepr, New EventArgs)
                 ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
@@ -306,80 +356,79 @@ Namespace Calculator
                     btnOutputFormat.Text = _eval.OutputFormat.ToString()
                     EvaluateExpr()
                 ElseIf e.KeyCode = Keys.T Then
-                    btnExplicit.PerformClick()
+                    btnExplicit_Click(btnExplicit, New EventArgs())
                 End If
             End If
         End Sub
 
-        Private Sub tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
-            ' auto-insert brackets
-            If e.KeyChar = "(" OrElse e.KeyChar = "[" OrElse e.KeyChar = "{" Then
-                Dim endSign As Char = ")"c
-                If e.KeyChar = "["c Then
-                    endSign = "]"c
-                ElseIf e.KeyChar = "{"c
-                    endSign = "}"c
-                End If
+        'Private Sub tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
+        '    ' auto-insert brackets
+        '    If e.KeyChar = "(" OrElse e.KeyChar = "[" OrElse e.KeyChar = "{" Then
+        '        Dim endSign As Char = ")"c
+        '        If e.KeyChar = "["c Then
+        '            endSign = "]"c
+        '        ElseIf e.KeyChar = "{"c
+        '            endSign = "}"c
+        '        End If
 
-                Dim start As Integer = tb.SelectionStart
-                Dim ct As Integer = 0
+        '        Dim start As Integer = tb.SelectionStart
+        '        Dim ct As Integer = 0
 
-                For Each c As Char In tb.Text
-                    If c = e.KeyChar Then
-                        ct += 1
-                    ElseIf c = endSign
-                        ct -= 1
-                    End If
-                Next
+        '        For Each c As Char In tb.Text
+        '            If c = e.KeyChar Then
+        '                ct += 1
+        '            ElseIf c = endSign
+        '                ct -= 1
+        '            End If
+        '        Next
 
-                tb.Text = tb.Text.Remove(tb.SelectionStart, tb.SelectionLength).Insert(start, e.KeyChar)
-                If ct >= 0 Then
-                    tb.Text = tb.Text.Insert(start + 1, endSign)
-                End If
-                tb.SelectionStart = start + 1
-                tb.ScrollToCaret()
-                e.Handled = True
+        '        tb.Text = tb.Text.Remove(tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, e.KeyChar)
+        '        If ct >= 0 Then
+        '            tb.Text = tb.Text.Insert(start + 1, endSign)
+        '        End If
+        '        tb.SelectionStart = start + 1
+        '        e.Handled = True
 
-            ElseIf e.KeyChar = ")" OrElse e.KeyChar = "]" OrElse e.KeyChar = "}"
-                tb.Focus()
-                Dim openBr As Char = "("c
-                Dim closeBr As Char = e.KeyChar
+        '    ElseIf e.KeyChar = ")" OrElse e.KeyChar = "]" OrElse e.KeyChar = "}"
+        '        tb.Focus()
+        '        Dim openBr As Char = "("c
+        '        Dim closeBr As Char = e.KeyChar
 
-                If e.KeyChar = "]" Then
-                    openBr = "["c
-                ElseIf e.KeyChar = "}" Then
-                    openBr = "{"c
-                End If
+        '        If e.KeyChar = "]" Then
+        '            openBr = "["c
+        '        ElseIf e.KeyChar = "}" Then
+        '            openBr = "{"c
+        '        End If
 
-                Dim start As Integer = tb.SelectionStart
-                tb.Text = tb.Text.Remove(tb.SelectionStart, tb.SelectionLength)
+        '        Dim start As Integer = tb.SelectionStart
+        '        tb.Text = tb.Text.Remove(tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart)
 
-                Dim insertStart As Boolean = True
-                For i As Integer = Math.Min(start, tb.Text.Length - 1) To 0 Step -1
-                    If tb.Text(i) = closeBr Then
-                        Exit For
-                    ElseIf tb.Text(i) = openBr
-                        insertStart = False
-                        Exit For
-                    End If
-                Next
-                If insertStart Then
-                    For i As Integer = start To -1 Step -1
-                        If i = -1 OrElse
-                            tb.Text.Length > i AndAlso (tb.Text(i) = ControlChars.Lf OrElse tb.Text(i) = ControlChars.Cr) Then
-                            tb.Text = tb.Text.Insert(i + 1, openBr)
-                            Exit For
-                        End If
-                    Next
-                    tb.Text = tb.Text.Insert(start + 1, closeBr)
-                Else
-                    tb.Text = tb.Text.Insert(start, closeBr)
-                End If
-                tb.Select(start + 2, 0)
-                tb.ScrollToCaret()
-                e.Handled = True
-            End If
-        End Sub
+        '        Dim insertStart As Boolean = True
+        '        For i As Integer = Math.Min(start, tb.Text.Length - 1) To 0 Step -1
+        '            If tb.Text(i) = closeBr Then
+        '                Exit For
+        '            ElseIf tb.Text(i) = openBr
+        '                insertStart = False
+        '                Exit For
+        '            End If
+        '        Next
+        '        If insertStart Then
+        '            For i As Integer = start To -1 Step -1
+        '                If i = -1 OrElse
+        '                    tb.Text.Length > i AndAlso (tb.Text(i) = ControlChars.Lf OrElse tb.Text(i) = ControlChars.Cr) Then
+        '                    tb.Text = tb.Text.Insert(i + 1, openBr)
+        '                    Exit For
+        '                End If
+        '            Next
+        '            tb.Text = tb.Text.Insert(start + 1, closeBr)
+        '        Else
+        '            tb.Text = tb.Text.Insert(start, closeBr)
+        '        End If
+        '        tb.SelectionStart = start + 2
+        '        tb.SelectionEnd = start + 2
+        '        e.Handled = True
+        '    End If
+        'End Sub
 #End Region
 #Region "Shared functions"
         ''' <summary>
@@ -519,18 +568,6 @@ Namespace Calculator
                     End If
                 ElseIf e.KeyCode = Keys.F Then
                     btnFunctions.PerformClick()
-                End If
-            End If
-
-            If e.Control Then
-                If e.KeyCode = Keys.A Then
-                    tb.SelectAll()
-                    e.SuppressKeyPress = True
-                ElseIf e.KeyCode = Keys.E Then
-                    Keyboards.OskRight.btnPow10.PerformClick()
-                    e.SuppressKeyPress = True
-                ElseIf e.KeyCode = Keys.M
-                    e.SuppressKeyPress = True
                 End If
             End If
 
@@ -883,7 +920,7 @@ Namespace Calculator
                 If diag.ShowDialog() = DialogResult.OK Then
                     Dim start As Integer = tb.SelectionStart
                     tb.Text = tb.Text.Remove(
-                                tb.SelectionStart, tb.SelectionLength).Insert(start, diag.Result)
+                                tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, diag.Result)
 
                     If diag.Result.Contains("(") Then
                         tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
@@ -900,6 +937,76 @@ Namespace Calculator
 
         Private Sub btnLog_MouseLeave(sender As Object, e As EventArgs) Handles btnLog.MouseLeave
             btnLog.ForeColor = Color.DarkSalmon
+        End Sub
+
+#End Region
+#Region "Scintilla"
+        Private Shared Function IsBrace(c As Integer) As Boolean
+            Select Case ChrW(c)
+                Case "("c, ")"c, "["c, "]"c, "{"c, "}"c,
+            "<"c, ">"c
+                    Return True
+            End Select
+
+            Return False
+        End Function
+        Private lastCaretPos As Integer = 0
+
+        ' brace pairing
+        Private Sub scintilla_UpdateUI(sender As Object, e As UpdateUIEventArgs) Handles tb.UpdateUI
+            ' Has the caret changed position?
+            Dim caretPos As Integer = tb.CurrentPosition
+            If lastCaretPos <> caretPos Then
+                lastCaretPos = caretPos
+                Dim bracePos1 As Integer = -1
+                Dim bracePos2 As Integer = -1
+
+                ' Is there a brace to the left or right?
+                If caretPos > 0 AndAlso IsBrace(tb.GetCharAt(caretPos - 1)) Then
+                    bracePos1 = (caretPos - 1)
+                ElseIf IsBrace(tb.GetCharAt(caretPos)) Then
+                    bracePos1 = caretPos
+                End If
+
+                If bracePos1 >= 0 Then
+                    ' Find the matching brace
+                    bracePos2 = tb.BraceMatch(bracePos1)
+                    If bracePos2 = Scintilla.InvalidPosition Then
+                        tb.BraceBadLight(bracePos1)
+                    Else
+                        tb.BraceHighlight(bracePos1, bracePos2)
+                    End If
+                Else
+                    ' Turn off brace matching
+                    tb.BraceHighlight(Scintilla.InvalidPosition, Scintilla.InvalidPosition)
+                End If
+            End If
+        End Sub
+
+        ' syntax highlighting
+        Private Sub tb_StyleNeeded(sender As Object, e As StyleNeededEventArgs) Handles tb.StyleNeeded
+            Dim startPos As Integer = tb.GetEndStyled()
+            Dim endPos As Integer = e.Position
+            _cantusLexer.Style(tb, startPos, endPos)
+        End Sub
+
+        ' autoindent
+        Private Sub tb_InsertCheck(sender As Object, e As InsertCheckEventArgs) Handles tb.InsertCheck
+            If e.Text.EndsWith(ControlChars.Cr) OrElse e.Text.EndsWith(ControlChars.Lf) Then
+                Dim curLine As Integer = tb.LineFromPosition(e.Position)
+                Dim curLineText As String = tb.Lines(curLine).Text
+
+                Dim indent As Match = Regex.Match(curLineText, "^\s*")
+                e.Text += indent.Value
+
+
+                Dim blockKwd As New HashSet(Of String)(("class function namespace if else elif for repeat " &
+                                                "switch case run try catch finally while until with").Split(" "c))
+                curLineText = curLineText.Trim()
+                If curLineText.Contains(" ") Then curLineText = curLineText.Remove(curLineText.IndexOf(" "))
+
+                If blockKwd.Contains(curLineText) Then e.Text += ControlChars.Tab
+            End If
         End Sub
 
 #End Region

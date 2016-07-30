@@ -31,6 +31,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -100,12 +102,17 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Alex Yu%27s Personal Certificate.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Alex Yu Self-Signed.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ScintillaNET">
+      <HintPath>lib\ScintillaNET.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -125,6 +132,8 @@
     <Import Include="System.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CantusLexer.vb" />
+    <Compile Include="EmbeddedAssembly.vb" />
     <Compile Include="Main.vb" />
     <Compile Include="Evaluator\BigDecimal.vb" />
     <Compile Include="Evaluator\EvalExceptions.vb" />
@@ -225,6 +234,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Alex Yu Self-Signed.pfx" />
     <None Include="app.config" />
     <None Include="bin\Release\ver" />
     <None Include="README.md" />
@@ -241,6 +251,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Calculator.ico" />
+    <EmbeddedResource Include="ScintillaNET.dll" />
     <None Include="Resources\windowsettings.png" />
     <None Include="Resources\settings.png" />
     <None Include="Resources\UpdateMsg.txt" />

@@ -25,7 +25,7 @@
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmCalc))
-            Me.tb = New System.Windows.Forms.TextBox()
+            Me.tb = New ScintillaNET.Scintilla()
             Me.pnlSettings = New System.Windows.Forms.Panel()
             Me.lbSettings = New System.Windows.Forms.Label()
             Me.btnLog = New System.Windows.Forms.Button()
@@ -58,20 +58,19 @@
             '
             'tb
             '
-            Me.tb.AcceptsTab = True
             Me.tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
             Me.tb.BorderStyle = System.Windows.Forms.BorderStyle.None
+            Me.tb.CaretForeColor = System.Drawing.Color.White
             Me.tb.Cursor = System.Windows.Forms.Cursors.Arrow
+            Me.tb.EdgeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.tb.Font = New System.Drawing.Font("Lucida Console", 13.5!)
             Me.tb.ForeColor = System.Drawing.Color.White
-            Me.tb.HideSelection = False
-            Me.tb.Location = New System.Drawing.Point(18, 19)
-            Me.tb.Multiline = True
+            Me.tb.Location = New System.Drawing.Point(3, 18)
             Me.tb.Name = "tb"
-            Me.tb.Size = New System.Drawing.Size(650, 283)
+            Me.tb.Size = New System.Drawing.Size(675, 294)
             Me.tb.TabIndex = 0
             '
             'pnlSettings
@@ -108,7 +107,7 @@
             Me.lbSettings.ForeColor = System.Drawing.Color.White
             Me.lbSettings.Image = CType(resources.GetObject("lbSettings.Image"), System.Drawing.Image)
             Me.lbSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-            Me.lbSettings.Location = New System.Drawing.Point(297, 82)
+            Me.lbSettings.Location = New System.Drawing.Point(296, 82)
             Me.lbSettings.Name = "lbSettings"
             Me.lbSettings.Size = New System.Drawing.Size(117, 30)
             Me.lbSettings.TabIndex = 13
@@ -145,7 +144,7 @@
             Me.btnExplicit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnExplicit.Font = New System.Drawing.Font("Segoe UI Semilight", 12.75!)
             Me.btnExplicit.ForeColor = System.Drawing.Color.White
-            Me.btnExplicit.Location = New System.Drawing.Point(224, 126)
+            Me.btnExplicit.Location = New System.Drawing.Point(223, 126)
             Me.btnExplicit.Name = "btnExplicit"
             Me.btnExplicit.Size = New System.Drawing.Size(86, 40)
             Me.btnExplicit.TabIndex = 0
@@ -183,7 +182,7 @@
             Me.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnUpdate.Font = New System.Drawing.Font("Segoe UI Semilight", 10.0!)
             Me.btnUpdate.ForeColor = System.Drawing.Color.White
-            Me.btnUpdate.Location = New System.Drawing.Point(407, 172)
+            Me.btnUpdate.Location = New System.Drawing.Point(406, 172)
             Me.btnUpdate.Name = "btnUpdate"
             Me.btnUpdate.Size = New System.Drawing.Size(86, 50)
             Me.btnUpdate.TabIndex = 9
@@ -220,14 +219,14 @@
             Me.btnAngleRepr.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnAngleRepr.Font = New System.Drawing.Font("Segoe UI Semilight", 12.75!)
             Me.btnAngleRepr.ForeColor = System.Drawing.Color.White
-            Me.btnAngleRepr.Location = New System.Drawing.Point(224, 171)
+            Me.btnAngleRepr.Location = New System.Drawing.Point(223, 171)
             Me.btnAngleRepr.Name = "btnAngleRepr"
             Me.btnAngleRepr.Size = New System.Drawing.Size(86, 50)
             Me.btnAngleRepr.TabIndex = 7
             Me.btnAngleRepr.Tag = "-"
             Me.btnAngleRepr.Text = "Radian"
-            Me.TTLetters.SetToolTip(Me.btnAngleRepr, "Change the angle representation:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Degree / Radian / Gradian" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Hotkey: Ctrl+P or C" &
-        "trl+<first letter of mode name>)")
+            Me.TTLetters.SetToolTip(Me.btnAngleRepr, "Change the angle representation:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Degree / Radian / Gradian" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Hotkey: Ctrl+Alt+P " &
+        "or Ctrl+Alt+<first letter of mode name>)")
             Me.btnAngleRepr.UseVisualStyleBackColor = False
             '
             'btnT
@@ -241,7 +240,7 @@
             Me.btnT.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnT.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
             Me.btnT.ForeColor = System.Drawing.Color.White
-            Me.btnT.Location = New System.Drawing.Point(407, 126)
+            Me.btnT.Location = New System.Drawing.Point(406, 126)
             Me.btnT.Name = "btnT"
             Me.btnT.Size = New System.Drawing.Size(40, 40)
             Me.btnT.TabIndex = 4
@@ -260,7 +259,7 @@
             Me.btnM.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnM.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
             Me.btnM.ForeColor = System.Drawing.Color.White
-            Me.btnM.Location = New System.Drawing.Point(453, 126)
+            Me.btnM.Location = New System.Drawing.Point(452, 126)
             Me.btnM.Name = "btnM"
             Me.btnM.Size = New System.Drawing.Size(40, 40)
             Me.btnM.TabIndex = 5
@@ -279,15 +278,15 @@
             Me.btnOutputFormat.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnOutputFormat.Font = New System.Drawing.Font("Segoe UI Semilight", 12.75!)
             Me.btnOutputFormat.ForeColor = System.Drawing.Color.White
-            Me.btnOutputFormat.Location = New System.Drawing.Point(316, 172)
+            Me.btnOutputFormat.Location = New System.Drawing.Point(315, 172)
             Me.btnOutputFormat.Name = "btnOutputFormat"
             Me.btnOutputFormat.Size = New System.Drawing.Size(86, 50)
             Me.btnOutputFormat.TabIndex = 8
             Me.btnOutputFormat.Tag = "-"
             Me.btnOutputFormat.Text = "Math"
             Me.TTLetters.SetToolTip(Me.btnOutputFormat, "Change the output format:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Math: Output fractions, roots, etc." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Scientific: Outpu" &
-        "t scientific notation " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Raw: Output full decimal number" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Hotkey: Ctrl+O or Ctrl" &
-        "+<first letter of mode name>)")
+        "t scientific notation " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Raw: Output full decimal number" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Hotkey: Ctrl+Alt+O or " &
+        "Ctrl+Alt+<first letter of mode name>)")
             Me.btnOutputFormat.UseVisualStyleBackColor = False
             '
             'btnY
@@ -301,7 +300,7 @@
             Me.btnY.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnY.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
             Me.btnY.ForeColor = System.Drawing.Color.White
-            Me.btnY.Location = New System.Drawing.Point(362, 126)
+            Me.btnY.Location = New System.Drawing.Point(361, 126)
             Me.btnY.Name = "btnY"
             Me.btnY.Size = New System.Drawing.Size(40, 40)
             Me.btnY.TabIndex = 3
@@ -320,7 +319,7 @@
             Me.btnX.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnX.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
             Me.btnX.ForeColor = System.Drawing.Color.White
-            Me.btnX.Location = New System.Drawing.Point(316, 126)
+            Me.btnX.Location = New System.Drawing.Point(315, 126)
             Me.btnX.Name = "btnX"
             Me.btnX.Size = New System.Drawing.Size(40, 40)
             Me.btnX.TabIndex = 2
@@ -528,11 +527,10 @@
             Me.pnlSettings.PerformLayout()
             Me.pnlResults.ResumeLayout(False)
             Me.pnlTb.ResumeLayout(False)
-            Me.pnlTb.PerformLayout()
             Me.ResumeLayout(False)
 
         End Sub
-        Friend WithEvents tb As System.Windows.Forms.TextBox
+        Friend WithEvents tb As ScintillaNET.Scintilla
         Friend WithEvents btnCalc As System.Windows.Forms.Button
         Friend WithEvents lbResult As System.Windows.Forms.Label
         Friend WithEvents pnlResults As System.Windows.Forms.Panel
