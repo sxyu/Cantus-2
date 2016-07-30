@@ -2233,7 +2233,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="value">The double to use</param>
         ''' <returns>Scientific notation representation</returns>
-        Public Function Sci(ByVal value As Double) As String
+        Private Function Sci(ByVal value As Double) As String
             If value = 0 Then Return "0"
             If Double.IsNaN(value) OrElse Double.IsInfinity(value) Then Return value.ToString()
             Dim log As Integer = Int(CDbl(Log10(Math.Abs(value))))
@@ -2243,7 +2243,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Convert a value to scientific notation
         ''' </summary>
-        Public Function Sci(ByVal value As BigDecimal) As String
+        Private Function Sci(ByVal value As BigDecimal) As String
             Return value.ToScientific()
         End Function
 

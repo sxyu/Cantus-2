@@ -26,7 +26,7 @@ Public Class DiagFunctions
         For Each i As Reflection.MethodInfo In info
             Try
                 ' regex filter
-                If Not Globals.Evaluator.InternalFunctions.Contains(i.Name.ToLowerInvariant(),
+                If Not Globals.Evaluator.InternalFunctions.Contains(ROOT_NAMESPACE & SCOPE_SEP & i.Name.ToLowerInvariant(),
                                                                     filter.ToLowerInvariant()) Then Continue For
             Catch
             End Try
@@ -107,7 +107,7 @@ Public Class DiagFunctions
                 If uf.Modifiers.Contains("private") Then Continue For ' ignore private methods
 
                 ' regex filter
-                If Not Globals.Evaluator.InternalFunctions.Contains(uf.Name.ToLowerInvariant(),
+                If Not Globals.Evaluator.InternalFunctions.Contains(uf.FullName.ToLowerInvariant(),
                                                                 filter.ToLowerInvariant()) Then Continue For
             Catch
             End Try
