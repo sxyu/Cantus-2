@@ -21,8 +21,8 @@ Namespace Calculator
         Private Sub EvalWrite(script As String, Optional ByVal path As String = "", Optional ByVal clone As Boolean = False)
             Try
                 Dim res As StatementRegistar.StatementResult =
-                            DirectCast(If(clone, Globals.Evaluator.Clone(), Globals.Evaluator).
-                                         EvalRaw(script, True), StatementRegistar.StatementResult)
+                            DirectCast(If(clone, Globals.Evaluator.DeepCopy(), Globals.Evaluator).
+                                         EvalRaw(script, noSaveAns:=True, internal:=True), StatementRegistar.StatementResult)
 
                 Console.WriteLine()
                 If res.Code = StatementRegistar.StatementResult.ExecCode.return Then
@@ -66,18 +66,23 @@ Namespace Calculator
             For Each file As String In initScripts
                 Try
                     ' Evaluate each file. On error, ignore.
+                    Globals.Evaluator.Load(file, file = "init.can")
+                Catch ex As Exception
                     If file = "init.can" Then
-                        Globals.Evaluator.Include(file, True)
+                        MsgBox("Error occurred while processing init.can." & vbNewLine & "Variables and functions may not load." &
+                               vbNewLine & vbNewLine & "Message:" & vbNewLine & ex.Message,
+                               MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Critical, "Initialization Error")
                     Else
-                        Globals.Evaluator.Include(file)
+                        MsgBox("Error occurred while loading ''" & file.Replace(IO.Path.DirectorySeparatorChar,
+                                                                                Evaluator.Evaluator.SCOPE_SEP).
+                               Remove(file.LastIndexOf(".")) & "''" & vbNewLine & ex.Message,
+                               MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "Initialization Error")
                     End If
-                Catch
                 End Try
             Next
 
             ' if init.can not found, restore constants and try restoring from Settings.State
-            If Not IO.File.Exists("init.can") Then
-                Globals.Evaluator.ReloadDefault() ' reload constants
+            If Not String.IsNullOrWhiteSpace(My.Settings.State) Then
                 Try
                     Globals.Evaluator.Eval(My.Settings.State)
                 Catch
@@ -111,7 +116,7 @@ Namespace Calculator
             If runFiles Then
                 ' free the console and exit
                 FreeConsole()
-                System.Windows.Forms.SendKeys.SendWait("{ENTER}")
+                SendKeys.SendWait("{ENTER}")
                 Exit Sub
             Else
                 '  open form

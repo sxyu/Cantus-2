@@ -17,19 +17,30 @@ Namespace Calculator.Keyboards
             TmrLoad.Stop()
             Me.Snap = My.Settings.OskLock
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
-            If (My.Settings.RightOskPos <> "") Then
-                Dim spl() As String = My.Settings.RightOskPos.Split(","c)
-                Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
+
+            For Each c As Control In Me.pnl.Controls
+                AddHandler c.Enter, AddressOf osk_Enter
+            Next
+
+            If (My.Settings.RightKbdPos <> "") Then
+                Dim spl() As String = My.Settings.RightKbdPos.Split(","c)
+                Me.Left = CInt(spl(0))
+                Me.Top = CInt(spl(1))
                 If Me.Left >= -100 And Me.Top >= 0 And Me.Right <= Screen.PrimaryScreen.WorkingArea.Width + 100 And
-                    Me.Bottom <= Screen.PrimaryScreen.WorkingArea.Height + 500 Then Exit Sub
+                Me.Bottom <= Screen.PrimaryScreen.WorkingArea.Height + 500 Then Exit Sub
+            Else
+                Me.Left = FrmCalc.Right - Me.Width
+                Me.Top = FrmCalc.Bottom
+                My.Settings.RightKbdPos = Me.Left & "," & Me.Top
+                My.Settings.Save()
             End If
-            Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 + FrmCalc.Width / 2) - 52 - Me.Width
-            Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 6 + FrmCalc.Height / 2)
-            My.Settings.RightOskPos = Me.Left & "," & Me.Top
-            My.Settings.Save()
         End Sub
 
-        Private Sub btnT_Click(sender As Object, e As EventArgs) Handles btnFact.Click, btnD.Click, btnStore.Click, btnMul.Click, btnDiv.Click, btnAdd.Click, btnMin.Click, btnEquals.Click, btnLessThan.Click, btnMoreThan.Click, btnAns.Click, btnExp.Click
+        Private Sub GenericButtonClick(sender As Object, e As EventArgs) Handles btnFact.Click, btnMul.Click, btnDiv.Click, btnAdd.Click, btnMin.Click,
+            btnEquals.Click, btnLessThan.Click, btnMoreThan.Click, btnAns.Click, btnExp.Click, btnPt.Click,
+            btnCBL.Click, btnCBR.Click, btnSqBrL.Click, btnSqBrR.Click, btnA.Click, btnB.Click, btnC.Click,
+            btnT.Click, btnM.Click, btnX.Click, btnY.Click, btnComma.Click, btnN.Click, btnTick.Click
+
             Dim btn As Button = DirectCast(sender, Button)
             FrmCalc.tb.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
@@ -53,11 +64,12 @@ Namespace Calculator.Keyboards
             Else
                 FrmCalc.tb.SelectionStart = start + s.Count()
             End If
+            FrmCalc.tb.Focus()
         End Sub
 
         Private Sub btnCalc_Click(sender As Object, e As EventArgs) Handles btnCalc.Click
             FrmCalc.tb.Focus()
-            FrmCalc.btnCalc.PerformClick()
+            WriteFunction(vbNewLine)
         End Sub
 
         Private Sub btnNext_Click(sender As Object, e As EventArgs) Handles btnNext.Click
@@ -116,7 +128,7 @@ Namespace Calculator.Keyboards
             End If
         End Sub
 
-        Private Sub btnPans_Click(sender As Object, e As EventArgs) Handles btnOperator.Click
+        Private Sub btnPans_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
             Using diag As New DiagFunctions
                 If diag.ShowDialog() = DialogResult.OK Then
                     WriteFunction(diag.Result)
@@ -131,7 +143,10 @@ Namespace Calculator.Keyboards
             FrmCalc.lbResult.Text = "= "
         End Sub
 
-        Private Sub btnTrig_Click(sender As Object, e As EventArgs) Handles btnAsin.Click, btnAcos.Click, btnSin.Click, btnCos.Click, btnTan.Click, btnAtan.Click
+        Private Sub btnFn_Click(sender As Object, e As EventArgs) Handles btnAsin.Click, btnAcos.Click,
+            btnSin.Click, btnCos.Click, btnTan.Click, btnAtan.Click, btnLn.Click,
+            btnConfirm.Click, btnYesNo.Click, btnAlert.Click, btnInput.Click, btnAvg.Click, btnMedian.Click
+
             WriteFunction(DirectCast(sender, Button).Text & "()")
         End Sub
 
@@ -215,7 +230,7 @@ Namespace Calculator.Keyboards
                     Me.Left = -12
                 End If
                 If Me.Top < FrmCalc.Bottom AndAlso Me.Top > FrmCalc.Top AndAlso Me.Left < FrmCalc.Right - 47 AndAlso Me.Right > FrmCalc.Left - 1 Then
-                    Me.Left = FrmCalc.Right - 53 - Me.Width
+                    Me.Left = FrmCalc.Right - Me.Width
                     Me.Top = FrmCalc.Bottom
                     FrmCalc.RSnap = True
                     If Me.Snap Then
@@ -226,8 +241,8 @@ Namespace Calculator.Keyboards
                 End If
             End If
             My.Settings.MainPos = FrmCalc.Left & "," & FrmCalc.Top
-            My.Settings.RightOskPos = Me.Left & "," & Me.Top
-            My.Settings.LeftOskPos = OskLeft.Left & "," & OskLeft.Top
+            My.Settings.RightKbdPos = Me.Left & "," & Me.Top
+            My.Settings.LeftKbdPos = OskLeft.Left & "," & OskLeft.Top
             My.Settings.OskLock = Me.Snap
             My.Settings.LOskSnap = FrmCalc.LSnap
             My.Settings.ROskSnap = FrmCalc.RSnap
@@ -238,7 +253,7 @@ Namespace Calculator.Keyboards
             WriteFunction(" mod ")
         End Sub
 
-        Private Sub osk_Enter(sender As Object, e As EventArgs) Handles lbResult.Enter, btnBrRt.Enter, btnBrLft.Enter, btnTan.Enter, btnStore.Enter, btnSqrt.Enter, btnSin.Enter, btnQdtc.Enter, btnRet.Enter, btnPrev.Enter, btnOperator.Enter, btnNext.Enter, btnMul.Enter, btnMoreThan.Enter, btnMod.Enter, btnMin.Enter, btnlog.Enter, btnLessThan.Enter, btnPow10.Enter, btnFact.Enter, btnExp.Enter, btnEquals.Enter, btnEnd.Enter, btnDiv.Enter, btnDel.Enter, btnD.Enter, btnCos.Enter, btnCalc.Enter, btnAtan.Enter, btnAsin.Enter, btnAns.Enter, btnAdd.Enter, btnAcos.Enter, btnAC.Enter, btnAbs.Enter
+        Private Sub osk_Enter(sender As Object, e As EventArgs)
             pnl.Focus()
             FrmCalc.tb.Focus()
             'frmCalc.BringToFront()
@@ -271,22 +286,51 @@ Namespace Calculator.Keyboards
                 FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start + 1, endSign)
             End If
             FrmCalc.tb.SelectionStart = start + 1
+            FrmCalc.tb.ScrollToCaret()
         End Sub
 
-        Private Sub btnBrRt_Click(sender As Object, e As EventArgs) Handles btnBrRt.Click
+        Private Sub btnBrRt_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrRt.MouseUp
             FrmCalc.tb.Focus()
+            Dim openBr As Char = "("c
+            Dim closeBr As Char = ")"c
+
+            If e.Button = MouseButtons.Right Then
+                openBr = "["c
+                closeBr = "]"c
+            ElseIf e.Button = MouseButtons.Middle
+                openBr = "{"c
+                closeBr = "}"c
+            End If
+
             Dim start As Integer = FrmCalc.tb.SelectionStart
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength)
+
+            Dim insertStart As Boolean = True
             For i As Integer = Math.Min(start, FrmCalc.tb.Text.Length - 1) To 0 Step -1
-                If FrmCalc.tb.Text(i) = ")"c Then
+                If FrmCalc.tb.Text(i) = closeBr Then
                     Exit For
-                ElseIf FrmCalc.tb.Text(i) = "("c
-                    FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, ")")
-                    FrmCalc.tb.Select(start + 2, 0)
-                    Exit Sub
+                ElseIf FrmCalc.tb.Text(i) = openBr
+                    insertStart = False
+                    Exit For
                 End If
             Next
-            FrmCalc.tb.Text = "(" + FrmCalc.tb.Text.Insert(start, ")")
+
+            If insertStart Then
+                For i As Integer = start - 1 To -1 Step -1
+                    If i = -1 OrElse
+                        FrmCalc.tb.Text.Length > i AndAlso (FrmCalc.tb.Text(i) = ControlChars.Lf OrElse
+                                                                     FrmCalc.tb.Text(i) = ControlChars.Cr) Then
+                        FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(i + 1, openBr)
+                        Exit For
+                    End If
+                Next
+                FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start + 1, closeBr)
+            Else
+                FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, closeBr)
+            End If
+
             FrmCalc.tb.Select(start + 2, 0)
+            FrmCalc.tb.ScrollToCaret()
         End Sub
 
         Private Sub btnln_MouseUp(sender As Object, e As MouseEventArgs) Handles btnlog.MouseUp
@@ -306,7 +350,41 @@ Namespace Calculator.Keyboards
         Private Sub btnExp_MouseUp(sender As Object, e As MouseEventArgs) Handles btnExp.MouseUp
             If e.Button = MouseButtons.Right Then
                 WriteFunction(" E ")
+            ElseIf e.Button = MouseButtons.Middle
+                WriteFunction("^2")
             End If
+        End Sub
+
+        Private Sub btnIntegral_Click(sender As Object, e As EventArgs) Handles btnIntegral.Click
+            WriteFunction("integral(,,)")
+        End Sub
+
+        Private Sub btnDyDx_Click(sender As Object, e As EventArgs) Handles btnDyDx.Click
+            WriteFunction("derivativeat(,,)")
+        End Sub
+
+        Private Sub btnIf_Click(sender As Object, e As EventArgs) Handles btnIf.Click
+            WriteFunction("if ")
+        End Sub
+
+        Private Sub btnWhile_Click(sender As Object, e As EventArgs) Handles btnWhile.Click
+            WriteFunction("while ")
+        End Sub
+
+        Private Sub btnSigma_Click(sender As Object, e As EventArgs) Handles btnSigma.Click
+            WriteFunction("sigma(,,)")
+        End Sub
+
+        Private Sub btnPerm_Click(sender As Object, e As EventArgs) Handles btnPerm.Click
+            WriteFunction("perm(,)")
+        End Sub
+
+        Private Sub btnChoose_Click(sender As Object, e As EventArgs) Handles btnChoose.Click
+            WriteFunction(" choose ")
+        End Sub
+
+        Private Sub btnRand_Click(sender As Object, e As EventArgs) Handles btnRand.Click
+            WriteFunction("rand()")
         End Sub
     End Class
 End Namespace

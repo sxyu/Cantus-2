@@ -871,7 +871,7 @@ Namespace Calculator.Graphing
 
         Private Function Eval(str As String, Optional useEval2 As Boolean = False) As Double
             Try
-                Dim prevmode As Evaluator.Evaluator.IOMode = _eval.OMode
+                Dim prevmode As Evaluator.Evaluator.eOutputFormat = _eval.OutputFormat
                 Dim ret As Double
                 If useEval2 Then
                     ret = CDbl(CType(_eval2.EvalExprRaw(str, True), Evaluator.CommonTypes.BigDecimal))
@@ -1439,7 +1439,7 @@ Namespace Calculator.Graphing
         End Sub
 
         Private Sub Trace()
-            _eval2 = _eval.Clone()
+            _eval2 = _eval.DeepCopy()
             Select Case _functiontype(_curfn)
                 Case FunctionType.Cartesian
                     TraceCartesian()
@@ -1738,7 +1738,7 @@ Namespace Calculator.Graphing
         End Sub
 
         Private Sub TraceSpecial(Optional primary_range As Integer = 26)
-            _eval2 = _eval.Clone()
+            _eval2 = _eval.DeepCopy()
             Select Case _functiontype(_curfn)
                 Case FunctionType.Cartesian, FunctionType.Inverse
                     TraceSpecialCartesian(primary_range)

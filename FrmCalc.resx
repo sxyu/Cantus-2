@@ -117,10 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lbSettings.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACYAAAAkCAYAAADl9UilAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        EwAACxMBAJqcGAAAAURJREFUWEftltENhCAMht1FBmINF2AZnm8MVnGVHgW9g7sfj4IXfaDJF5NqQv0o
+        1YmIAhzLskzzPN/imhXGybuQBXrgCoKxXd/dgMmrGcakDGNShjEppxjTdvUfDkdGKUL3W4FJCcb5umgl
+        q88rTGws2HGGoqVSeHva+lL7ioVJhFL6YVxS0GpJK/XIngkFbbFygW2FtRnjNa0uLqiU8c44+voOJhGv
+        Bf1Wovspu7mjFzhCZEzFLvd1/bbA2x7kgu2uBSZTXouE+G7ord6vgtMDUvMyKVXGjgpL731uW09hDEwi
+        4lbWj4Bosu0AyHpsHwU1zS84KCVgskTtlK99roTIGJMOUNQ3WT922GJgEvEeAY7SDwAK54KypqZnxMZS
+        8tMao3WgImBSQhwL5/72dBn7NzB5NcOYlGFMyjAmJTN2r+s8PQEVBLyTt95HBwAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="TTLetters.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>117, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnExplicit.ToolTip" xml:space="preserve">
+    <value>Toggle explicit mode (Ctrl+T)
+On (orange): Variables must be declared 
+                       with let/global/private/public
+                       before being used
+Off (gray): Variables can be used without
+                   being declared</value>
+  </data>
   <data name="btnClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADUAAAAwCAYAAACxKzLDAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

@@ -1,4 +1,5 @@
 ﻿Imports System.Runtime.InteropServices
+Imports System.Text
 Imports System.Threading
 Imports Cantus.Calculator.Evaluator
 Imports Cantus.Calculator.Evaluator.CommonTypes
@@ -9,7 +10,7 @@ Namespace Calculator
         ''' <summary>
         ''' Maximum length of text to display on the tooltip
         ''' </summary>
-        Private Const TT_LEN_LIMIT As Integer = 350
+        Private Const TT_LEN_LIMIT As Integer = 500
         Private Const PREV_EXPRESSION_LIMIT As Integer = 15
 
         Private Const RELEASE_TYPE As String = "Alpha"
@@ -38,7 +39,7 @@ Namespace Calculator
         ''' If true, displays the update message after load
         ''' </summary>
         Private _displayUpdateMessage As Boolean = False
-        
+
         ' Win32 API to change tab width in textbox
         Const EM_SETTABSTOPS As Integer = &HCB
         <DllImport("user32.dll")>
@@ -70,11 +71,11 @@ Namespace Calculator
                 If Not (Me.Left >= -100 And Me.Top >= -300 And Me.Right <= Screen.PrimaryScreen.WorkingArea.Width + 100 And
                 Me.Bottom <= Screen.PrimaryScreen.WorkingArea.Height) Then
                     Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
-                    Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 6 - Me.Height / 2)
+                    Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 4 - Me.Height / 3)
                 End If
             Else
                 Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
-                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 6 - Me.Height / 2)
+                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 4 - Me.Height / 3)
             End If
 
             ' setup evaluator
@@ -166,7 +167,7 @@ Namespace Calculator
             My.Settings.MainPos = Me.Left & "," & Me.Top
 
             ' update tooltips
-            UpdateletterTT()
+            UpdateLetterTT()
 
             ' set up UI
             pnlSettings.BackColor = Color.FromArgb(50, 30, 30, 30)
@@ -181,19 +182,19 @@ Namespace Calculator
             SendMessageA(tb.Handle, EM_SETTABSTOPS, 1, TabStop)
 
             ' set up modes
-            If _eval.OMode = Evaluator.Evaluator.IOMode.MathO Then
-                btnOMode.Text = "MathO"
-            ElseIf _eval.OMode = Evaluator.Evaluator.IOMode.SciO Then
-                btnOMode.Text = "SciO"
+            If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math Then
+                btnOutputFormat.Text = "MathO"
+            ElseIf _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
+                btnOutputFormat.Text = "SciO"
             Else
-                btnOMode.Text = "LineO"
+                btnOutputFormat.Text = "LineO"
             End If
-            If _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Radian Then
-                btnAngleRep.Text = "Radian"
-            ElseIf _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Degree Then
-                btnAngleRep.Text = "Degree"
+            If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Radian Then
+                btnAngleRepr.Text = "Radian"
+            ElseIf _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree Then
+                btnAngleRepr.Text = "Degree"
             Else
-                btnAngleRep.Text = "Gradian"
+                btnAngleRepr.Text = "Gradian"
             End If
 
             ' check for update
@@ -229,7 +230,7 @@ Namespace Calculator
                 If RSnap Then Keyboards.OskRight.Show()
             End If
         End Sub
-        Private Sub FrmCalc_Tb_KeyUp(sender As Object, e As KeyEventArgs) Handles tb.KeyUp
+        Private Sub tb_KeyUp(sender As Object, e As KeyEventArgs) Handles tb.KeyUp
             Try
                 If e.KeyCode = Keys.Enter And e.Alt Then
                     EvaluateExpr()
@@ -254,6 +255,7 @@ Namespace Calculator
                                 Replace(vbLf, vbNewLine) ' fix line endings
                         End If
                     End Using
+
                 ElseIf e.KeyCode = Keys.F5
                     Using diag As New OpenFileDialog()
                         diag.Filter = "Cantus Script (.can)|*.can"
@@ -264,6 +266,12 @@ Namespace Calculator
                             _eval.EvalAsync(IO.File.ReadAllText(diag.FileName))
                         End If
                     End Using
+                ElseIf e.KeyCode = Keys.V AndAlso e.Control AndAlso e.Alt AndAlso e.Shift
+                    Dim sb As New StringBuilder
+                    For Each v As Evaluator.Evaluator.Variable In _eval.Variables.Values
+                        sb.Append(v.ToString).Append(vbNewLine)
+                    Next
+                    My.Computer.Clipboard.SetText(sb.ToString)
                 End If
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground, "File Read/Save Operation Failed")
@@ -273,36 +281,38 @@ Namespace Calculator
         Private Sub FrmCalc_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
             If e.Control Then
                 If e.KeyCode = Keys.P Then
-                    btnAngleRep_Click(btnAngleRep, New EventArgs)
+                    btnAngleRep_Click(btnAngleRepr, New EventArgs)
                 ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
                     If e.KeyCode = Keys.D Then
-                        _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Degree
+                        _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree
                     ElseIf e.KeyCode = Keys.R
-                        _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Radian
+                        _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Radian
                     Else
-                        _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Gradian
+                        _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Gradian
                     End If
-                    btnAngleRep.Text = _eval.AngleRepMode.ToString()
+                    btnAngleRepr.Text = _eval.AngleMode.ToString()
                     EvaluateExpr()
                 ElseIf e.KeyCode = Keys.O Then
-                    btnOMode_Click(btnOMode, New EventArgs)
+                    btnOMode_Click(btnOutputFormat, New EventArgs)
                 ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.L Then
                     If e.KeyCode = Keys.M Then
-                        _eval.OMode = Evaluator.Evaluator.IOMode.MathO
+                        _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math
                         e.SuppressKeyPress = True
                     ElseIf e.KeyCode = Keys.L
-                        _eval.OMode = Evaluator.Evaluator.IOMode.LineO
+                        _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Raw
                     Else
-                        _eval.OMode = Evaluator.Evaluator.IOMode.SciO
+                        _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific
                     End If
-                    btnOMode.Text = _eval.OMode.ToString()
+                    btnOutputFormat.Text = _eval.OutputFormat.ToString()
                     EvaluateExpr()
+                ElseIf e.KeyCode = Keys.T Then
+                    btnExplicit.PerformClick()
                 End If
             End If
         End Sub
 
         Private Sub tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
-            ' ez-bracket
+            ' auto-insert brackets
             If e.KeyChar = "(" OrElse e.KeyChar = "[" OrElse e.KeyChar = "{" Then
                 Dim endSign As Char = ")"c
                 If e.KeyChar = "["c Then
@@ -327,6 +337,46 @@ Namespace Calculator
                     tb.Text = tb.Text.Insert(start + 1, endSign)
                 End If
                 tb.SelectionStart = start + 1
+                tb.ScrollToCaret()
+                e.Handled = True
+
+            ElseIf e.KeyChar = ")" OrElse e.KeyChar = "]" OrElse e.KeyChar = "}"
+                tb.Focus()
+                Dim openBr As Char = "("c
+                Dim closeBr As Char = e.KeyChar
+
+                If e.KeyChar = "]" Then
+                    openBr = "["c
+                ElseIf e.KeyChar = "}" Then
+                    openBr = "{"c
+                End If
+
+                Dim start As Integer = tb.SelectionStart
+                tb.Text = tb.Text.Remove(tb.SelectionStart, tb.SelectionLength)
+
+                Dim insertStart As Boolean = True
+                For i As Integer = Math.Min(start, tb.Text.Length - 1) To 0 Step -1
+                    If tb.Text(i) = closeBr Then
+                        Exit For
+                    ElseIf tb.Text(i) = openBr
+                        insertStart = False
+                        Exit For
+                    End If
+                Next
+                If insertStart Then
+                    For i As Integer = start To -1 Step -1
+                        If i = -1 OrElse
+                            tb.Text.Length > i AndAlso (tb.Text(i) = ControlChars.Lf OrElse tb.Text(i) = ControlChars.Cr) Then
+                            tb.Text = tb.Text.Insert(i + 1, openBr)
+                            Exit For
+                        End If
+                    Next
+                    tb.Text = tb.Text.Insert(start + 1, closeBr)
+                Else
+                    tb.Text = tb.Text.Insert(start, closeBr)
+                End If
+                tb.Select(start + 2, 0)
+                tb.ScrollToCaret()
                 e.Handled = True
             End If
         End Sub
@@ -337,59 +387,55 @@ Namespace Calculator
         ''' </summary>
         Private Sub EvaluateExpr()
             tb.Focus()
-            lbResult.Text = ""
+            lbResult.Text = "="
 
             ' evaluae
             _eval.EvalAsync(tb.Text)
         End Sub
 
         Private Sub EvalComplete(sender As Object, result As Object)
-            lbResult.Text = ""
-
-            Dim ans As String = result.ToString()
-
-            ' save previous expressions 
-            If _prevExp.Count = 0 OrElse _prevExp(_prevExp.Count - 1) <> tb.Text Then
-                _prevExp.Add(tb.Text)
-                _curExpId += 1
-            End If
-
-            ' remove previous expressions past limit
-            _lastExp = tb.Text
-            If _prevExp.Count > PREV_EXPRESSION_LIMIT Then
-                _prevExp.RemoveAt(0) 'max expressions
-                _curExpId -= 1
-            End If
-
-            ' display answer
-            AutoTrimDisplayText(ans)
-
-            ' Beautify
-            ' No = when we have :=, cleaner looking
-            If Not lbResult.Text.Contains(":=") Then
-                lbResult.Text = "= " & lbResult.Text
+            If lbResult.InvokeRequired Then
+                lbResult.BeginInvoke(Sub() EvalComplete(sender, result))
             Else
-                lbResult.Text = lbResult.Text.Remove(lbResult.Text.Length - 1).Substring(1)
-            End If
+                Dim ans As String = result.ToString()
 
-            tb.Focus()
+                ' save previous expressions 
+                If _prevExp.Count = 0 OrElse _prevExp(_prevExp.Count - 1) <> tb.Text Then
+                    _prevExp.Add(tb.Text)
+                    _curExpId += 1
+                End If
+
+                ' remove previous expressions past limit
+                _lastExp = tb.Text
+                If _prevExp.Count > PREV_EXPRESSION_LIMIT Then
+                    _prevExp.RemoveAt(0) 'max expressions
+                    _curExpId -= 1
+                End If
+
+                ' display answer
+                lbResult.Text = AutoTrimDisplayText(ans)
+
+                tb.Focus()
+            End If
         End Sub
 
-        Private Sub AutoTrimDisplayText(txt As String)
+        Private Function AutoTrimDisplayText(txt As String) As String
             Dim g As Graphics = Graphics.FromHwnd(Me.Handle)
-            Dim wid As Single = g.MeasureString(lbResult.Text, lbResult.Font).Width
             Dim i As Integer = 0
-            While i < txt.Length AndAlso wid < lbResult.Width - 10
-                lbResult.Text &= txt(i)
+            Dim res As String = "= "
+            Dim wid As Single = g.MeasureString(res, lbResult.Font).Width
+            While i < txt.Length AndAlso wid < lbResult.Width - 1
+                res &= txt(i)
                 i += 1
-                wid = g.MeasureString(lbResult.Text, lbResult.Font).Width
+                wid = g.MeasureString(res, lbResult.Font).Width
             End While
-            If wid > lbResult.Width - 20 Then
-                While wid > lbResult.Width - 20 AndAlso lbResult.Text.Length > 0
-                    lbResult.Text = lbResult.Text.Remove(lbResult.Text.Length - 1)
-                    wid = g.MeasureString(lbResult.Text & "...", lbResult.Font).Width
+
+            If wid > lbResult.Width - 1 Then
+                While wid > lbResult.Width - 1 AndAlso res.Length > 0
+                    res = res.Remove(res.Length - 1)
+                    wid = g.MeasureString(res & "...", lbResult.Font).Width
                 End While
-                lbResult.Text &= "..."
+                res &= "..."
                 If txt.Length <= TT_LEN_LIMIT Then
                     TTLetters.SetToolTip(lbResult, txt)
                 Else
@@ -398,7 +444,9 @@ Namespace Calculator
             Else
                 TTLetters.SetToolTip(lbResult, "")
             End If
-        End Sub
+
+            Return res
+        End Function
 
         Public Sub SaveSettings()
             My.Settings.ROskSnap = Me.RSnap
@@ -450,32 +498,40 @@ Namespace Calculator
 #Region "textbox & labels"
 
         Private Sub tb_keydown(sender As Object, e As KeyEventArgs) Handles tb.KeyDown
-            If e.KeyCode = Keys.Up AndAlso e.Alt Then
-                If _curExpId > 1 And _prevExp.Count > 1 Then
-                    If (tb.Text = _lastExp) Then
-                        _curExpId -= 1
-                    Else
-                        _prevExp.Add(tb.Text)
+            If e.Alt Then
+                If e.KeyCode = Keys.Up Then
+                    If _curExpId > 1 And _prevExp.Count > 1 Then
+                        If (tb.Text = _lastExp) Then
+                            _curExpId -= 1
+                        Else
+                            _prevExp.Add(tb.Text)
+                        End If
+                        _lastExp = _prevExp(_curExpId - 1)
+                        tb.Text = _lastExp
+                        tb.SelectionStart = tb.Text.Length
                     End If
-                    _lastExp = _prevExp(_curExpId - 1)
-                    tb.Text = _lastExp
-                    tb.SelectionStart = tb.Text.Length
+                ElseIf e.KeyCode = Keys.Down Then
+                    If _curExpId < _prevExp.Count And _prevExp.Count > 1 Then
+                        _curExpId += 1
+                        _lastExp = _prevExp(_curExpId - 1)
+                        tb.Text = _lastExp
+                        tb.SelectionStart = tb.Text.Length
+                    End If
+                ElseIf e.KeyCode = Keys.F Then
+                    btnFunctions.PerformClick()
                 End If
-            ElseIf e.KeyCode = Keys.Down AndAlso e.Alt Then
-                If _curExpId < _prevExp.Count And _prevExp.Count > 1 Then
-                    _curExpId += 1
-                    _lastExp = _prevExp(_curExpId - 1)
-                    tb.Text = _lastExp
-                    tb.SelectionStart = tb.Text.Length
+            End If
+
+            If e.Control Then
+                If e.KeyCode = Keys.A Then
+                    tb.SelectAll()
+                    e.SuppressKeyPress = True
+                ElseIf e.KeyCode = Keys.E Then
+                    Keyboards.OskRight.btnPow10.PerformClick()
+                    e.SuppressKeyPress = True
+                ElseIf e.KeyCode = Keys.M
+                    e.SuppressKeyPress = True
                 End If
-            ElseIf e.Control And e.KeyCode = Keys.A Then
-                tb.SelectAll()
-                e.SuppressKeyPress = True
-            ElseIf e.Control And e.KeyCode = Keys.E Then
-                Keyboards.OskRight.btnPow10.PerformClick()
-                e.SuppressKeyPress = True
-            ElseIf e.Control And e.KeyCode = Keys.M
-                e.SuppressKeyPress = True
             End If
 
         End Sub
@@ -495,6 +551,8 @@ Namespace Calculator
                 Catch ex As Exception
                 End Try
                 pnlTb.Focus()
+                btnAngleRepr.Text = _eval.AngleMode.ToString()
+                btnOutputFormat.Text = _eval.OutputFormat.ToString()
                 pnlSettings.Show()
             Else
                 EvaluateExpr()
@@ -502,19 +560,30 @@ Namespace Calculator
             End If
         End Sub
 
-        Private Sub btnLetters_click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btnT.Click, btnM.Click, btnB.Click, btnA.Click
+        Private Sub btnLetters_click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btnT.Click, btnM.Click
             Dim btn As Button = DirectCast(sender, Button)
             SetVariable(btn.Tag.ToString()(0), _eval.GetLastAns())
-            UpdateletterTT()
+            UpdateLetterTT()
         End Sub
+
         Private Sub SetVariable(varnm As Char, data As Object)
             _eval.SetVariable(varnm, ObjectTypes.DetectType(data))
         End Sub
-        Private Sub UpdateletterTT()
+        ''' <summary>
+        ''' Update tooltips for variable buttons
+        ''' </summary>
+        Private Sub UpdateLetterTT()
             For Each c As Control In pnlSettings.Controls
                 If c.Tag.ToString() = "-" Then Continue For
-                Dim val As Object = _eval.GetVariable(c.Text.Remove(0, 1)(0))
-                TTLetters.SetToolTip(c, c.Text.Remove(0, 1) & " = " & val.ToString())
+
+                Dim val As String
+                Try
+                    val = _eval.GetVariableRef(c.Text.Remove(0, 1)(0)).ToString()
+                Catch
+                    val = "Undefined"
+                End Try
+
+                TTLetters.SetToolTip(c, c.Text.Remove(0, 1) & " = " & val)
             Next
         End Sub
 #End Region
@@ -605,7 +674,7 @@ Namespace Calculator
         End Sub
         Private Sub pnlMemLtrs_VisibleChanged(sender As Object, e As EventArgs) Handles pnlSettings.VisibleChanged
             If pnlSettings.Visible Then
-                UpdateletterTT()
+                UpdateLetterTT()
                 btnSettings.BackColor = Color.FromArgb(60, 60, 60)
                 btnSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60)
             Else
@@ -637,7 +706,7 @@ Namespace Calculator
                         Keyboards.OskLeft.Top = newTop + Me.Height - 1
                     End If
                     If RSnap Then
-                        Keyboards.OskRight.Left = newLft + Me.Width - 53 - Keyboards.OskRight.Width
+                        Keyboards.OskRight.Left = newLft + Me.Width - Keyboards.OskRight.Width
                         Keyboards.OskRight.Top = newTop + Me.Height - 1
                     End If
                 Else
@@ -646,7 +715,7 @@ Namespace Calculator
                         Keyboards.OskLeft.Top = newTop + Me.Height - 1
                     End If
                     If RSnap Then
-                        Keyboards.OskRight.Left = newLft + Me.Width - 53 - Keyboards.OskRight.Width
+                        Keyboards.OskRight.Left = newLft + Me.Width - Keyboards.OskRight.Width
                         Keyboards.OskRight.Top = newTop + Me.Height - 1
                     End If
                     Me.Left = newLft
@@ -670,7 +739,7 @@ Namespace Calculator
             Else
                 _isMoving = False
                 If Me.Bottom > Keyboards.OskRight.Top AndAlso Me.Bottom < Keyboards.OskRight.Bottom AndAlso Me.Left > Keyboards.OskRight.Left - 400 AndAlso Me.Right < Keyboards.OskRight.Right + 400 AndAlso Not RSnap Then
-                    Me.Left = Keyboards.OskRight.Right - Me.Width + 53
+                    Me.Left = Keyboards.OskRight.Right - Me.Width
                     Me.Top = Keyboards.OskRight.Top - Me.Height
                     Me.RSnap = True
                     If LSnap Then
@@ -683,7 +752,7 @@ Namespace Calculator
                     Me.Top = Keyboards.OskLeft.Top - Me.Height
                     Me.LSnap = True
                     If RSnap Then
-                        Keyboards.OskRight.Left = Me.Right - 53 - Keyboards.OskRight.Width
+                        Keyboards.OskRight.Left = Me.Right - Keyboards.OskRight.Width
                         Keyboards.OskRight.Top = Me.Bottom
                     End If
                 End If
@@ -693,42 +762,42 @@ Namespace Calculator
                     My.Settings.OskLock = True
                 End If
                 My.Settings.MainPos = Me.Left & "," & Me.Top
-                My.Settings.LeftOskPos = Keyboards.OskLeft.Left & "," & Keyboards.OskLeft.Top
-                My.Settings.RightOskPos = Keyboards.OskRight.Left & "," & Keyboards.OskRight.Top
+                My.Settings.LeftKbdPos = Keyboards.OskLeft.Left & "," & Keyboards.OskLeft.Top
+                My.Settings.RightKbdPos = Keyboards.OskRight.Left & "," & Keyboards.OskRight.Top
                 My.Settings.ROskSnap = RSnap
                 My.Settings.LOskSnap = LSnap
             End If
             My.Settings.Save()
         End Sub
 
-        Private Sub btnOMode_Click(sender As Object, e As EventArgs) Handles btnOMode.Click
-            If _eval.OMode = Evaluator.Evaluator.IOMode.SciO Then
-                _eval.OMode = Evaluator.Evaluator.IOMode.LineO
+        Private Sub btnOMode_Click(sender As Object, e As EventArgs) Handles btnOutputFormat.Click
+            If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
+                _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Raw
             Else
-                _eval.OMode = CType(CInt(_eval.OMode) + 1, Evaluator.Evaluator.IOMode)
+                _eval.OutputFormat = CType(CInt(_eval.OutputFormat) + 1, Evaluator.Evaluator.eOutputFormat)
             End If
-            If _eval.OMode = Evaluator.Evaluator.IOMode.MathO Then
-                btnOMode.Text = "MathO"
-            ElseIf _eval.OMode = Evaluator.Evaluator.IOMode.SciO Then
-                btnOMode.Text = "SciO"
+            If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math Then
+                btnOutputFormat.Text = "Math"
+            ElseIf _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
+                btnOutputFormat.Text = "Scientific"
             Else
-                btnOMode.Text = "LineO"
+                btnOutputFormat.Text = "Raw"
             End If
             EvaluateExpr()
         End Sub
 
-        Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles btnAngleRep.Click
-            If _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Gradian Then
-                _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Degree
+        Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles btnAngleRepr.Click
+            If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Gradian Then
+                _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree
             Else
-                _eval.AngleRepMode = CType(CInt(_eval.AngleRepMode) + 1, Evaluator.Evaluator.AngleRep)
+                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Evaluator.Evaluator.eAngleRepresentation)
             End If
-            If _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Radian Then
-                btnAngleRep.Text = "Radian"
-            ElseIf _eval.AngleRepMode = Evaluator.Evaluator.AngleRep.Degree Then
-                btnAngleRep.Text = "Degree"
+            If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Radian Then
+                btnAngleRepr.Text = "Radian"
+            ElseIf _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree Then
+                btnAngleRepr.Text = "Degree"
             Else
-                btnAngleRep.Text = "Gradian"
+                btnAngleRepr.Text = "Gradian"
             End If
             EvaluateExpr()
         End Sub
@@ -740,10 +809,10 @@ Namespace Calculator
             End Using
         End Sub
 
-        Private Sub pnlSettings_Click(sender As Object, e As EventArgs) Handles pnlSettings.Click
+        Private Sub pnlSettings_Click(sender As Object, e As EventArgs) Handles pnlSettings.Click, lbSettings.Click
             btnSettings.PerformClick()
         End Sub
-        Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles lbAbout.Click
+        Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles lbAbout.Click, btnLog.Click
             Using diag As New DiagFeatureList(
                  My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion))
                 diag.ShowDialog()
@@ -767,7 +836,7 @@ Namespace Calculator
             If Keyboards.OskRight.WindowState = FormWindowState.Maximized Then
                 Keyboards.OskRight.WindowState = FormWindowState.Normal
                 If RSnap Then
-                    Keyboards.OskRight.Left = Me.Right - 53 - Keyboards.OskRight.Width
+                    Keyboards.OskRight.Left = Me.Right - Keyboards.OskRight.Width
                     Keyboards.OskRight.Top = Me.Bottom
                 End If
             End If
@@ -791,6 +860,46 @@ Namespace Calculator
                 btnCalc.PerformClick()
             End If
             ct -= 1
+        End Sub
+
+        Private Sub btnExplicit_Click(sender As Object, e As EventArgs) Handles btnExplicit.Click
+            _eval.ExplicitMode = Not _eval.ExplicitMode
+            If _eval.ExplicitMode Then
+                btnExplicit.BackColor = btnCalc.BackColor
+                btnExplicit.ForeColor = btnCalc.ForeColor
+                btnExplicit.FlatAppearance.MouseOverBackColor = btnCalc.FlatAppearance.MouseOverBackColor
+                btnExplicit.FlatAppearance.MouseDownBackColor = btnCalc.FlatAppearance.MouseDownBackColor
+            Else
+                btnExplicit.BackColor = btnX.BackColor
+                btnExplicit.ForeColor = btnX.ForeColor
+                btnExplicit.FlatAppearance.MouseOverBackColor = btnX.FlatAppearance.MouseOverBackColor
+                btnExplicit.FlatAppearance.MouseDownBackColor = btnX.FlatAppearance.MouseDownBackColor
+            End If
+        End Sub
+
+        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
+            tb.Focus()
+            Using diag As New DiagFunctions
+                If diag.ShowDialog() = DialogResult.OK Then
+                    Dim start As Integer = tb.SelectionStart
+                    tb.Text = tb.Text.Remove(
+                                tb.SelectionStart, tb.SelectionLength).Insert(start, diag.Result)
+
+                    If diag.Result.Contains("(") Then
+                        tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
+                    Else
+                        tb.SelectionStart = start + diag.Result.Count
+                    End If
+                End If
+            End Using
+        End Sub
+
+        Private Sub btnLog_MouseEnter(sender As Object, e As EventArgs) Handles btnLog.MouseEnter
+            btnLog.ForeColor = Color.LightSalmon
+        End Sub
+
+        Private Sub btnLog_MouseLeave(sender As Object, e As EventArgs) Handles btnLog.MouseLeave
+            btnLog.ForeColor = Color.DarkSalmon
         End Sub
 
 #End Region

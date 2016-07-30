@@ -2,6 +2,9 @@
 Imports Cantus.Calculator.Evaluator
 Imports Cantus.Calculator.Evaluator.Evaluator
 
+''' <summary>
+''' Dialog for listing all available functions
+''' </summary>
 Public Class DiagFunctions
 
     Public Property Result As String = ""
@@ -22,17 +25,18 @@ Public Class DiagFunctions
         ' add internal functions
         For Each i As Reflection.MethodInfo In info
             Try
+                ' regex filter
                 If Not Globals.Evaluator.InternalFunctions.Contains(i.Name.ToLowerInvariant(),
                                                                     filter.ToLowerInvariant()) Then Continue For
             Catch
             End Try
 
-            Dim name As New StringBuilder(i.Name)
+            Dim name As New StringBuilder(ROOT_NAMESPACE)
             Dim tag As New StringBuilder(i.Name)
             Dim types As New StringBuilder()
 
             Dim init As Boolean = True
-            name.Append(" (")
+            name.Append(SCOPE_SEP).Append(i.Name).Append(" (")
             tag.Append("(")
 
             For Each p As Reflection.ParameterInfo In i.GetParameters()
@@ -46,9 +50,7 @@ Public Class DiagFunctions
                     init = False
                 End If
 
-                Dim typeName As String = p.ParameterType.Name().Replace("Double", "Number").Replace("BigDecimal", "Number").Replace("String", "Text").
-                    Replace("List", "Matrix").Replace("SortedDictionary", "Set").Replace("Reference[]", "Tuple").
-                    Replace("Object", "(Variable)").Replace("ICollection", "(Matrix/Set/Tuple)")
+                Dim typeName As String = GetEvaluatorTypeName(p.ParameterType)
 
                 If typeName.Contains("`") Then typeName = typeName.Remove(typeName.IndexOf("`"c))
 
@@ -74,9 +76,7 @@ Public Class DiagFunctions
                 End If
             Next
 
-            Dim returnType As String = i.ReturnType.Name.Replace("Double", "Number").Replace("BigDecimal", "Number").Replace("String", "Text").
-                    Replace("List", "Matrix").Replace("SortedDictionary", "Set").Replace("Reference[]", "Tuple").
-                    Replace("Object", "(Variable)").Replace("ICollection", "(Matrix/Set/Tuple)")
+            Dim returnType As String = GetEvaluatorTypeName(i.ReturnType)
 
             If returnType.Contains("`") Then returnType = returnType.Remove(returnType.IndexOf("`"c))
 
@@ -102,21 +102,23 @@ Public Class DiagFunctions
         Next
 
         ' add user functions
-        For Each ufname As String In Globals.Evaluator.ListUserFunctions()
+        For Each uf As UserFunction In Globals.Evaluator.UserFunctions.Values
             Try
-                If Not Globals.Evaluator.InternalFunctions.Contains(ufname.ToLowerInvariant(),
+                If uf.Modifiers.Contains("private") Then Continue For ' ignore private methods
+
+                ' regex filter
+                If Not Globals.Evaluator.InternalFunctions.Contains(uf.Name.ToLowerInvariant(),
                                                                 filter.ToLowerInvariant()) Then Continue For
             Catch
             End Try
 
-            Dim uf As UserFunction = Globals.Evaluator.GetUserFunction(ufname)
-            Dim name As New StringBuilder(ufname)
-            Dim tag As New StringBuilder(ufname)
+            Dim name As New StringBuilder(uf.FullName)
+            Dim tag As New StringBuilder(Evaluator.RemoveRedundantScope(uf.FullName, Globals.Evaluator.Scope))
             Dim types As New StringBuilder()
 
             Dim init As Boolean = True
-            tag.Append("(")
             name.Append(" (")
+            tag.Append("(")
 
             For Each p As String In uf.Args
                 If Not init Then
@@ -133,6 +135,8 @@ Public Class DiagFunctions
             name.Append(")")
 
             tag.Append(")")
+
+            If types.Length = 0 Then types.Append("(No Params)")
             types.Append(" → (Variable)")
 
             Dim lvI As New ListViewItem(name.ToString())
@@ -142,7 +146,11 @@ Public Class DiagFunctions
 
             lvI.SubItems.Add("0") ' order at beginning
 
-            lvI.BackColor = Color.FromArgb(35, 35, 35)
+            If Globals.Evaluator.IsExternalScope(uf.DeclaringScope) Then
+                lvI.BackColor = Color.FromArgb(35, 35, 35) ' color for user functions
+            Else
+                lvI.BackColor = Color.FromArgb(50, 50, 35) ' color for plugins
+            End If
 
             If lvI.Tag.ToString() = _lastResult Then
                 lvI.Selected = True
@@ -189,7 +197,7 @@ Public Class DiagFunctions
     Private Sub tbSearch_Leave(sender As Object, e As EventArgs) Handles tbSearch.Leave
         If String.IsNullOrWhiteSpace(tbSearch.Text) Then
             tbSearch.ForeColor = Color.Gainsboro
-            tbSearch.Text = "Filter Functions (Regex)"
+            tbSearch.Text = "Type to Filter Functions (Regex Enabled) ..."
         End If
     End Sub
 
@@ -217,6 +225,6 @@ Public Class ListViewItemComparer
     Implements IComparer(Of ListViewItem)
 
     Public Function Compare(x As ListViewItem, y As ListViewItem) As Integer Implements IComparer(Of ListViewItem).Compare
-        Return Integer.Parse(x.SubItems(2).Text).CompareTo(Integer.Parse(y.SubItems(2).Text))
+        Return Integer.Parse(x.SubItems(x.SubItems.Count - 1).Text).CompareTo(Integer.Parse(y.SubItems(y.SubItems.Count - 1).Text))
     End Function
 End Class

@@ -1,4 +1,6 @@
-﻿Imports System.Numerics
+﻿Imports System.Globalization
+Imports System.Numerics
+Imports System.Text
 Imports Cantus.Calculator.Evaluator.Exceptions
 Namespace Calculator.Evaluator.CommonTypes
     ''' <summary>
@@ -24,12 +26,6 @@ Namespace Calculator.Evaluator.CommonTypes
         Public Const PRECISION As Integer = 50
 
         ''' <summary>
-        ''' Sets the maximum order of magnitude the power operation allows
-        ''' If AlwaysTruncate is set to true all operations are affected.
-        ''' </summary>
-        Public Const MAX_EXP As Integer = 20000
-
-        ''' <summary>
         ''' Sets the maximum order of magnitude at which we display the full value of the BigDecimal
         ''' </summary>
         Public Const MAX_FULL_DISP As Double = 10000000000.0
@@ -45,6 +41,12 @@ Namespace Calculator.Evaluator.CommonTypes
         ''' <returns></returns>
         Public Shared ReadOnly Property Undefined As BigDecimal = New BigDecimal(0, 0, True)
 
+        ''' <summary>
+        ''' If true, this bigdecimal represents an undefined value
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property IsUndefined As Boolean
+
         Public Property Mantissa() As BigInteger
             Get
                 Return m_Mantissa
@@ -53,6 +55,7 @@ Namespace Calculator.Evaluator.CommonTypes
                 m_Mantissa = Value
             End Set
         End Property
+
         Private m_Mantissa As BigInteger
         Public Property Exponent() As Integer
             Get
@@ -62,6 +65,7 @@ Namespace Calculator.Evaluator.CommonTypes
                 m_Exponent = Value
             End Set
         End Property
+
         Private m_Exponent As Integer
 
         Public Sub New(mantissa__1 As BigInteger, exponent__2 As Integer, Optional undefined__3 As Boolean = False)
@@ -74,7 +78,6 @@ Namespace Calculator.Evaluator.CommonTypes
                 Truncate()
             End If
         End Sub
-        Public Property IsUndefined As Boolean
 
         Public Sub New(value As Double)
             Me.New()
@@ -134,7 +137,7 @@ Namespace Calculator.Evaluator.CommonTypes
 
         Public Function Truncate() As BigDecimal
             If IsUndefined Then Return Me
-            Return Truncate(Precision)
+            Return Truncate(PRECISION)
         End Function
 
         Private Shared Function NumberOfDigits(value As BigInteger) As Integer
@@ -290,7 +293,6 @@ Namespace Calculator.Evaluator.CommonTypes
         End Function
 
         Public Shared Function Pow(basis As Double, exponent As Double) As BigDecimal
-            If Math.Log10(basis) + exponent > MAX_EXP Then Throw New OverflowException("Power is too large. Cancelled to prevent freeze")
             Dim tmp As BigDecimal = CType(1, BigDecimal)
             While Math.Abs(exponent) > 100
                 Dim diff As Integer = If(exponent > 0, 100, -100)
@@ -303,36 +305,76 @@ Namespace Calculator.Evaluator.CommonTypes
 #End Region
 
         ''' <summary>
+        ''' Returns string containing the full decimal representation of this number
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function ToFullNumber() As String
+            Me.Normalize()
+            If Me.Mantissa = 0 Then Return "0" ' special case: for 0 nothing needs to be inserted
+
+            Dim neg As Boolean = False
+            Dim str As StringBuilder
+            If Me.Mantissa < 0 Then
+                str = New StringBuilder((-Me.Mantissa).ToString())
+                neg = True
+            Else
+                str = New StringBuilder(Me.Mantissa.ToString())
+            End If
+
+            If Me.Exponent < 0 AndAlso str.Length + Me.Exponent <= 0 Then ' we need to add 0's to left
+                Dim left As String = "".PadLeft(-Me.Exponent - str.Length, "0"c) ' generate string of zeros
+                str.Insert(0, left)
+                str.Insert(0, "0" & CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+            ElseIf Me.Exponent < 0 Then ' just insert point
+                str.Insert(str.Length + Me.Exponent, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+            Else ' we need to append 0's to right
+                str.Append("".PadLeft(Me.Exponent, "0"c)) ' generate string of zeros
+            End If
+
+            If neg Then str.Insert(0, "-")
+            Return str.ToString()
+        End Function
+
+        ''' <summary>
         ''' Convert the BigDecimal to scientific notation
         ''' </summary>
         ''' <returns></returns>
         Public Function ToScientific() As String
             If Me.IsUndefined Then Return "Undefined"
+
+            Me.Normalize()
             If Me.Mantissa = 0 Then Return "0"
+
             Dim tmp As BigDecimal = Me.Truncate(10)
-            Dim isNegative As Boolean = False
+
+            Dim neg As Boolean = False
+            Dim val As StringBuilder
             If tmp.Mantissa < 0 Then
+                val = New StringBuilder((-tmp.Mantissa).ToString())
                 tmp.Mantissa = -tmp.Mantissa
-                isNegative = True
+                neg = True
+            Else
+                val = New StringBuilder(tmp.Mantissa.ToString())
             End If
-            Dim val As String = tmp.Mantissa.ToString()
-            If val.Length > 10 Then val = val.Remove(10)
+
+            If val.Length > 1 Then val.Insert(1, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+
             Dim expo As Integer = tmp.Exponent + CInt(Math.Floor(BigInteger.Log10(tmp.Mantissa)))
-            If val.Length > 1 Then val = val.Insert(1, ".")
-            Return String.Concat(If(isNegative, "-", ""), val, " E ", expo)
+            Return String.Concat(If(neg, "-", ""), val.ToString(), " E ", expo)
         End Function
+
         Public Function IsOutsideDispRange() As Boolean
             Return Me > New BigDecimal(MAX_FULL_DISP) OrElse Me < New BigDecimal(-MAX_FULL_DISP) OrElse
                 Math.Abs(CDbl(Me)) < MIN_FULL_DISP
         End Function
+
         Public Overrides Function ToString() As String
             If Me.IsUndefined Then Return "Undefined"
             If Me.Mantissa = 0 Then Return "0"
             If Me.IsOutsideDispRange() Then
                 Return Me.ToScientific()
             Else
-                Dim tmp As BigDecimal = Me.Truncate(10)
-                Return CDbl(tmp).ToString()
+                Return Me.Truncate(10).ToFullNumber()
             End If
         End Function
 

@@ -57,24 +57,24 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property LeftOskPos() As String
+        Public Property LeftKbdPos() As String
             Get
-                Return CType(Me("LeftOskPos"),String)
+                Return CType(Me("LeftKbdPos"),String)
             End Get
             Set
-                Me("LeftOskPos") = value
+                Me("LeftKbdPos") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property RightOskPos() As String
+        Public Property RightKbdPos() As String
             Get
-                Return CType(Me("RightOskPos"),String)
+                Return CType(Me("RightKbdPos"),String)
             End Get
             Set
-                Me("RightOskPos") = value
+                Me("RightKbdPos") = value
             End Set
         End Property
         

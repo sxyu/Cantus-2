@@ -3,6 +3,7 @@ Imports Cantus.Calculator.Evaluator
 Imports Cantus.Calculator.Evaluator.StatementRegistar.StatementResult
 Imports Cantus.Calculator.Evaluator.ObjectTypes
 Imports Cantus.Calculator.Evaluator.CommonTypes
+Imports Cantus.Calculator.Evaluator.Evaluator
 
 Namespace Calculator.Evaluator
 
@@ -98,10 +99,16 @@ Namespace Calculator.Evaluator
             Public ReadOnly Property AuxKeywords As String() ' e.g. elif, else
 
             ''' <summary>
-            ''' If true, this keyword will be processed as a block
+            ''' If true, this keyword will be processed as a block if possible
             ''' </summary>
             ''' <returns></returns>
             Public ReadOnly Property BlockLevel As Boolean
+
+            ''' <summary>
+            ''' If true, this keyword is allowed in declarative mode (when creating classes, for example
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property Declarative As Boolean
 
             ''' <summary>
             ''' Dictionary specifying whether each key needs a argument
@@ -132,11 +139,13 @@ Namespace Calculator.Evaluator
             '''  (raises an error when an argument is found) for use with statements like continue, try</param>
             Public Sub New(mainKeywords As IEnumerable(Of String), auxKeywords As IEnumerable(Of String),
                            execute As Func(Of List(Of Block), StatementResult), Optional blockLevel As Boolean = True,
-                           Optional argumentExpected As Dictionary(Of String, Boolean) = Nothing)
+                           Optional argumentExpected As Dictionary(Of String, Boolean) = Nothing,
+                           Optional declarative As Boolean = False)
                 Me.MainKeywords = mainKeywords.ToArray()
                 Me.AuxKeywords = auxKeywords.ToArray()
                 Me.Execute = execute
                 Me.BlockLevel = blockLevel
+                Me.Declarative = declarative
                 If argumentExpected Is Nothing Then
                     Me.ArgumentExpected = New Dictionary(Of String, Boolean)
                 Else
@@ -158,11 +167,13 @@ Namespace Calculator.Evaluator
             '''  (raises an error when an argument is found) for use with statements like continue, try</param>
             Public Sub New(mainKeywords As IEnumerable(Of String),
                        execute As Func(Of List(Of Block), StatementResult), Optional blockLevel As Boolean = True,
-                       Optional argumentExpected As Dictionary(Of String, Boolean) = Nothing)
+                       Optional argumentExpected As Dictionary(Of String, Boolean) = Nothing,
+                           Optional declarative As Boolean = False)
                 Me.MainKeywords = mainKeywords.ToArray()
                 Me.AuxKeywords = {}
                 Me.Execute = execute
                 Me.BlockLevel = blockLevel
+                Me.Declarative = declarative
                 If argumentExpected Is Nothing Then
                     Me.ArgumentExpected = New Dictionary(Of String, Boolean)
                 Else
@@ -178,7 +189,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Maximum length in characters of a single statement
         ''' </summary>
-        Public Const MAX_STATEMENT_LENGTH As Integer = 8
+        Public Const MAX_STATEMENT_LENGTH As Integer = 9
 
         ''' <summary>
         ''' Maximum times to loop
@@ -218,11 +229,11 @@ Namespace Calculator.Evaluator
             ' all keywords must be lower case
 
             ' FORMAT Register(New Statement({[main keywords]}, {[aux keywords]},
-            '                {[allowed argument counts]}, AddressOf [definition], [is block level], 
-            '                 [dictionary: argument expected for each keyword?]))
-            ' or     Register(New Statement({[main keywords]}, {[allowed argument counts]}, 
-            '                 AddressOf [definition], [is block level], 
-            '                 [dictionary: argument expected for each keyword?]))
+            '                {[allowed argument numbers]}, AddressOf [definition], [block level?], 
+            '                 [dictionary: argument expected for each keyword?], [declarative?]))
+            ' or     Register(New Statement({[main keywords]}, {[allowed argument numbers]}, 
+            '                 AddressOf [definition], [block level?], 
+            '                 [dictionary: argument expected for each keyword?], [declarative?]))
 
             Register(New Statement({"if"}, {"elif", "else if", "else"}, AddressOf StatementIfElifElse))
             Register(New Statement({"while"}, AddressOf StatementWhile))
@@ -238,7 +249,7 @@ Namespace Calculator.Evaluator
             Register(New Statement({"with"}, AddressOf StatementWith))
 
             Register(New Statement({"switch"}, AddressOf StatementSwitch, True))
-            Register(New Statement({"case"}, AddressOf StatementCase, True))
+            Register(New Statement({"case"}, AddressOf StatementCase, True, declarative:=True))
 
             Register(New Statement({"return"}, AddressOf StatementReturn, False))
             Register(New Statement({"break"}, AddressOf StatementBreak, False,
@@ -247,10 +258,22 @@ Namespace Calculator.Evaluator
                      New Dictionary(Of String, Boolean) From {{"continue", False}}))
 
             ' use to declare local scoped variables or override global variable names
-            Register(New Statement({"let"}, AddressOf StatementDeclare, False))
-            Register(New Statement({"global"}, AddressOf StatementDeclareGlobal, False))
+            Register(New Statement({"let"}, AddressOf StatementDeclare, False, declarative:=True))
+            Register(New Statement({"global"}, AddressOf StatementDeclareGlobal, False, declarative:=True))
+            Register(New Statement({"private", "public", "static"}, AddressOf StatementDeclareModifier, True, declarative:=True))
 
-            Register(New Statement({"function"}, AddressOf StatementDeclareFunction))
+            ' declare functions
+            Register(New Statement({"function"}, AddressOf StatementDeclareFunction, declarative:=True))
+
+            ' import stuff
+            Register(New Statement({"import"}, AddressOf StatementImport, False))
+            Register(New Statement({"load"}, AddressOf StatementLoad, False))
+
+            ' namespacing
+            Register(New Statement({"namespace"}, AddressOf StatementNamespace, True))
+
+            ' classes
+            Register(New Statement({"class"}, AddressOf StatementClass, True))
         End Sub
 
         ''' <summary>
@@ -330,15 +353,15 @@ Namespace Calculator.Evaluator
         ''' Evaluates the given script in a child evaluator and returns the result
         ''' </summary>
         Private Function Run(expr As String, Optional vars As Dictionary(Of String, Object) = Nothing,
-                             Optional [default] As Reference = Nothing) As StatementResult
-            Dim newEval As Evaluator = _eval.ScopedEvaluator()
+                             Optional [default] As Reference = Nothing, Optional declarative As Boolean = False) As StatementResult
+            Dim newEval As Evaluator = _eval.SubEvaluator()
             If Not vars Is Nothing Then
                 For Each k As String In vars.Keys
                     newEval.SetVariable(k, vars(k))
                 Next
             End If
             If Not [default] Is Nothing Then newEval.SetDefaultVariable([default])
-            Return DirectCast(newEval.EvalRaw(expr, True), StatementResult)
+            Return DirectCast(newEval.EvalRaw(expr, noSaveAns:=True, declarative:=declarative, internal:=True), StatementResult)
         End Function
 
         ''' <summary>
@@ -496,7 +519,7 @@ Namespace Calculator.Evaluator
                     If LimitLoops AndAlso ct > LoopLimit Then Throw New EvaluatorException("Loop limit reached")
                     If _die Then Throw New EvaluatorException("")
 
-                    Dim tmpEval As Evaluator = _eval.ScopedEvaluator()
+                    Dim tmpEval As Evaluator = _eval.SubEvaluator()
                     For i As Integer = 0 To vars.Count - 1
                         If i >= lst.Count Then
                             tmpEval.SetVariable(vars(i), Double.NaN)
@@ -505,7 +528,7 @@ Namespace Calculator.Evaluator
                         End If
                     Next
 
-                    result = DirectCast(tmpEval.EvalRaw(blocks(0).Content, True), StatementResult)
+                    result = DirectCast(tmpEval.EvalRaw(blocks(0).Content, noSaveAns:=True, internal:=True), StatementResult)
 
                     Select Case result.Code
                         Case ExecCode.break, ExecCode.return, ExecCode.breakLevel
@@ -546,10 +569,10 @@ Namespace Calculator.Evaluator
                     If LimitLoops AndAlso ct > LoopLimit Then Throw New EvaluatorException("Loop limit reached")
                     If _die Then Throw New EvaluatorException("")
 
-                    Dim tmpEval As Evaluator = _eval.ScopedEvaluator()
+                    Dim tmpEval As Evaluator = _eval.SubEvaluator()
                     tmpEval.SetVariable(varname, i)
 
-                    result = DirectCast(tmpEval.EvalRaw(blocks(0).Content, True), StatementResult)
+                    result = DirectCast(tmpEval.EvalRaw(blocks(0).Content, noSaveAns:=True, internal:=True), StatementResult)
 
                     Select Case result.Code
                         Case ExecCode.break, ExecCode.return, ExecCode.breakLevel
@@ -598,7 +621,7 @@ Namespace Calculator.Evaluator
         Private Function StatementSwitch(blocks As List(Of Block)) As StatementResult
             If blocks.Count <> 1 Then Throw New SyntaxException("Switch statement is invalid")
             Return Run(blocks(0).Content, New Dictionary(Of String, Object) From {{"__switch",
-                       _eval.EvalExprRaw(blocks(0).Argument, True)}})
+                       _eval.EvalExprRaw(blocks(0).Argument, True)}}, declarative:=True)
         End Function
 
         Private Function StatementCase(blocks As List(Of Block)) As StatementResult
@@ -680,32 +703,190 @@ Namespace Calculator.Evaluator
             Return New StatementResult(Globals.Evaluator.GetVariableRef(var), ExecCode.resume)
         End Function
 
-        Private Function StatementDeclareFunction(blocks As List(Of Block)) As StatementResult
-            _eval.AddUserFunction(blocks(0).Argument, blocks(0).Content)
-            If String.IsNullOrWhiteSpace(blocks(0).Content) Then
-                Return New StatementResult(blocks(0).Keyword & " " &
-                       blocks(0).Argument & " : undefined", ExecCode.resume)
-            Else
-                Return New StatementResult(blocks(0).Keyword & " " &
-                       blocks(0).Argument & " : ...", ExecCode.resume)
+        Private Function StatementDeclareModifier(blocks As List(Of Block)) As StatementResult
+            If blocks.Count <> 1 Then Throw New SyntaxException("Modified variable/function declaration is invalid ")
+            Dim var As String = blocks(0).Argument.Trim()
+            Dim keywords As New HashSet(Of String)({blocks(0).Keyword.Trim()})
+
+            ' find additional keywords
+            Dim validKeywords As String() = {"public", "private", "static"}
+            While True
+                For Each kwd As String In validKeywords
+                    If var.ToLower().StartsWith(kwd) Then
+                        var = var.Substring(kwd.Length).Trim()
+                        keywords.Add(kwd)
+                        Continue While
+                    End If
+                Next
+                Exit While
+            End While
+
+            If var.Contains("function ") Then ' functions
+                var = var.Substring("function ".Length).Trim()
+                If blocks.Count <> 1 Then Throw New SyntaxException("Function declaration is invalid ")
+
+                _eval.DefineUserFunction(var, blocks(0).Content, keywords)
+                If String.IsNullOrWhiteSpace(blocks(0).Content) Then
+                    Return New StatementResult(blocks(0).Keyword &
+                       blocks(0).Argument & " (undefined)", ExecCode.resume)
+                Else
+                    Return New StatementResult(blocks(0).Keyword &
+                       blocks(0).Argument & " ...", ExecCode.resume)
+                End If
+
+            ElseIf var.Contains("class ") Then ' classes
+                var = var.Substring("class ".Length).Trim()
+                If blocks.Count <> 1 Then Throw New SyntaxException("Class declaration is invalid ")
+
+                If var.Contains(":") Then
+                    Dim inhIdx As Integer = var.IndexOf(":")
+                    If Not Evaluator.IsValidIdentifier(var.Remove(inhIdx).Trim()) Then
+                        Throw New EvaluatorException("Invalid class name")
+                    End If
+                    _eval.DefineUserClass(var.Trim(), blocks(0).Content,
+                                     var.Substring(inhIdx + 1).Split(","c), keywords)
+                Else
+                    If Not Evaluator.IsValidIdentifier(var.Trim()) Then Throw New EvaluatorException("Invalid class name")
+                    _eval.DefineUserClass(var, blocks(0).Content, modifiers:=keywords)
+                End If
+
+                Return New StatementResult("Class " & var.Trim() & " (declared)", ExecCode.resume)
+
+            Else ' variables
+
+                If var.StartsWith("let ") Then var = var.Substring("let ".Length).Trim() ' ignore let
+
+                Dim isGlobal As Boolean = False
+                If var.StartsWith("global ") Then ' if global, declare global
+                    var = var.Substring("global ".Length).Trim()
+                    isGlobal = True
+                End If
+
+                Dim def As Object = Double.NaN
+                If var.Contains("=") Then
+                    Try
+                        def = ObjectTypes.DetectType(_eval.EvalExprRaw(var.Substring(var.IndexOf("="c) + 1).Trim(), True))
+                    Catch
+                        ' do nothing
+                    End Try
+                    var = var.Remove(var.IndexOf("="c)).Trim()
+                    If var.EndsWith(":") Then var = var.Remove(var.Length - 1)
+                End If
+                var = var.Trim()
+
+                If isGlobal Then
+                    Dim ref As Reference = DirectCast(Globals.Evaluator.GetVariableRef(var), Reference).ResolveRef()
+                    ref.SetValue(def)
+                    _eval.SetVariable(var, ref, modifiers:=keywords)
+                Else
+                    _eval.SetVariable(var, def, modifiers:=keywords)
+                End If
+
+                Return New StatementResult(_eval.GetVariableRef(var).GetValue(), ExecCode.resume)
             End If
         End Function
 
-        Private Function StatementDeclareVoid(blocks As List(Of Block)) As StatementResult
-            Dim baseIndent As Integer = LineIndentLevel(blocks(0).Content.
-                Trim({ControlChars.Lf, ControlChars.Cr}))
-            _eval.AddUserFunction(blocks(0).Argument, blocks(0).Content)
+        Private Function StatementDeclareFunction(blocks As List(Of Block)) As StatementResult
+            If blocks.Count <> 1 Then Throw New SyntaxException("Function declaration is invalid ")
+            _eval.DefineUserFunction(blocks(0).Argument, blocks(0).Content)
             If String.IsNullOrWhiteSpace(blocks(0).Content) Then
-                Return New StatementResult(blocks(0).Keyword & " " &
-                       blocks(0).Argument & " : undefined", ExecCode.resume)
+                Return New StatementResult(blocks(0).Keyword &
+                       blocks(0).Argument & " (undefined)", ExecCode.resume)
             Else
-                Return New StatementResult(blocks(0).Keyword & " " &
-                       blocks(0).Argument & " : ...", ExecCode.resume)
+                Return New StatementResult(blocks(0).Keyword &
+                       blocks(0).Argument & " ...", ExecCode.resume)
             End If
+        End Function
+
+        Private Function StatementImport(blocks As List(Of Block)) As StatementResult
+            If blocks.Count <> 1 Then Throw New SyntaxException("Import statement is invalid ")
+            For Each path As String In blocks(0).Argument.Split(","c)
+                path = path.Trim()
+                If Not _eval.Loaded.Contains(path.Trim()) Then
+                    Try
+                        ' if not loaded, try loading the scope
+                        _eval.Load(path, False, True)
+                    Catch
+                        ' load failed? check if it is some scope we don't know (i.e. below file level) by looking through things
+                        For Each fn As UserFunction In _eval.UserFunctions.Values
+                            If IsParentScopeOf(path, fn.DeclaringScope) Then
+                                _eval.Import(path) ' confirmed, import
+                                Exit Try
+                            ElseIf IsParentScopeOf(path, fn.DeclaringScope, _eval.scope) Then ' import relative to current scope?
+                                _eval.Import(_eval.Scope & Evaluator.SCOPE_SEP & path) ' confirmed, import
+                                Exit Try
+                            End If
+                        Next
+
+                        For Each var As Variable In _eval.Variables.Values
+                            If IsParentScopeOf(path, var.DeclaringScope) Then
+                                _eval.Import(path) ' confirmed, import
+                                Exit Try
+                            ElseIf IsParentScopeOf(path, var.DeclaringScope, _eval.Scope) Then ' import relative to current scope?
+                                _eval.Import(_eval.Scope & Evaluator.SCOPE_SEP & path) ' confirmed, import
+                                Exit Try
+                            End If
+                        Next
+                        ' nope, does not exist. complain to the user.
+                        Throw New EvaluatorException("Import: Cantus package ''" & path & "'' does not exist")
+                    End Try
+                Else
+                    ' already loaded, import namespace
+                    _eval.Import(path)
+                End If
+            Next
+            Return New StatementResult("Import: imported " & blocks(0).Argument.Trim(), ExecCode.resume)
+        End Function
+
+        Private Function StatementLoad(blocks As List(Of Block)) As StatementResult
+            If blocks.Count <> 1 Then Throw New SyntaxException("Load statement is invalid ")
+            For Each path As String In blocks(0).Argument.Split(","c)
+                Try
+                    _eval.Load(path, False)
+                Catch
+                    Throw New EvaluatorException("Load: package ''" & path.Trim() & "'' does not exist")
+                End Try
+            Next
+            Return New StatementResult("Load: loaded " & blocks(0).Argument.Trim(), ExecCode.resume)
+        End Function
+
+        Private Function StatementNamespace(blocks As List(Of Block)) As StatementResult
+            If blocks.Count <> 1 Then Throw New SyntaxException("Namespace declaration is invalid ")
+            If Not Evaluator.IsValidIdentifier(blocks(0).Argument.Trim()) Then Throw New EvaluatorException("Invalid namespace name")
+
+            _eval.SubScope(blocks(0).Argument.Trim())
+
+            Dim res As StatementResult
+            Try
+                res = DirectCast(_eval.EvalRaw(blocks(0).Content, True, False, True), StatementResult)
+                _eval.ParentScope()
+            Catch ex As Exception
+                _eval.ParentScope()
+                Throw ex
+            End Try
+            Return res
+        End Function
+
+        Private Function StatementClass(blocks As List(Of Block)) As StatementResult
+            If blocks.Count <> 1 Then Throw New SyntaxException("Class declaration is invalid ")
+
+            If blocks(0).Argument.ToLower().Contains(":") Then
+                Dim inhIdx As Integer = blocks(0).Argument.ToLower().IndexOf(":")
+                If Not Evaluator.IsValidIdentifier(blocks(0).Argument.Remove(inhIdx).Trim()) Then
+                    Throw New EvaluatorException("Invalid class name")
+                End If
+                _eval.DefineUserClass(blocks(0).Argument.Remove(inhIdx).Trim(), blocks(0).Content,
+                                     blocks(0).Argument.Substring(inhIdx + 1).Split(","c))
+            Else
+                If Not Evaluator.IsValidIdentifier(blocks(0).Argument.Trim()) Then Throw New EvaluatorException("Invalid class name")
+                _eval.DefineUserClass(blocks(0).Argument, blocks(0).Content)
+            End If
+
+            Return New StatementResult("Class " & blocks(0).Argument.Trim() & " (declared)", ExecCode.resume)
         End Function
 
         ''' <summary>
-        ''' Stop all threads and disallow spawning of new ones
+        ''' Stop all threads running statements and disallow spawning of new ones
         ''' </summary>
         Public Sub Dispose() Implements IDisposable.Dispose
             Me._die = True
@@ -713,7 +894,7 @@ Namespace Calculator.Evaluator
         End Sub
 
         ''' <summary>
-        ''' Stop all threads and continue
+        ''' Stop all threads running statements and continue
         ''' </summary>
         Public Sub StopAll()
             Me._die = True

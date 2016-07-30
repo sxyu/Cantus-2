@@ -16,57 +16,63 @@
             Me.Show()
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
             Me.Snap = My.Settings.OskLock
-            If My.Settings.LeftOskPos <> "" Then
-                Dim spl() As String = My.Settings.LeftOskPos.Split(","c)
+            If My.Settings.LeftKbdPos <> "" Then
+                Dim spl() As String = My.Settings.LeftKbdPos.Split(","c)
                 Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
                 If Me.Left >= -100 And Me.Top >= 0 And Me.Right <= Screen.PrimaryScreen.WorkingArea.Width + 100 And
                 Me.Bottom <= Screen.PrimaryScreen.WorkingArea.Height + 500 Then Exit Sub
             End If
-            Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - FrmCalc.Width / 2)
-            Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 6 + FrmCalc.Height / 2)
+            Me.Left = FrmCalc.Left
+            Me.Top = FrmCalc.Bottom
             Me.Width = btn3.Right + 12
-            My.Settings.LeftOskPos = Me.Left & "," & Me.Top
+            My.Settings.LeftKbdPos = Me.Left & "," & Me.Top
             My.Settings.Save()
         End Sub
 
-        Private Sub btnT_Click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btnT.Click, btnM.Click, btnD.Click, btnC.Click, btnB.Click, btnA.Click, btn9.Click, btn8.Click, btn7.Click, btn6.Click, btn5.Click, btn4.Click, btn3.Click, btn2.Click, btn1.Click, btn0.Click, btnPt.Click, btnZ.Click, btnPi.Click, btnE.Click, btnSpace.Click
+        Private Sub btnT_Click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btn9.Click, btn8.Click, btn7.Click,
+            btn6.Click, btn5.Click, btn4.Click, btn3.Click, btn2.Click, btn1.Click, btn0.Click, btnPt.Click,
+            btnZ.Click, btnPi.Click, btnE.Click, btnImagUnit.Click
             Dim btn As Button = DirectCast(sender, Button)
             'pnl.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
             FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength)
             FrmCalc.tb.Focus()
-            FrmCalc.tb.Text = frmCalc.tb.Text.Insert(start, btn.Text)
-            frmCalc.tb.SelectionStart = start + btn.Text.Length
+            FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, btn.Text)
+            FrmCalc.tb.SelectionStart = start + btn.Text.Length
         End Sub
         Private Sub WriteFunction(ByVal s As String)
-            frmCalc.tb.Focus()
+            FrmCalc.tb.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
             FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionLength).Insert(start, s)
             If s.Contains("(") Then
-                frmCalc.tb.SelectionStart = start + s.IndexOf("(") + 1
+                FrmCalc.tb.SelectionStart = start + s.IndexOf("(") + 1
             Else
-                frmCalc.tb.SelectionStart = start + s.Count()
+                FrmCalc.tb.SelectionStart = start + s.Count()
             End If
         End Sub
 
-        Private Sub btnFileLine_Click(sender As Object, e As EventArgs) Handles btnFileLine.Click
-            WriteFunction(" comb ")
-        End Sub
-
-        Private Sub btnFile_Click(sender As Object, e As EventArgs) Handles btnFile.Click
+        Private Sub btnAlert_Click(sender As Object, e As EventArgs)
             WriteFunction("alert()")
         End Sub
 
-        Private Sub btnClip_Click(sender As Object, e As EventArgs) Handles btnClip.Click
-            WriteFunction("clipboard()")
+        Private Sub btnConfirm_Click(sender As Object, e As EventArgs)
+            WriteFunction("confirm()")
         End Sub
 
-        Private Sub btnFileAppend_Click(sender As Object, e As EventArgs) Handles btnFileAppend.Click
+        Private Sub btnInput_Click(sender As Object, e As EventArgs)
             WriteFunction("input()")
         End Sub
 
+        Private Sub btnChoose_Click(sender As Object, e As EventArgs)
+            WriteFunction(" choose ")
+        End Sub
+
+        Private Sub btnPerm_Click(sender As Object, e As EventArgs)
+            WriteFunction("nPr()")
+        End Sub
+
         Private Sub OskLeft_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-            frmCalc.Close()
+            FrmCalc.Close()
         End Sub
         Private _isMoving As Boolean
         Private _movingPrevPt As Point
@@ -148,22 +154,21 @@
                     End If
                 End If
             End If
-            My.Settings.MainPos = frmCalc.Left & "," & frmCalc.Top
-            My.Settings.LeftOskPos = Me.Left & "," & Me.Top
-            My.Settings.RightOskPos = OskRight.Left & "," & OskRight.Top
+            My.Settings.MainPos = FrmCalc.Left & "," & FrmCalc.Top
+            My.Settings.LeftKbdPos = Me.Left & "," & Me.Top
+            My.Settings.RightKbdPos = OskRight.Left & "," & OskRight.Top
             My.Settings.OskLock = Me.Snap
-            My.Settings.LOskSnap = frmCalc.LSnap
-            My.Settings.ROskSnap = frmCalc.RSnap
-            My.Settings.ROskSnap = frmCalc.RSnap
+            My.Settings.LOskSnap = FrmCalc.LSnap
+            My.Settings.ROskSnap = FrmCalc.RSnap
+            My.Settings.ROskSnap = FrmCalc.RSnap
             My.Settings.Save()
         End Sub
 
         Private Sub osk_Enter(sender As Object, e As EventArgs) Handles btnPi.Enter, btnE.Enter, btnZ.Enter, btnY.Enter,
-        btnX.Enter, btnT.Enter, btnSpace.Enter, btnPt.Enter, btnM.Enter, btnFileLine.Enter, btnFileAppend.Enter, btnFile.Enter,
-        btnD.Enter, btnClip.Enter, btnC.Enter, btnB.Enter, btnA.Enter, btn9.Enter, btn8.Enter, btn7.Enter, btn6.Enter, btn5.Enter,
+        btnX.Enter, btnPt.Enter, btnImagUnit.Enter, btn9.Enter, btn8.Enter, btn7.Enter, btn6.Enter, btn5.Enter,
         btn4.Enter, btn3.Enter, btn2.Enter, btn1.Enter, btn0.Enter
             If (Not DirectCast(sender, Control).Name = "pnl") Then pnl.Focus()
-            frmCalc.tb.Focus()
+            FrmCalc.tb.Focus()
             'frmCalc.BringToFront()
         End Sub
     End Class

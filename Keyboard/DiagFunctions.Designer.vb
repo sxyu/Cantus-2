@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class DiagFunctions
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class DiagFunctions
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.lv = New System.Windows.Forms.ListView()
         Me.ColName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -47,7 +47,7 @@ Partial Class DiagFunctions
         Me.lv.Location = New System.Drawing.Point(12, 8)
         Me.lv.MultiSelect = False
         Me.lv.Name = "lv"
-        Me.lv.Size = New System.Drawing.Size(857, 464)
+        Me.lv.Size = New System.Drawing.Size(1110, 464)
         Me.lv.TabIndex = 0
         Me.lv.UseCompatibleStateImageBehavior = False
         Me.lv.View = System.Windows.Forms.View.Details
@@ -55,7 +55,7 @@ Partial Class DiagFunctions
         'ColName
         '
         Me.ColName.Text = "Name"
-        Me.ColName.Width = 234
+        Me.ColName.Width = 450
         '
         'ColDescription
         '
@@ -73,7 +73,7 @@ Partial Class DiagFunctions
         Me.btnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
         Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnOK.ForeColor = System.Drawing.Color.White
-        Me.btnOK.Location = New System.Drawing.Point(780, -1)
+        Me.btnOK.Location = New System.Drawing.Point(1033, -1)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(90, 44)
         Me.btnOK.TabIndex = 3
@@ -92,7 +92,7 @@ Partial Class DiagFunctions
         Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
         Me.btnCancel.ForeColor = System.Drawing.Color.White
-        Me.btnCancel.Location = New System.Drawing.Point(688, 0)
+        Me.btnCancel.Location = New System.Drawing.Point(941, 0)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(93, 44)
         Me.btnCancel.TabIndex = 4
@@ -110,7 +110,7 @@ Partial Class DiagFunctions
         Me.tbSearch.Name = "tbSearch"
         Me.tbSearch.Size = New System.Drawing.Size(417, 25)
         Me.tbSearch.TabIndex = 2
-        Me.tbSearch.Text = "Filter Functions (Regex)"
+        Me.tbSearch.Text = "Type to Filter Functions (Regex Enabled) ..."
         '
         'PnlSearch
         '
@@ -123,7 +123,7 @@ Partial Class DiagFunctions
         Me.PnlSearch.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.PnlSearch.Location = New System.Drawing.Point(1, 475)
         Me.PnlSearch.Name = "PnlSearch"
-        Me.PnlSearch.Size = New System.Drawing.Size(868, 47)
+        Me.PnlSearch.Size = New System.Drawing.Size(1121, 47)
         Me.PnlSearch.TabIndex = 5
         '
         'DiagFunctions
@@ -133,7 +133,7 @@ Partial Class DiagFunctions
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.CancelButton = Me.btnCancel
-        Me.ClientSize = New System.Drawing.Size(868, 517)
+        Me.ClientSize = New System.Drawing.Size(1121, 517)
         Me.Controls.Add(Me.PnlSearch)
         Me.Controls.Add(Me.lv)
         Me.Font = New System.Drawing.Font("Segoe UI Semilight", 11.0!)

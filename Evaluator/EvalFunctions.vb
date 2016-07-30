@@ -1,5 +1,4 @@
 ﻿Imports System.Text
-Imports System.Numerics
 Imports Cantus.Calculator.Evaluator.CommonTypes
 Imports Cantus.Calculator.Evaluator.Exceptions
 Imports Cantus.Calculator.Evaluator.ObjectTypes
@@ -25,30 +24,55 @@ Namespace Calculator.Evaluator
 
         ' evaluator management
 
-        Public Function AllClear() As String
+        ''' <summary>
+        ''' Reload all constants, clears all variables and userfunctions, and clears imports
+        ''' </summary>
+        Public Sub AllClear()
             _eval.Clear()
             _eval.ReloadDefault()
-            Return "Everything cleared"
-        End Function
+        End Sub
 
-        Public Function Reload() As String
-            _eval.ReloadDefault()
-            Return "Constants reloaded"
-        End Function
+        ''' <summary>
+        ''' Reload default constants. if name is specified, reloads constant with that name only.
+        ''' </summary>
+        Public Sub Reload(Optional name As String = "")
+            _eval.ReloadDefault(name)
+        End Sub
 
+        ''' <summary>
+        ''' Get the previous nth answer
+        ''' </summary>
         Public Function PrevAns(index As Double) As Object
             Return _eval.PrevAns(Int(_eval.PrevAns.Count - index - 1))
         End Function
 
         ' modes
-        Public Function OMode(Optional ByVal val As String = "") As String
+        ''' <summary>
+        ''' Get or set the output format of this evaluator
+        ''' </summary>
+        Public Function _Output(Optional ByVal val As String = "") As String
             If val <> "" Then
-                _eval.OMode = DirectCast([Enum].Parse(GetType(IOMode), val, True), IOMode)
+                Try
+                    val = val.ToLower()
+                    ' shorthands
+                    If val = "sci" Then
+                        val = "Scientific"
+                    End If
+                    ' do not allow numbers
+                    If Double.TryParse(val, Nothing) Then Throw New EvaluatorException()
+                    _eval.OutputFormat = DirectCast([Enum].Parse(GetType(eOutputFormat), val, True), eOutputFormat)
+                Catch
+                    Throw New EvaluatorException(val & " is not a valid output mode. Choices are: 
+                        Raw, Math, Scientific (Sci)")
+                End Try
             End If
-            Return _eval.OMode.ToString()
+            Return _eval.OutputFormat.ToString()
         End Function
 
-        Public Function AngleRep(Optional ByVal val As String = "") As String
+        ''' <summary>
+        ''' Get or set the angle representation mode of this evaluator
+        ''' </summary>
+        Public Function _AngleRepr(Optional ByVal val As String = "") As String
             If val <> "" Then
                 val = val.ToLower()
                 ' shorthands
@@ -59,16 +83,43 @@ Namespace Calculator.Evaluator
                 ElseIf val = "grad"
                     val = "Gradian"
                 End If
-                _eval.AngleRepMode = DirectCast([Enum].Parse(GetType(AngleRep), val, True), AngleRep)
+                Try
+                    _eval.AngleMode = DirectCast([Enum].Parse(GetType(eAngleRepresentation), val, True), eAngleRepresentation)
+                Catch
+                    Throw New EvaluatorException(val & " is not a valid angle representation mode." &
+                    "Choices are: Radian (Rad), Degree (Deg), Gradian (Grad)")
+                End Try
             End If
-            Return _eval.AngleRepMode.ToString()
+            Return _eval.AngleMode.ToString()
         End Function
 
-        Public Function SpacesPerTab(Optional ByVal val As Double = -1) As Double
+        ''' <summary>
+        ''' Get or set the number of spaces per tab of this evaluator
+        ''' </summary>
+        Public Function _SpacesPerTab(Optional ByVal val As Double = Double.NaN) As Double
             If val >= 0 Then
                 _eval.SpacesPerTab = Int(val)
+            ElseIf val < 0 AndAlso Not Double.IsNaN(val) Then
+                Throw New EvaluatorException("Number of spaces per tab may not be negative.")
             End If
             Return _eval.SpacesPerTab
+        End Function
+
+        ''' <summary>
+        ''' Get or set the explicit mode
+        ''' </summary>
+        Public Function _Explicit(Optional ByVal val As Boolean? = Nothing) As Boolean
+            If Not val Is Nothing Then
+                _eval.ExplicitMode = CBool(val)
+            End If
+            Return _eval.ExplicitMode
+        End Function
+
+        ''' <summary>
+        ''' Get the scope
+        ''' </summary>
+        Public Function _Scope() As String
+            Return _eval.Scope
         End Function
 
         ''' <summary>
@@ -78,7 +129,7 @@ Namespace Calculator.Evaluator
         ''' <returns></returns>
         Public Function RecallUF(name As String) As String
             Try
-                Return _eval.GetUserFunction(name).ToString()
+                Return _eval.UserFunctions(name).ToString(_eval.Scope)
             Catch
                 Return "Function ''" & name & "'' is undefined"
             End Try
@@ -91,7 +142,7 @@ Namespace Calculator.Evaluator
         ''' <returns></returns>
         Public Function CopyUF(name As String) As Object
             Try
-                Return Clipboard(_eval.GetUserFunction(name).ToString())
+                Return Clipboard(_eval.UserFunctions(name).ToString(_eval.Scope))
             Catch
                 Return "Function ''" & name & "''is undefined"
             End Try
@@ -155,12 +206,12 @@ Namespace Calculator.Evaluator
         ' trig functions
         Public Function Sin(ByVal v As Object) As Object
             If TypeOf v Is Double Then
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return SinD(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return SinR(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return SinG(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -173,12 +224,12 @@ Namespace Calculator.Evaluator
         End Function
         Public Function Cos(ByVal v As Object) As Object
             If TypeOf v Is Double Then
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return CosD(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return CosR(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return CosG(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -191,12 +242,12 @@ Namespace Calculator.Evaluator
         End Function
         Public Function Tan(ByVal v As Object) As Object
             If TypeOf v Is Double Then
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return TanD(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return TanR(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return TanG(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -261,13 +312,13 @@ Namespace Calculator.Evaluator
             Return 1 / SinD(v)
         End Function
         Public Function SinR(ByVal v As Double) As Double
-            Return Math.Round(Math.Sin(v), 11)
+            Return Math.Round(Math.Sin(v), 9)
         End Function
         Public Function CosR(ByVal v As Double) As Double
-            Return Math.Round(Math.Cos(v), 11)
+            Return Math.Round(Math.Cos(v), 9)
         End Function
         Public Function TanR(ByVal v As Double) As Double
-            Return Math.Round(Math.Tan(v), 11)
+            Return Math.Round(Math.Tan(v), 9)
         End Function
         Public Function CotR(ByVal v As Double) As Double
             Return 1 / TanR(v)
@@ -301,12 +352,12 @@ Namespace Calculator.Evaluator
             If TypeOf v Is Numerics.Complex Then
                 Return Numerics.Complex.Asin(CType(v, Numerics.Complex))
             ElseIf TypeOf v Is Double
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return Asind(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return Asinr(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return Asing(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -320,12 +371,12 @@ Namespace Calculator.Evaluator
             If TypeOf v Is Numerics.Complex Then
                 Return Numerics.Complex.Acos(CType(v, Numerics.Complex))
             ElseIf TypeOf v Is Double
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return Acosd(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return Acosr(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return Acosg(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -359,12 +410,12 @@ Namespace Calculator.Evaluator
             If TypeOf v Is Numerics.Complex Then
                 Return Numerics.Complex.Atan(CType(v, Numerics.Complex))
             ElseIf TypeOf v Is Double
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return Atand(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return Atanr(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return Atang(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -387,12 +438,12 @@ Namespace Calculator.Evaluator
             If TypeOf v Is Numerics.Complex Then
                 Return Numerics.Complex.Sinh(CType(v, Numerics.Complex))
             ElseIf TypeOf v Is Double
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return SinhD(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return SinhR(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return SinhG(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -406,12 +457,12 @@ Namespace Calculator.Evaluator
             If TypeOf v Is Numerics.Complex Then
                 Return Numerics.Complex.Tanh(CType(v, Numerics.Complex))
             ElseIf TypeOf v Is Double
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return TanhD(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return TanhR(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return TanhG(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -425,12 +476,12 @@ Namespace Calculator.Evaluator
             If TypeOf v Is Numerics.Complex Then
                 Return Numerics.Complex.Cosh(CType(v, Numerics.Complex))
             ElseIf TypeOf v Is Double
-                Select Case _eval.AngleRepMode
-                    Case Evaluator.AngleRep.Degree
+                Select Case _eval.AngleMode
+                    Case Evaluator.eAngleRepresentation.Degree
                         Return CoshD(CDbl(v))
-                    Case Evaluator.AngleRep.Radian
+                    Case Evaluator.eAngleRepresentation.Radian
                         Return CoshR(CDbl(v))
-                    Case Evaluator.AngleRep.Gradian
+                    Case Evaluator.eAngleRepresentation.Gradian
                         Return CoshG(CDbl(v))
                     Case Else
                         Return Double.NaN
@@ -480,11 +531,14 @@ Namespace Calculator.Evaluator
         Public Function Pow(ByVal value1 As Object, ByVal value2 As Object) As Object
             If TypeOf value1 Is Double AndAlso TypeOf value2 Is Double Then
                 Return BigDecimal.Pow(CDbl(value1), CDbl(value2))
+
             ElseIf TypeOf value1 Is Numerics.Complex
                 If TypeOf value2 Is BigDecimal OrElse TypeOf value2 Is Double Then value2 = New Numerics.Complex(CDbl(value2), 0)
                 Return Numerics.Complex.Pow(CType(value1, Numerics.Complex), CType(value2, Numerics.Complex))
-            ElseIf TypeOf value1 Is List(Of Reference) AndAlso TypeOf value2 Is Double OrElse TypeOf value2 Is BigDecimal
-                Return New Matrix(DirectCast(value1, List(Of Reference))).Expo(Int(CDbl(value2))).GetValue()
+
+            ElseIf TypeOf value1 Is IEnumerable(Of Reference) AndAlso TypeOf value2 Is Double OrElse TypeOf value2 Is BigDecimal
+                Return New Matrix(DirectCast(value1, IEnumerable(Of Reference))).Expo(Int(CDbl(value2))).GetValue()
+
             Else
                 Throw New EvaluatorException("Invalid pow")
             End If
@@ -629,27 +683,38 @@ Namespace Calculator.Evaluator
         End Function
 
         ' combinatorics
-        Public Function Combinations(ByVal n As Double, ByVal k As Double) As Double
+        ''' <summary>
+        ''' Compute combinations
+        ''' </summary>
+        Public Function Comb(ByVal n As Double, ByVal r As Double) As Double
             Dim sum As Double = 0
             n = Math.Truncate(n)
-            If CmpDbl(n, 0) = 0 AndAlso k < 1 AndAlso k >= 0 Then Return 1 ' (0 0) = 1
-            For i As Long = 0 To CLng(Math.Truncate(k - 1))
+            If CmpDbl(n, 0) = 0 AndAlso r < 1 AndAlso r >= 0 Then Return 1 ' (0 0) = 1
+            For i As Long = 0 To CLng(Math.Truncate(r - 1))
                 sum += Math.Log10(n - i)
                 sum -= Math.Log10(i + 1)
             Next
             Return Math.Round(Math.Pow(10, sum))
         End Function
 
+        ''' <summary>
+        ''' Compute combinations
+        ''' </summary>
         Public Function Choose(ByVal n As Double, ByVal k As Double) As Double
-            Return Combinations(n, k)
+            Return Comb(n, k)
         End Function
-        Public Function Comb(ByVal n As Double, ByVal k As Double) As Double
-            Return Combinations(n, k)
-        End Function
+
+        ''' <summary>
+        ''' Compute combinations
+        ''' </summary>
         Public Function NCr(ByVal n As Double, ByVal k As Double) As Double
-            Return Combinations(n, k)
+            Return Comb(n, k)
         End Function
-        Public Function Permutations(ByVal n As Double, ByVal k As Double) As Double
+
+        ''' <summary>
+        ''' Compute permutations
+        ''' </summary>
+        Public Function Perm(ByVal n As Double, ByVal k As Double) As Double
             Dim sum As Double = 0
             n = Math.Truncate(n)
             If CmpDbl(n, 0) = 0 AndAlso k < 1 AndAlso k >= 0 Then Return 1 ' (0 0) = 1
@@ -658,11 +723,12 @@ Namespace Calculator.Evaluator
             Next
             Return Math.Round(Math.Pow(10, sum))
         End Function
-        Public Function Perm(ByVal n As Double, ByVal k As Double) As Double
-            Return Permutations(n, k)
-        End Function
+
+        ''' <summary>
+        ''' Compute permutations
+        ''' </summary>
         Public Function nPr(ByVal n As Double, ByVal k As Double) As Double
-            Return Permutations(n, k)
+            Return Perm(n, k)
         End Function
         Public Function GCF(ByVal v1 As Double, ByVal v2 As Double) As Double
             Try
@@ -733,10 +799,16 @@ Namespace Calculator.Evaluator
                            Int(digits)) * 10 ^ Math.Ceiling(Math.Log10(Math.Abs(value)))
         End Function
 
+        ''' <summary>
+        ''' Get the sign of a number
+        ''' </summary>
         Public Function Sgn(ByVal value As Double) As Double
             Return Math.Sign(value)
         End Function
 
+        ''' <summary>
+        ''' Get the absolute value of a number, determinant of a matrix, magnitude of a vector
+        ''' </summary>
         Public Function Abs(ByVal value As Object) As Object
             If TypeOf value Is Double Then
                 Return Math.Abs(CDbl(value))
@@ -749,21 +821,29 @@ Namespace Calculator.Evaluator
                 End If
             ElseIf TypeOf value Is Numerics.Complex Then
                 Return CType(value, Numerics.Complex).Magnitude
-            ElseIf TypeOf value Is List(Of Reference) Then
-                ' Find the determinant. If we cannot, try getting the length of the list
+            ElseIf TypeOf value Is IEnumerable(Of Reference) Then
+                ' Find the determinant. If we cannot, try getting the magnitude. If that still fails, get the length of the list
                 Try
-                    Return Det(CType(value, List(Of Reference)))
+                    Return Det(CType(value, IEnumerable(Of Reference)))
                 Catch
-                    Return CType(value, List(Of Reference)).Count
+                    Try
+                        Return Magnitude(CType(value, IEnumerable(Of Reference)))
+                    Catch
+                        Return CType(value, IEnumerable(Of Reference)).Count
+                    End Try
                 End Try
-            ElseIf TypeOf value Is SortedDictionary(Of Reference, Reference) Then
-                Return CType(value, SortedDictionary(Of Reference, Reference)).Count
+            ElseIf TypeOf value Is IDictionary(Of Reference, Reference) Then
+                Return CType(value, IDictionary(Of Reference, Reference)).Count
             ElseIf TypeOf value Is String
                 Return CStr(value).Length
             Else
                 Return 0
             End If
         End Function
+
+        ''' <summary>
+        ''' Get the natural logarithm of a number
+        ''' </summary>
         Public Function Ln(ByVal value As Object) As Object
             If TypeOf value Is Double Then
                 Return Math.Log(CDbl(value))
@@ -773,6 +853,10 @@ Namespace Calculator.Evaluator
                 Return Double.NaN
             End If
         End Function
+
+        ''' <summary>
+        ''' Get the base [base] logarithm of a number. If base is not specified, defaults to 10.
+        ''' </summary>
         Public Function Log(ByVal value As Object, Optional ByVal base As Object = 10) As Object
             If TypeOf value Is Double Then
                 Return Math.Log(CDbl(value), CDbl(base))
@@ -782,15 +866,31 @@ Namespace Calculator.Evaluator
                 Return Double.NaN
             End If
         End Function
+
+        ''' <summary>
+        ''' Get the base 2 logarithm of a number
+        ''' </summary>
         Public Function Log2(ByVal value As Object) As Object
             Return Me.Log(value, 2)
         End Function
+
+        ''' <summary>
+        ''' Get the base 2 logarithm of a number
+        ''' </summary>
         Public Function Lg(ByVal value As Object) As Object
             Return Me.Log2(value)
         End Function
+
+        ''' <summary>
+        ''' Get the base 10 logarithm of a number
+        ''' </summary>
         Public Function Log10(ByVal value As Object) As Object
             Return Me.Log(value)
         End Function
+
+        ''' <summary>
+        ''' Get the modulo of two numbers
+        ''' </summary>
         Public Function Modulo(ByVal value1 As Double, ByVal value2 As Double) As Double
             If value2 < 0 Then Return -Modulo(-value1, -value2)
             If value1 < 0 Then
@@ -798,6 +898,16 @@ Namespace Calculator.Evaluator
             Else
                 Return value1 Mod value2
             End If
+        End Function
+
+        ''' <summary>
+        ''' Swap two references to objects
+        ''' </summary>
+        Public Function Swap(value1 As Reference, value2 As Reference) As Reference()
+            Dim t As Object = value1.GetValue()
+            value1.SetValue(value2.GetValue())
+            value2.SetValue(t)
+            Return {value1, value2}
         End Function
 
         ''' <summary>
@@ -831,13 +941,13 @@ Namespace Calculator.Evaluator
         ''' <returns></returns>
         Public Function Median(ByVal value1 As Object) As Double
             Dim lst As New List(Of Double)
-            If TypeOf value1 Is List(Of Reference) Then
-                Dim tmp As List(Of Reference) = CType(value1, List(Of Reference))
+            If TypeOf value1 Is IEnumerable(Of Reference) Then
+                Dim tmp As IEnumerable(Of Reference) = CType(value1, IEnumerable(Of Reference))
                 For Each r As Reference In tmp
                     lst.Add(CDbl(r.Resolve()))
                 Next
             ElseIf TypeOf value1 Is Reference() Then
-                Dim tmp As List(Of Reference) = CType(value1, Reference()).ToList()
+                Dim tmp As IEnumerable(Of Reference) = CType(value1, Reference()).ToList()
                 For Each r As Reference In tmp
                     lst.Add(CDbl(r.Resolve()))
                 Next
@@ -864,13 +974,13 @@ Namespace Calculator.Evaluator
             Dim count As New Dictionary(Of Double, Integer)
             Dim countfreq As New Dictionary(Of Integer, Integer)
 
-            If TypeOf value1 Is List(Of Reference) Then
-                Dim tmp As List(Of Reference) = CType(value1, List(Of Reference))
+            If TypeOf value1 Is IEnumerable(Of Reference) Then
+                Dim tmp As IEnumerable(Of Reference) = CType(value1, IEnumerable(Of Reference))
                 For Each r As Reference In tmp
                     lst.Add(CDbl(r.Resolve()))
                 Next
             ElseIf TypeOf value1 Is Reference() Then
-                Dim tmp As List(Of Reference) = CType(value1, Reference()).ToList()
+                Dim tmp As IEnumerable(Of Reference) = CType(value1, Reference()).ToList()
                 For Each r As Reference In tmp
                     lst.Add(CDbl(r.Resolve()))
                 Next
@@ -915,8 +1025,8 @@ Namespace Calculator.Evaluator
         Private Function RecursiveComputeLst(list() As Object, func As Func(Of Double, Double, Double)) As Double
             If list.Length = 0 Then Return Double.NaN
 
-            If TypeOf list(0) Is List(Of Reference) Then
-                list(0) = RecursiveComputeLst(New List(Of Object)(CType(list(0), List(Of Reference))).ToArray(), func)
+            If TypeOf list(0) Is IEnumerable(Of Reference) Then
+                list(0) = RecursiveComputeLst(New List(Of Object)(CType(list(0), IEnumerable(Of Reference))).ToArray(), func)
             ElseIf TypeOf list(0) Is Reference() Then
                 list(0) = RecursiveComputeLst(New List(Of Object)(CType(list(0), Reference())).ToArray(), func)
             End If
@@ -928,8 +1038,8 @@ Namespace Calculator.Evaluator
             Dim result As Double = CDbl(list(0))
             For i As Integer = 1 To list.Length - 1
                 Dim obj As Object = list(i)
-                If TypeOf list(0) Is List(Of Reference) Then
-                    obj = RecursiveComputeLst(CType(obj, List(Of Reference)).ToArray(), func)
+                If TypeOf list(0) Is IEnumerable(Of Reference) Then
+                    obj = RecursiveComputeLst(CType(obj, IEnumerable(Of Reference)).ToArray(), func)
                 ElseIf TypeOf list(0) Is Reference() Then
                     obj = RecursiveComputeLst(CType(obj, Reference()), func)
                 End If
@@ -944,22 +1054,31 @@ Namespace Calculator.Evaluator
             Return result
         End Function
 
+
+
         ' calculus
-        Public Function Dydx(ByVal func As String) As Double
+        Public Function Dydx(ByVal func As Lambda) As Double
             Return Derivative(func)
         End Function
-        Public Function DydxAt(ByVal func As String, ByVal x As Double) As Double
+        Public Function DydxAt(ByVal func As Lambda, ByVal x As Double) As Double
             Return DerivativeAt(func, x)
         End Function
-        Public Function DNydxN(ByVal func As String, ByVal n As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function DNydxN(ByVal func As Lambda, ByVal n As Double, Optional ByVal delta As String = "x"c) As Double
             Dim v As Double = CDbl(_eval.GetVariable(delta))
             Return DNydxNAt(func, n, v)
         End Function
-        Public Function DNydxNAt(ByVal func As String, ByVal n As Double, ByVal x As Double) As Double
+        Public Function DNydxNAt(ByVal func As Lambda, ByVal n As Double, ByVal x As Double) As Double
             If n > 0 Then
                 If CmpDbl(n, 1) > 0 Then
                     For i As Integer = 1 To Int(Math.Floor(n)) - 1
-                        func = "derivative(" & ControlChars.Quote & func & ControlChars.Quote & ")"
+                        Dim newFn As String = func.ToString()
+                        If newFn.StartsWith("`") Then
+                            newFn = newFn.Trim("`"c)
+                        Else
+                            newFn = newFn & "()"
+                        End If
+                        func = New Lambda("`derivative(" & ControlChars.Quote & newFn &
+                                          ControlChars.Quote & ")`")
                     Next
                 End If
                 Return DerivativeAt(func, x)
@@ -974,7 +1093,7 @@ Namespace Calculator.Evaluator
         ''' <param name="func">The function, as a texting</param>
         ''' <param name="delta">The variable to take the derivative of</param>
         ''' <returns></returns>
-        Public Function Derivative(ByVal func As String, Optional ByVal delta As String = "x"c) As Double
+        Public Function Derivative(ByVal func As Lambda, Optional ByVal delta As String = "x"c) As Double
             Dim v As Double = CDbl(_eval.GetVariable(delta))
             Return DerivativeAt(func, v)
         End Function
@@ -982,12 +1101,12 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Take the derivative of a function at x
         ''' </summary>
-        Public Function DerivativeAt(ByVal func As String, ByVal x As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function DerivativeAt(ByVal func As Lambda, ByVal x As Double, Optional ByVal delta As String = "x"c) As Double
             Dim oldx As Object = _eval.GetVariable("x"c)
             _eval.SetVariable(delta, New ObjectTypes.Number(x - 0.0001))
-            Dim l As Double = CDbl(_eval.EvalExprRaw(func))
+            Dim l As Double = CDbl(func.Execute(_eval, {}))
             _eval.SetVariable(delta, New ObjectTypes.Number(x + 0.0001))
-            Dim r As Double = CDbl(_eval.EvalExprRaw(func))
+            Dim r As Double = CDbl(func.Execute(_eval, {}))
             _eval.SetVariable(delta, ObjectTypes.DetectType(oldx))
             Return Math.Round((r - l) / 0.0002, 5)
         End Function
@@ -996,7 +1115,8 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Takes the definite integral of a function between a and b
         ''' </summary>
-        Public Function Integral(ByVal func As String, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function Integral(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
+                                 Optional ByVal delta As String = "x"c) As Double
             ' use simpson's rule by default
             Return IntegralSimpson(func, a, b, delta)
         End Function
@@ -1005,7 +1125,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Takes the definite integral of a function between a and the current value of thevariable
         ''' </summary>
-        Public Function IntegralFrom(ByVal func As String, ByVal a As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralFrom(ByVal func As Lambda, ByVal a As Double, Optional ByVal delta As String = "x"c) As Double
             ' use simpson's rule by default
             Return IntegralSimpson(func, a, CDbl(_eval.GetVariable(delta)), delta)
         End Function
@@ -1013,7 +1133,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         '''  Integral estimation with simpson's rule
         ''' </summary>
-        Public Function IntegralSimpson(ByVal func As String, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralSimpson(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
             If CmpDbl(a, b) = 0 Then Return 0
             Dim oldx As Object = _eval.GetVariable(delta)
             Dim stepx As Decimal = CDec(b - a) / 2500
@@ -1022,7 +1142,7 @@ Namespace Calculator.Evaluator
             _eval.SetVariable(delta, New ObjectTypes.Number(a))
             For cx As Decimal = CDec(a) To CDec(b) - stepx Step stepx
                 _eval.SetVariable(delta, New ObjectTypes.Number(cx))
-                res += sw * CDec(_eval.EvalExprRaw(func))
+                res += sw * CDec(func.Execute(_eval, {}))
                 If sw = 2 OrElse sw = 1 Then
                     sw = 4
                 Else
@@ -1030,7 +1150,7 @@ Namespace Calculator.Evaluator
                 End If
             Next
             _eval.SetVariable(delta, New ObjectTypes.Number(b))
-            res += CDec(_eval.EvalExprRaw(func))
+            res += CDec(func.Execute(_eval, {}))
             _eval.SetVariable(delta, ObjectTypes.DetectType(oldx))
             Return Math.Round(res / 3 * stepx, 5)
         End Function
@@ -1038,16 +1158,16 @@ Namespace Calculator.Evaluator
         ''' <summary>
         '''  Integral estimation with trapezoid sums
         ''' </summary>
-        Public Function IntegralTrapezoid(ByVal func As String, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralTrapezoid(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
             If CmpDbl(a, b) = 0 Then Return 0
             Dim oldx As Object = _eval.GetVariable(delta)
             Dim stepx As Decimal = CDec(b - a) / 25000
             Dim res As Decimal = 0
             _eval.SetVariable(delta, New ObjectTypes.Number(a))
-            Dim py As Decimal = CDec(_eval.EvalExprRaw(func))
+            Dim py As Decimal = CDec(func.Execute(_eval, {}))
             For cx As Decimal = CDec(a) + stepx To CDec(b) Step stepx
                 _eval.SetVariable(delta, New ObjectTypes.Number(cx))
-                Dim cy As Decimal = CDec(_eval.EvalExprRaw(func))
+                Dim cy As Decimal = CDec(func.Execute(_eval, {}))
                 res += (py + (cy - py) / 2) * stepx
                 py = cy
             Next
@@ -1058,26 +1178,26 @@ Namespace Calculator.Evaluator
         ''' <summary>
         '''  Integral estimation with midpoint sums
         ''' </summary>
-        Public Function IntegralMidpoint(ByVal func As String, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralMidpoint(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
             Return IntegralRiemann(func, a, b, 0, delta)
         End Function
         ''' <summary>
         ''' integral estimation with left riemann sums
         ''' </summary>
-        Public Function IntegralLeft(ByVal func As String, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralLeft(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
             Return IntegralRiemann(func, a, b, -1, delta, 50000)
         End Function
         ''' <summary>
         ''' integral estimation with right riemann sums
         ''' </summary>
-        Public Function IntegralRight(ByVal func As String, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
+        Public Function IntegralRight(ByVal func As Lambda, ByVal a As Double, ByVal b As Double, Optional ByVal delta As String = "x"c) As Double
             Return IntegralRiemann(func, a, b, 1, delta, 50000)
         End Function
 
         ''' <summary>
         ''' helper function for integral estimations with riemann sums
         ''' </summary>
-        Private Function IntegralRiemann(ByVal func As String, ByVal a As Double, ByVal b As Double,
+        Private Function IntegralRiemann(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
                              ByVal offset As Integer, Optional ByVal delta As String = "x"c, Optional ByVal intervals As Integer = 10000) As Double
             If CmpDbl(a, b) = 0 Then Return 0
             Dim oldx As Object = _eval.GetVariable(delta)
@@ -1086,7 +1206,7 @@ Namespace Calculator.Evaluator
             _eval.SetVariable(delta, New ObjectTypes.Number(a))
             For cx As Decimal = CDec(a) + stepx / 2 * (offset + 1) To CDec(b) + stepx / 2 * (offset - 1) Step stepx
                 _eval.SetVariable(delta, New ObjectTypes.Number(cx))
-                res += stepx * CDec(_eval.EvalExprRaw(func))
+                res += stepx * CDec(func.Execute(_eval, {}))
             Next
             _eval.SetVariable(delta, ObjectTypes.DetectType(oldx))
             Return Math.Round(res, 5)
@@ -1096,7 +1216,7 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Summation: takes the sum of expression over the range between a and b, inclusive
         ''' </summary>
-        Public Function Sigma(ByVal expression As String, ByVal a As Double, ByVal b As Double,
+        Public Function Sigma(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
                               Optional ByVal [step] As Double = 1, Optional ByVal variable As String = "i") As BigDecimal
             Try
                 ' step cannot be 0 or in the reverse direction
@@ -1107,7 +1227,7 @@ Namespace Calculator.Evaluator
                 Dim sum As BigDecimal = 0
                 For i As Double = a To b Step [step]
                     _eval.SetVariable(variable, New ObjectTypes.Number(i))
-                    sum += CType(_eval.EvalExprRaw(expression), BigDecimal)
+                    sum += CType(func.Execute(_eval, {}), BigDecimal)
                 Next
                 _eval.SetVariable(variable, prevvar)
                 Return sum
@@ -1120,16 +1240,16 @@ Namespace Calculator.Evaluator
         ''' Summation: takes the sum of expression over the range between a and b, inclusive
         ''' Alias for sigma()
         ''' </summary>
-        Public Function Sum(ByVal expression As String, ByVal a As Double, ByVal b As Double,
+        Public Function Sum(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
                             Optional ByVal [step] As Double = 1, Optional ByVal variable As String = "i") As BigDecimal
-            Return Sigma(expression, a, b, [step], variable)
+            Return Sigma(func, a, b, [step], variable)
         End Function
 
         ''' <summary>
         ''' Product: takes the product of expression over the range between l and r, inclusive
         ''' Alias for sigma()
         ''' </summary>
-        Public Function product(ByVal expression As String, ByVal a As Double, ByVal b As Double,
+        Public Function product(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
                                 Optional ByVal [step] As Double = 1, Optional ByVal variable As String = "i") As BigDecimal
             Try
                 ' step cannot be 0 or in the reverse direction
@@ -1140,7 +1260,7 @@ Namespace Calculator.Evaluator
                 Dim prod As BigDecimal = 1
                 For i As Double = a To b Step [step]
                     _eval.SetVariable(variable, New ObjectTypes.Number(i))
-                    prod *= CType(_eval.EvalExprRaw(expression), BigDecimal)
+                    prod *= CType(func.Execute(_eval, {}), BigDecimal)
                 Next
                 _eval.SetVariable(variable, prevvar)
                 Return prod
@@ -1203,47 +1323,47 @@ Namespace Calculator.Evaluator
         Public Function DecodeXecryption(ByVal value As String, Optional ByVal pwd As Double = -1) As String
             Dim res As String = ""
             Dim rand As New Random()
-                Dim spl As String() = value.Trim({"."c, vbCr(0), vbLf(0), " "c}).Split("."c)
-                If spl.Length < 3 Then Return ""
-                If pwd = -1 Then
-                    Dim totalini As Integer = Integer.Parse(spl(0)) + Integer.Parse(spl(1)) +
+            Dim spl As String() = value.Trim({"."c, vbCr(0), vbLf(0), " "c}).Split("."c)
+            If spl.Length < 3 Then Return ""
+            If pwd = -1 Then
+                Dim totalini As Integer = Integer.Parse(spl(0)) + Integer.Parse(spl(1)) +
                 Integer.Parse(spl(2))
-                    Dim subopt As String = ""
-                    For t As Integer = totalini - 126 To totalini - 10
-                        Dim text As String = DecodeXecryption(value, t)
-                        For i As Integer = 0 To text.Length - 1
-                            Dim ascii As Integer = AscW(text(i))
-                            If ascii >= AscW("{"c) OrElse (ascii < AscW(" "c) AndAlso ascii <> AscW(vbLf(0)) AndAlso
+                Dim subopt As String = ""
+                For t As Integer = totalini - 126 To totalini - 10
+                    Dim text As String = DecodeXecryption(value, t)
+                    For i As Integer = 0 To text.Length - 1
+                        Dim ascii As Integer = AscW(text(i))
+                        If ascii >= AscW("{"c) OrElse (ascii < AscW(" "c) AndAlso ascii <> AscW(vbLf(0)) AndAlso
                         ascii <> AscW(vbCr(0))) Then
-                                text = ""
-                                Exit For
-                            End If
-                        Next
-                        If text = "" Then Continue For
-                        For i As Integer = 0 To text.Length - 1
-                            Dim ascii As Integer = AscW(text(i))
-                            If ((ascii >= AscW(" "c) AndAlso ascii < AscW("#"c)) OrElse (ascii >= AscW(","c) AndAlso
-                        ascii <= AscW("."c)) OrElse (ascii >= AscW(":"c) AndAlso
-                        ascii < AscW("<"c)) OrElse ascii = AscW("?"c)) Then
-                                If subopt = "" Then subopt = text & vbCrLf
-                                text = ""
-                                Exit For
-                            End If
-                        Next
-
-                        If text <> "" Then
-                            Return text
+                            text = ""
+                            Exit For
                         End If
                     Next
-                    If subopt <> "" Then Return subopt
-                    Return "XEcryption: Auto Decryption Failed"
-                End If
-                For i As Integer = 2 To spl.Length - 1 Step 3
-                    Dim total As Integer = Integer.Parse(spl(i - 2)) + Integer.Parse(spl(i - 1)) +
-                Integer.Parse(spl(i)) - Int(Math.Truncate(pwd))
-                    res &= ChrW(total)
+                    If text = "" Then Continue For
+                    For i As Integer = 0 To text.Length - 1
+                        Dim ascii As Integer = AscW(text(i))
+                        If ((ascii >= AscW(" "c) AndAlso ascii < AscW("#"c)) OrElse (ascii >= AscW(","c) AndAlso
+                        ascii <= AscW("."c)) OrElse (ascii >= AscW(":"c) AndAlso
+                        ascii < AscW("<"c)) OrElse ascii = AscW("?"c)) Then
+                            If subopt = "" Then subopt = text & vbCrLf
+                            text = ""
+                            Exit For
+                        End If
+                    Next
+
+                    If text <> "" Then
+                        Return text
+                    End If
                 Next
-                Return res
+                If subopt <> "" Then Return subopt
+                Return "XEcryption: Auto Decryption Failed"
+            End If
+            For i As Integer = 2 To spl.Length - 1 Step 3
+                Dim total As Integer = Integer.Parse(spl(i - 2)) + Integer.Parse(spl(i - 1)) +
+                Integer.Parse(spl(i)) - Int(Math.Truncate(pwd))
+                res &= ChrW(total)
+            Next
+            Return res
         End Function
 
         ' encryption (actual)
@@ -1510,10 +1630,10 @@ Namespace Calculator.Evaluator
                         Return ts
                     End If
                 Else
-                    If Int(CInt(first)) * 365 + Int(month) * 30 + Int(day) <= ObjectTypes.DateTime.TIMESPAN_DIVIDER Then
-                        Return New TimeSpan(Int(CInt(first)) * 365 + Int(month) * 30 + Int(day), Int(hour), Int(minute), Int(second), Int(ms))
+                    If Int(CDbl(first)) * 365 + Int(month) * 30 + Int(day) <= ObjectTypes.DateTime.TIMESPAN_DIVIDER Then
+                        Return New TimeSpan(Int(CDbl(first)) * 365 + Int(month) * 30 + Int(day), Int(hour), Int(minute), Int(second), Int(ms))
                     Else
-                        Return New Date(Int(CInt(first)), Int(month), Int(day), Int(hour), Int(minute), Int(second), Int(ms))
+                        Return New Date(Int(CDbl(first)), Int(month), Int(day), Int(hour), Int(minute), Int(second), Int(ms))
                     End If
                 End If
             Else
@@ -1525,8 +1645,9 @@ Namespace Calculator.Evaluator
             Return New Date(Int(year), Int(month), Int(day))
         End Function
         Public Function Time(Optional ByVal hour As Double = 0,
-                                 Optional ByVal minute As Double = 0, Optional ByVal second As Double = 0) As TimeSpan
-            Return New TimeSpan(Int(hour), Int(minute), Int(second))
+                                 Optional ByVal minute As Double = 0, Optional ByVal second As Double = 0,
+                             Optional ByVal millisecond As Double = 0) As TimeSpan
+            Return New TimeSpan(Int(hour), Int(minute), Int(second), Int(millisecond))
         End Function
 
         Public Function Now() As System.DateTime
@@ -1539,6 +1660,7 @@ Namespace Calculator.Evaluator
             Return System.DateTime.Today
         End Function
 
+        ' datetime modification
         Public Function Year(dt As Object) As Double
             If TypeOf dt Is System.DateTime Then
                 Return DirectCast(dt, System.DateTime).Year
@@ -1735,9 +1857,14 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
-        Public Function Random() As Double
+        Public Function Rand(Optional min As Double = 0, Optional max As Double = 1) As Double
+            Dim r As New Random()
+            Return r.NextDouble() * (max - min) + min
+        End Function
+
+        Public Function RandInt(min As Double, max As Double) As Double
             Dim rand As New Random()
-            Return rand.NextDouble()
+            Return rand.Next(Int(min), Int(max))
         End Function
 
         Public Function GUID() As String
@@ -1748,6 +1875,9 @@ Namespace Calculator.Evaluator
             Return GUID()
         End Function
 
+        ''' <summary>
+        ''' Compare two double values with the precision
+        ''' </summary>
         Friend Function CmpDbl(v1 As Double, v2 As Double, Optional ByVal epsi As Double = 0.000000000001) As Integer
             Dim diff As Double = Math.Abs(v1 - v2)
             If diff < epsi Then
@@ -1759,29 +1889,20 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
-        Friend Function Cmpdbldgts(v1 As Double, v2 As Double, dgts As Double) As Integer
-            Dim epsi As Double = Math.Pow(10, -dgts)
-            Dim diff As Double = Math.Abs(v1 - v2)
-            If diff < epsi Then
-                Return 0
-            ElseIf v1 > v2 Then
-                Return 1
+        ''' <summary>
+        ''' Get the length of any collection or string
+        ''' </summary>
+        Public Function Len(ByVal obj As Object) As Double
+            If TypeOf obj Is String Then
+                Return CStr(obj).Length
+            ElseIf TypeOf obj Is IEnumerable(Of Reference)
+                Return DirectCast(obj, IEnumerable(Of Reference)).Count()
+            ElseIf TypeOf obj Is Reference()
+                Return DirectCast(obj, Reference()).Length
+            ElseIf TypeOf obj Is Dictionary(Of Object, Object)
+                Return DirectCast(obj, Dictionary(Of Object, Object)).Count()
             Else
-                Return -1
-            End If
-        End Function
-
-        Public Function Len(ByVal text As Object) As Double
-            If TypeOf text Is String Then
-                Return CStr(text).Length
-            ElseIf TypeOf text Is List(Of Reference)
-                Return DirectCast(text, List(Of Reference)).Count()
-            ElseIf TypeOf text Is Reference()
-                Return DirectCast(text, Reference()).Length
-            ElseIf TypeOf text Is Dictionary(Of Object, Object)
-                Return DirectCast(text, Dictionary(Of Object, Object)).Count()
-            Else
-                If text Is Nothing Then
+                If obj Is Nothing Then
                     Return 0
                 Else
                     Return 1
@@ -1789,24 +1910,39 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
-        Public Function Size(ByVal text As Object) As Double
-            Return Len(text)
+        ''' <summary>
+        ''' Get the length of a piece of text or a collection
+        ''' </summary>
+        Public Function Size(ByVal obj As Object) As Double
+            Return Len(obj)
         End Function
-        Public Function Length(ByVal text As Object) As Double
-            Return Len(text)
+
+        ''' <summary>
+        ''' Get the length of a piece of text or a collection
+        ''' </summary>
+        Public Function Length(ByVal lst As Object) As Double
+            Return Len(lst)
         End Function
+
+        ''' <summary>
+        ''' Get the type of the object
+        ''' </summary>
         Public Function Type(ByVal obj As Object) As String
             If obj Is Nothing OrElse (TypeOf obj Is Double AndAlso
             Double.IsNaN(CDbl(obj))) OrElse TypeOf obj Is System.DBNull Then
                 Return "Undefined"
-            ElseIf TypeOf obj Is List(Of Reference) Then
+            ElseIf TypeOf obj Is LinkedList(Of Reference) Then
+                Return "LinkedList"
+            ElseIf TypeOf obj Is IEnumerable(Of Reference) Then
                 Return "Matrix"
             ElseIf TypeOf obj Is Reference() Then
                 Return "Tuple"
             ElseIf TypeOf obj Is SortedDictionary(Of Reference, Reference) Then
                 Return "Set"
+            ElseIf TypeOf obj Is Dictionary(Of Reference, Reference) Then
+                Return "HashSet"
             ElseIf TypeOf obj Is Double OrElse TypeOf obj Is Single OrElse
-            TypeOf obj Is Decimal Then
+                TypeOf obj Is Decimal Then
                 Return "Number"
             ElseIf TypeOf obj Is String Then
                 Return "Text"
@@ -1816,6 +1952,10 @@ Namespace Calculator.Evaluator
                 Return "Boolean"
             ElseIf TypeOf obj Is ICollection Then
                 Return "(Matrix/Set/Tuple)"
+            ElseIf TypeOf obj Is Reference Then
+                Return "Reference of " & Type(DirectCast(obj, Reference).GetValue())
+            ElseIf TypeOf obj Is Lambda Then
+                Return "Function"
             Else
                 Return obj.GetType().Name
             End If
@@ -1823,22 +1963,85 @@ Namespace Calculator.Evaluator
         Public Shadows Function [GetType](ByVal obj As Object) As String
             Return Type(obj)
         End Function
-        Public Function Trim(ByVal text As String, Optional ByVal chars As String = " " & vbCrLf) As String
-            Return Strip(text, chars)
-        End Function
-        Public Function Strip(ByVal text As String, Optional ByVal chars As String = " " & vbCrLf) As String
-            Return text.Trim(chars.ToCharArray())
+
+        ''' <summary>
+        ''' Automatically detect the type of an object and convert it to a char array
+        ''' </summary>
+        ''' <param name="chars"></param>
+        ''' <returns></returns>
+        Private Function ToCharArray(chars As Object) As Char()
+            If TypeOf chars Is String Then
+                Return CStr(chars).ToCharArray()
+            Else
+                Dim lst As New List(Of Char)
+                Dim refLst As IEnumerable(Of Reference)
+                If TypeOf chars Is IEnumerable(Of Reference) Then
+                    refLst = DirectCast(chars, IEnumerable(Of Reference))
+                ElseIf TypeOf chars Is IDictionary(Of Reference, Reference) Then
+                    refLst = DirectCast(chars, IDictionary(Of Reference, Reference)).Keys
+                Else
+                    Throw New EvaluatorException("Invalid types: expecting list of characters")
+                End If
+                For Each r As Reference In refLst
+                    Dim res As Object = r.Resolve()
+                    If TypeOf res Is String Then
+                        If CStr(res).Length <> 1 Then Throw New EvaluatorException("Character expected")
+                        lst.Add(CStr(res)(0))
+                    End If
+                Next
+                Return lst.ToArray()
+            End If
         End Function
 
-        Public Function Format(ByVal value As Object, ByVal style As String) As String
-            Return String.Format(value.ToString(), style)
+        ''' <summary>
+        ''' Remove all instances of each character from both ends of the string
+        ''' </summary>
+        Public Function Strip(ByVal text As String, Optional ByVal chars As Object = Nothing) As String
+            If chars Is Nothing Then
+                Return text.Trim()
+            Else
+                Return text.Trim(ToCharArray(chars))
+            End If
         End Function
 
-        Private Function Int(ByVal value As Double) As Integer
+        ''' <summary>
+        ''' Remove all instances of each character from the start of the string
+        ''' </summary>
+        Public Function StripStart(ByVal text As String, Optional ByVal chars As Object = Nothing) As String
+            If chars Is Nothing Then
+                Return text.TrimStart()
+            Else
+                Return text.TrimStart(ToCharArray(chars))
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Remove all instances of each character from the end of the string
+        ''' </summary>
+        Public Function StripEnd(ByVal text As String, Optional ByVal chars As Object = Nothing) As String
+            If chars Is Nothing Then
+                Return text.TrimEnd()
+            Else
+                Return text.TrimEnd(ToCharArray(chars))
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Replace format {0} in text with 
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function Format(ByVal text As Object, ByVal formatPattern As Object) As String
+            Return String.Format(text.ToString(), formatPattern)
+        End Function
+
+        Friend Function Int(ByVal value As Double) As Integer
             Return CInt(Math.Truncate(value))
         End Function
 
-        Public Function Quadratic(ByVal a As Double, ByVal b As Double, ByVal c As Double) As List(Of Reference)
+        ''' <summary>
+        ''' Solve a quadratic equation with coefficients a, b, and c
+        ''' </summary>
+        Public Function Quadratic(ByVal a As Double, ByVal b As Double, ByVal c As Double) As IEnumerable(Of Reference)
             Dim tort As Double = b ^ 2 - 4 * a * c
             Dim resultLst As New HashSet(Of Reference)
             If tort >= 0 Then
@@ -1850,10 +2053,17 @@ Namespace Calculator.Evaluator
             End If
             Return New List(Of Reference)(resultLst)
         End Function
-        Public Function Qdtc(ByVal a As Double, ByVal b As Double, ByVal c As Double) As List(Of Reference) 'shorthand for quadratic
+
+        ''' <summary>
+        ''' Solve a quadratic equation with coefficients a, b, and c (shorthand for quadratic())
+        ''' </summary>
+        Public Function Qdtc(ByVal a As Double, ByVal b As Double, ByVal c As Double) As IEnumerable(Of Reference) 'shorthand for quadratic
             Return Quadratic(a, b, c)
         End Function
 
+        ''' <summary>
+        ''' Simplify a radical with radicand d and index ind
+        ''' </summary>
         Private Function SimpRadical(ByVal d As Double, ByVal ind As Double) As String
             Dim sign As String = ""
             If d < 0 Then
@@ -1875,6 +2085,9 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
+        ''' <summary>
+        ''' Internal helper for simplifying radicals
+        ''' </summary>
         Private Function SRadical(ByVal d As Double, ByVal ind As Integer) As Int64()
             Dim coe As Long = 1
             Dim rdc As Long = Convert.ToInt64(d)
@@ -1892,7 +2105,10 @@ Namespace Calculator.Evaluator
             Return {coe, rdc}
         End Function
 
-        Private Function ToFrac(ByVal d As Double) As String 'public interface for cfrac function, returns a texting
+        ''' <summary>
+        ''' Convert a double value to a fraction
+        ''' </summary>
+        Private Function ToFrac(ByVal d As Double) As String
             Dim sign As Integer = Int(Sgn(d))
             Dim res() As Double = CFrac(Math.Abs(d), Math.Min(0.0000000000001 * 10 ^ Math.Round(Math.Abs(d) ^ 0.1), 0.001))
             If res(1) = 1 Then
@@ -1905,6 +2121,10 @@ Namespace Calculator.Evaluator
                 Return d.ToString()
             End If
         End Function
+
+        ''' <summary>
+        ''' Internal function for converting a double value to a fraction
+        ''' </summary>
         Private Function CFrac(ByVal d As Double, Optional ByVal epsi As Double = 0.000000000001) As Double()
             Dim n As Double = Math.Floor(d)
             d -= n
@@ -1941,11 +2161,16 @@ Namespace Calculator.Evaluator
             Return {0, 1.0}
         End Function
 
+        ''' <summary>
+        ''' Tests if the double value is an interger
+        ''' </summary>
         Private Function IsInteger(d As Double) As Boolean
-            Return Cmpdbldgts(d, Math.Round(d), 8) = 0
+            Return CmpDbl(d, Math.Round(d), 0.00000001) = 0
         End Function
 
-        ' factoring function (needs improvement)
+        ''' <summary>
+        ''' Trinomial factoring Function (needs improvement)
+        ''' </summary>
         Public Function TriFact(ByVal a As Double, ByVal b As Double, ByVal c As Double) As String
             Dim fact As Double = GCF(GCF(a, b), c)
             If a < 0 Then
@@ -2015,11 +2240,17 @@ Namespace Calculator.Evaluator
             Return value / Math.Pow(10, log) & " x 10^" & log
         End Function
 
+        ''' <summary>
+        ''' Convert a value to scientific notation
+        ''' </summary>
         Public Function Sci(ByVal value As BigDecimal) As String
             Return value.ToScientific()
         End Function
 
         ' output modes
+        ''' <summary>
+        ''' Output as scientific notation
+        ''' </summary>
         Private Function SciO(value As Object) As String
             If TypeOf value Is Double Then
                 Return Sci(CDbl(value))
@@ -2029,6 +2260,10 @@ Namespace Calculator.Evaluator
                 Return value.ToString()
             End If
         End Function
+
+        ''' <summary>
+        ''' Output directly
+        ''' </summary>
         Private Function LineO(value As Object) As String ' use this to see results in linear fashion when in mathio mode
             If TypeOf value Is Double Then
                 If Math.Abs(CDbl(value)) < 0.0001 OrElse Math.Abs(CDbl(value)) >= 1.0E+15 Then
@@ -2044,6 +2279,9 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
+        ''' <summary>
+        ''' Output as mathematical notation
+        ''' </summary>
         Private Function MathO(o As Object) As String ' use this to see results in mathio fashion when in lineio mode
             If TypeOf o Is BigDecimal OrElse TypeOf o Is Double Then
                 Dim value As Double
@@ -2181,85 +2419,67 @@ Namespace Calculator.Evaluator
             Return ""
         End Function
 
+        ''' <summary>
+        ''' Output using the current output mode. Also deals with data structures.
+        ''' </summary>
         Friend Function O(value As Object) As String
             ' use Undefined instead of NaN
             If value Is Nothing OrElse (TypeOf value Is BigDecimal AndAlso CType(value, BigDecimal).IsUndefined) OrElse
-                                 (TypeOf value Is Double AndAlso Double.IsNaN(CDbl(value))) Then Return "Undefined"
+                             (TypeOf value Is Double AndAlso Double.IsNaN(CDbl(value))) Then Return "Undefined"
 
-            If TypeOf value Is Reference Then value = DirectCast(value, Reference).GetValue()
+            If TypeOf value Is Reference Then ' reference: display ampersand
+                Return "&" & DirectCast(value, Reference).ToString()
 
-            Dim ret As String
+            ElseIf TypeOf value Is Lambda Then ' lambda: display ampersand if function pointer
+                Dim result As String = DirectCast(value, Lambda).ToString()
+                If result.StartsWith("`") Then Return result
+                Return "&" & result
 
-            If TypeOf value Is List(Of Reference) Then
-                ret = "["
-                For Each r As Reference In DirectCast(value, List(Of Reference))
-                    If ret <> "[" Then ret &= ", "
-                    ret &= O(r.Resolve())
-                Next
-                ret &= "]"
-
-            ElseIf TypeOf value Is SortedDictionary(Of Reference, Reference) Then
-                ret = New [Set](CType(value, SortedDictionary(Of Reference, Reference))).ToString()
-
-            ElseIf TypeOf value Is Reference() Then
-                ret = "("
-                For Each r As Reference In DirectCast(value, Reference())
-                    If ret <> "(" Then ret &= ", "
-                    ret &= O(r.Resolve())
-                Next
-                ret &= ")"
-
-            ElseIf TypeOf value Is Numerics.Complex Then
-                Return String.Format("({0} {1} {2}i)", O(CType(value, Numerics.Complex).Real),
-                                     If(CType(value, Numerics.Complex).Imaginary >= 0, "+", "-"),
-                                     O(Math.Abs(CType(value, Numerics.Complex).Imaginary)))
-
-            ElseIf TypeOf value Is String Then
+            ElseIf TypeOf value Is String Then ' text: put quotes
                 Return ControlChars.Quote & CStr(value) & ControlChars.Quote ' put quotes around textings
 
-            Else
-                If _eval.OMode = Evaluator.IOMode.MathO Then
+            ElseIf TypeOf value Is Double OrElse TypeOf value Is BigDecimal Then ' numbers: process (detect fractions, etc.)
+                Dim ret As String
+                If _eval.OutputFormat = Evaluator.eOutputFormat.Math Then
                     ret = MathO(value)
-                ElseIf _eval.OMode = Evaluator.IOMode.SciO Then
+                ElseIf _eval.OutputFormat = Evaluator.eOutputFormat.Scientific Then
                     ret = SciO(value)
                 Else
                     ret = LineO(value)
                 End If
+                Return ret
+
+            Else
+                Return DetectType(value).ToString() ' other stuff like sets, lists: use type-specific serialization
             End If
-            Return ret
         End Function
 
+        ''' <summary>
+        ''' Evaluate an expression
+        ''' </summary>
         Public Function Eval(value As Object) As Object
             Dim ans As Object = _eval.EvalExprRaw(value.ToString(), True)
             Return ans
         End Function
 
-        Public Function EvalN(value As Object) As Double
-            Return CDbl(Eval(value))
-        End Function
-
-        Public Function EvalD(value As Object) As Date
-            Return CDate(Eval(value))
-        End Function
-
-        Public Function [Do](value As Object, operation As String) As Object
-            _eval.SetVariable(DEFAULT_VAR_NAME, value)
-            Return Eval(operation)
-        End Function
-
-        Public Function [Each](lst As Object, operation As String) As Object
+        ''' <summary>
+        ''' Loop over a collection and apply an operation
+        ''' </summary>
+        Public Function [Each](lst As Object, operation As Lambda) As Object
             Dim loopLst As New List(Of Reference)
             If TypeOf lst Is IEnumerable(Of Reference) Then
                 loopLst.AddRange(DirectCast(lst, IEnumerable(Of Reference)))
             ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
-                loopLst = ToList(DirectCast(lst, IDictionary(Of Reference, Reference)))
+                loopLst.AddRange(ToList(DirectCast(lst, IDictionary(Of Reference, Reference))))
             End If
             For Each v As Object In loopLst
-                _eval.SetVariable(DEFAULT_VAR_NAME, v)
-                If operation.Trim.ToLower().StartsWith("return") Then
-                    Return Eval(operation)
+                _eval.SetDefaultVariable(New Reference(v))
+                If TypeOf v Is Reference() Then
+                    operation.Execute(_eval, DirectCast(v, Reference()))
+                ElseIf TypeOf v Is Reference
+                    operation.Execute(_eval, {DirectCast(v, Reference)})
                 Else
-                    Eval(operation)
+                    operation.Execute(_eval, {New Reference(v)})
                 End If
             Next
             Return lst
@@ -2317,7 +2537,7 @@ Namespace Calculator.Evaluator
         End Function
 
         Public Function Text(ByVal obj As Object) As String
-            Return CStr(obj)
+            Return obj.ToString()
         End Function
         Public Function [Boolean](ByVal obj As Object) As Boolean
             Return IsTrue(obj)
@@ -2327,12 +2547,6 @@ Namespace Calculator.Evaluator
         End Function
         Public Function Ascii(ByVal c As String) As Integer
             Return AscW(c(0))
-        End Function
-        Public Function First(ByVal text As String) As Char
-            Return text(0)
-        End Function
-        Public Function Last(ByVal text As String) As String
-            Return text(text.Length - 1)
         End Function
 
         Public Shadows Function ToString(ByVal obj As Object) As String
@@ -2361,10 +2575,10 @@ Namespace Calculator.Evaluator
         ''' Concatenate (join) two text objects
         ''' </summary>
         Public Function Concat(ByVal a As Object, ByVal b As Object) As Object
-            If TypeOf a Is List(Of Reference) AndAlso TypeOf b Is List(Of Reference) Then
-                Dim ac As List(Of Reference) = DirectCast(New Matrix(DirectCast(
-                                                 a, List(Of Reference))).DeepCopy().GetValue(), List(Of Reference))
-                Return Append(ac, DirectCast(b, List(Of Reference)))
+            If TypeOf a Is IList(Of Reference) AndAlso TypeOf b Is IList(Of Reference) Then
+                Dim ac As IList(Of Reference) = DirectCast(New Matrix(DirectCast(
+                                                 a, IList(Of Reference))).GetDeepCopy().GetValue(), IList(Of Reference))
+                Return Append(ac, DirectCast(b, IList(Of Reference)))
             Else
                 Return a.ToString() & b.ToString()
             End If
@@ -2403,7 +2617,7 @@ Namespace Calculator.Evaluator
             If len < 0 Then
                 Return text.Substring(Int(Math.Truncate(fi)))
             Else
-                Return text.Substring(CInt(Math.Truncate(fi)), CInt(Math.Truncate(len)))
+                Return text.Substring(Int(Math.Truncate(fi)), Int(Math.Truncate(len)))
             End If
         End Function
 
@@ -2464,12 +2678,12 @@ Namespace Calculator.Evaluator
             Dim res As New StringBuilder()
 
             Dim lstc As IEnumerable(Of Reference)
-            If TypeOf lst Is List(Of Reference) Then
-                lstc = DirectCast(lst, List(Of Reference))
+            If TypeOf lst Is IEnumerable(Of Reference) Then
+                lstc = DirectCast(lst, IEnumerable(Of Reference))
             ElseIf TypeOf lst Is Reference()
                 lstc = CType(lst, Reference())
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference)
-                lstc = DirectCast(lst, SortedDictionary(Of Reference, Reference)).Keys
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
+                lstc = DirectCast(lst, IDictionary(Of Reference, Reference)).Keys
             Else
                 Return ""
             End If
@@ -2509,7 +2723,7 @@ Namespace Calculator.Evaluator
         ''' <param name="text"></param>
         ''' <param name="pattern"></param>
         ''' <returns></returns>
-        Public Function RegexMatch(ByVal text As String, ByVal pattern As String) As List(Of Reference)
+        Public Function RegexMatch(ByVal text As String, ByVal pattern As String) As IEnumerable(Of Reference)
             Dim regex As New Regex(pattern)
             Dim result As New List(Of Reference)
             Dim match As Match = regex.Match(text)
@@ -2530,7 +2744,7 @@ Namespace Calculator.Evaluator
         ''' <param name="text"></param>
         ''' <param name="pattern"></param>
         ''' <returns></returns>
-        Public Function RegexMatchAll(ByVal text As String, ByVal pattern As String) As List(Of Reference)
+        Public Function RegexMatchAll(ByVal text As String, ByVal pattern As String) As IEnumerable(Of Reference)
             Dim regex As New Regex(pattern)
             Dim result As New List(Of Reference)
             For Each match As Match In regex.Matches(text)
@@ -2557,26 +2771,41 @@ Namespace Calculator.Evaluator
 
         ' matrix/list stuff
 
+        ''' <summary>
+        ''' Get the item at the index, wrapping around if out of range
+        ''' </summary>
         Public Function Index(ByVal lst As Object, val As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
+            If TypeOf lst Is IList(Of Reference) Then
                 If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) AndAlso
-                                 (Len(lst) > CDbl(val) AndAlso -Len(lst) <= CDbl(val)) Then
-                    If CDbl(val) < 0 Then val = CType(lst, List(Of Reference)).Count + CDbl(val)
-                    Return DirectCast(lst, List(Of Reference)).Item(CInt(val))
+                                     (Len(lst) > CDbl(val) AndAlso -Len(lst) <= CDbl(val)) Then
+                    If CDbl(val) < 0 Then val = CType(lst, IEnumerable(Of Reference)).Count + CDbl(val)
+                    Return DirectCast(lst, IEnumerable(Of Reference))(Int(CDbl(val)))
+                Else
+                    Return "Index Is Out Of Range"
+                End If
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then ' WARNING: inefficient
+                If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) AndAlso
+                                     (Len(lst) > CDbl(val) AndAlso -Len(lst) <= CDbl(val)) Then
+                    If CDbl(val) < 0 Then val = CType(lst, LinkedList(Of Reference)).Count + CDbl(val)
+                    Dim first As LinkedListNode(Of Reference) = DirectCast(lst, LinkedList(Of Reference)).First
+                    For i As Integer = 1 To Int(CDbl(val))
+                        first = first.Next
+                    Next
+                    Return New Reference(first)
                 Else
                     Return "Index Is Out Of Range"
                 End If
             ElseIf TypeOf lst Is Reference() Then
                 If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) AndAlso
-                                 (Len(lst) > CDbl(val) AndAlso -Len(lst) <= CDbl(val)) Then
+                                     (Len(lst) > CDbl(val) AndAlso -Len(lst) <= CDbl(val)) Then
                     If CDbl(val) < 0 Then val = CType(lst, Reference()).Length + CDbl(val)
-                    Return DirectCast(lst, Reference())(CInt(val))
+                    Return DirectCast(lst, Reference())(Int(CDbl(val)))
                 Else
                     Return "Index Is Out Of Range"
                 End If
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference)
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
                 Try
-                    Dim res As Object = DirectCast(lst, SortedDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(val)))
+                    Dim res As Object = DirectCast(lst, IDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(val)))
                     If res Is Nothing Then Return Double.NaN
                     Return res
                 Catch
@@ -2584,9 +2813,9 @@ Namespace Calculator.Evaluator
                 End Try
             ElseIf TypeOf lst Is String
                 If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) AndAlso
-                                 (Len(lst) > CDbl(val) AndAlso -Len(lst) <= CDbl(val)) Then
+                                     (Len(lst) > CDbl(val) AndAlso -Len(lst) <= CDbl(val)) Then
                     If CDbl(val) < 0 Then val = CType(lst, Reference()).Length + CDbl(val)
-                    Return DirectCast(lst, String)(CInt(val)).ToString()
+                    Return DirectCast(lst, String)(Int(CDbl(val))).ToString()
                 Else
                     Return "Index Is Out Of Range"
                 End If
@@ -2595,24 +2824,38 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
+        ''' <summary>
+        ''' Get the item at the index, wrapping around if out of range
+        ''' </summary>
         Public Function IndexCircular(ByVal lst As Object, val As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
+            If TypeOf lst Is IList(Of Reference) Then
                 If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) Then
-                    val = Modulo(CInt(val), Len(lst))
-                    Return DirectCast(lst, List(Of Reference)).Item(CInt(val))
+                    val = Modulo(Int(CDbl(val)), Len(lst))
+                    Return DirectCast(lst, IEnumerable(Of Reference))(Int(CDbl(val)))
                 Else
                     Return "Index Must Be A Number"
+                End If
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then ' WARNING: inefficient
+                If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) Then
+                    val = Modulo(Int(CDbl(val)), Len(lst))
+                    Dim first As LinkedListNode(Of Reference) = DirectCast(lst, LinkedList(Of Reference)).First
+                    For i As Integer = 1 To Int(CDbl(val))
+                        first = first.Next
+                    Next
+                    Return New Reference(first)
+                Else
+                    Return "Index Is Out Of Range"
                 End If
             ElseIf TypeOf lst Is Reference() Then
                 If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) Then
-                    val = Modulo(CInt(val), Len(lst))
-                    Return DirectCast(lst, Reference())(CInt(val))
+                    val = Modulo(Int(CDbl(val)), Len(lst))
+                    Return DirectCast(lst, Reference())(Int(CDbl(val)))
                 Else
                     Return "Index Must Be A Number"
                 End If
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference)
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
                 Try
-                    Dim res As Object = DirectCast(lst, SortedDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(val)))
+                    Dim res As Object = DirectCast(lst, IDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(val)))
                     If res Is Nothing Then Return Double.NaN
                     Return res
                 Catch
@@ -2620,8 +2863,8 @@ Namespace Calculator.Evaluator
                 End Try
             ElseIf TypeOf lst Is String
                 If (TypeOf val Is Double OrElse TypeOf val Is BigDecimal OrElse TypeOf val Is Integer) Then
-                    val = Modulo(CInt(val), Len(lst))
-                    Return DirectCast(lst, String)(CInt(val)).ToString()
+                    val = Modulo(Int(CDbl(val)), Len(lst))
+                    Return DirectCast(lst, String)(Int(CDbl(val))).ToString()
                 Else
                     Return "Index Must Be A Number"
                 End If
@@ -2634,27 +2877,35 @@ Namespace Calculator.Evaluator
             Return IndexCircular(lst, val)
         End Function
 
-        Public Function SetAt(lst As ICollection, idx As Object, val As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
+        Public Function SetAt(lst As Object, idx As Object, val As Object) As Object
+            If TypeOf lst Is IList(Of Reference) Then
                 If TypeOf idx Is Double AndAlso (Len(lst) > CDbl(idx) AndAlso CDbl(idx) >= 0) Then
-                    DirectCast(lst, List(Of Reference))(CInt(idx)) = New Reference(ObjectTypes.DetectType(val))
+                    DirectCast(lst, IList(Of Reference)).Item(Int(CDbl(idx))) = New Reference(ObjectTypes.DetectType(val))
                 End If
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference) Then
-                DirectCast(lst, SortedDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(idx))) = New Reference(ObjectTypes.DetectType(val))
+            ElseIf TypeOf lst Is Reference() Then
+                If TypeOf idx Is Double AndAlso (Len(lst) > CDbl(idx) AndAlso CDbl(idx) >= 0) Then
+                    DirectCast(lst, Reference())(Int(CDbl(idx))) = New Reference(ObjectTypes.DetectType(val))
+                End If
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
+                DirectCast(lst, IDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(idx))) = New Reference(ObjectTypes.DetectType(val))
             Else
                 Return "Index Out Of Range"
             End If
             Return lst
         End Function
 
-        Public Function SetAtCircular(lst As ICollection, idx As Object, val As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
+        Public Function SetAtCircular(lst As Object, idx As Object, val As Object) As Object
+            If TypeOf lst Is IList(Of Reference) Then
                 If TypeOf idx Is Double Then
-                    idx = Modulo(CDbl(idx), lst.Count)
-                    DirectCast(lst, List(Of Reference))(CInt(idx)) = New Reference(ObjectTypes.DetectType(val))
+                    idx = Modulo(CDbl(idx), DirectCast(lst, IList(Of Reference)).Count)
+                    DirectCast(lst, IList(Of Reference)).Item(Int(CDbl(idx))) = New Reference(ObjectTypes.DetectType(val))
                 End If
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference) Then
-                DirectCast(lst, SortedDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(idx))) = New Reference(ObjectTypes.DetectType(val))
+            ElseIf TypeOf lst Is Reference() Then
+                If TypeOf idx Is Double AndAlso (Len(lst) > CDbl(idx) AndAlso CDbl(idx) >= 0) Then
+                    DirectCast(lst, Reference())(Int(CDbl(idx))) = New Reference(ObjectTypes.DetectType(val))
+                End If
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
+                DirectCast(lst, IDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(idx))) = New Reference(ObjectTypes.DetectType(val))
             Else
                 Return "Index Out Of Range"
             End If
@@ -2671,6 +2922,7 @@ Namespace Calculator.Evaluator
 
             If b < 0 Then b = Len(lst) + b
             If a < 0 Then a = Len(lst) + a
+
             If b < a Then
                 reverse = True
                 Dim t As Double = a
@@ -2678,56 +2930,53 @@ Namespace Calculator.Evaluator
                 b = t
             End If
 
-            If TypeOf lst Is List(Of Reference) Then
-                If Len(lst) >= a AndAlso Len(lst) >= b AndAlso a >= 0 AndAlso b >= 0 Then
-                    Dim rlst As New List(Of Reference)(DirectCast(lst, List(Of Reference)))
-                    rlst.RemoveRange(Int(b), Int(Len(rlst) - b))
-                    rlst.RemoveRange(0, Int(a))
-                    If reverse Then rlst.Reverse()
-                    Return rlst
-                Else
-                    Return "Index Out Of Range"
-                End If
+            ' allow out of range
+            If b > Len(lst) Then b = Len(lst)
+            If a < 0 Then a = 0
+
+            If TypeOf lst Is IEnumerable(Of Reference) Then
+                Dim rlst As New List(Of Reference)(DirectCast(lst, IEnumerable(Of Reference)))
+                rlst.RemoveRange(Int(b), Int(Len(rlst) - b))
+                rlst.RemoveRange(0, Int(a))
+                If reverse Then rlst.Reverse()
+                Return rlst
             ElseIf TypeOf lst Is Reference() Then
-                If Len(lst) >= a AndAlso Len(lst) >= b AndAlso a >= 0 AndAlso b >= 0 Then
-                    Dim lst2 As New List(Of Reference)(DirectCast(lst, Reference()))
-                    lst2.RemoveRange(Int(b), Int(Len(lst2) - b))
-                    lst2.RemoveRange(0, Int(a))
-                    If reverse Then lst2.Reverse()
-                    Return lst2
-                Else
-                    Return "Index Out Of Range"
-                End If
+                Dim lst2 As New List(Of Reference)(DirectCast(lst, Reference()))
+                lst2.RemoveRange(Int(b), Int(Len(lst2) - b))
+                lst2.RemoveRange(0, Int(a))
+                If reverse Then lst2.Reverse()
+                Return lst2
             ElseIf TypeOf lst Is String
-                If CStr(lst).Length >= b AndAlso CStr(lst).Length >= a AndAlso a >= 0 AndAlso b >= 0 Then
-                    Dim text As String
-                    If b = CStr(lst).Length Then
-                        text = CStr(lst).Substring(Int(a))
-                    Else
-                        text = CStr(lst).Remove(Int(b)).Substring(Int(a))
-                    End If
-                    If reverse Then Return Me.Reverse(text)
-                    Return text
+                Dim text As String
+                If b = CStr(lst).Length Then
+                    text = CStr(lst).Substring(Int(a))
                 Else
-                    Return "Index Out Of Range"
+                    text = CStr(lst).Remove(Int(b)).Substring(Int(a))
                 End If
+                If reverse Then Return Me.Reverse(text)
+                Return text
             Else
                 Return Double.NaN
             End If
             Return lst
         End Function
 
-        Public Function Add(lst As ICollection, val As Object) As ICollection
-            If TypeOf lst Is List(Of Reference) Then
-                DirectCast(lst, List(Of Reference)).Add(New Reference(ObjectTypes.DetectType(val)))
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference) Then
-                If TypeOf val Is List(Of Reference) AndAlso CType(val, List(Of Reference)).Count = 2 Then
-                    Dim valLst As List(Of Reference) = CType(val, List(Of Reference))
-                    DirectCast(lst, SortedDictionary(Of Reference, Reference)).Add(valLst(0), valLst(1))
-                ElseIf TypeOf val Is SortedDictionary(Of Reference, Reference)
-                    lst = Union(CType(lst, SortedDictionary(Of Reference, Reference)), CType(val, SortedDictionary(Of Reference, Reference)))
+        ''' <summary>
+        ''' Add an item to a list-matrix or setionary-set
+        ''' </summary>
+        Public Function Add(lst As Object, val As Object) As Object
+            If TypeOf lst Is IList(Of Reference) Then
+                DirectCast(lst, IList(Of Reference)).Add(New Reference(ObjectTypes.DetectType(val)))
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                DirectCast(lst, LinkedList(Of Reference)).AddLast(New Reference(ObjectTypes.DetectType(val)))
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
+                If TypeOf val Is IEnumerable(Of Reference) AndAlso CType(val, IEnumerable(Of Reference)).Count = 2 Then
+                    Dim valLst As IEnumerable(Of Reference) = CType(val, IEnumerable(Of Reference))
+                    DirectCast(lst, IDictionary(Of Reference, Reference)).Add(valLst(0), valLst(1))
+                ElseIf TypeOf val Is IDictionary(Of Reference, Reference)
+                    lst = Union(CType(lst, IDictionary(Of Reference, Reference)), CType(val, IDictionary(Of Reference, Reference)))
                 Else
-                    DirectCast(lst, SortedDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(val))) = Nothing
+                    DirectCast(lst, IDictionary(Of Reference, Reference))(New Reference(ObjectTypes.DetectType(val))) = Nothing
                 End If
             Else
                 Return Nothing
@@ -2740,10 +2989,10 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function AddRow(lst As List(Of Reference)) As List(Of Reference)
-            Dim mat As New Matrix(DirectCast(lst, List(Of Reference)))
+        Public Function AddRow(lst As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Dim mat As New Matrix(DirectCast(lst, IEnumerable(Of Reference)))
             mat.Resize(mat.Height + 1, mat.Width)
-            Return DirectCast(mat.GetValue(), List(Of Reference))
+            Return DirectCast(mat.GetValue(), IEnumerable(Of Reference))
             Return lst
         End Function
 
@@ -2752,10 +3001,10 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function AddCol(lst As List(Of Reference)) As List(Of Reference)
-            Dim mat As New Matrix(DirectCast(lst, List(Of Reference)))
+        Public Function AddCol(lst As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Dim mat As New Matrix(DirectCast(lst, IEnumerable(Of Reference)))
             mat.Resize(mat.Height, mat.Width + 1)
-            Return DirectCast(mat.GetValue(), List(Of Reference))
+            Return DirectCast(mat.GetValue(), IEnumerable(Of Reference))
             Return lst
         End Function
 
@@ -2765,40 +3014,57 @@ Namespace Calculator.Evaluator
         ''' <param name="lst"></param>
         ''' <param name="val"></param>
         ''' <returns></returns>
-        Public Function Append(lst As List(Of Reference), val As List(Of Reference)) As List(Of Reference)
-            If TypeOf lst Is List(Of Reference) AndAlso TypeOf val Is List(Of Reference) Then
-                lst.AddRange(val.ToArray())
-                Return lst
+        Public Function Append(lst As IEnumerable(Of Reference), val As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            If TypeOf lst Is List(Of Reference) Then
+                DirectCast(lst, List(Of Reference)).AddRange(val.ToArray())
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                For Each r As Reference In val
+                    DirectCast(lst, LinkedList(Of Reference)).AddLast(r)
+                Next
             Else
-                Return Nothing
+                Return Nothing ' not supported
             End If
+            Return lst
         End Function
 
         ''' <summary>
         ''' Remove the first object matching the specified object within the list
         ''' </summary>
-        Public Function Remove(lst As Object, val As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
+        Public Function Remove(lst As Object, Optional val As Object = Nothing) As Object
+            If TypeOf lst Is IList(Of Reference) Then
                 Dim i As Integer = 0
-                Dim tmp As List(Of Reference) = DirectCast(lst, List(Of Reference))
+                Dim tmp As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 While i < tmp.Count
-                    If O(tmp(i)) = O(val) Then
+                    If GenericComparer.CompareObjs(tmp(i), val) = 0 Then
                         tmp.RemoveAt(i)
                         Exit While
                     End If
                     i += 1
                 End While
                 Return tmp
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference)
-                Dim tmp As SortedDictionary(Of Reference, Reference) = DirectCast(lst, SortedDictionary(Of Reference, Reference))
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                Dim tmp As LinkedListNode(Of Reference) = DirectCast(lst, LinkedList(Of Reference)).First
+                While Not tmp Is Nothing
+                    If GenericComparer.CompareObjs(tmp.Value, val) = 0 Then
+                        tmp.List.Remove(tmp)
+                        Exit While
+                    End If
+                    tmp = tmp.Next
+                End While
+                Return tmp.List
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
+                Dim tmp As IDictionary(Of Reference, Reference) = DirectCast(lst, IDictionary(Of Reference, Reference))
                 tmp.Remove(New Reference(ObjectTypes.DetectType(val)))
                 Return tmp
-            ElseIf TypeOf lst Is String
+            ElseIf TypeOf lst Is String Then
                 If CStr(lst).Contains(val.ToString()) Then
                     lst = CStr(lst).Remove(CStr(lst).IndexOf(val.ToString())) &
                     CStr(lst).Substring(CStr(lst).IndexOf(val.ToString()) + val.ToString().Length)
                 End If
                 Return lst
+            ElseIf TypeOf lst Is Reference Then
+                DirectCast(lst, Reference).NodeRemove()
+                Return DirectCast(lst, Reference)
             Else
                 Return Nothing
             End If
@@ -2808,17 +3074,28 @@ Namespace Calculator.Evaluator
         ''' Remove all objects matching the specified object within the list
         ''' </summary>
         Public Function RemoveAll(lst As Object, val As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
+            If TypeOf lst Is IList(Of Reference) Then
                 Dim i As Integer = 0
-                Dim tmp As List(Of Reference) = DirectCast(lst, List(Of Reference))
+                Dim tmp As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 While i < tmp.Count
-                    If O(CType(tmp(i), EvalObjectBase).GetValue()) = O(val) Then
+                    If GenericComparer.CompareObjs(tmp(i), val) = 0 Then
                         tmp.RemoveAt(i)
                         Continue While
                     End If
                     i += 1
                 End While
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference)
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                Dim tmp As LinkedListNode(Of Reference) = DirectCast(lst, LinkedList(Of Reference)).First
+                While Not tmp Is Nothing
+                    If GenericComparer.CompareObjs(tmp.Value, val) = 0 Then
+                        Dim nxt As LinkedListNode(Of Reference) = tmp.Next
+                        tmp.List.Remove(tmp)
+                        tmp = nxt
+                    End If
+                    tmp = tmp.Next
+                End While
+                Return tmp.List
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
                 Return Remove(lst, val)
             ElseIf TypeOf lst Is String
                 While CStr(lst).Contains(val.ToString())
@@ -2835,10 +3112,10 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <returns></returns>
         Public Function Reverse(lst As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
-                DirectCast(lst, List(Of Reference)).Reverse()
+            If TypeOf lst Is IEnumerable(Of Reference) Then
+                DirectCast(lst, IEnumerable(Of Reference)).Reverse()
             ElseIf TypeOf lst Is String
-                Dim slst As List(Of Char) = CStr(lst).ToList()
+                Dim slst As IEnumerable(Of Char) = CStr(lst).ToList()
                 slst.Reverse()
                 Dim s As New StringBuilder()
                 For Each c As Char In slst
@@ -2851,12 +3128,71 @@ Namespace Calculator.Evaluator
             Return lst
         End Function
 
+        ''' <summary>
+        ''' Return a reference to the first item in the linked list
+        ''' </summary>
+        Public Function First(lst As LinkedList(Of Reference)) As Reference
+            Return New Reference(DirectCast(lst, LinkedList(Of Reference)).First)
+        End Function
+
+        ''' <summary>
+        ''' Return a reference to the last item in the linked list
+        ''' </summary>
+        Public Function Last(lst As LinkedList(Of Reference)) As Reference
+            Return New Reference(DirectCast(lst, LinkedList(Of Reference)).Last)
+        End Function
+
+        ''' <summary>
+        ''' Tries to move the reference to the next place on the linkedlist the specified number of times
+        ''' </summary>
+        Public Function [Next](ref As Reference, Optional ByVal times As Double = 1) As Reference
+            For i As Double = 0 To times - 1
+                ref.NodeNext()
+            Next
+            Return ref
+        End Function
+
+        ''' <summary>
+        ''' Tries to move the reference to the previous place on the linkedlist the specified number of times
+        ''' </summary>
+        Public Function Prev(ref As Reference, Optional ByVal times As Double = 1) As Reference
+            For i As Double = 0 To times - 1
+                ref.NodePrevious()
+            Next
+            Return ref
+        End Function
+
+        ''' <summary>
+        ''' Tries to add an item after the one pointed to by the reference on the linked list 
+        ''' </summary>
+        Public Function AddAfter(ref As Reference, ByVal val As Object) As Reference
+            ref.NodeAddAfter(New Reference(val))
+            Return ref
+        End Function
+
+        ''' <summary>
+        ''' Tries to add an item before the one pointed to by the reference on the linked list 
+        ''' </summary>
+        Public Function AddBefore(ref As Reference, ByVal val As Object) As Reference
+            ref.NodeAddBefore(New Reference(val))
+            Return ref
+        End Function
+
+        ''' <summary>
+        ''' Take an item from the end of the list, remove it and return it.
+        ''' </summary>
         Public Function Pop(lst As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
-                Dim lr As List(Of Reference) = DirectCast(lst, List(Of Reference))
+            If TypeOf lst Is IList(Of Reference) Then
+                Dim lr As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 If lr.Count = 0 Then Return Double.NaN
                 Dim last As Object = lr(lr.Count - 1)
                 lr.RemoveAt(lr.Count - 1)
+                Return last
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                Dim lr As LinkedList(Of Reference) = DirectCast(lst, LinkedList(Of Reference))
+                If lr.Count = 0 Then Return Double.NaN
+                Dim last As Object = lr.Last.Value.Resolve()
+                lr.RemoveLast()
                 Return last
             ElseIf TypeOf lst Is String Then
                 If CStr(lst).Length = 0 Then Return Double.NaN
@@ -2868,16 +3204,28 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
+        ''' <summary>
+        ''' Take an item from the end of the list, remove it and return it.
+        ''' </summary>
         Public Function PopLast(lst As Object) As Object
             Return Pop(lst)
         End Function
 
+        ''' <summary>
+        ''' Take an item from the start of the list, remove it and return it.
+        ''' </summary>
         Public Function PopFirst(lst As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
-                Dim lr As List(Of Reference) = DirectCast(lst, List(Of Reference))
+            If TypeOf lst Is IList(Of Reference) Then
+                Dim lr As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 If lr.Count = 0 Then Return Double.NaN
                 Dim first As Object = lr(0)
                 lr.RemoveAt(0)
+                Return first
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                Dim lr As LinkedList(Of Reference) = DirectCast(lst, LinkedList(Of Reference))
+                If lr.Count = 0 Then Return Double.NaN
+                Dim first As Object = lr.First.Value.Resolve()
+                lr.RemoveFirst()
                 Return first
             ElseIf TypeOf lst Is String Then
                 If CStr(lst).Length = 0 Then Return Double.NaN
@@ -2889,10 +3237,17 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
+        ''' <summary>
+        ''' Push an item to the end of the list
+        ''' </summary>
         Public Function Push(lst As Object, obj As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
-                Dim lr As List(Of Reference) = DirectCast(lst, List(Of Reference))
+            If TypeOf lst Is IList(Of Reference) Then
+                Dim lr As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 lr.Add(New Reference(obj))
+                Return lr
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                Dim lr As LinkedList(Of Reference) = DirectCast(lst, LinkedList(Of Reference))
+                lr.AddLast(New Reference(obj))
                 Return lr
             ElseIf TypeOf lst Is String Then
                 lst = CStr(lst) & obj.ToString()
@@ -2902,14 +3257,24 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
+        ''' <summary>
+        ''' Push an item to the end of the list
+        ''' </summary>
         Public Function PushLast(lst As Object, obj As Object) As Object
             Return Push(lst, obj)
         End Function
 
+        ''' <summary>
+        ''' Push an item to the beginning of the list
+        ''' </summary>
         Public Function PushFirst(lst As Object, obj As Object) As Object
-            If TypeOf lst Is List(Of Reference) Then
-                Dim lr As List(Of Reference) = DirectCast(lst, List(Of Reference))
+            If TypeOf lst Is IList(Of Reference) Then
+                Dim lr As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 lr.Insert(0, New Reference(obj))
+                Return lr
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                Dim lr As LinkedList(Of Reference) = DirectCast(lst, LinkedList(Of Reference))
+                lr.AddFirst(New Reference(obj))
                 Return lr
             ElseIf TypeOf lst Is String Then
                 lst = obj.ToString() & CStr(lst)
@@ -2919,13 +3284,16 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
+        ''' <summary>
+        ''' Cycle the list forwards: [1,2,3]->[3,1,2]
+        ''' </summary>
         Public Function Cycle(lst As Object, Optional times As Double = 1) As Object
             Dim reverse As Boolean = False
             If times < 0 Then
                 reverse = True
                 times = -times
             End If
-            For i As Integer = 0 To CInt(times) - 1
+            For i As Integer = 0 To Int(times) - 1
                 If reverse Then
                     Push(lst, PopFirst(lst))
                 Else
@@ -2935,13 +3303,25 @@ Namespace Calculator.Evaluator
             Return lst
         End Function
 
+        ''' <summary>
+        ''' Cycle the list backwards: [1,2,3]->[2,3,1]
+        ''' </summary>
         Public Function CycleReverse(lst As Object, Optional times As Double = 1) As Object
             Return Cycle(lst, -times)
         End Function
 
+        ''' <summary>
+        ''' Remove at the index in the matrix-list
+        ''' </summary>
         Public Function RemoveAt(lst As Object, val As Double) As Object
-            If TypeOf lst Is List(Of Reference) Then
-                DirectCast(lst, List(Of Reference)).RemoveAt(Int(val))
+            If TypeOf lst Is IList(Of Reference) Then
+                DirectCast(lst, IList(Of Reference)).RemoveAt(Int(val))
+            ElseIf TypeOf lst Is linkedList(Of Reference) Then
+                Dim tmp As LinkedListNode(Of Reference) = DirectCast(lst, LinkedList(Of Reference)).First
+                For i As Integer = 1 To Int(val)
+                    tmp = tmp.Next
+                Next
+                tmp.List.Remove(tmp)
             ElseIf TypeOf lst Is String Then
                 Dim idx As Integer = CStr(lst).IndexOf(val.ToString())
                 lst = CStr(lst).Remove(idx) + CStr(lst).Substring(idx + 1)
@@ -2953,22 +3333,28 @@ Namespace Calculator.Evaluator
 
         ''' <summary>
         ''' Count the number of times the given value occurs within the matrix, set, or texting.
-        ''' Note: for sets, if the set is in dictionary form ({a:b,c:d}), 
+        ''' Note: for sets, if the set is in setionary form ({a:b,c:d}), 
         ''' then this counts the number of times the value, not key occurs, in the set (i.e. b and d are checked)
         ''' Otherwise, this simply returns one because elements of the set are unique.
         ''' Note2: Regex enabled for textings
         ''' </summary>
         Public Function Count(lst As Object, val As Object) As Double
             Dim ct As Integer = 0
-            If TypeOf lst Is List(Of Reference) Then
-                For Each i As Object In DirectCast(lst, ICollection)
+            If TypeOf lst Is IEnumerable(Of Reference) Then
+                For Each i As Object In DirectCast(lst, IEnumerable)
                     If O(i) = O(val) Then
                         ct += 1
                     End If
                 Next
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference)
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                For Each i As Object In DirectCast(lst, LinkedList(Of Reference))
+                    If O(i) = O(val) Then
+                        ct += 1
+                    End If
+                Next
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
                 Dim notNullCt As Integer = 0
-                For Each i As KeyValuePair(Of Reference, Reference) In DirectCast(lst, SortedDictionary(Of Reference, Reference))
+                For Each i As KeyValuePair(Of Reference, Reference) In DirectCast(lst, IDictionary(Of Reference, Reference))
                     If i.Value Is Nothing Then Continue For
                     If O(i.Value) = O(val) Then ct += 1
                     notNullCt += 1
@@ -2987,14 +3373,13 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Clear the matrix or set
         ''' </summary>
-        ''' <param name="lst"></param>
-        ''' <param name="val"></param>
-        ''' <returns></returns>
-        Public Function Clear(lst As ICollection, val As Double) As ICollection
-            If TypeOf lst Is List(Of Reference) Then
-                DirectCast(lst, List(Of Reference)).Clear()
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference) Then
-                DirectCast(lst, SortedDictionary(Of Reference, Reference)).Clear()
+        Public Function Clear(lst As Object) As Object
+            If TypeOf lst Is IList(Of Reference) Then
+                DirectCast(lst, IList(Of Reference)).Clear()
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
+                DirectCast(lst, LinkedList(Of Reference)).Clear()
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
+                DirectCast(lst, IDictionary(Of Reference, Reference)).Clear()
             Else
                 Return Nothing
             End If
@@ -3004,14 +3389,11 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Returns true if the specified matrix, text, or set contains the value. (regex enabled for texting)
         ''' </summary>
-        ''' <param name="lst"></param>
-        ''' <param name="val"></param>
-        ''' <returns></returns>
         Public Function Contains(lst As Object, val As Object) As Boolean
-            If TypeOf lst Is List(Of Reference) Then
-                Return DirectCast(lst, List(Of Reference)).Contains(New Reference(ObjectTypes.DetectType(val)))
-            ElseIf TypeOf lst Is SortedDictionary(Of Reference, Reference)
-                Return ContainsKey(DirectCast(lst, SortedDictionary(Of Reference, Reference)), val)
+            If TypeOf lst Is IEnumerable(Of Reference) Then
+                Return DirectCast(lst, IEnumerable(Of Reference)).Contains(New Reference(ObjectTypes.DetectType(val)))
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
+                Return ContainsKey(DirectCast(lst, IDictionary(Of Reference, Reference)), val)
             ElseIf TypeOf lst Is String
                 Return Not RegexMatch(CStr(lst), val.ToString()).Count = 0
             Else
@@ -3027,8 +3409,8 @@ Namespace Calculator.Evaluator
         ''' <returns></returns>
         Public Function Find(lst As Object, val As Object) As Double
             Dim res As Double
-            If TypeOf lst Is List(Of Reference) Then
-                res = DirectCast(lst, List(Of Reference)).IndexOf(New Reference(ObjectTypes.DetectType(val)))
+            If TypeOf lst Is IList(Of Reference) Then
+                res = DirectCast(lst, IList(Of Reference)).IndexOf(New Reference(ObjectTypes.DetectType(val)))
             ElseIf TypeOf lst Is String
                 Dim regex As New Regex(val.ToString())
                 res = regex.Match(CStr(lst)).Index
@@ -3150,9 +3532,9 @@ Namespace Calculator.Evaluator
         ''' <param name="length"></param>
         ''' <returns></returns>
         Public Function Pad(lst As Object, length As Double, Optional item As Object = Nothing) As Object
-            If TypeOf lst Is List(Of Reference) Then
+            If TypeOf lst Is IList(Of Reference) Then
                 If item Is Nothing Then item = 0.0
-                Dim rlst As List(Of Reference) = DirectCast(lst, List(Of Reference))
+                Dim rlst As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 While Len(rlst) < Int(length)
                     rlst.Insert(0, New Reference(item))
                 End While
@@ -3172,9 +3554,9 @@ Namespace Calculator.Evaluator
         ''' <param name="length"></param>
         ''' <returns></returns>
         Public Function PadEnd(lst As Object, length As Double, Optional ByVal item As Object = Nothing) As Object
-            If TypeOf lst Is List(Of Reference) Then
+            If TypeOf lst Is IList(Of Reference) Then
                 If item Is Nothing Then item = 0.0
-                Dim rlst As List(Of Reference) = DirectCast(lst, List(Of Reference))
+                Dim rlst As IList(Of Reference) = DirectCast(lst, IList(Of Reference))
                 While Len(rlst) < Int(length)
                     rlst.Add(New Reference(item))
                 End While
@@ -3188,17 +3570,87 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
+        ''' Get the levenshtein edit distance between two strings, optionally with custom weights
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function EditDist(a As String, b As String,
+                                     Optional costAdd As Double = 1,
+                                     Optional costRem As Double = 1, Optional costChange As Double = 1) As Double
+
+            costAdd = Math.Min(costAdd, costRem)
+
+            Dim dp(a.Length + 1, b.Length + 1) As Double
+
+            ' initialize to 0
+            For i As Integer = 0 To a.Length
+                dp(i, 0) = i * costAdd
+            Next
+            For i As Integer = 1 To b.Length
+                dp(0, i) = i * costAdd
+            Next
+
+            For i As Integer = 1 To a.Length
+                For j As Integer = 1 To b.Length
+                    If a(i - 1) = b(j - 1) Then
+                        dp(i, j) = dp(i - 1, j - 1)
+                    Else
+                        dp(i, j) = Math.Min(Math.Min(dp(i - 1, j) + costAdd,
+                                     dp(i, j - 1) + costAdd), dp(i - 1, j - 1) + costChange)
+                    End If
+                Next
+            Next
+
+            Return dp(a.Length, b.Length)
+        End Function
+
+        ''' <summary>
+        ''' Swap two items in a list without creating a matrix, used internally by qsort
+        ''' </summary>
+        Private Sub InplaceSwap(list As IList(Of Reference), a As Integer, b As Integer)
+            Dim tmp As Reference = list(a)
+            list(a) = list(b)
+            list(b) = tmp
+        End Sub
+
+        ''' <summary>
+        ''' Internal function using quicksort to sort a list in-place
+        ''' </summary>
+        ''' <param name="lst">List to sort</param>
+        ''' <param name="l">Left limit of range to sort (inclusive)</param>
+        ''' <param name="r">Right limit of range to sort (exclusive)</param>
+        Private Sub QSort(lst As IList(Of Reference), l As Integer, r As Integer)
+            If l + 1 >= r Then Return
+
+            'MsgBox(String.Join(",", lst))
+            Dim pivot As Integer = Int(l + (r - l) / 2) ' choose middle element as pivot
+            InplaceSwap(lst, pivot, r - 1) ' move pivot to end
+
+            pivot = r - 1 ' new location for pivot, set for convenience
+
+            Dim mid As Integer = l ' the index we are moving things less than the pivot to
+            For i As Integer = l To pivot - 1 ' do not loop onto pivot
+                ' if less than pivot, swap
+                If GenericComparer.CompareObjs(lst(i), lst(pivot)) < 0 Then
+                    InplaceSwap(lst, i, mid)
+                    mid += 1 ' this index is full, go to next
+                End If
+            Next
+
+            InplaceSwap(lst, mid, pivot) ' swap pivot back to where it should belong
+
+            ' divide and conquer
+            QSort(lst, l, mid)
+            QSort(lst, mid + 1, r)
+        End Sub
+
+        ''' <summary>
         ''' Sort a list using the generic comparer, returning true on success
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Sort(lst As List(Of Reference)) As List(Of Reference)
-            Try
-                lst.Sort(New GenericComparer())
-                Return lst
-            Catch
-                Return Nothing
-            End Try
+        Public Function Sort(lst As IList(Of Reference)) As IList(Of Reference)
+            QSort(lst, 0, lst.Count)
+            Return lst
         End Function
 
         ''' <summary>
@@ -3206,7 +3658,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Shuffle(lst As List(Of Reference)) As List(Of Reference)
+        Public Function Shuffle(lst As IList(Of Reference)) As IList(Of Reference)
             Dim lst2 As New List(Of Reference)(lst)
             lst.Clear()
             Dim rnd As New Random()
@@ -3223,7 +3675,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Height(lst As List(Of Reference)) As Double
+        Public Function Height(lst As IEnumerable(Of Reference)) As Double
             Return New Matrix(lst).Height
         End Function
 
@@ -3232,7 +3684,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Rows(lst As List(Of Reference)) As Double
+        Public Function Rows(lst As IEnumerable(Of Reference)) As Double
             Return Height(lst)
         End Function
 
@@ -3241,7 +3693,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Width(lst As List(Of Reference)) As Double
+        Public Function Width(lst As IEnumerable(Of Reference)) As Double
             Return New Matrix(lst).Width
         End Function
 
@@ -3250,7 +3702,7 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Cols(lst As List(Of Reference)) As Double
+        Public Function Cols(lst As IEnumerable(Of Reference)) As Double
             Return Width(lst)
         End Function
 
@@ -3259,24 +3711,24 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Normalize(lst As List(Of Reference)) As List(Of Reference)
-            Return CType(New Matrix(lst).GetValue(), List(Of Reference))
+        Public Function Normalize(lst As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Return CType(New Matrix(lst).GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
         ''' Get a row of the matrix as a 1-column matrix/vector
         ''' </summary>
         ''' <returns></returns>
-        Public Function Row(lst As List(Of Reference), id As Double) As List(Of Reference)
-            Return DirectCast(New Matrix(lst).Row(Int(id)).GetValue(), List(Of Reference))
+        Public Function Row(lst As IEnumerable(Of Reference), id As Double) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(lst).Row(Int(id)).GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
         ''' Get a column of the matrix as a 1-column matrix/vector
         ''' </summary>
         ''' <returns></returns>
-        Public Function Col(lst As List(Of Reference), id As Double) As List(Of Reference)
-            Return DirectCast(New Matrix(lst).Col(Int(id)).GetValue(), List(Of Reference))
+        Public Function Col(lst As IEnumerable(Of Reference), id As Double) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(lst).Col(Int(id)).GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
@@ -3284,11 +3736,11 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Resize(lst As List(Of Reference), height As Double, Optional width As Double = Double.NaN) As List(Of Reference)
+        Public Function Resize(lst As IEnumerable(Of Reference), height As Double, Optional width As Double = Double.NaN) As IEnumerable(Of Reference)
             Dim mat As New Matrix(lst)
             If width = Double.NaN Then width = mat.Width
-            mat.Resize(CInt(height), CInt(width))
-            Return CType(mat.GetValue(), List(Of Reference))
+            mat.Resize(Int(height), Int(width))
+            Return CType(mat.GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
@@ -3297,7 +3749,7 @@ Namespace Calculator.Evaluator
         ''' <param name="a"></param>
         ''' <param name="b"></param>
         ''' <returns></returns>
-        Public Function Multiply(a As List(Of Reference), b As List(Of Reference)) As Object
+        Public Function Multiply(a As IEnumerable(Of Reference), b As IEnumerable(Of Reference)) As Object
             Dim ma As New Matrix(a)
             Dim mb As New Matrix(b)
             Try
@@ -3311,7 +3763,7 @@ Namespace Calculator.Evaluator
         ''' Get the dot product of two column vectors
         ''' </summary>
         ''' <returns></returns>
-        Public Function Dot(a As List(Of Reference), b As List(Of Reference)) As Object
+        Public Function Dot(a As IEnumerable(Of Reference), b As IEnumerable(Of Reference)) As Object
             Return New Matrix(a).Dot(New Matrix(b))
         End Function
 
@@ -3319,39 +3771,39 @@ Namespace Calculator.Evaluator
         ''' Get the cross product of two column vectors
         ''' </summary>
         ''' <returns></returns>
-        Public Function Cross(a As List(Of Reference), b As List(Of Reference)) As List(Of Reference)
-            Return DirectCast(New Matrix(a).Cross(New Matrix(b)).GetValue(), List(Of Reference))
+        Public Function Cross(a As IEnumerable(Of Reference), b As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(a).Cross(New Matrix(b)).GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
         ''' Multiply a matrix and a scalar
         ''' </summary>
         ''' <returns></returns>
-        Public Function Scale(a As List(Of Reference), b As Object) As List(Of Reference)
-            Return DirectCast(New Matrix(a).MultiplyScalar(b).GetValue(), List(Of Reference))
+        Public Function Scale(a As IEnumerable(Of Reference), b As Object) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(a).MultiplyScalar(b).GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
         ''' Swap two rows in a matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function SwapRows(mat As List(Of Reference), a As Double, b As Double) As List(Of Reference)
-            Return DirectCast(New Matrix(mat).SwapRows(Int(a), Int(b)).GetValue(), List(Of Reference))
+        Public Function SwapRows(mat As IList(Of Reference), a As Double, b As Double) As IList(Of Reference)
+            Return DirectCast(New Matrix(mat).SwapRows(Int(a), Int(b)).GetValue(), IList(Of Reference))
         End Function
 
         ''' <summary>
         ''' Swap two columns in a matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function SwapCols(mat As List(Of Reference), a As Double, b As Double) As List(Of Reference)
-            Return DirectCast(New Matrix(mat).SwapCols(Int(a), Int(b)).GetValue(), List(Of Reference))
+        Public Function SwapCols(mat As IList(Of Reference), a As Double, b As Double) As IList(Of Reference)
+            Return DirectCast(New Matrix(mat).SwapCols(Int(a), Int(b)).GetValue(), IList(Of Reference))
         End Function
 
         ''' <summary>
         ''' Find the determinant of a matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function Det(a As List(Of Reference)) As Object
+        Public Function Det(a As IEnumerable(Of Reference)) As Object
             Return New Matrix(a).Determinant()
         End Function
 
@@ -3359,27 +3811,19 @@ Namespace Calculator.Evaluator
         ''' Find the reduced row echelon form of a matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function Rref(mat As List(Of Reference), Optional aug As List(Of Reference) = Nothing) As List(Of Reference)
+        Public Function Rref(mat As IEnumerable(Of Reference), Optional aug As IEnumerable(Of Reference) = Nothing) As IEnumerable(Of Reference)
             If Not aug Is Nothing Then
-                Return DirectCast(New Matrix(mat).Rref(New Matrix(aug)).GetValue(), List(Of Reference))
+                Return DirectCast(New Matrix(mat).Rref(New Matrix(aug)).GetValue(), IEnumerable(Of Reference))
             Else
-                Return DirectCast(New Matrix(mat).Rref().GetValue(), List(Of Reference))
+                Return DirectCast(New Matrix(mat).Rref().GetValue(), IEnumerable(Of Reference))
             End If
-        End Function
-
-        ''' <summary>
-        ''' Find the magnitude of a column vector
-        ''' </summary>
-        ''' <returns></returns>
-        Public Function Magnitude(a As List(Of Reference)) As Object
-            Return New Matrix(a).Magnitude()
         End Function
 
         ''' <summary>
         ''' Find the norm of a column vector (gives the square of the magnitude)
         ''' </summary>
         ''' <returns></returns>
-        Public Function Norm(a As List(Of Reference)) As Object
+        Public Function Norm(a As IEnumerable(Of Reference)) As Object
             Return New Matrix(a).Norm()
         End Function
 
@@ -3388,16 +3832,16 @@ Namespace Calculator.Evaluator
         ''' </summary>
         ''' <param name="a"></param>
         ''' <returns></returns>
-        Public Function Transpose(a As List(Of Reference)) As List(Of Reference)
-            Return DirectCast(New Matrix(a).Transpose().GetValue(), List(Of Reference))
+        Public Function Transpose(a As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(a).Transpose().GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
         ''' Find the inverse of a matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function Inverse(a As List(Of Reference)) As List(Of Reference)
-            Return DirectCast(New Matrix(a).Inverse().GetValue(), List(Of Reference))
+        Public Function Inverse(a As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(a).Inverse().GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
@@ -3405,20 +3849,18 @@ Namespace Calculator.Evaluator
         ''' with the specified number of rows and cols
         ''' </summary>
         ''' <returns></returns>
-        Public Function IdentityMatrix(rows As Double, Optional cols As Double = -1) As List(Of Reference)
-            Return DirectCast(ObjectTypes.Matrix.IdentityMatrix(Int(rows), Int(cols)).GetValue(), List(Of Reference))
+        Public Function IdentityMatrix(rows As Double, Optional cols As Double = -1) As IEnumerable(Of Reference)
+            Return DirectCast(ObjectTypes.Matrix.IdentityMatrix(Int(rows), Int(cols)).GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
         ''' Convert to set
         ''' </summary>
-        ''' <param name="lst"></param>
-        ''' <returns></returns>
         Public Function ToSet(lst As Object) As SortedDictionary(Of Reference, Reference)
             Dim tmp As [Set]
             If TypeOf lst Is IEnumerable(Of Reference) Then
                 tmp = New [Set](CType(lst, IEnumerable(Of Reference)))
-            ElseIf TypeOf lst Is Dictionary(Of Object, Object)
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
                 tmp = New [Set](CType(lst, IDictionary(Of Reference, Reference)))
             Else
                 tmp = New [Set]({New Reference(lst)}.ToList())
@@ -3426,57 +3868,107 @@ Namespace Calculator.Evaluator
             Return CType(tmp.GetValue(), SortedDictionary(Of Reference, Reference))
         End Function
 
-        Public Function [Set](lst As Object) As SortedDictionary(Of Reference, Reference)
+        ''' <summary>
+        ''' Create a new set from any object
+        ''' </summary>
+        Public Function [Set](Optional lst As Object = Nothing) As IDictionary(Of Reference, Reference)
+            If lst Is Nothing Then Return New SortedDictionary(Of Reference, Reference)
             Return ToSet(lst)
         End Function
 
-
-        ' dictionary/set
-
-        Public Function Union(dict1 As SortedDictionary(Of Reference, Reference), dict2 As SortedDictionary(Of Reference, Reference)) As _
-                SortedDictionary(Of Reference, Reference)
-            For Each kv As KeyValuePair(Of Reference, Reference) In dict2
-                dict1(New Reference(kv.Key)) = kv.Value
-            Next
-            Return dict1
+        ''' <summary>
+        ''' Convert to hashset
+        ''' </summary>
+        Public Function ToHashSet(lst As Object) As Dictionary(Of Reference, Reference)
+            Dim tmp As HashSet
+            If TypeOf lst Is IEnumerable(Of Reference) Then
+                tmp = New HashSet(CType(lst, IEnumerable(Of Reference)))
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference)
+                tmp = New HashSet(CType(lst, IDictionary(Of Reference, Reference)))
+            Else
+                tmp = New HashSet({New Reference(lst)}.ToList())
+            End If
+            Return CType(tmp.GetValue(), Dictionary(Of Reference, Reference))
         End Function
 
-        Public Function Intersect(dict1 As SortedDictionary(Of Reference, Reference), dict2 As SortedDictionary(Of Reference, Reference)) As _
-                SortedDictionary(Of Reference, Reference)
-            Dim tmp As IEnumerable(Of KeyValuePair(Of Reference, Reference)) = dict1.Intersect(dict2)
-            dict1 = New SortedDictionary(Of Reference, Reference)(New GenericComparer())
-            For Each kv As KeyValuePair(Of Reference, Reference) In tmp
-                dict1(kv.Key) = kv.Value
-            Next
-            Return dict1
+        ''' <summary>
+        ''' Create a new hashset from any object
+        ''' </summary>
+        Public Function [HashSet](Optional lst As Object = Nothing) As IDictionary(Of Reference, Reference)
+            If lst Is Nothing Then Return New Dictionary(Of Reference, Reference)
+            Return ToHashSet(lst)
         End Function
 
-        Public Function Difference(dict1 As SortedDictionary(Of Reference, Reference), dict2 As SortedDictionary(Of Reference, Reference)) As _
-                SortedDictionary(Of Reference, Reference)
-            For Each kv As KeyValuePair(Of Reference, Reference) In dict2
-                If dict1.ContainsKey(kv.Key) Then dict1.Remove(kv.Key)
+        ' setionary/set
+
+        ''' <summary>
+        ''' Computes the union of two sets
+        ''' </summary>
+        Public Function Union(set1 As IDictionary(Of Reference, Reference), set2 As IDictionary(Of Reference, Reference)) As _
+                IDictionary(Of Reference, Reference)
+            For Each kv As KeyValuePair(Of Reference, Reference) In set2
+                set1(New Reference(kv.Key)) = kv.Value
             Next
-            Return dict1
+            Return set1
         End Function
 
-        Public Function SymmetricDifference(dict1 As SortedDictionary(Of Reference, Reference), dict2 As SortedDictionary(Of Reference, Reference)) As _
-                SortedDictionary(Of Reference, Reference)
-            For Each kv As KeyValuePair(Of Reference, Reference) In dict2
-                If dict1.ContainsKey(kv.Key) Then
-                    dict1.Remove(kv.Key)
+        ''' <summary>
+        ''' Computes the intersection of two sets
+        ''' </summary>
+        Public Function Intersect(set1 As IDictionary(Of Reference, Reference), set2 As IDictionary(Of Reference, Reference)) As _
+                IDictionary(Of Reference, Reference)
+            Dim toRem As New List(Of Reference)
+            For Each kv As KeyValuePair(Of Reference, Reference) In set1
+                If Not set2.ContainsKey(kv.Key) Then toRem.Add(kv.Key)
+            Next
+            For Each r As Reference In toRem
+                set1.Remove(r)
+            Next
+            Return set1
+        End Function
+
+        ''' <summary>
+        ''' Computes the difference of two sets
+        ''' </summary>
+        Public Function Difference(set1 As IDictionary(Of Reference, Reference), set2 As IDictionary(Of Reference, Reference)) As _
+                IDictionary(Of Reference, Reference)
+            For Each kv As KeyValuePair(Of Reference, Reference) In set2
+                If set1.ContainsKey(kv.Key) Then set1.Remove(kv.Key)
+            Next
+            Return set1
+        End Function
+
+        ''' <summary>
+        ''' Computes the symmetric difference of two sets
+        ''' </summary>
+        Public Function SymmetricDifference(set1 As IDictionary(Of Reference, Reference), set2 As IDictionary(Of Reference, Reference)) As _
+                IDictionary(Of Reference, Reference)
+            For Each kv As KeyValuePair(Of Reference, Reference) In set2
+                If set1.ContainsKey(kv.Key) Then
+                    set1.Remove(kv.Key)
                 Else
-                    dict1(kv.Key) = kv.Value
+                    set1(kv.Key) = kv.Value
                 End If
             Next
-            Return dict1
+            Return set1
         End Function
 
-        Public Function ContainsKey(dict As SortedDictionary(Of Reference, Reference), val As Object) As Boolean
-            Return dict.ContainsKey(New Reference(ObjectTypes.DetectType(val)))
+        ''' <summary>
+        ''' Returns true if the specified setionary (set) contains the key
+        ''' </summary>
+        Public Function ContainsKey([set] As IDictionary(Of Reference, Reference), val As Object) As Boolean
+            Return [set].ContainsKey(New Reference(ObjectTypes.DetectType(val)))
         End Function
 
-        Public Function ContainsValue(dict As SortedDictionary(Of Reference, Reference), val As Object) As Boolean
-            Return dict.ContainsValue(New Reference(ObjectTypes.DetectType(val)))
+        ''' <summary>
+        ''' Returns true if the specified setionary (set) contains the value
+        ''' </summary>
+        Public Function ContainsValue([set] As IDictionary(Of Reference, Reference), val As Object) As Boolean
+            Dim valRef As Reference = New Reference(ObjectTypes.DetectType(val))
+            For Each r As Reference In [set].Values
+                If GenericComparer.CompareObjs(r, valRef) = 0 Then Return True
+            Next
+            Return False
         End Function
 
         ''' <summary>
@@ -3487,11 +3979,11 @@ Namespace Calculator.Evaluator
         Public Function ToMatrix(lst As Object) As List(Of Reference)
             Dim ret As New List(Of Reference)
             If TypeOf lst Is IDictionary Then
-                For Each k As KeyValuePair(Of Reference, Reference) In DirectCast(lst, IDictionary)
+                For Each k As KeyValuePair(Of Reference, Reference) In DirectCast(lst, IDictionary(Of Reference, Reference))
                     If k.Value Is Nothing Then
                         ret.Add(k.Key)
                     Else
-                        ret.AddRange({k.Key, k.Value})
+                        ret.Add(New Reference({k.Key, k.Value}))
                     End If
                 Next
             ElseIf TypeOf lst Is IEnumerable(Of Reference)
@@ -3514,22 +4006,58 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Convert to a matrix or create a new matrix with a rows and b columns filled with 0
         ''' </summary>
-        ''' <param name="a"></param>
-        ''' <param name="b"></param>
+        ''' <param name="lstOrRows">either a collection or the number of rows</param>
+        ''' <param name="cols">number of columns</param>
         ''' <returns></returns>
-        Public Function Matrix(a As Object, Optional b As Object = Nothing) As List(Of Reference)
-            If b Is Nothing Then
-                Return ToMatrix(a)
+        Public Function Matrix(Optional lstOrRows As Object = Nothing, Optional cols As Object = Nothing) As List(Of Reference)
+            If lstOrRows Is Nothing Then Return New List(Of Reference)
+            If cols Is Nothing Then
+                Return ToMatrix(lstOrRows)
             Else
-                Return DirectCast(New Matrix(Int(CDbl(a)), Int(CDbl(b))).GetValue(), List(Of Reference))
+                Return DirectCast(New Matrix(Int(CDbl(lstOrRows)), Int(CDbl(cols))).GetValue(), List(Of Reference))
             End If
+        End Function
+
+        ''' <summary>
+        ''' Convert to a linked list
+        ''' </summary>
+        ''' <param name="lst"></param>
+        ''' <returns></returns>
+        Public Function ToLinkedList(lst As Object) As LinkedList(Of Reference)
+            Dim ret As New LinkedList(Of Reference)
+            If TypeOf lst Is IDictionary Then
+                For Each k As KeyValuePair(Of Reference, Reference) In DirectCast(lst, IDictionary(Of Reference, Reference))
+                    If k.Value Is Nothing Then
+                        ret.AddLast(k.Key)
+                    Else
+                        ret.AddLast(New Reference(ToLinkedList({k.Key, k.Value})))
+                    End If
+                Next
+            ElseIf TypeOf lst Is IEnumerable(Of Reference)
+                For Each r As Reference In DirectCast(lst, IEnumerable(Of Reference))
+                    ret.AddLast(r)
+                Next
+            Else
+                ret.AddLast(New Reference(lst))
+            End If
+            Return ret
+        End Function
+
+        ''' <summary>
+        ''' Alias for ToLinkedList(lst); Creates a new linked list 
+        ''' </summary>
+        ''' <param name="lst"></param>
+        ''' <returns></returns>
+        Public Function LinkedList(Optional lst As Object = Nothing) As LinkedList(Of Reference)
+            If lst Is Nothing Then Return New LinkedList(Of Reference)
+            Return ToLinkedList(lst)
         End Function
 
         ''' <summary>
         ''' Initialize an array with the specified number of dimensions, with only one item at 0.
         ''' </summary>
         ''' <returns></returns>
-        Public Function Array(dimensions As Double) As List(Of Reference)
+        Public Function Array(dimensions As Double) As IEnumerable(Of Reference)
             Dim d As Integer = Int(dimensions)
             If d < 0 Then Throw New EvaluatorException("Array dimensions cannot be negative")
             If d > 25 Then Throw New EvaluatorException("Array dimensions too large: please keep under 15 dimensions")
@@ -3550,13 +4078,16 @@ Namespace Calculator.Evaluator
         Public Function ToTuple(lst As Object) As Reference()
             Dim ret As New List(Of Reference)
             If TypeOf lst Is IDictionary Then
-                For Each k As KeyValuePair(Of Reference, Reference) In DirectCast(lst, IDictionary)
-                    If k.Value Is Nothing Then
-                        ret.Add(k.Key)
-                    Else
-                        ret.AddRange({k.Key, k.Value})
-                    End If
-                Next
+                Try
+                    For Each k As KeyValuePair(Of Reference, Reference) In CType(lst, IDictionary(Of Reference, Reference))
+                        If k.Value Is Nothing Then
+                            ret.Add(k.Key)
+                        Else
+                            ret.Add(New Reference({k.Key, k.Value}))
+                        End If
+                    Next
+                Catch
+                End Try
             ElseIf TypeOf lst Is IEnumerable(Of Reference)
                 ret.AddRange(DirectCast(lst, IEnumerable(Of Reference)))
             Else
@@ -3569,7 +4100,8 @@ Namespace Calculator.Evaluator
         ''' Convert to a tuple; Alias for ToTuple(lst)
         ''' </summary>
         ''' <returns></returns>
-        Public Function Tuple(lst As Object) As Reference()
+        Public Function Tuple(Optional lst As Object = Nothing) As Reference()
+            If lst Is Nothing Then Return {}
             Return ToTuple(lst)
         End Function
 
@@ -3586,40 +4118,73 @@ Namespace Calculator.Evaluator
         ''' Create a new complex number from real and imaginary parts
         ''' </summary>
         ''' <returns></returns>
-        Public Function Complex(real As Double, Optional imag As Double = 0) As Numerics.Complex
+        Public Function Complex(Optional real As Double = 0, Optional imag As Double = 0) As Numerics.Complex
             Return ToComplex(real, imag)
         End Function
 
+        ''' <summary>
+        ''' Get the conjugate of the complex number
+        ''' </summary>
         Public Function Conjugate(val As Numerics.Complex) As Numerics.Complex
             Return Numerics.Complex.Conjugate(val)
         End Function
 
+        ''' <summary>
+        ''' Get the reciprocal of the complex number
+        ''' </summary>
         Public Function Reciprocal(val As Numerics.Complex) As Numerics.Complex
             Return Numerics.Complex.Reciprocal(val)
         End Function
 
+        ''' <summary>
+        ''' Get the real part of the complex number
+        ''' </summary>
         Public Function Real(val As Numerics.Complex) As Double
             Return val.Real
         End Function
+
+        ''' <summary>
+        ''' Get the imaginary part of the complex number
+        ''' </summary>
         Public Function Imag(val As Numerics.Complex) As Double
             Return val.Imaginary
         End Function
-        Public Function Magnitude(val As Numerics.Complex) As Double
-            Return val.Magnitude
+
+        ''' <summary>
+        ''' Get the magnitude of a complex number or a column vector
+        ''' </summary>
+        Public Function Magnitude(val As Object) As Object
+            If TypeOf val Is Numerics.Complex Then
+                Return DirectCast(val, Numerics.Complex).Magnitude
+            ElseIf TypeOf val Is IEnumerable(Of Reference)
+                Return New Matrix(DirectCast(val, IEnumerable(Of Reference))).Magnitude()
+            Else
+                Return Double.NaN
+            End If
         End Function
+
+        ''' <summary>
+        ''' Get the phase of a complex number 
+        ''' </summary>
         Public Function Phase(val As Numerics.Complex) As Double
             Return val.Phase
         End Function
+
+        ''' <summary>
+        ''' Create a new complex number from polar coordinates.
+        ''' </summary>
         Public Function FromPolar(magnitude As Double, phase As Double) As Numerics.Complex
             Return Numerics.Complex.FromPolarCoordinates(magnitude, phase)
         End Function
 
-        ' find out if the object is 'truthy', for use with conditions
+        ''' <summary>
+        ''' find out If the Object Is 'truthy' (e.g. for numbers, all numbers other than 0 are considered truthy), for use with conditions
+        ''' </summary>
         Public Function IsTrue(ByVal obj As Object) As Boolean
             If TypeOf obj Is Boolean Then
                 Return CBool(obj) = True
             ElseIf TypeOf obj Is Integer OrElse TypeOf obj Is Int32 Then
-                Return CInt(obj) <> 0
+                Return Int(CDbl(obj)) <> 0
             ElseIf TypeOf obj Is Double OrElse TypeOf obj Is Single Then
                 Return (CDbl(obj) - 0) > 0.00000001
             ElseIf TypeOf obj Is BigDecimal Then
@@ -3633,11 +4198,15 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
-        ' limiters
-        Public Function SliceFunction(ByVal text As Object, ByVal l As Double, ByVal r As Double, Optional ByVal var As String = "x") As Object
+        ' limits for functions
+        ''' <summary>
+        ''' If the variable specified (default x) is between l and r, then evaluates func and returns the value
+        ''' Otherwise returns undefined.
+        ''' </summary>
+        Public Function SliceFunction(ByVal text As Object, ByVal left As Double, ByVal right As Double, Optional ByVal var As String = "x") As Object
             Try
                 Dim varval As Double = CDbl(_eval.GetVariable(var))
-                If varval >= l AndAlso varval <= r Then
+                If varval >= left AndAlso varval <= right Then
                     Dim ans As Double = CDbl(_eval.EvalExprRaw(text.ToString()))
                     Return ans
                 Else
@@ -3648,10 +4217,14 @@ Namespace Calculator.Evaluator
             End Try
         End Function
 
-        Public Function Domain(ByVal text As Object, ByVal dom As String) As Object
+        ''' <summary>
+        ''' If dom evaluates to a 'truthy' value, then evaluates func and returns the value
+        ''' Otherwise returns undefined.
+        ''' </summary>
+        Public Function Domain(ByVal func As Object, ByVal dom As String) As Object
             Try
                 If IsTrue(_eval.EvalExprRaw(dom)) Then
-                    Dim ans As Double = CDbl(_eval.EvalExprRaw(text.ToString()))
+                    Dim ans As Double = CDbl(_eval.EvalExprRaw(func.ToString()))
                     Return ans
                 Else
                     Return Double.NaN
@@ -3663,24 +4236,39 @@ Namespace Calculator.Evaluator
 
         ' input / output
         ' command line
+        ''' <summary>
+        ''' Prints to the console, if available
+        ''' </summary>
         Public Function Print(ByVal text As Object) As String
-            Console.WriteLine(text.ToString())
+            Console.Write(text.ToString())
             Return text.ToString()
         End Function
 
+        ''' <summary>
+        ''' Prints the text to the console, if available, followed immediately by a line break
+        ''' </summary>
         Public Function WriteLine(ByVal text As Object) As Boolean
             Console.WriteLine(text.ToString())
             Return True
         End Function
 
+        ''' <summary>
+        ''' Read a line from the console, if available
+        ''' </summary>
         Public Function ReadLine() As String
             Return Console.ReadLine()
         End Function
 
+        ''' <summary>
+        ''' Read a character from the console, if available
+        ''' </summary>
         Public Function Read() As String
             Return ChrW(Console.Read()).ToString()
         End Function
 
+        ''' <summary>
+        ''' Clear the console, if available
+        ''' </summary>
         Public Function Cls() As Boolean
             Console.Clear()
             Return True
@@ -3708,7 +4296,7 @@ Namespace Calculator.Evaluator
         ''' <returns></returns>
         Public Function ReadLine(ByVal path As String, ByVal line As Double) As Object
             Try
-                Return IO.File.ReadAllLines(path)(CInt(line - 1))
+                Return IO.File.ReadAllLines(path)(Int(line - 1))
             Catch 'ex As Exception
                 Return Double.NaN
             End Try
@@ -3732,7 +4320,7 @@ Namespace Calculator.Evaluator
         Public Function WriteFileLine(ByVal path As String, ByVal line As Integer, ByVal content As Object) As String
             Try
                 Dim lines As String() = IO.File.ReadAllLines(path)
-                lines(CInt(line - 1)) = content.ToString()
+                lines(Int(line - 1)) = content.ToString()
                 FileIO.FileSystem.WriteAllText(path, String.Join(vbNewLine, lines), False)
                 Return "Write Success"
             Catch 'ex As Exception
@@ -3796,27 +4384,27 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' List the files and directories at the specified file system path
+        ''' IEnumerable the files and directories at the specified file system path
         ''' </summary>
-        Public Function ListDir(ByVal path As String) As List(Of Reference)
+        Public Function IEnumerableDir(ByVal path As String) As IEnumerable(Of Reference)
             Return DirectCast(New Matrix(Directory.EnumerateFileSystemEntries(path).ToList()).GetValue(),
-                List(Of Reference))
+                IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
-        ''' List the files at the specified file system path
+        ''' IEnumerable the files at the specified file system path
         ''' </summary>
-        Public Function ListFiles(ByVal path As String) As List(Of Reference)
+        Public Function IEnumerableFiles(ByVal path As String) As IEnumerable(Of Reference)
             Return DirectCast(New Matrix(Directory.EnumerateFiles(path).ToList()).GetValue(),
-                List(Of Reference))
+                IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
-        ''' List the directories at the specified file system path
+        ''' IEnumerable the directories at the specified file system path
         ''' </summary>
-        Public Function ListDirs(ByVal path As String) As List(Of Reference)
+        Public Function IEnumerableDirs(ByVal path As String) As IEnumerable(Of Reference)
             Return DirectCast(New Matrix(Directory.EnumerateDirectories(path).ToList()).GetValue(),
-                List(Of Reference))
+                IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
@@ -3858,42 +4446,56 @@ Namespace Calculator.Evaluator
         ''' Get the startup directory
         ''' </summary>
         Public Function BaseDir() As String
-            Return Application.StartupPath
+            Return Environment.CurrentDirectory
         End Function
 
         ''' <summary>
         ''' Get the desktop path
         ''' </summary>
         Public Function DesktopDir() As String
-            Return FileIO.SpecialDirectories.Desktop
+            Return Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+        End Function
+
+        ''' <summary>
+        ''' Get the desktop path
+        ''' </summary>
+        Public Function PublicDesktopDir() As String
+            Return Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory)
         End Function
 
         ''' <summary>
         ''' Get the program files directory
         ''' </summary>
         Public Function ProgramFilesPath() As String
-            Return FileIO.SpecialDirectories.ProgramFiles
+            Return Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+        End Function
+
+        ''' <summary>
+        ''' Get the program files (x86) directory
+        ''' </summary>
+        Public Function ProgramFilesX86Path() As String
+            Return Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
         End Function
 
         ''' <summary>
         ''' Get the temp directory
         ''' </summary>
         Public Function TempDir() As String
-            Return FileIO.SpecialDirectories.Temp
+            Return Path.GetTempPath()
         End Function
 
         ''' <summary>
         ''' Get the appdata directory
         ''' </summary>
         Public Function AppDataDir() As String
-            Return FileIO.SpecialDirectories.CurrentUserApplicationData
+            Return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
         End Function
 
         ''' <summary>
         ''' Get the appdata directory for all users
         ''' </summary>
         Public Function PublicAppDataDir() As String
-            Return FileIO.SpecialDirectories.AllUsersApplicationData
+            Return Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
         End Function
 
         ''' <summary>
@@ -3907,20 +4509,19 @@ Namespace Calculator.Evaluator
         ''' Get the system's path separator (/ for linux, \ for windows)
         ''' </summary>
         Public Function GetPathSeparator() As String
-            Return IO.Path.PathSeparator
+            Return IO.Path.DirectorySeparatorChar
         End Function
 
         ' GUI Only
         ''' <summary>
-        ''' Show a message on the screen
+        ''' Show a message on the screen (if gui available)
         ''' </summary>
-        Public Function Alert(ByVal text As Object, Optional ByVal title As Object = "Alert") As Boolean
+        Public Sub Alert(ByVal text As Object, Optional ByVal title As Object = "Alert")
             MsgBox(text.ToString(), MsgBoxStyle.SystemModal, title.ToString())
-            Return True
-        End Function
+        End Sub
 
         ''' <summary>
-        ''' Show a confirmation box (Ok/Cancel) on the screen
+        ''' Show a confirmation box (Ok/Cancel) on the screen (if gui available)
         ''' </summary>
         Public Function Confirm(ByVal text As Object, Optional ByVal title As Object = "Message") As Boolean
             Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.OkCancel, title.ToString()) =
@@ -3928,7 +4529,7 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' Show a confirmation box (Yes/No) on the screen
+        ''' Show a confirmation box (Yes/No) on the screen (if gui available)
         ''' </summary>
         Public Function YesNo(ByVal text As Object, Optional ByVal title As Object = "Message") As Boolean
             Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.YesNo, title.ToString()) =
@@ -3936,7 +4537,7 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' Show a input box on the screen
+        ''' Show a input box on the screen (if gui available)
         ''' </summary>
         Public Function Input(ByVal text As Object, Optional ByVal title As Object = "Enter a Value", Optional ByVal deftext As Object = "") As String
             Return InputBox(text.ToString(), title.ToString(), deftext.ToString(), 50, 50)
@@ -3953,7 +4554,7 @@ Namespace Calculator.Evaluator
         Public Function Async(ByVal text As String, Optional ByVal after As String = "",
                               Optional runAfter As String = "", Optional var As String = "result") As String
             Try
-                Dim tmp As Evaluator = _eval.Clone()
+                Dim tmp As Evaluator = _eval.DeepCopy()
                 AddHandler tmp.EvalComplete, Sub(sender As Object, result As Object)
                                                  AsyncCallBack(tmp, result, var, runAfter)
                                              End Sub
@@ -4015,18 +4616,17 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' Kill all subthreads spawned from the evaluator
+        ''' Kill all subthreads (except this one) spawned from the evaluator
         ''' </summary>
-        Public Function StopAll() As Boolean
-            _eval.StatementRegistar.StopAll()
-            Return True
-        End Function
+        Public Sub StopAll()
+            _eval.StopAll(Thread.CurrentThread.ManagedThreadId)
+        End Sub
 
         ''' <summary>
         ''' Execute a script at the specified path, saves the result into var and executes runAfter
         ''' </summary>
         Public Function Run(ByVal path As String, Optional runAfter As String = "", Optional var As String = "result") As String
-            Dim tmp As Evaluator = _eval.Clone()
+            Dim tmp As Evaluator = _eval.DeepCopy()
             AddHandler tmp.EvalComplete, Sub(sender As Object, result As Object)
                                              RunCallBack(tmp, result, var, runAfter)
                                          End Sub
@@ -4052,7 +4652,7 @@ Namespace Calculator.Evaluator
         ''' Execute the script at the specified path, wait, and return the result
         ''' </summary>
         Public Function RunWait(ByVal path As String) As Object
-            Return _eval.EvalRaw(File.ReadAllText(path))
+            Return _eval.EvalRaw(File.ReadAllText(path), noSaveAns:=True)
         End Function
 
         ''' <summary>
@@ -4099,7 +4699,7 @@ Namespace Calculator.Evaluator
             Return DownloadText(url)
         End Function
 
-        Public Function WebGet(ByVal url As String, Optional ByVal params As SortedDictionary(Of Reference, Reference) = Nothing) As String
+        Public Function WebGet(ByVal url As String, Optional ByVal params As IDictionary(Of Reference, Reference) = Nothing) As String
             If params IsNot Nothing Then
                 url &= "?"
                 For Each k As KeyValuePair(Of Reference, Reference) In params
@@ -4110,7 +4710,7 @@ Namespace Calculator.Evaluator
             Return DownloadText(url)
         End Function
 
-        Public Function WebPost(ByVal url As String, Optional ByVal params As SortedDictionary(Of Reference, Reference) = Nothing) As String
+        Public Function WebPost(ByVal url As String, Optional ByVal params As IDictionary(Of Reference, Reference) = Nothing) As String
             Using wc As New WebClient()
                 If params Is Nothing Then params = New SortedDictionary(Of Reference, Reference)(New GenericComparer())
                 Dim nvc As New NameValueCollection()
@@ -4149,5 +4749,20 @@ Namespace Calculator.Evaluator
         Public Function OsVer() As String
             Return My.Computer.Info.OSVersion()
         End Function
+
+        ' removed functions, kept to prevent upgrade errors. Will be deleted eventually
+        Public Function OMode(Optional val As String = "") As String
+            _Output(val)
+            Return "Removed in version 2.1. Please use _Output() instead"
+        End Function
+        Public Function AngleRep(Optional val As String = "") As String
+            _AngleRepr(val)
+            Return "Removed in version 2.1. Please use _AngleRepr() instead"
+        End Function
+        Public Function SpacesPerTab(Optional val As Double = Double.NaN) As String
+            _SpacesPerTab(val)
+            Return "Deprecated in version 2.1. Please use _SpacesPerTab() instead"
+        End Function
+
     End Class
 End Namespace

@@ -1,9 +1,73 @@
 ﻿Welcome to Cantus (Previously Calculatorˣ) Version {ver} (Alpha)!
 By Alex Yu 2015-16
 
-
 *********************************************************************************************
 What's New
+*********************************************************************************************
+-OOP: support for classes, multiple inheritance, etc.
+e.g.
+
+# Tip: you can copy this into the editor to see the result for yourself!
+
+class pet
+	name = ""
+	function init(name)
+		this.name = name
+	function text()
+		return "Pet name: " + name
+
+class cat : pet
+	function init(name)
+		this.name = name
+	function speak()
+		return "Meow!"
+	function text()
+		return "Cat name: " + name
+
+myCat = cat("Alex")
+alert(myCat) # alerts Cat name: Alex
+alert(myCat.speak()) # alerts Meow!
+
+-Static keyword to make a variable shared across all class instances
+-Access modifiers: public, private
+-Lambda expressions: `123`, `x=>123`
+-Function pointers: x=sin
+-Multi-line lambda expressions: max=`x,y=>
+    if x>y
+		return x
+	else
+		return y
+  `
+-Namespacing: create namespaces with the namespace keyword
+
+-Import statement to import a package from any path path or from under 'include/' using member access notation:
+	import cantus_xyz.foo
+  will import from include/cantus_xyz/foo from under the directory
+
+  **Items in imported packages may be accessed directly without any access qualifiers**
+
+-Use the load statement to make a package available for use (with its full path) without importing it.
+-If you aren't sure how to call a function just find it in the 'insert function' dialog using Alt+F
+
+-Explicit mode: force declaration of variables (with let/global/private/public/static)
+  This is now available as an option in the settings panel in the GUI (Alt+S)
+
+-New data structures: linkedlist() hashset()
+-Use a reference to move through the linkedlist:
+	a = lst.first() # outputs first item
+	alert(a.type()) # alerts 'Reference'
+	a.next() # outputs second item
+	a.remove() # removes second item, outputs new second item
+	a.prev() # outputs first item
+
+-Default number of spaces per tab changed to 2 from 4
+
+-All system functions are now prefixed with _, the older ones are now deprecated
+-The 'OMode' setting is now called 'Output Format'
+-Numerous minor fixes
+
+*********************************************************************************************
+New From 2.0.0.83
 *********************************************************************************************
 -Changed buttons on bottom of left keyboard
 -Fixed crash when using clipboard() function
