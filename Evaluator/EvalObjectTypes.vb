@@ -1351,25 +1351,25 @@ Namespace Calculator.Evaluator
 
                 ' fit width
                 For i As Integer = 0 To height - 1
-                    Dim r As Reference = _value(i)
-                    If width > 1 Then
-                        If Not TypeOf r.ResolveObj() Is Matrix Then
-                            r.SetValue(New Matrix({r.GetValue()}))
+                        Dim r As Reference = _value(i)
+                        If width > 1 Then
+                            If Not TypeOf r.ResolveObj() Is Matrix Then
+                                r.SetValue(New Matrix({r.GetValue()}))
+                            End If
+                            Dim inner As List(Of Reference) = CType(CType(r.GetRefObject(), Matrix).GetValue(), List(Of Reference))
+                            While inner.Count < width
+                                inner.Add(New Reference(0.0))
+                            End While
+                            While inner.Count > width
+                                inner.RemoveAt(inner.Count - 1)
+                            End While
+                        ElseIf width = 1 Then
+                            ' if single column, expand to column vector
+                            If TypeOf r.ResolveObj() Is Matrix Then
+                                r.SetValue(DirectCast(r.Resolve(), List(Of Reference))(0).ResolveObj())
+                            End If
                         End If
-                        Dim inner As List(Of Reference) = CType(CType(r.GetRefObject(), Matrix).GetValue(), List(Of Reference))
-                        While inner.Count < width
-                            inner.Add(New Reference(0.0))
-                        End While
-                        While inner.Count > width
-                            inner.RemoveAt(inner.Count - 1)
-                        End While
-                    Else
-                        ' if single column, expand to column vector
-                        If TypeOf r.ResolveObj() Is Matrix Then
-                            r.SetValue(DirectCast(r.Resolve(), List(Of Reference))(0).ResolveObj())
-                        End If
-                    End If
-                Next
+                    Next
             End Sub
 
             ''' <summary>
@@ -2121,6 +2121,7 @@ Namespace Calculator.Evaluator
 
             Private _value As String
             Private _fnPtr As Boolean
+            Private _dispText As String
 
             ''' <summary>
             ''' Returns self
@@ -2156,6 +2157,7 @@ Namespace Calculator.Evaluator
                 Next
 
                 Dim res As Object = tmpEval.EvalRaw(_value, noSaveAns:=True)
+
                 If TypeOf res Is Reference Then
                     Dim ref As Reference = DirectCast(res, Reference)
                     Return ref.GetRefObject()
@@ -2361,6 +2363,7 @@ Namespace Calculator.Evaluator
                     If Not imported Then Me.UserClass.Evaluator.Unimport(UserClass.InnerScope)
 
                     Me.UserClass.Evaluator.ParentScope()
+                    InitInstanceId()
                 End If
             End Sub
 
@@ -2368,8 +2371,8 @@ Namespace Calculator.Evaluator
             ''' Recursively get the value of the field with the specified name under this instance
             ''' </summary>
             Public Function ResolveField(fieldName As String, scope As String) As Reference
+                If String.IsNullOrWhiteSpace(fieldName) Then Throw New Exception("Field name cannot be blank")
                 Try
-                    If String.IsNullOrWhiteSpace(fieldName) Then Throw New Exception("Member name cannot be blank")
                     Dim spl As String() = fieldName.Split(SCOPE_SEP)
                     Dim curVar As Reference = New Reference(Me)
 
@@ -2420,7 +2423,7 @@ Namespace Calculator.Evaluator
                     ' use the "text" function within the class definition
                     Dim tmpEval As Evaluator = UserClass.Evaluator.SubEvaluator()
                     tmpEval.Scope = Me.InnerScope
-                    tmpEval.Import(UserClass.InnerScope)
+                    'tmpEval.Import(UserClass.InnerScope)
                     tmpEval.SubScope()
                     tmpEval.SetDefaultVariable(New Reference(Me))
                     Return UserClass.Evaluator.InternalFunctions.O(
@@ -2436,11 +2439,25 @@ Namespace Calculator.Evaluator
             End Function
 
             ''' <summary>
+            ''' Set up the 'instanceid' member function
+            ''' </summary>
+            Private Sub InitInstanceId()
+                ' add 'instaneid' function
+                Dim iidFn As New UserFunction("type", String.Format("return " & ControlChars.Quote & Me.InnerScope &
+                                                                    ControlChars.Quote,
+                                                                    ROOT_NAMESPACE, SCOPE_SEP),
+                                               New List(Of String), Me.InnerScope)
+                iidFn.Modifiers.Add("internal")
+                Me.Fields(iidFn.Name) = New Reference(New Lambda(iidFn, True))
+            End Sub
+
+            ''' <summary>
             ''' Create an identical class instance from another class instance
             ''' </summary>
             Public Sub New(ci As ClassInstance)
                 Me.Fields = New Dictionary(Of String, Reference)()
                 Me.SetValue(ci)
+                InitInstanceId()
             End Sub
 
             ''' <summary>
@@ -2464,6 +2481,7 @@ Namespace Calculator.Evaluator
                 Catch
                 End Try
                 uc.Evaluator.ParentScope()
+                InitInstanceId()
             End Sub
 
             Public Sub New(uc As UserClass, args As IEnumerable(Of Object))
@@ -2504,6 +2522,7 @@ Namespace Calculator.Evaluator
                         Me.Fields(var.Name) = var.Reference
                     End If
                 Next
+                InitInstanceId()
             End Sub
 
             Public Overrides Function GetHashCode() As Integer

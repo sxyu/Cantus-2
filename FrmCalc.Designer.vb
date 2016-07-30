@@ -63,7 +63,7 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
             Me.tb.BorderStyle = System.Windows.Forms.BorderStyle.None
-            Me.tb.CaretForeColor = System.Drawing.Color.White
+            Me.tb.CaretForeColor = System.Drawing.Color.GhostWhite
             Me.tb.Cursor = System.Windows.Forms.Cursors.Arrow
             Me.tb.EdgeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.tb.Font = New System.Drawing.Font("Lucida Console", 13.5!)

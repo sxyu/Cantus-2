@@ -32,7 +32,7 @@
         If e.Control Then
             If e.KeyCode = Keys.A Then
                 tb.SelectAll()
-            Else
+            ElseIf Not e.KeyCode = Keys.V OrElse e.KeyCode = Keys.x
                 ctrl = True
             End If
         End If

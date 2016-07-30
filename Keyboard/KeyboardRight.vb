@@ -34,17 +34,16 @@ Namespace Calculator.Keyboards
             End If
         End Sub
 
-        Private Sub GenericButtonClick(sender As Object, e As EventArgs) Handles btnFact.Click, btnMul.Click, btnDiv.Click, btnAdd.Click, btnMin.Click,
+        Private Sub GenericButtonClick(sender As Object, e As EventArgs) Handles btnFact.Click, btnMul.Click,
+            btnDiv.Click, btnAdd.Click, btnMin.Click,
             btnEquals.Click, btnLessThan.Click, btnMoreThan.Click, btnAns.Click, btnExp.Click, btnPt.Click,
-            btnCBL.Click, btnCBR.Click, btnSqBrL.Click, btnSqBrR.Click, btnA.Click, btnB.Click, btnC.Click,
+           btnA.Click, btnB.Click, btnC.Click,
             btnT.Click, btnM.Click, btnX.Click, btnY.Click, btnComma.Click, btnN.Click, btnTick.Click
 
             Dim btn As Button = DirectCast(sender, Button)
             FrmCalc.tb.Focus()
-            Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, btn.Text)
-            FrmCalc.tb.SelectionStart = start + btn.Text.Length
+            FrmCalc.tb.DeleteRange(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
+            FrmCalc.tb.AddText(btn.Text)
         End Sub
 
         ''' <summary>
@@ -55,7 +54,8 @@ Namespace Calculator.Keyboards
         Private Sub WriteFunction(ByVal s As String, Optional ByVal sep As String = "(")
             FrmCalc.tb.Focus()
             Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart).Insert(start, s)
+            FrmCalc.tb.DeleteRange(start, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
+            FrmCalc.tb.InsertText(start, s)
 
             If s.Contains(sep) Then
                 FrmCalc.tb.SelectionStart = start + s.IndexOf(sep) + 1
@@ -257,14 +257,12 @@ Namespace Calculator.Keyboards
             'frmCalc.BringToFront()
         End Sub
 
-        Private Sub btnBrLft_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrLft.MouseUp
-            Dim startSign As Char = "("c
+        Private Sub btnBrLft_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrLft.MouseUp, btnSqBrL.MouseUp, btnCBL.MouseUp
+            Dim startSign As Char = DirectCast(sender, Button).Text(0)
             Dim endSign As Char = ")"c
-            If e.Button = MouseButtons.Right Then
-                startSign = "["c
+            If startSign = "["c Then
                 endSign = "]"c
-            ElseIf e.Button = MouseButtons.Middle Then
-                startSign = "{"c
+            ElseIf startSign = "}"c
                 endSign = "}"c
             End If
 
@@ -279,11 +277,13 @@ Namespace Calculator.Keyboards
                 End If
             Next
 
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart).Insert(start, startSign)
+            FrmCalc.tb.DeleteRange(start, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
+            FrmCalc.tb.AddText(startSign)
             If ct >= 0 Then
-                FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start + 1, endSign)
+                FrmCalc.tb.AddText(endSign)
+                FrmCalc.tb.SelectionStart -= 1
+                FrmCalc.tb.SelectionEnd -= 1
             End If
-            FrmCalc.tb.SelectionStart = start + 1
         End Sub
 
         Private Sub btnBrRt_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrRt.MouseUp
@@ -386,6 +386,10 @@ Namespace Calculator.Keyboards
 
         Private Sub btnYesNo_Click(sender As Object, e As EventArgs) Handles btnYesNo.Click
             WriteFunction("yesno()")
+        End Sub
+
+        Private Sub btnBrRt_Click(sender As Object, e As EventArgs) Handles btnBrRt.Click
+
         End Sub
     End Class
 End Namespace

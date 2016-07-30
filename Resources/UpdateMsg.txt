@@ -25,15 +25,26 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's New
+What's new
+*********************************************************************************************
+-Added basic autocompletion
+-Fixed a bug where class member functions could no longer access the fields in the instance
+  after a reload
+-Other minor bug fixes
+
+*********************************************************************************************
+New from 2.1.1.86
 *********************************************************************************************
 -Textbox with syntax highlighting, brace pairing, and line numbers using Scintilla.NET
--Fixed a few buttons on the right on-screen keyboard
--Choose operator no longer rounds operands to the nearest integer; 
-  Binomial coefficients now extended to negative numbers
+-Fixed some broken buttons on the right on-screen keyboard
+
+-'Choose' operator no longer rounds operands to the nearest integer and now
+  accepts negative operands
+
 -Integration, differentiation, summation, and product functions
-  have been updated to use lambda expressions and function pointers!
+  have been updated to use lambda expressions and function pointers.
   TRY: dydx(sin) on the graphing window
+
 -Minor fixes
 
 *********************************************************************************************

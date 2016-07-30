@@ -1953,6 +1953,8 @@ Namespace Calculator.Evaluator
                 Return "Reference of " & Type(DirectCast(obj, Reference).GetValue())
             ElseIf TypeOf obj Is Lambda Then
                 Return "Function"
+            ElseIf TypeOf obj Is ClassInstance Then
+                Return DirectCast(obj, ClassInstance).UserClass.FullName
             Else
                 Return obj.GetType().Name
             End If
@@ -4381,25 +4383,25 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' IEnumerable the files and directories at the specified file system path
+        ''' List the files and directories at the specified file system path
         ''' </summary>
-        Public Function IEnumerableDir(ByVal path As String) As IEnumerable(Of Reference)
+        Public Function ListDir(ByVal path As String) As IEnumerable(Of Reference)
             Return DirectCast(New Matrix(Directory.EnumerateFileSystemEntries(path).ToList()).GetValue(),
                 IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
-        ''' IEnumerable the files at the specified file system path
+        ''' List the files at the specified file system path
         ''' </summary>
-        Public Function IEnumerableFiles(ByVal path As String) As IEnumerable(Of Reference)
+        Public Function ListFiles(ByVal path As String) As IEnumerable(Of Reference)
             Return DirectCast(New Matrix(Directory.EnumerateFiles(path).ToList()).GetValue(),
                 IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
-        ''' IEnumerable the directories at the specified file system path
+        ''' List the directories at the specified file system path
         ''' </summary>
-        Public Function IEnumerableDirs(ByVal path As String) As IEnumerable(Of Reference)
+        Public Function ListDirs(ByVal path As String) As IEnumerable(Of Reference)
             Return DirectCast(New Matrix(Directory.EnumerateDirectories(path).ToList()).GetValue(),
                 IEnumerable(Of Reference))
         End Function

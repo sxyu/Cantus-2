@@ -360,7 +360,7 @@ Namespace Calculator.Evaluator
             End Property
 
             ''' <summary>
-            ''' Gets the shortest name of the class that can be directly used to access it
+            ''' Gets the shortest name of the class that can be directly used to access it in the evaluator
             ''' </summary>
             ''' <returns></returns>
             Public ReadOnly Property ShortestAccessibleName As String
@@ -466,6 +466,13 @@ Namespace Calculator.Evaluator
                     fn.Modifiers.Add("internal")
                     Me.Fields(fn.Name) = New Variable(fn.Name, New ObjectTypes.Lambda(fn, True), Me.FullName, fn.Modifiers)
                 End If
+
+                ' add 'type' function
+                Dim typeFn As New UserFunction("type", String.Format("return {0}{1}type(this)", ROOT_NAMESPACE, SCOPE_SEP),
+                                               New List(Of String), tmpScope)
+                typeFn.Modifiers.Add("internal")
+                Me.Fields(typeFn.Name) = New Variable(typeFn.Name,
+                                      New ObjectTypes.Lambda(typeFn, True), Me.FullName, typeFn.Modifiers)
             End Sub
 
             Public Shared Operator =(a As UserClass, b As UserClass) As Boolean
@@ -843,46 +850,47 @@ Namespace Calculator.Evaluator
                 End While
             End Sub
 
-            ''' <summary>
-            ''' Converts the list to a human-readable string.
-            ''' Each list represents a token, with
-            ''' the first row indicating if the token is NOT removed (pointing at another token), 
-            ''' the second indicating the operator, and the third the object.
-            ''' The final row contains a count of remaining valid (not removed) objects.
-            ''' </summary>
-            ''' <returns></returns>
-            Public Overrides Function ToString() As String
-                Dim str As New StringBuilder("OPER" & vbTab)
-                For i As Integer = 0 To Me.OperatorCount - 1
+            '''' <summary>
+            '''' For debugging purposes
+            '''' Converts the list to a human-readable string.
+            '''' Each list represents a token, with
+            '''' the first row indicating if the token is NOT removed (pointing at another token), 
+            '''' the second indicating the operator, and the third the object.
+            '''' The final row contains a count of remaining valid (not removed) objects.
+            '''' </summary>
+            '''' <returns></returns>
+            'Public Overrides Function ToString() As String
+            '    Dim str As New StringBuilder("OPER" & vbTab)
+            '    For i As Integer = 0 To Me.OperatorCount - 1
 
-                    If Me.IsRemoved(i) Then Continue For
+            '        If Me.IsRemoved(i) Then Continue For
 
-                    If i > 0 Then str.Append(vbTab)
+            '        If i > 0 Then str.Append(vbTab)
 
-                    If Me.OperatorAt(i) Is Nothing Then
-                        str.Append("Null")
-                    Else
-                        str.Append(Me.OperatorAt(i).Signs(0))
-                    End If
+            '        If Me.OperatorAt(i) Is Nothing Then
+            '            str.Append("Null")
+            '        Else
+            '            str.Append(Me.OperatorAt(i).Signs(0))
+            '        End If
 
-                Next
+            '    Next
 
-                str.Append(vbCrLf & "VALUE" & vbTab)
-                For i As Integer = 0 To Me.ObjectCount - 1
+            '    str.Append(vbCrLf & "VALUE" & vbTab)
+            '    For i As Integer = 0 To Me.ObjectCount - 1
 
-                    If Me.IsRemoved(i) Then Continue For
-                    If i > 0 Then str.Append(vbTab)
+            '        If Me.IsRemoved(i) Then Continue For
+            '        If i > 0 Then str.Append(vbTab)
 
-                    If Me.ObjectAt(i) Is Nothing Then
-                        str.Append("Null")
-                    Else
-                        str.Append(Me.ObjectAt(i).ToString())
-                    End If
+            '        If Me.ObjectAt(i) Is Nothing Then
+            '            str.Append("Null")
+            '        Else
+            '            str.Append(Me.ObjectAt(i).ToString())
+            '        End If
 
-                Next
-                str.Append(vbCrLf & "TOTAL ITEMS " & vbTab & Me.ValidCount)
-                Return str.ToString()
-            End Function
+            '    Next
+            '    str.Append(vbCrLf & "TOTAL ITEMS " & vbTab & Me.ValidCount)
+            '    Return str.ToString()
+            'End Function
         End Class
 #End Region
 
@@ -1593,6 +1601,7 @@ Namespace Calculator.Evaluator
                 End If
 
             Catch ex As Exception
+                'MsgBox(ex.ToString)
                 Throw New EvaluatorException(ex.Message, _curLine + 1)
             End Try
         End Function
@@ -2280,7 +2289,7 @@ Namespace Calculator.Evaluator
                                                           ": " & lambda.Args.Count & " parameter(s) expected")
                         Else
                             ' execute
-                            Dim tmpEval As Evaluator = Me.SubEvaluator(0)
+                            Dim tmpEval As Evaluator = ci.UserClass.Evaluator.SubEvaluator()
                             tmpEval.Scope = ci.InnerScope
                             tmpEval.SubScope()
                             tmpEval.SetDefaultVariable(New Reference(ci))
@@ -2396,10 +2405,11 @@ Namespace Calculator.Evaluator
         End Sub
 
         ''' <summary>
-        ''' Removes redundant scope on name
+        ''' Removes redundant scope on a name relative to a scope: cantus.abc -> abc
         ''' </summary>
         Friend Shared Function RemoveRedundantScope(ByVal name As String, ByVal scope As String) As String
-            If name.StartsWith(scope) Then name = name.Substring(scope.Length).Trim({SCOPE_SEP})
+            If scope = name Then Return "" ' same scope, none required
+            If name.StartsWith(scope & SCOPE_SEP) Then name = name.Substring(scope.Length + 1)
             Return name
         End Function
 
@@ -2789,6 +2799,7 @@ Namespace Calculator.Evaluator
                 name = name.Remove(ROOT_NAMESPACE.Length).Trim({SCOPE_SEP})
             End If
 
+            name = RemoveRedundantScope(name, ROOT_NAMESPACE)
             Dim info As MethodInfo = GetType(InternalFunctions).GetMethod(name.ToLowerInvariant(),
                     Reflection.BindingFlags.IgnoreCase Or
                     Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
@@ -2878,7 +2889,7 @@ Namespace Calculator.Evaluator
         Public Function ExecInternalFunction(name As String, args As List(Of Object)) As Object
             Dim info As Reflection.MethodInfo
 
-            If name.StartsWith(ROOT_NAMESPACE) Then name = name.Remove(ROOT_NAMESPACE.Length).Trim({SCOPE_SEP})
+            name = RemoveRedundantScope(name, ROOT_NAMESPACE)
             info = GetType(InternalFunctions).GetMethod(name.ToLowerInvariant(),
                     Reflection.BindingFlags.IgnoreCase Or
                     Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
