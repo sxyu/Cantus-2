@@ -72,7 +72,7 @@ Namespace Calculator.Updater
             End If
         End Sub
 
-        Public Sub ChangeTexts(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
+        Public Sub UpdateMessages(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
 
             Me.lbTSize.Text = "File Size: " & Math.Round((length / 1024), 2) & " KB"
 
@@ -146,10 +146,7 @@ Namespace Calculator.Updater
                 theResponse = theRequest.GetResponse
             Catch ex As Exception
 
-                MessageBox.Show("An error occurred while downloading file. Possible causes:" & ControlChars.CrLf &
-                            "1) File doesn't exist" & ControlChars.CrLf &
-                            "2) Remote server error", "Error",
-            MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("An error occurred while downloading the newer version of Cantus.")
 
                 Dim cancelDelegate As New DownloadCompleteSafe(AddressOf DownloadComplete)
                 Me.Invoke(cancelDelegate, True)
@@ -157,7 +154,7 @@ Namespace Calculator.Updater
             End Try
             Dim length As Long = theResponse.ContentLength 'Size of the response (in bytes)
 
-            Dim safedelegate As New ChangeTextsSafe(AddressOf ChangeTexts)
+            Dim safedelegate As New ChangeTextsSafe(AddressOf UpdateMessages)
             Me.Invoke(safedelegate, length, 0, 0, 0) 'Invoke the TreadsafeDelegate
             Dim writeStream As New IO.FileStream(Me._saveLocation, IO.FileMode.Create, IO.FileAccess.Write)
 
@@ -221,10 +218,7 @@ Namespace Calculator.Updater
         End Sub
 
         Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-            'If MsgBox("Are you sure you want to cancel the update?", MsgBoxStyle.Exclamation Or MsgBoxStyle.YesNo, "Cancel Update") _
-            '= MsgBoxResult.Yes Then
             bw.CancelAsync()
-            'End If
         End Sub
 
         Private Sub bw_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bw.RunWorkerCompleted

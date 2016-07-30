@@ -27,8 +27,13 @@ Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resourc
 *********************************************************************************************
 What's new
 *********************************************************************************************
+-Minor fix
+
+*********************************************************************************************
+New from 2.1.2.87
+*********************************************************************************************
 -Added basic autocompletion
--Fixed a bug where class member functions could no longer access the fields in the instance
+-Fixed a bug where class member functions could no longer access other fields in the instance
   after a reload
 -Other minor bug fixes
 

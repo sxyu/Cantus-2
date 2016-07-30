@@ -207,8 +207,7 @@ Namespace Calculator
                 Catch
                 End Try
 
-                Using diag As New DiagFeatureList(
-                 My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion))
+                Using diag As New DiagFeatureList()
                     diag.ShowDialog()
                 End Using
 
@@ -669,12 +668,17 @@ Namespace Calculator
                 Next
 
                 Try
-                    If FileIO.FileSystem.FileExists(Application.StartupPath & "\calculator.backup") Then FileIO.FileSystem.DeleteFile(Application.StartupPath & "\calculator.backup")
+                    If FileIO.FileSystem.FileExists(Application.StartupPath & "\cantus.backup") Then
+                        FileIO.FileSystem.DeleteFile(Application.StartupPath & "\cantus.backup")
+                    End If
+                    If FileIO.FileSystem.FileExists(Application.StartupPath & "\calculator.backup") Then
+                        FileIO.FileSystem.DeleteFile(Application.StartupPath & "\calculator.backup")
+                    End If
                 Catch 'ex2 As Exception
                 End Try
 
                 Try
-                    FileIO.FileSystem.RenameFile(Application.ExecutablePath, "calculator.backup")
+                    FileIO.FileSystem.RenameFile(Application.ExecutablePath, "cantus.backup")
                 Catch 'ex As Exception
                 End Try
                 If (Me.InvokeRequired) Then
@@ -856,8 +860,7 @@ Namespace Calculator
             btnSettings.PerformClick()
         End Sub
         Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles lbAbout.Click, btnLog.Click
-            Using diag As New DiagFeatureList(
-                 My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion))
+            Using diag As New DiagFeatureList()
                 diag.ShowDialog()
             End Using
             tb.Focus()

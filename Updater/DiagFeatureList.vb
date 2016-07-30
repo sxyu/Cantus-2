@@ -1,12 +1,7 @@
 ﻿Public Class DiagFeatureList
-    Dim _featureList As String
-    Public Sub New(featureList As String)
-
+    Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-        Me._featureList = featureList.Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).Replace(vbLf, vbNewLine)
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -15,7 +10,7 @@
 
     Private Sub DiagFeatureList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Icon = My.Resources.Calculator
-        tb.Text = _featureList
+        tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion).Replace(vbLf, vbCrLf)
         tb.SelectionStart = 0
         Dim cCode As String = Globalization.CultureInfo.CurrentCulture.Name
 
@@ -32,7 +27,7 @@
         If e.Control Then
             If e.KeyCode = Keys.A Then
                 tb.SelectAll()
-            ElseIf Not e.KeyCode = Keys.V OrElse e.KeyCode = Keys.x
+            ElseIf e.KeyCode = Keys.C
                 ctrl = True
             End If
         End If
@@ -62,6 +57,7 @@
     End Sub
 
     Private Sub btnDocs_Click(sender As Object, e As EventArgs) Handles btnDocs.Click
+        If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
         _allowNavigation = True
         SwitchTab("docs")
         wb.Navigate("https://github.com/sxyu/Cantus-2/blob/master/README.md")
@@ -70,20 +66,22 @@
     End Sub
 
     Private Sub btnLicense_Click(sender As Object, e As EventArgs) Handles btnLicense.Click
+        If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
         _allowNavigation = True
-        SwitchTab("license")
-        wb.Navigate("https://github.com/sxyu/Cantus-2/blob/master/LICENSE")
-        wb.Show()
-        wb.Focus()
+            SwitchTab("license")
+        wb.Hide()
+        tb.Text = My.Resources.LICENSE.Replace(vbLf, vbCrLf)
     End Sub
 
     Private Sub btnLog_Click(sender As Object, e As EventArgs) Handles btnLog.Click
+        If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
         SwitchTab("log")
         wb.Hide()
+        tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion).Replace(vbLf, vbCrLf)
     End Sub
 
     Private _allowNavigation As Boolean = False
     Private Sub wb_Navigating(sender As Object, e As WebBrowserNavigatingEventArgs) Handles wb.Navigating
-        'If Not _allowNavigation Then e.Cancel = True Else _allowNavigation = False
+        If Not _allowNavigation Then e.Cancel = True Else _allowNavigation = False
     End Sub
 End Class

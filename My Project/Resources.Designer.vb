@@ -71,6 +71,26 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to                     GNU GENERAL PUBLIC LICENSE
+        '''                       Version 2, June 1991
+        '''
+        ''' Copyright (C) 1989, 1991 Free Software Foundation, Inc., &lt;http://fsf.org/&gt;
+        ''' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+        ''' Everyone is permitted to copy and distribute verbatim copies
+        ''' of this license document, but changing it is not allowed.
+        '''
+        '''                            Preamble
+        '''
+        '''  The licenses for most software are designed to take away your
+        '''freedom to share and change it.  By contrast, the GNU Genera [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property LICENSE() As String
+            Get
+                Return ResourceManager.GetString("LICENSE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         '''</summary>
         Friend ReadOnly Property Update() As System.Drawing.Icon
@@ -82,18 +102,17 @@ Namespace My.Resources
         
         '''<summary>
         '''  Looks up a localized string similar to Welcome to Cantus (Previously Calculatorˣ) Version {ver} (Alpha)!
-        '''By Alex Yu 2015-16
         '''
-        '''
-        '''*********************************************************************************************
-        '''What&apos;s New
-        '''*********************************************************************************************
-        '''-Greatly reduced flickering on launch
-        '''-Minor fixes
+        '''Cantus is a powerful yet lightweight mathematical language and expression evaluator 
+        '''created By Alex Yu 2015-16
+        '''https://github.com/sxyu/Cantus-2
         '''
         '''*********************************************************************************************
-        '''New From 2.0.0.68:
-        '''************************************************* [rest of string was truncated]&quot;;.
+        '''Credits
+        '''*********************************************************************************************
+        '''This project wouldn&apos;t have been possible without the following:
+        '''
+        '''Scintilla: Textbox with syntax matchin [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property UpdateMsg() As String
             Get

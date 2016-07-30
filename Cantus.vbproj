@@ -237,6 +237,7 @@
     <None Include="Alex Yu Self-Signed.pfx" />
     <None Include="app.config" />
     <None Include="bin\Release\ver" />
+    <None Include="LICENSE" />
     <None Include="README.md" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">

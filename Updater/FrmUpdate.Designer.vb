@@ -116,10 +116,10 @@
             'lbDlSize
             '
             Me.lbDlSize.ForeColor = System.Drawing.Color.White
-            Me.lbDlSize.Location = New System.Drawing.Point(138, 138)
+            Me.lbDlSize.Location = New System.Drawing.Point(63, 138)
             Me.lbDlSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
             Me.lbDlSize.Name = "lbDlSize"
-            Me.lbDlSize.Size = New System.Drawing.Size(150, 29)
+            Me.lbDlSize.Size = New System.Drawing.Size(225, 29)
             Me.lbDlSize.TabIndex = 19
             Me.lbDlSize.Text = "Downloaded Size"
             Me.lbDlSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -127,10 +127,10 @@
             'lbSpeed
             '
             Me.lbSpeed.ForeColor = System.Drawing.Color.White
-            Me.lbSpeed.Location = New System.Drawing.Point(138, 113)
+            Me.lbSpeed.Location = New System.Drawing.Point(67, 113)
             Me.lbSpeed.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
             Me.lbSpeed.Name = "lbSpeed"
-            Me.lbSpeed.Size = New System.Drawing.Size(150, 29)
+            Me.lbSpeed.Size = New System.Drawing.Size(221, 29)
             Me.lbSpeed.TabIndex = 17
             Me.lbSpeed.Text = "Speed"
             Me.lbSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -138,10 +138,10 @@
             'lbTSize
             '
             Me.lbTSize.ForeColor = System.Drawing.Color.White
-            Me.lbTSize.Location = New System.Drawing.Point(138, 163)
+            Me.lbTSize.Location = New System.Drawing.Point(59, 163)
             Me.lbTSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
             Me.lbTSize.Name = "lbTSize"
-            Me.lbTSize.Size = New System.Drawing.Size(150, 29)
+            Me.lbTSize.Size = New System.Drawing.Size(229, 29)
             Me.lbTSize.TabIndex = 18
             Me.lbTSize.Text = "Total Size"
             Me.lbTSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight
