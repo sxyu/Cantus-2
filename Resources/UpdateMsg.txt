@@ -4,9 +4,11 @@ By Alex Yu 2015-16
 *********************************************************************************************
 What's New
 *********************************************************************************************
--OOP: support for classes, multiple inheritance, etc.
-e.g.
+-Wider, larger editor with more keyboard buttons
 
+-OOP: support for classes, multiple inheritance, etc.
+
+OOP format example:
 # Tip: you can copy this into the editor to see the result for yourself!
 
 class pet
@@ -32,12 +34,13 @@ alert(myCat.speak()) # alerts Meow!
 -Access modifiers: public, private
 -Lambda expressions: `123`, `x=>123`
 -Function pointers: x=sin
--Multi-line lambda expressions: max=`x,y=>
-    if x>y
-		return x
-	else
-		return y
-  `
+-Multi-line lambda expressions: 
+	max = ` x,y =>
+	    if x>y
+			return x
+		else
+			return y
+	`
 -Namespacing: create namespaces with the namespace keyword
 
 -Import statement to import a package from any path path or from under 'include/' using member access notation:
