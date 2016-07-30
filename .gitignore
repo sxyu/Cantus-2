@@ -7,6 +7,7 @@ bin/Release/ver
 bin/Release/manifest
 bin/Release/init.can
 bin/Release/cantus.xml
+bin/Release/ScintillaNet.dll
 bin/Release/plugin/
 *.backup
 
