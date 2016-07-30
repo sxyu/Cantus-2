@@ -2,13 +2,12 @@
 Evaluator/EvaluatorOld.vb
 Graphing/FrmDrawGraph.*
 
-# Do not include debug directory
-bin/Debug/
-
 # Exclude updater files
 bin/Release/ver
 bin/Release/manifest
 bin/Release/init.can
+bin/Release/cantus.xml
+bin/Release/plugin/
 *.backup
 
 ## Ignore Visual Studio temporary files, build results, and
@@ -28,13 +27,14 @@ bin/Release/init.can
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
+#[Rr]elease/
 [Rr]eleases/
 x64/
 x86/
 build/
 bld/
-[Bb]in/
+#[Bb]in/
+[Bb]in/Debug/
 [Oo]bj/
 
 # Visual Studio 2015 cache/options directory

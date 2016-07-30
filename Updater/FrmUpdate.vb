@@ -1,10 +1,20 @@
 ﻿Imports System.Net
 
 Namespace Calculator.Updater
+
+    ''' <summary>
+    ''' Very basic Google drive based updater for Cantus
+    ''' </summary>
     Public Class FrmUpdate
-        ' google drive based updater
-        Delegate Sub ChangeTextsSafe(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
+        Delegate Sub UpdateMessagesSafe(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
         Delegate Sub DownloadCompleteSafe(ByVal cancelled As Boolean)
+
+        ' urls: hosted on google drive
+        Private Const VERSION_URL As String = "https://drive.google.com/uc?export=download&id=0B314tJw3ioySY0k1THVWZFV6S00"
+        Private Const MANIFEST_URL As String = "https://drive.google.com/uc?export=download&id=0B314tJw3ioySX0hPNFFRS3FFOEk"
+
+        Private Const BACKUP_NAME As String = "cantus.backup"
+        Private Const EXECUTABLE_NAME As String = "cantus.exe"
 
         Dim _saveLocation As String = Application.StartupPath
         Dim _toDownload As String = ""
@@ -17,11 +27,12 @@ Namespace Calculator.Updater
             Me.btnCancel.Enabled = False
             If cancelled Then
                 Try
-                    FileIO.FileSystem.RenameFile(Application.StartupPath & "\cantus.backup", "cantus.exe")
+                    FileIO.FileSystem.RenameFile(BACKUP_NAME, EXECUTABLE_NAME)
                 Catch
                 End Try
                 Application.Exit()
             End If
+
             Me.pb.Value = 0
             Me.lbTSize.Text = ""
             Me.lbDlSize.Text = "Finishing Up..."
@@ -32,14 +43,14 @@ Namespace Calculator.Updater
                 lbStep.Text = "Deleting Temporary Files..."
                 lbFile.Text = ""
                 For Each file As String In _manifestFile
-                    Dim fn As String = "cantus.exe" ' temporary measure
-                    Dim tempFile As String = FileIO.SpecialDirectories.Temp & "\" & fn
-                    Dim actualFile As String = Application.StartupPath & "\" & fn
+                    Dim tempFile As String = _saveLocation
+                    Dim actualFile As String = Application.StartupPath & "\" & EXECUTABLE_NAME
                     Try
                         FileIO.FileSystem.CopyFile(tempFile, actualFile, True)
                     Catch ex As Exception
                     End Try
                 Next
+
                 If MsgBox("We have successfully updated Cantus to version " & _newVersion & "!" & vbCrLf &
                    "Launch Cantus now?",
                    MsgBoxStyle.Information Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.YesNo, "Update Successful") =
@@ -49,31 +60,31 @@ Namespace Calculator.Updater
                     Dim p As New Process
                     With pi
                         .UseShellExecute = True
-                        .FileName = "cantus.exe"
+                        .FileName = EXECUTABLE_NAME
                         .WindowStyle = ProcessWindowStyle.Normal
                         .Verb = "runas"
                     End With
 
                     Try
-                        p = Process.Start(pi) ' try getting
+                        p = Process.Start(pi) ' try getting admin privileges to set file associations
                     Catch
-                        Process.Start(Application.StartupPath & "\cantus.exe") ' if refused, return
+                        Process.Start(Application.StartupPath & "\cantus.exe") ' if refused, run normally
                     End Try
                 End If
                 _reRun = False
                 Application.Exit()
+
             Else
                 _toDownload = _manifestFile(_downloadCount).Trim.Replace("%20", " ")
                 Dim filename As String = IO.Path.GetFileName(_toDownload)
                 lbFile.Text = filename
                 lbStep.Text = _downloadCount + 1 & " of " & _manifestFile.Length
-                _saveLocation = FileIO.SpecialDirectories.Temp & "\" & filename
+                _saveLocation = IO.Path.GetTempFileName()
                 _reRun = True
             End If
         End Sub
 
         Public Sub UpdateMessages(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
-
             Me.lbTSize.Text = "File Size: " & Math.Round((length / 1024), 2) & " KB"
 
             Me.lbDlSize.Text = "Downloaded " & Math.Round((position / 1024), 2) & " KB (" & Me.pb.Value & "%)"
@@ -91,6 +102,7 @@ Namespace Calculator.Updater
             End If
             Me.pb.Value = percent
         End Sub
+
         Private Sub frmUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             Me.Icon = My.Resources.Update
             Try
@@ -100,20 +112,20 @@ Namespace Calculator.Updater
                     Application.Exit()
                 Else
                     Using wc As New System.Net.WebClient()
-                        _newVersion = wc.DownloadString("https://drive.google.com/uc?export=download&id=0B314tJw3ioySY0k1THVWZFV6S00")
+                        _newVersion = wc.DownloadString(VERSION_URL)
                         lbVer.Text = "Installing Update " & _newVersion
-                        _manifestFile =
-                        wc.DownloadString("https://drive.google.com/uc?export=download&id=0B314tJw3ioySX0hPNFFRS3FFOEk").Split(CChar(vbLf))
+                        _manifestFile = wc.DownloadString(MANIFEST_URL).Split(ControlChars.Lf)
                     End Using
+
                     If _manifestFile.Length > 0 Then
-                        _toDownload = _manifestFile(0).Trim.Replace("%20", " ")
-                        Dim filename As String = "cantus.exe"
+                        _toDownload = _manifestFile(0).Trim.Replace("%20", " ").Trim()
+                        Dim filename As String = EXECUTABLE_NAME
                         lbFile.Text = filename
                         lbStep.Text = "1 of " & _manifestFile.Length
-                        _saveLocation = FileIO.SpecialDirectories.Temp & "\" & filename
+                        _saveLocation = IO.Path.GetTempFileName()
                         bw.RunWorkerAsync()
                     Else
-                        MsgBox("Updater Error 1: the update manifest is corrupted or failed to download. If this persists, please contact Mr. Yu.",
+                        MsgBox("Updater Error: the update manifest is corrupted or failed to download. If this persists, please contact Mr. Yu.",
                             MsgBoxStyle.Exclamation, "Error")
                         Application.Exit()
                     End If
@@ -138,24 +150,26 @@ Namespace Calculator.Updater
 
         Private Sub bw_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bw.DoWork
             'Creating the request and getting the response
-            Dim theResponse As WebResponse
-            Dim theRequest As WebRequest
+            Dim resp As WebResponse
+            Dim req As WebRequest
             Try 'Checks if the file exist
 
-                theRequest = WebRequest.Create(Me._toDownload)
-                theResponse = theRequest.GetResponse
-            Catch ex As Exception
+                req = WebRequest.Create(Me._toDownload.Trim())
+                resp = req.GetResponse
 
+            Catch ex As Exception
                 MessageBox.Show("An error occurred while downloading the newer version of Cantus.")
 
                 Dim cancelDelegate As New DownloadCompleteSafe(AddressOf DownloadComplete)
                 Me.Invoke(cancelDelegate, True)
                 Exit Sub
             End Try
-            Dim length As Long = theResponse.ContentLength 'Size of the response (in bytes)
 
-            Dim safedelegate As New ChangeTextsSafe(AddressOf UpdateMessages)
-            Me.Invoke(safedelegate, length, 0, 0, 0) 'Invoke the TreadsafeDelegate
+            Dim length As Long = resp.ContentLength ' Size of the response (in bytes)
+
+            Dim safedelegate As New UpdateMessagesSafe(AddressOf UpdateMessages)
+            Me.Invoke(safedelegate, length, 0, 0, 0) ' Initialize
+
             Dim writeStream As New IO.FileStream(Me._saveLocation, IO.FileMode.Create, IO.FileAccess.Write)
 
             'Replacement for Stream.Position (webResponse stream doesn't support seek)
@@ -174,7 +188,7 @@ Namespace Calculator.Updater
                 speedtimer.Start()
 
                 Dim readBytes(4095) As Byte
-                Dim bytesread As Integer = theResponse.GetResponseStream.Read(readBytes, 0, 4096)
+                Dim bytesread As Integer = resp.GetResponseStream.Read(readBytes, 0, 4096)
 
                 nRead += bytesread
                 Dim percent As Short = CShort((nRead * 100) / length)
@@ -188,7 +202,8 @@ Namespace Calculator.Updater
                 speedtimer.Stop()
 
                 readings += 1
-                If readings >= 5 Then 'For increase precision, _
+                If readings >= 5 Then
+                    ' For increased precision, 
                     ' the speed is calculated only every five cycles
                     currentspeed = 20480 / (speedtimer.ElapsedMilliseconds / 1000)
                     speedtimer.Reset()
@@ -197,7 +212,7 @@ Namespace Calculator.Updater
             Loop
 
             'Close the streams
-            theResponse.GetResponseStream.Close()
+            resp.GetResponseStream.Close()
             writeStream.Close()
 
             If Me.bw.CancellationPending Then
@@ -205,7 +220,6 @@ Namespace Calculator.Updater
                 IO.File.Delete(Me._saveLocation)
 
                 Dim cancelDelegate As New DownloadCompleteSafe(AddressOf DownloadComplete)
-
                 Me.Invoke(cancelDelegate, True)
 
                 Exit Sub
@@ -213,7 +227,6 @@ Namespace Calculator.Updater
             End If
 
             Dim completeDelegate As New DownloadCompleteSafe(AddressOf DownloadComplete)
-
             Me.Invoke(completeDelegate, False)
         End Sub
 
