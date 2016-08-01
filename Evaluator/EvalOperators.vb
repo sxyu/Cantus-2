@@ -212,7 +212,7 @@ Namespace Calculator.Evaluator
                 Dim stackHeight As Integer = 0
                 Dim lastFound As Integer = -1
 
-                For endIdx = 0 To expr.Length
+                For endIdx = 0 To expr.Length - 1
                     Dim foundEndSign As Boolean = False
                     ' try to find end sign
                     For Each s As String In endSign
@@ -226,39 +226,40 @@ Namespace Calculator.Evaluator
                     Next
 
                     ' end sign not found, try to find start sign
-                    If Stackable And Not foundEndSign Then
-                        If expr.Substring(endIdx).StartsWith(startSign) Then
-                            stackHeight += 1
-                            endIdx += startSign.Length - 1
-                        Else ' try to find other brackets
-                            For Each b As Bracket In opReg.Brackets
-                                If expr.Substring(endIdx).StartsWith(b.Signs(0)) Then
-                                    ' start escape sequence
-                                    If expr(endIdx) = "\"c Then
-                                        lastFound = endIdx + 1 ' save the time we last found an escaped end sign
-                                        endIdx += 1
-                                    Else
+                    If Not foundEndSign Then
+                        If expr(endIdx) = "\"c Then
+                            lastFound = endIdx + 1 ' save the time we last found an escaped end sign
+                            endIdx += 1
+                        ElseIf Stackable Then
+                            If expr.Substring(endIdx).StartsWith(startSign) Then
+                                stackHeight += 1
+                                endIdx += startSign.Length - 1
+
+                            Else ' try to find other brackets
+                                For Each b As Bracket In opReg.Brackets
+                                    If expr.Substring(endIdx).StartsWith(b.Signs(0)) Then
+                                        ' start escape sequence
                                         If b.Signs.Count = 1 Then
                                             endIdx += b.FindCloseBracket(expr.Substring(endIdx + b.Signs(0).Length), opReg) +
                                                 b.Signs(0).Length
                                         Else ' >1
                                             endIdx += b.FindCloseBracket(expr.Substring(endIdx + b.Signs(0).Length), opReg) +
-                                                b.Signs(1).Length
+                                                    b.Signs(1).Length
                                         End If
+                                        Exit For
                                     End If
-                                    Exit For
-                                End If
-                            Next
+                                Next
+                            End If
                         End If
                     End If
                 Next
 
                 ' if we can't find anything unescaped we'll ignore the last escape sequence
                 If lastFound = -1 Then
-                    Return expr.Length
-                Else
-                    Return lastFound
-                End If
+                        Return expr.Length
+                    Else
+                        Return lastFound
+                    End If
             End Function
         End Class
 
@@ -364,7 +365,7 @@ Namespace Calculator.Evaluator
             Register(New BinaryOperator({"^^"}, ePrecedence.mul_div, AddressOf BinaryOperatorBitwiseXor))
 
             ' use number group separator for ,
-            RegisterByRef(New BinaryOperator({","}, ePrecedence.tupling, AddressOf BinaryOperatorComma))
+            RegisterByRef(New BinaryOperator({","}, ePrecedence.tupling, AddressOf BinaryOperatorCommaTuple))
 
             RegisterByRef(New BinaryOperator({":"}, ePrecedence.tupling, AddressOf BinaryOperatorColon))
 
@@ -826,7 +827,7 @@ Namespace Calculator.Evaluator
                 If right Is Nothing OrElse TypeOf right Is ObjectTypes.Number AndAlso Double.IsNaN(CDbl(right.GetValue())) Then
                     If lambda.Args.Count > 0 Then Throw New EvaluatorException("(Lambda): " & lambda.Args.Count & " parameters expected")
                     Return ObjectTypes.DetectType(lambda.Execute(_eval, New List(Of ObjectTypes.Reference)))
-                ElseIf TypeOf right Is Objecttypes.Tuple
+                ElseIf TypeOf right Is ObjectTypes.Tuple
                     If lambda.Args.Count <> DirectCast(right.GetValue(), ObjectTypes.Reference()).Length Then
                         Throw New EvaluatorException("(Lambda): " & lambda.Args.Count & " parameters expected")
                     End If
@@ -1379,11 +1380,13 @@ Namespace Calculator.Evaluator
             End Try
         End Function
 
-        Private Function BinaryOperatorComma(left As ObjectTypes.EvalObjectBase, right As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
+        Private Function BinaryOperatorCommaTuple(left As ObjectTypes.EvalObjectBase, right As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
             If left Is Nothing Then Return right
             If right Is Nothing Then Return left
+
             Dim lv As Object = left.GetValue()
             Dim rv As Object = right.GetValue()
+
             Try
                 If ObjectTypes.Tuple.IsType(left) Then
                     Return New ObjectTypes.Tuple((DirectCast(lv, Object()).Concat({right})))
@@ -1404,7 +1407,7 @@ Namespace Calculator.Evaluator
                 If rv Is Nothing OrElse rv.ToString() = "NaN" Then Return left
                 If ObjectTypes.Tuple.IsType(left) Then
                     Dim lst As New List(Of ObjectTypes.Reference)(DirectCast(lv, ObjectTypes.Reference()))
-                    lst(lst.Count - 1) = New ObjectTypes.Reference(BinaryOperatorComma(lst(lst.Count - 1).GetRefObject(), right))
+                    lst(lst.Count - 1) = New ObjectTypes.Reference(BinaryOperatorCommaTuple(lst(lst.Count - 1).GetRefObject(), right))
                     Return New ObjectTypes.Tuple(lst)
                 Else
                     Dim ref As New ObjectTypes.Reference(New ObjectTypes.Tuple({lv, rv}))

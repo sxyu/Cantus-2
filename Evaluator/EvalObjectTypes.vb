@@ -173,7 +173,11 @@ Namespace Calculator.Evaluator
             End Function
 
             Public Overrides Sub SetValue(obj As Object)
-                _value = CDbl(obj)
+                If TypeOf obj Is BigDecimal Then
+                    _value = CType(obj, BigDecimal)
+                Else
+                    _value = CDbl(obj)
+                End If
             End Sub
 
             Public Shared Shadows Function IsType(obj As Object) As Boolean
@@ -701,7 +705,7 @@ Namespace Calculator.Evaluator
                 For Each k As Reference In _value
                     If Not str.Length = 1 Then str.Append(", ")
                     Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
-                    str.Append(ef.O(k.Resolve()))
+                    str.Append(ef.O(k.GetRefObject()))
                 Next
                 str.Append(")")
                 Return str.ToString()
@@ -720,20 +724,25 @@ Namespace Calculator.Evaluator
             Public Sub New(value As IEnumerable(Of Object))
                 Me._value = New List(Of Reference)()
                 For Each v As Object In value
-                    If TypeOf v Is Reference Then
+                    If TypeOf v Is Reference AndAlso Not TypeOf DirectCast(v, Reference).GetRefObject() Is Reference Then
                         Me._value.Add(DirectCast(v, Reference))
                     Else
-                        Me._value.Add(New Reference(ObjectTypes.DetectType(v, True)))
+                        Me._value.Add(New Reference(DetectType(v, True)))
                     End If
                 Next
             End Sub
-            Public Sub New(str As String, eval As Evaluator)
+
+            ''' <summary>
+            ''' Create a new tuple
+            ''' </summary>
+            ''' <param name="conditions">If true, all members are evaluated in condition mode into booleans</param>
+            Public Sub New(str As String, eval As Evaluator, Optional ByVal conditions As Boolean = True)
                 'Try
                 If StrIsType(str) Then
                     str = str.Trim().Remove(str.Length - 1).Substring(1).Trim(","c)
                     Me._value = New List(Of Reference)
                     If Not String.IsNullOrWhiteSpace(str) Then
-                        Dim res As EvalObjectBase = ObjectTypes.DetectType(eval.EvalExprRaw("0," & str, True), True)
+                        Dim res As EvalObjectBase = ObjectTypes.DetectType(eval.EvalExprRaw("0," & str, True, conditions), True)
                         If IsType(res) Then
                             Dim lst As List(Of Reference) = CType(res.GetValue(), Reference()).ToList()
                             Me._value.AddRange(lst.GetRange(1, lst.Count - 1))
@@ -785,15 +794,17 @@ Namespace Calculator.Evaluator
             End Sub
 
             ''' <summary>
-            ''' Get the object at the specified row and column in the matrix as a system type
+            ''' Get the object at the specified row and column in the matrix
             ''' </summary>
             ''' <returns></returns>
             Public Function GetCoord(row As Integer, col As Integer) As Object
                 Dim r As EvalObjectBase = _value(row).GetRefObject()
                 If TypeOf r Is Matrix Then
-                    Return CType(CType(r, Matrix).GetValue(), List(Of Reference))(col).GetValue()
+                    Return CType(CType(r, Matrix).GetValue(), List(Of Reference))(col).Resolve()
                 Else
                     If col = 0 Then
+                        If TypeOf r Is Reference Then Return DirectCast(r, Reference).Resolve()
+                        If TypeOf r Is Number Then Return DirectCast(r, Number).BigDecValue
                         Return r.GetValue()
                     Else
                         Return Double.NaN
@@ -802,18 +813,18 @@ Namespace Calculator.Evaluator
             End Function
 
             ''' <summary>
-            ''' Get the object at the specified row and column in the matrix as an evaluator type
+            ''' Get the object at the specified row and column in the matrix as a reference
             ''' </summary>
             ''' <returns></returns>
-            Public Function GetCoordObj(row As Integer, col As Integer) As EvalObjectBase
+            Public Function GetCoordRef(row As Integer, col As Integer) As Reference
                 Dim r As EvalObjectBase = _value(row).GetRefObject()
                 If TypeOf r Is Matrix Then
                     Return CType(CType(r, Matrix).GetValue(), List(Of Reference))(col)
                 Else
                     If col = 0 Then
-                        Return r
+                        Return New Reference(r)
                     Else
-                        Return New Number(Double.NaN)
+                        Return New Reference(Double.NaN)
                     End If
                 End If
             End Function
@@ -823,12 +834,17 @@ Namespace Calculator.Evaluator
             ''' </summary>
             Public Sub SetCoord(row As Integer, col As Integer, obj As Object)
                 Dim r As EvalObjectBase = _value(row).ResolveObj()
-                If TypeOf r Is Matrix Then
-                    CType(CType(r, Matrix).GetValue(), List(Of Reference))(col).SetValue(obj)
+                If TypeOf obj Is Reference Then
+                    If TypeOf r Is Matrix Then
+                        CType(CType(r, Matrix).GetValue(), List(Of Reference))(col) = DirectCast(obj, Reference)
+                    Else
+                        If col = 0 Then _value(row) = DirectCast(obj, Reference)
+                    End If
                 Else
-                    If TypeOf obj Is Reference Then obj = DirectCast(obj, Reference).Resolve()
-                    If col = 0 Then
-                        r.SetValue(obj)
+                    If TypeOf r Is Matrix Then
+                        CType(CType(r, Matrix).GetValue(), List(Of Reference))(col).SetValue(obj)
+                    Else
+                        If col = 0 Then r.SetValue(obj)
                     End If
                 End If
             End Sub
@@ -1089,7 +1105,7 @@ Namespace Calculator.Evaluator
             ''' </summary>
             ''' <param name="aug">Matrix representing right side of augmented matrix, if available</param>
             ''' <returns></returns>
-            Public Function SwapRows(a As Integer, b As Integer, Optional aug As Matrix = Nothing) As Matrix
+            Public Function SwapRows(a As Integer, b As Integer, Optional ByRef aug As Matrix = Nothing) As Matrix
                 Dim tmp As Reference = _value(a)
                 _value(a) = _value(b)
                 _value(b) = tmp
@@ -1106,7 +1122,8 @@ Namespace Calculator.Evaluator
                     If TypeOf Me._value(i).ResolveObj() Is Matrix Then
                         Dim tmp As Reference
                         tmp = DirectCast(Me._value(i).Resolve(), List(Of Reference))(b)
-                        DirectCast(Me._value(i).Resolve(), List(Of Reference))(b) = DirectCast(Me._value(i).Resolve(), List(Of Reference))(a)
+                        DirectCast(Me._value(i).Resolve(), List(Of Reference))(b) =
+                            DirectCast(Me._value(i).Resolve(), List(Of Reference))(a)
                         DirectCast(Me._value(i).Resolve(), List(Of Reference))(a) = tmp
                     Else
                         If a <> 0 OrElse b <> 0 Then Throw New MathException("Index is out of bounds")
@@ -1119,17 +1136,17 @@ Namespace Calculator.Evaluator
             ''' Scale the specified row by the specified factor
             ''' </summary>
             ''' <param name="aug">Right side of augmented matrix, if applicable</param>
-            Public Sub ScaleRow(row As Integer, scale As Object, Optional aug As Matrix = Nothing)
+            Public Sub ScaleRow(row As Integer, scale As Object, Optional ByRef aug As Matrix = Nothing)
                 For i As Integer = 0 To Width - 1
                     Dim orig As Object = GetCoord(row, i)
                     If TypeOf scale Is Numerics.Complex OrElse TypeOf orig Is Numerics.Complex Then
                         If Not TypeOf scale Is Numerics.Complex Then scale = New Numerics.Complex(CDbl(scale), 0)
                         If Not TypeOf orig Is Numerics.Complex Then orig = New Numerics.Complex(CDbl(orig), 0)
                         SetCoord(row, i, New Reference(DirectCast(orig, Numerics.Complex) * DirectCast(scale, Numerics.Complex)))
-                    ElseIf TypeOf scale Is Double AndAlso TypeOf orig Is Double
-                        SetCoord(row, i, New Reference(CDbl(orig) * CDbl(scale)))
-                    ElseIf TypeOf scale Is BigDecimal AndAlso TypeOf orig Is BigDecimal
-                        SetCoord(row, i, New Reference(DirectCast(orig, BigDecimal) * DirectCast(scale, BigDecimal)))
+                    ElseIf TypeOf orig Is Double
+                        SetCoord(row, i, New Reference((CDbl(orig) * CType(scale, BigDecimal))))
+                    ElseIf TypeOf orig Is BigDecimal
+                        SetCoord(row, i, New Reference((DirectCast(orig, BigDecimal) * DirectCast(scale, BigDecimal))))
                     End If
                 Next
                 If Not aug Is Nothing Then aug.ScaleRow(row, scale)
@@ -1139,7 +1156,7 @@ Namespace Calculator.Evaluator
             ''' Subtract row b from row a and assign the values to row a
             ''' </summary>
             ''' <param name="aug">Right side of augmented matrix, if applicable</param>
-            Public Sub SubtractRow(a As Integer, b As Integer, Optional aug As Matrix = Nothing)
+            Public Sub SubtractRow(a As Integer, b As Integer, Optional ByRef aug As Matrix = Nothing)
                 For i As Integer = 0 To Width - 1
                     Dim av As Object = GetCoord(a, i)
                     Dim bv As Object = GetCoord(b, i)
@@ -1148,9 +1165,9 @@ Namespace Calculator.Evaluator
                         If Not TypeOf bv Is Numerics.Complex Then bv = New Numerics.Complex(CDbl(bv), 0)
                         SetCoord(a, i, DirectCast(av, Numerics.Complex) - DirectCast(bv, Numerics.Complex))
                     ElseIf TypeOf av Is Double AndAlso TypeOf bv Is Double
-                        SetCoord(a, i, New Reference(Math.Round(CDbl(av) - CDbl(bv), 12)))
+                        SetCoord(a, i, New Reference(CType(CDbl(av) - CDbl(bv), BigDecimal)))
                     ElseIf TypeOf av Is BigDecimal AndAlso TypeOf bv Is BigDecimal
-                        SetCoord(a, i, New Reference(DirectCast(av, BigDecimal) - DirectCast(bv, BigDecimal)))
+                        SetCoord(a, i, New Reference((DirectCast(av, BigDecimal) - DirectCast(bv, BigDecimal))))
                     End If
                 Next
                 If Not aug Is Nothing Then aug.SubtractRow(a, b)
@@ -1162,7 +1179,7 @@ Namespace Calculator.Evaluator
             ''' <returns></returns>
             Private Function AutoReciprocal(a As Object) As Object
                 If TypeOf a Is Double Then
-                    Return 1 / CDbl(a)
+                    Return 1 / CType(CDbl(a), BigDecimal)
                 ElseIf TypeOf a Is BigDecimal Then
                     Return 1 / DirectCast(a, BigDecimal)
                 ElseIf TypeOf a Is Numerics.Complex Then
@@ -1175,64 +1192,69 @@ Namespace Calculator.Evaluator
             ''' <summary>
             ''' Find the reduced row echelon form of the matrix
             ''' </summary>
-            ''' <param name="aug">Matrix to modify along with the current matrix as an augmented matrix</param>
+            ''' <param name="augmented">Matrix to modify along with the current matrix as an augmented matrix</param>
             ''' <returns></returns>
-            Public Function Rref(Optional aug As Matrix = Nothing) As Matrix
+            Public Function Rref(Optional ByRef augmented As Matrix = Nothing) As Matrix
+
                 ' deep copy everything before doing anything to avoid messing up due to references
                 Dim mat As Matrix = DirectCast(Me.GetDeepCopy(), Matrix)
 
-                '' convert all rows to matrices
-                'If mat.Width = 1 Then
-                '    Dim lst As List(Of Reference) = DirectCast(mat.GetValue(), List(Of Reference))
-                '    For i As Integer = 0 To mat.Height - 1
-                '        lst(i) = New Reference(New Matrix({lst(i).ResolveObj()}))
-                '    Next
-                'End If
+                    '' convert all rows to matrices
+                    'If mat.Width = 1 Then
+                    '    Dim lst As List(Of Reference) = DirectCast(mat.GetValue(), List(Of Reference))
+                    '    For i As Integer = 0 To mat.Height - 1
+                    '        lst(i) = New Reference(New Matrix({lst(i).ResolveObj()}))
+                    '    Next
+                    'End If
 
-                Dim pivot As New Dictionary(Of Integer, Integer)
-                Dim curRow As Integer = 0
-                For col As Integer = 0 To mat.Width - 1
-                    If curRow >= mat.Height Then Return mat
-                    Dim success As Boolean = True
+                    Dim pivot As New Dictionary(Of Integer, Integer)
+                    Dim curRow As Integer = 0
+                    For col As Integer = 0 To mat.Width - 1
+                        If curRow >= mat.Height Then Return mat
+                        Dim success As Boolean = True
 
-                    For swapRow As Integer = curRow To mat.Height
-                        If swapRow = mat.Height Then ' reached end, failed to find an appropriate row
-                            success = False
-                            Exit For
-                        End If
-                        Dim val As Object = mat.GetCoord(swapRow, col)
-                        If ((TypeOf val Is Double OrElse TypeOf val Is BigDecimal) AndAlso CDbl(val) <> 0.0) OrElse
-                                TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
-                            mat.SwapRows(curRow, swapRow, aug)
-                            mat.ScaleRow(curRow, AutoReciprocal(val), aug)
-                            pivot(curRow) = col
-                            Exit For
-                        End If
-                    Next
-
-                    If Not success Then Continue For
-
-                    For zeroOutRow As Integer = 0 To Height - 1
-                        If zeroOutRow = curRow Then Continue For
-                        Dim val As Object = mat.GetCoord(zeroOutRow, col)
-                        If ((TypeOf val Is Double OrElse TypeOf val Is BigDecimal) AndAlso CDbl(val) <> 0.0) OrElse
-                                TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
-                            mat.ScaleRow(zeroOutRow, AutoReciprocal(val), aug)
-                            mat.SubtractRow(zeroOutRow, curRow, aug)
-
-                            ' if the row was already processed then we need to scale its pivot back to one
-                            If zeroOutRow < curRow Then
-                                mat.ScaleRow(zeroOutRow, AutoReciprocal(mat.GetCoord(zeroOutRow, pivot(zeroOutRow))), aug)
+                        For swapRow As Integer = curRow To mat.Height
+                            If swapRow = mat.Height Then ' reached end, failed to find an appropriate row
+                                success = False
+                                Exit For
                             End If
-                        End If
+                            Dim val As Object = mat.GetCoord(swapRow, col)
+                            If (TypeOf val Is Double AndAlso CDbl(val) <> 0.0) OrElse (TypeOf val Is BigDecimal AndAlso
+                                CType(val, BigDecimal) <> 0.0) OrElse
+                                TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
+                                mat.SwapRows(curRow, swapRow, augmented)
+                                mat.ScaleRow(curRow, AutoReciprocal(val), augmented)
+                                pivot(curRow) = col
+                                Exit For
+                            End If
+                        Next
+
+                        If Not success Then Continue For
+
+                        For zeroOutRow As Integer = 0 To Height - 1
+                            If zeroOutRow = curRow Then Continue For
+                            Dim val As Object = mat.GetCoord(zeroOutRow, col)
+                            If (TypeOf val Is Double AndAlso CDbl(val) <> 0.0) OrElse (TypeOf val Is BigDecimal AndAlso
+                                CType(val, BigDecimal) <> 0.0) OrElse
+                                TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
+                                mat.ScaleRow(zeroOutRow, AutoReciprocal(val), augmented)
+                                mat.SubtractRow(zeroOutRow, curRow, augmented)
+
+                                ' if the row was already processed then we need to scale its pivot back to one
+                                If zeroOutRow < curRow Then
+                                    mat.ScaleRow(zeroOutRow, AutoReciprocal(mat.GetCoord(zeroOutRow, pivot(zeroOutRow))), augmented)
+                                End If
+                            End If
+                        Next
+                        curRow += 1
                     Next
-                    curRow += 1
-                Next
-                While curRow < mat.Height
-                    mat.ScaleRow(curRow, 0, aug)
-                    curRow += 1
-                End While
-                Return mat
+
+                    While curRow < mat.Height
+                        mat.ScaleRow(curRow, 0, augmented)
+                        curRow += 1
+                    End While
+
+                    Return mat
             End Function
 
             ''' <summary>
@@ -1298,7 +1320,7 @@ Namespace Calculator.Evaluator
                 For Each k As Reference In _value
                     If Not str.Length = 1 Then str.Append(", ")
                     Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
-                    str.Append(ef.O(k.Resolve()))
+                    str.Append(ef.O(k.GetRefObject()))
                 Next
                 str.Append("]")
                 Return str.ToString()
@@ -1351,25 +1373,25 @@ Namespace Calculator.Evaluator
 
                 ' fit width
                 For i As Integer = 0 To height - 1
-                        Dim r As Reference = _value(i)
-                        If width > 1 Then
-                            If Not TypeOf r.ResolveObj() Is Matrix Then
-                                r.SetValue(New Matrix({r.GetValue()}))
-                            End If
-                            Dim inner As List(Of Reference) = CType(CType(r.GetRefObject(), Matrix).GetValue(), List(Of Reference))
-                            While inner.Count < width
-                                inner.Add(New Reference(0.0))
-                            End While
-                            While inner.Count > width
-                                inner.RemoveAt(inner.Count - 1)
-                            End While
-                        ElseIf width = 1 Then
-                            ' if single column, expand to column vector
-                            If TypeOf r.ResolveObj() Is Matrix Then
-                                r.SetValue(DirectCast(r.Resolve(), List(Of Reference))(0).ResolveObj())
-                            End If
+                    Dim r As Reference = _value(i)
+                    If width > 1 Then
+                        If Not TypeOf r.ResolveObj() Is Matrix Then
+                            r.SetValue(New Matrix({r.GetValue()}))
                         End If
-                    Next
+                        Dim inner As List(Of Reference) = CType(CType(r.GetRefObject(), Matrix).GetValue(), List(Of Reference))
+                        While inner.Count < width
+                            inner.Add(New Reference(0.0))
+                        End While
+                        While inner.Count > width
+                            inner.RemoveAt(inner.Count - 1)
+                        End While
+                    ElseIf width = 1 Then
+                        ' if single column, expand to column vector
+                        If TypeOf r.ResolveObj() Is Matrix Then
+                            r.SetValue(DirectCast(r.Resolve(), List(Of Reference))(0).ResolveObj())
+                        End If
+                    End If
+                Next
             End Sub
 
             ''' <summary>
@@ -1383,7 +1405,7 @@ Namespace Calculator.Evaluator
                         If TypeOf obj Is Numerics.Complex Then
                             If Math.Round(DirectCast(obj, Numerics.Complex).Magnitude, 12) <> expected Then Return False
                         ElseIf TypeOf obj Is Double OrElse TypeOf obj Is BigDecimal
-                            If Math.Round(CDbl(obj), 12) <> expected Then Return False
+                            If CType(obj, BigDecimal).Truncate(12) <> expected Then Return False
                         End If
                     Next
                 Next
@@ -1410,7 +1432,7 @@ Namespace Calculator.Evaluator
             ''' </summary>
             Public Sub New(rows As Integer, Optional cols As Integer = -1)
                 If cols = -1 Then cols = rows
-                Me._value = New List(Of Reference)
+                Me._value = New List(Of Reference)(rows)
                 Me.Resize(rows, cols)
             End Sub
 
@@ -1455,6 +1477,7 @@ Namespace Calculator.Evaluator
                 Try
                     If StrIsType(str) Then
                         str = str.Trim().Remove(str.Length - 1).Substring(1).Trim()
+
                         Me._value = New List(Of Reference)
                         If Not String.IsNullOrWhiteSpace(str) Then
                             ' add zeros to fill blanks for convenience
@@ -1470,7 +1493,7 @@ Namespace Calculator.Evaluator
                             If str.EndsWith(",") Then str = str.Remove(str.Length - 1)
                             If str.StartsWith(",") Then str = str.Substring(1)
 
-                            Dim res As Object = eval.EvalExprRaw("0," & str, True)
+                            Dim res As Object = eval.EvalExprRaw("0," & str, True, True)
 
                             If Tuple.IsType(res) Then
                                 Dim lst As List(Of Reference) = CType(res, Reference()).ToList()
@@ -1545,9 +1568,9 @@ Namespace Calculator.Evaluator
                 For Each k As KeyValuePair(Of Reference, Reference) In _value
                     If Not str.Length = 1 Then str.Append(", ")
                     Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
-                    str.Append(ef.O(k.Key.Resolve()))
+                    str.Append(ef.O(k.Key.GetRefObject()))
                     If Not k.Value Is Nothing Then
-                        str.Append(":" & ef.O(k.Value.Resolve()))
+                        str.Append(":" & ef.O(k.Value.GetRefObject()))
                     End If
                 Next
                 str.Append("}")
@@ -1651,9 +1674,9 @@ Namespace Calculator.Evaluator
                 For Each k As KeyValuePair(Of Reference, Reference) In _value
                     If Not str.Chars(str.Length - 1) = "{" Then str.Append(", ")
                     Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
-                    str.Append(ef.O(k.Key.Resolve()))
+                    str.Append(ef.O(k.Key.GetRefObject()))
                     If Not k.Value Is Nothing Then
-                        str.Append(":" & ef.O(k.Value.Resolve()))
+                        str.Append(":" & ef.O(k.Value.GetRefObject()))
                     End If
                 Next
                 str.Append("})")
@@ -1827,7 +1850,7 @@ Namespace Calculator.Evaluator
                 For Each r As Reference In _value
                     If Not init Then str.Append(", ") Else init = False
                     Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
-                    str.Append(ef.O(r.Resolve()))
+                    str.Append(ef.O(r.GetRefObject()))
                 Next
                 str.Append("])")
                 Return str.ToString()
@@ -2354,7 +2377,8 @@ Namespace Calculator.Evaluator
                             Else
                                 newVal = DirectCast(f.Value.GetDeepCopy(), Reference)
                             End If
-                            Me.UserClass.Evaluator.SetVariable(Me.InnerScope & SCOPE_SEP & f.Key, newVal, modifiers:={"internal"})
+                            Me.UserClass.Evaluator.SetVariable(Me.InnerScope & SCOPE_SEP & f.Key, newVal,
+                                                               modifiers:={"internal"})
                             Me._Fields(f.Key) = Me.UserClass.Evaluator.GetVariableRef(Me.InnerScope & SCOPE_SEP & f.Key)
                         Next
                     Catch

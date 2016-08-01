@@ -9,6 +9,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Text.RegularExpressions
 Imports Cantus.Calculator.Evaluator.Evaluator
+Imports Microsoft.Win32
 
 Namespace Calculator.Evaluator
     ' Define functions here (name is case insensitive)
@@ -16,7 +17,6 @@ Namespace Calculator.Evaluator
     ' All private and friend functions are hidden
     Public Class InternalFunctions
         Private _eval As Evaluator
-        Private _curThreadId As Integer
 
         Public Sub New(parent As Evaluator)
             Me._eval = parent
@@ -27,8 +27,8 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Exit the evaluator
         ''' </summary>
-        Public Sub _Exit(Optional name As String = "")
-            Application.Exit()
+        Public Sub _Exit()
+            Environment.Exit(0)
         End Sub
 
         ''' <summary>
@@ -3315,7 +3315,7 @@ Namespace Calculator.Evaluator
         Public Function RemoveAt(lst As Object, val As Double) As Object
             If TypeOf lst Is IList(Of Reference) Then
                 DirectCast(lst, IList(Of Reference)).RemoveAt(Int(val))
-            ElseIf TypeOf lst Is linkedList(Of Reference) Then
+            ElseIf TypeOf lst Is LinkedList(Of Reference) Then
                 Dim tmp As LinkedListNode(Of Reference) = DirectCast(lst, LinkedList(Of Reference)).First
                 For i As Integer = 1 To Int(val)
                     tmp = tmp.Next
@@ -3731,11 +3731,11 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' Resize
+        ''' Resize a matrix
         ''' </summary>
         ''' <param name="lst"></param>
         ''' <returns></returns>
-        Public Function Resize(lst As IEnumerable(Of Reference), height As Double, Optional width As Double = Double.NaN) As IEnumerable(Of Reference)
+        Public Function Resize(lst As List(Of Reference), height As Double, Optional width As Double = Double.NaN) As IEnumerable(Of Reference)
             Dim mat As New Matrix(lst)
             If width = Double.NaN Then width = mat.Width
             mat.Resize(Int(height), Int(width))
@@ -3745,16 +3745,14 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Multiply two matrices
         ''' </summary>
-        ''' <param name="a"></param>
-        ''' <param name="b"></param>
         ''' <returns></returns>
-        Public Function Multiply(a As IEnumerable(Of Reference), b As IEnumerable(Of Reference)) As Object
-            Dim ma As New Matrix(a)
-            Dim mb As New Matrix(b)
+        Public Function Multiply(A As List(Of Reference), B As List(Of Reference)) As Object
+            Dim ma As New Matrix(A)
+            Dim mb As New Matrix(B)
             Try
                 Return ma.Multiply(mb).GetValue()
             Catch ex As MathException
-                Return Dot(a, b)
+                Return Dot(A, B)
             End Try
         End Function
 
@@ -3762,7 +3760,7 @@ Namespace Calculator.Evaluator
         ''' Get the dot product of two column vectors
         ''' </summary>
         ''' <returns></returns>
-        Public Function Dot(a As IEnumerable(Of Reference), b As IEnumerable(Of Reference)) As Object
+        Public Function Dot(a As List(Of Reference), b As List(Of Reference)) As Object
             Return New Matrix(a).Dot(New Matrix(b))
         End Function
 
@@ -3770,16 +3768,16 @@ Namespace Calculator.Evaluator
         ''' Get the cross product of two column vectors
         ''' </summary>
         ''' <returns></returns>
-        Public Function Cross(a As IEnumerable(Of Reference), b As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
-            Return DirectCast(New Matrix(a).Cross(New Matrix(b)).GetValue(), IEnumerable(Of Reference))
+        Public Function Cross(a As List(Of Reference), b As List(Of Reference)) As List(Of Reference)
+            Return DirectCast(New Matrix(a).Cross(New Matrix(b)).GetValue(), List(Of Reference))
         End Function
 
         ''' <summary>
         ''' Multiply a matrix and a scalar
         ''' </summary>
         ''' <returns></returns>
-        Public Function Scale(a As IEnumerable(Of Reference), b As Object) As IEnumerable(Of Reference)
-            Return DirectCast(New Matrix(a).MultiplyScalar(b).GetValue(), IEnumerable(Of Reference))
+        Public Function Scale(a As List(Of Reference), b As Object) As List(Of Reference)
+            Return DirectCast(New Matrix(a).MultiplyScalar(b).GetValue(), List(Of Reference))
         End Function
 
         ''' <summary>
@@ -3802,17 +3800,37 @@ Namespace Calculator.Evaluator
         ''' Find the determinant of a matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function Det(a As IEnumerable(Of Reference)) As Object
-            Return New Matrix(a).Determinant()
+        Public Function Det(A As IEnumerable(Of Reference)) As Object
+            Return New Matrix(A).Determinant()
         End Function
 
         ''' <summary>
-        ''' Find the reduced row echelon form of a matrix
+        ''' Find the reduced row echelon form of a matrix, optionally specifying an augmented matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function Rref(mat As IEnumerable(Of Reference), Optional aug As IEnumerable(Of Reference) = Nothing) As IEnumerable(Of Reference)
+        Public Function Rref(mat As IEnumerable(Of Reference),
+                             Optional aug As List(Of Reference) = Nothing) As IEnumerable(Of Reference)
             If Not aug Is Nothing Then
-                Return DirectCast(New Matrix(mat).Rref(New Matrix(aug)).GetValue(), IEnumerable(Of Reference))
+                Dim augmented As Matrix = New Matrix(aug)
+                Dim augmented2 As Matrix = New Matrix(aug)
+                Dim ret As IEnumerable(Of Reference) =
+                    DirectCast(New Matrix(mat).Rref(augmented).GetValue(), IEnumerable(Of Reference))
+
+                Try
+                    For i As Integer = 0 To augmented.Height - 1
+                        For j As Integer = 0 To augmented.Width - 1
+                            Dim val As Object = augmented.GetCoord(i, j)
+                            If TypeOf val Is BigDecimal Then
+                                augmented2.SetCoord(i, j, SigFig(CDbl(DirectCast(val, BigDecimal).Truncate(10)), 9))
+                            Else
+                                augmented2.SetCoord(i, j, val)
+                            End If
+                        Next
+                    Next
+                Catch ex As Exception
+                    MsgBox(ex.ToString)
+                End Try
+                Return ret
             Else
                 Return DirectCast(New Matrix(mat).Rref().GetValue(), IEnumerable(Of Reference))
             End If
@@ -3822,25 +3840,24 @@ Namespace Calculator.Evaluator
         ''' Find the norm of a column vector (gives the square of the magnitude)
         ''' </summary>
         ''' <returns></returns>
-        Public Function Norm(a As IEnumerable(Of Reference)) As Object
-            Return New Matrix(a).Norm()
+        Public Function Norm(A As IEnumerable(Of Reference)) As Object
+            Return New Matrix(A).Norm()
         End Function
 
         ''' <summary>
         ''' Find the transpose of a matrix
         ''' </summary>
-        ''' <param name="a"></param>
         ''' <returns></returns>
-        Public Function Transpose(a As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
-            Return DirectCast(New Matrix(a).Transpose().GetValue(), IEnumerable(Of Reference))
+        Public Function Transpose(A As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(A).Transpose().GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
         ''' Find the inverse of a matrix
         ''' </summary>
         ''' <returns></returns>
-        Public Function Inverse(a As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
-            Return DirectCast(New Matrix(a).Inverse().GetValue(), IEnumerable(Of Reference))
+        Public Function Inverse(A As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
+            Return DirectCast(New Matrix(A).Inverse().GetValue(), IEnumerable(Of Reference))
         End Function
 
         ''' <summary>
@@ -3850,6 +3867,251 @@ Namespace Calculator.Evaluator
         ''' <returns></returns>
         Public Function IdentityMatrix(rows As Double, Optional cols As Double = -1) As IEnumerable(Of Reference)
             Return DirectCast(ObjectTypes.Matrix.IdentityMatrix(Int(rows), Int(cols)).GetValue(), IEnumerable(Of Reference))
+        End Function
+
+        ''' <summary>
+        ''' Checks if the given matrix is an identity matrix
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function IsIdentityMatrix(A As List(Of Object)) As Boolean
+            Return New Matrix(A).IsIdentityMatrix()
+        End Function
+
+        ''' <summary>
+        ''' Get the identity matrix (filled with zeros except the primary diagonal which is filled with ones) 
+        ''' with the specified number of rows and cols
+        ''' (Alias for IdentityMatrix(,))
+        ''' </summary>
+        Public Function IMat(rows As Double, Optional cols As Double = -1) As IEnumerable(Of Reference)
+            Return IdentityMatrix(rows, cols)
+        End Function
+
+        ''' <summary>
+        ''' Get the upper triangular part of a matrix
+        ''' </summary>
+        Public Function TriUpper(A As List(Of Reference)) As List(Of Reference)
+            Dim mat As Matrix = DirectCast(New Matrix(A).GetDeepCopy(), Matrix)
+            For i As Integer = 0 To mat.Width - 2
+                For j As Integer = i + 1 To mat.Height - 1
+                    mat.SetCoord(j, i, 0)
+                Next
+            Next
+            Return DirectCast(mat.GetValue(), List(Of Reference))
+        End Function
+
+        ''' <summary>
+        ''' Get the lower triangular part of a matrix
+        ''' </summary>
+        Public Function TriLower(A As List(Of Reference)) As List(Of Reference)
+            Dim mat As Matrix = DirectCast(New Matrix(A).GetDeepCopy(), Matrix)
+            For i As Integer = 1 To mat.Width - 1
+                For j As Integer = 0 To i - 1
+                    mat.SetCoord(j, i, 0)
+                Next
+            Next
+            Return DirectCast(mat.GetValue(), List(Of Reference))
+        End Function
+
+        ''' <summary>
+        ''' Get a new matrix, replacing all instances of val with the item with the same coordinates in B
+        ''' </summary>
+        Public Function Mask(A As List(Of Reference), B As List(Of Reference),
+                             Optional value As Object = 0.0) As List(Of Reference)
+
+            If TypeOf value Is Double Then value = CType(CDbl(value), BigDecimal)
+
+            Dim matA As Matrix = DirectCast(New Matrix(A).GetDeepCopy(), Matrix)
+            Dim matB As Matrix = New Matrix(B)
+            For i As Integer = 0 To matA.Width - 1
+                For j As Integer = 0 To matA.Height - 1
+                    Dim val As Object = matA.GetCoord(j, i)
+                    Dim match As Boolean = False
+
+                    If TypeOf val Is Double Then
+                        If CmpDbl(CDbl(val), CDbl(DirectCast(value, BigDecimal))) = 0 Then match = True
+                    ElseIf TypeOf val Is BigDecimal Then
+                        If DirectCast(val, BigDecimal).Truncate(10) =
+                                DirectCast(value, BigDecimal) Then match = True
+                    ElseIf TypeOf val Is Numerics.Complex AndAlso TypeOf value Is Numerics.Complex
+                        If CmpDbl(DirectCast(val, Numerics.Complex).Magnitude,
+                                      DirectCast(value, Numerics.Complex).Magnitude) = 0 Then match = True
+                    End If
+
+                    If match AndAlso j < matB.Height AndAlso i < matB.Width Then
+                        matA.SetCoord(j, i, matB.GetCoordRef(j, i))
+                    End If
+                Next
+            Next
+
+            Return DirectCast(matA.GetValue(), List(Of Reference))
+        End Function
+
+
+        ''' <summary>
+        ''' Checks if a matrix is symmetric
+        ''' </summary>
+        Public Function IsSymmetric(A As List(Of Reference)) As Boolean
+            Dim mat As Matrix = DirectCast(New Matrix(A).GetDeepCopy(), Matrix)
+            For i As Integer = 1 To mat.Width - 1
+                For j As Integer = 0 To i - 1
+                    Dim val As Object = mat.GetCoord(j, i)
+                    If TypeOf val Is Double Then
+                        If CmpDbl(CDbl(val), 0) <> 0 Then Return False
+                    ElseIf TypeOf val Is BigDecimal
+                        If DirectCast(val, BigDecimal).Truncate(10) <> 0 Then Return False
+                    ElseIf TypeOf val Is Numerics.Complex
+                        If CmpDbl(DirectCast(val, Numerics.Complex).Magnitude, 0) <> 0 Then Return False
+                    End If
+                Next
+            Next
+            Return True
+        End Function
+
+        ''' <summary>
+        ''' Checks if a matrix is upper trangular
+        ''' </summary>
+        Public Function IsUpperTri(A As List(Of Reference)) As Boolean
+            Dim mat As Matrix = DirectCast(New Matrix(A).GetDeepCopy(), Matrix)
+            For i As Integer = 0 To mat.Width - 2
+                For j As Integer = i + 1 To mat.Height - 1
+                    Dim val As Object = mat.GetCoord(j, i)
+                    If TypeOf val Is Double Then
+                        If CmpDbl(CDbl(val), 0) <> 0 Then Return False
+                    ElseIf TypeOf val Is BigDecimal
+                        If DirectCast(val, BigDecimal).Truncate(10) <> 0 Then Return False
+                    ElseIf TypeOf val Is Numerics.Complex
+                        If CmpDbl(DirectCast(val, Numerics.Complex).Magnitude, 0) <> 0 Then Return False
+                    End If
+                Next
+            Next
+            Return True
+        End Function
+
+        ''' <summary>
+        ''' Checks if a matrix is lower trangular
+        ''' </summary>
+        Public Function IsLowerTri(A As List(Of Reference)) As Boolean
+            Dim mat As Matrix = DirectCast(New Matrix(A).GetDeepCopy(), Matrix)
+            For i As Integer = 1 To mat.Width - 1
+                For j As Integer = 0 To i - 1
+                    Dim vall As Object = mat.GetCoord(j, i)
+                    Dim valu As Object = mat.GetCoord(mat.Height - j - 1, mat.Width - i - 1)
+
+                    If TypeOf vall Is Double Then
+                        If CmpDbl(CDbl(vall), CDbl(valu)) <> 0 Then Return False
+                    ElseIf TypeOf vall Is BigDecimal
+                        If DirectCast(vall, BigDecimal).Truncate(10) <> DirectCast(valu, BigDecimal).Truncate(10) Then Return False
+                    ElseIf TypeOf vall Is Numerics.Complex
+                        If CmpDbl(DirectCast(vall, Numerics.Complex).Magnitude, DirectCast(valu, Numerics.Complex).Magnitude) <> 0 Then Return False
+                    End If
+                Next
+            Next
+            Return True
+        End Function
+
+        ''' <summary>
+        ''' Get a basis for the null space of a matrix, obtained with rref
+        ''' </summary>
+        Public Function NullSpace(lst As List(Of Reference)) As List(Of Reference)
+            Dim mat As New Matrix(lst)
+            mat = mat.Rref()
+
+            Dim ker As New Matrix(mat.Width, mat.Width - mat.Height + 1)
+
+            For i As Integer = 0 To ker.Width - 1
+                For j As Integer = 0 To ker.Width - 1
+                    Dim val As Object = mat.GetCoord(i, j + ker.Width)
+                    If TypeOf val Is Double Then
+                        ker.SetCoord(i, j, -CDbl(val))
+                    ElseIf TypeOf val Is BigDecimal Then
+                        ker.SetCoord(i, j, -DirectCast(val, BigDecimal))
+                    ElseIf TypeOf val Is Numerics.Complex
+                        ker.SetCoord(i, j, -DirectCast(val, Numerics.Complex))
+                    End If
+                Next
+            Next
+
+            For i As Integer = 0 To ker.Width - 1
+                ker.SetCoord(ker.Width + i, i, 1)
+            Next
+
+            Return DirectCast(ker.GetValue(), List(Of Reference))
+        End Function
+
+        ''' <summary>
+        ''' Get the main diagonal of a matrix
+        ''' </summary>
+        Public Function Diag(lst As List(Of Reference)) As List(Of Reference)
+            Dim mat As New Matrix(lst)
+            Dim diagonal As New List(Of Reference)(Math.Min(mat.Width, mat.Height))
+            For i As Integer = 0 To Math.Min(mat.Width - 1, mat.Height - 1)
+                diagonal.Add(mat.GetCoordRef(i, i))
+            Next
+            Return diagonal
+        End Function
+
+        ''' <summary>
+        ''' Get a square matrix with the specified vector as its diagonal
+        ''' </summary>
+        Public Function AsDiag(lst As List(Of Reference)) As List(Of Reference)
+            Dim vec As New Matrix(lst)
+            If vec.Width <> 1 Then Throw New EvaluatorException("Matrix is not a column vector")
+
+            Dim mat As New Matrix(vec.Height, vec.Height)
+            For i As Integer = 0 To vec.Height - 1
+                mat.SetCoord(i, i, vec.GetCoordRef(i, 0))
+            Next
+            Return DirectCast(mat.GetValue(), List(Of Reference))
+        End Function
+
+        ''' <summary>
+        ''' Fill a collection with 0's
+        ''' </summary>
+        Public Function Fill(lst As Object, Optional val As Object = 0) As Object
+            If TypeOf lst Is IEnumerable(Of Reference) Then
+                For Each r As Reference In DirectCast(lst, IEnumerable(Of Reference))
+                    Fill(r, val)
+                Next
+            ElseIf TypeOf lst Is IDictionary(Of Reference, Reference) Then
+                For Each r As Reference In DirectCast(lst, IDictionary(Of Reference, Reference)).Keys
+                    Fill(r, val)
+                Next
+
+            ElseIf TypeOf lst Is Reference Then
+                DirectCast(lst, Reference).SetValue(val)
+            Else
+                lst = val
+            End If
+
+            Return lst
+        End Function
+
+        ''' <summary>
+        ''' Create a new vector with the specified length, filled with the specified number (default 0)
+        ''' </summary>
+        ''' <param name="len"></param>
+        ''' <param name="fill"></param>
+        ''' <returns></returns>
+        Public Function Vector(len As Double, Optional fill As Object = 0) As IEnumerable(Of Reference)
+            Dim vec As New List(Of Reference)(Int(len))
+            For i As Integer = 1 To Int(len)
+                vec.Add(New Reference(fill))
+            Next
+            Return vec
+        End Function
+
+        ''' <summary>
+        ''' Get a column vector with the specified length filled with ones.
+        ''' </summary>
+        Public Function Ones(len As Double) As IEnumerable(Of Reference)
+            Return Vector(len, 1)
+        End Function
+
+        ''' <summary>
+        ''' Get a column vector with the specified length filled with zeros.
+        ''' </summary>
+        Public Function Zeros(len As Double) As IEnumerable(Of Reference)
+            Return Vector(len)
         End Function
 
         ''' <summary>
@@ -4501,14 +4763,14 @@ Namespace Calculator.Evaluator
         ''' Get the path of the cantus executable
         ''' </summary>
         Public Function CantusPath() As String
-            Return Application.ExecutablePath
+            Return Environment.GetCommandLineArgs(0)
         End Function
 
         ''' <summary>
         ''' Get the system's path separator (/ for linux, \ for windows)
         ''' </summary>
         Public Function GetPathSeparator() As String
-            Return IO.Path.DirectorySeparatorChar
+            Return Path.DirectorySeparatorChar
         End Function
 
         ' GUI Only
@@ -4733,19 +4995,46 @@ Namespace Calculator.Evaluator
         End Function
 
         Public Function Ver() As String
-            Return My.Application.Info.Version.ToString()
+            Return Environment.Version.ToString()
         End Function
 
+        Private Function HKLM_GetString(path As String, key As String) As String
+            Try
+                Dim rk As RegistryKey = Registry.LocalMachine.OpenSubKey(path)
+                If rk Is Nothing Then
+                    Return ""
+                End If
+                Return DirectCast(rk.GetValue(key), String)
+            Catch
+                Return ""
+            End Try
+        End Function
+
+
         Public Function OsName() As String
-            Return My.Computer.Info.OSFullName()
+            Dim ProductName As String = HKLM_GetString("SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName")
+            Dim CSDVersion As String = HKLM_GetString("SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CSDVersion")
+            If ProductName <> "" Then
+                Return Convert.ToString(ProductName + If(CSDVersion <> "", Convert.ToString(" ") & CSDVersion, ""))
+            End If
+            Return "Unknown"
         End Function
 
         Public Function OsVer() As String
-            Return My.Computer.Info.OSVersion()
+            Return Environment.OSVersion.ToString()
         End Function
 
         ' removed functions, kept to prevent upgrade errors. Will be deleted eventually
         Public Function OMode(Optional val As String = "") As String
+            ' older names to maintain compatibility
+            Select Case val
+                Case "MathO"
+                    val = "Math"
+                Case "SciO"
+                    val = "Scientific"
+                Case "LineO"
+                    val = "Raw"
+            End Select
             _Output(val)
             Return "Removed in version 2.1. Please use _Output() instead"
         End Function

@@ -78,9 +78,26 @@ Namespace Calculator.Evaluator
             Public Property Args As List(Of String)
 
             ''' <summary>
-            ''' Types of the function arguments (NI)
+            ''' Get the minimum number of arguments required
             ''' </summary>
-            Public Property ArgTypes As List(Of String)
+            ''' <returns></returns>
+            Public ReadOnly Property MinArgsCount As Integer
+                Get
+                    For i As Integer = 0 To Defaults.Count - 1
+                        If Not (Defaults(i) Is Nothing OrElse
+                            (TypeOf Defaults(i) Is Double AndAlso Double.IsNaN(CDbl(Defaults(i)))) OrElse
+                            (TypeOf Defaults(i) Is BigDecimal AndAlso DirectCast(Defaults(i), BigDecimal).IsUndefined)) Then
+                            Return i
+                        End If
+                    Next
+                    Return Defaults.Count
+                End Get
+            End Property
+
+            ''' <summary>
+            ''' Default values of the function arguments
+            ''' </summary>
+            Public Property Defaults As List(Of Object)
 
             ''' <summary>
             ''' Gets the scope in which this function was declared
@@ -103,7 +120,7 @@ Namespace Calculator.Evaluator
             Public Sub New(name As String, body As String,
                            args As List(Of String), declaredScope As String,
                             Optional modifiers As IEnumerable(Of String) = Nothing,
-                           Optional argTypes As List(Of String) = Nothing,
+                           Optional defaults As List(Of Object) = Nothing,
                            Optional returnType As String = "")
                 If modifiers Is Nothing Then
                     Me.Modifiers = New HashSet(Of String)()
@@ -114,11 +131,11 @@ Namespace Calculator.Evaluator
                 Me.Body = body
                 Me.Args = args
                 Me.DeclaringScope = declaredScope
-                Me.ArgTypes = argTypes
-                If Me.ArgTypes Is Nothing Then
-                    Me.ArgTypes = New List(Of String)
+                Me.Defaults = defaults
+                If Me.Defaults Is Nothing Then
+                    Me.Defaults = New List(Of Object)
                     For Each a As String In Me.Args
-                        Me.ArgTypes.Add("")
+                        Me.Defaults.Add(Double.NaN)
                     Next
                 End If
                 Me.ReturnType = returnType
@@ -1136,6 +1153,7 @@ Namespace Calculator.Evaluator
                        Optional prevAns As List(Of ObjectTypes.EvalObjectBase) = Nothing,
                        Optional vars As Dictionary(Of String, Variable) = Nothing,
                        Optional userFunctions As Dictionary(Of String, UserFunction) = Nothing,
+                       Optional userClasses As Dictionary(Of String, UserClass) = Nothing,
                        Optional baseLine As Integer = 0,
                        Optional scope As String = ROOT_NAMESPACE, Optional reloadDefault As Boolean = True
                        )
@@ -1581,7 +1599,7 @@ Namespace Calculator.Evaluator
                         ' do not save if undefined
                         If (Not TypeOf lastVal Is BigDecimal OrElse Not DirectCast(lastVal, BigDecimal).IsUndefined) AndAlso
                              (Not TypeOf lastVal Is Double OrElse Not Double.IsNaN(CDbl(lastVal))) Then
-                            PrevAns.Add(ObjectTypes.DetectType(lastVal))
+                            PrevAns.Add(DetectType(lastVal, True))
                         End If
                     End If
                     Return lastVal
@@ -1687,7 +1705,7 @@ Namespace Calculator.Evaluator
         Public Function EvalExprRaw(expr As String, Optional noSaveAns As Boolean = False,
                                     Optional conditionMode As Boolean = False) As Object
 
-            Dim oldmode As Boolean = conditionMode
+            Dim oldmode As Boolean = OperatorRegistar.ConditionMode
             OperatorRegistar.ConditionMode = conditionMode
             Dim resultObj As ObjectTypes.EvalObjectBase = ResolveOperators(Tokenize(expr))
             OperatorRegistar.ConditionMode = oldmode
@@ -1840,8 +1858,8 @@ Namespace Calculator.Evaluator
                                     ' for same precedence, just continue
                                     Continue For
                                 Else
-                                    ' for different precedence, we'll have to evaluate separately and join back
-                                    tokens.SetObject(opid, ObjectTypes.DetectType(EvalExprRaw(
+                                    ' for different precedence, we'll have to evaluate separately and join
+                                    tokens.SetObject(opid, DetectType(EvalExprRaw(
                                                                   tokens.OperatorAt(opid + 1).Signs(0).ToString() &
                                                                   tokens.ObjectAt(opid + 1).ToString(), True)))
                                     tokens.RemoveAt(opid + 1)
@@ -1853,14 +1871,14 @@ Namespace Calculator.Evaluator
                             ' if we're not passing by reference then "dereference" the references before passing
                             If Not op.ByReference Then
                                 If Not prevtoken.Object Is Nothing Then
-                                    If TypeOf prevtoken.Object Is ObjectTypes.Reference Then
-                                        prevtoken.Object = CType(prevtoken.Object, ObjectTypes.Reference).ResolveObj()
+                                    If TypeOf prevtoken.Object Is Reference Then
+                                        prevtoken.Object = CType(prevtoken.Object, Reference).ResolveObj()
                                     End If
                                     prevtoken.Object = prevtoken.Object.GetDeepCopy()
                                 End If
                                 If Not curtoken.Object Is Nothing Then
-                                    If TypeOf curtoken.Object Is ObjectTypes.Reference Then
-                                        curtoken.Object = CType(curtoken.Object, ObjectTypes.Reference).ResolveObj()
+                                    If TypeOf curtoken.Object Is Reference Then
+                                        curtoken.Object = CType(curtoken.Object, Reference).ResolveObj()
                                     End If
                                     curtoken.Object = curtoken.Object.GetDeepCopy()
                                 End If
@@ -2219,42 +2237,47 @@ Namespace Calculator.Evaluator
 
             Dim argLst As New List(Of Object)
             If Not baseObj Is Nothing Then
-                If TypeOf baseObj Is ObjectTypes.Tuple Then ' if a tuple is used, supplies multiple parameters
-                    For Each r As ObjectTypes.Reference In CType(CType(baseObj, ObjectTypes.Tuple).GetValue(),
-                        ObjectTypes.Reference())
-                        argLst.Add(r.Resolve())
+                If TypeOf baseObj Is Tuple Then ' if a tuple is used, supplies multiple parameters
+                    For Each r As Reference In CType(CType(baseObj, Tuple).GetValue(),
+                        Reference())
+                        If TypeOf DirectCast(r, Reference).GetRefObject() Is Reference Then
+                            argLst.Add(r)
+                        Else
+                            argLst.Add(r.GetValue())
+                        End If
                     Next
                 ElseIf TypeOf baseObj Is Reference
-                    If TypeOf DirectCast(baseObj, Reference).ResolveObj() Is Reference Then
+                    If TypeOf DirectCast(baseObj, Reference).GetRefObject() Is Reference Then
                         argLst.Add(baseObj)
                     Else
-                        argLst.Add(DirectCast(baseObj, Reference).Resolve())
+                        argLst.Add(DirectCast(baseObj, Reference).GetValue())
                     End If
                 Else
                     argLst.Add(baseObj.GetValue())
                 End If
             End If
 
+            Dim tmpEval As Evaluator = Me.ShallowCopy()
             If Not String.IsNullOrWhiteSpace(args) Then
-                Dim tuple As Object = EvalExprRaw("(" & args & ")", True)
-                Dim otherarglst As New List(Of ObjectTypes.Reference)
+                Dim tuple As Object = New Tuple("(" & args & ")", tmpEval, False).GetValue()
+                Dim otherarglst As New List(Of Reference)
 
-                If TypeOf tuple Is ObjectTypes.Reference() Then
-                    otherarglst.AddRange(DirectCast(tuple, ObjectTypes.Reference()))
-                ElseIf TypeOf tuple Is ObjectTypes.Reference
+                If TypeOf tuple Is Reference() Then
+                    otherarglst.AddRange(DirectCast(tuple, Reference()))
+                ElseIf TypeOf tuple Is Reference
                     otherarglst.Add(DirectCast(tuple, ObjectTypes.Reference))
                 Else
                     otherarglst.Add(New ObjectTypes.Reference(tuple))
                 End If
 
-                For Each ref As ObjectTypes.Reference In otherarglst
+                For Each ref As Reference In otherarglst
                     If ref Is Nothing Then
                         argLst.Add(Double.NaN)
                     Else
-                        If TypeOf ref.ResolveObj() Is Reference Then
+                        If TypeOf ref.GetRefObject() Is Reference Then
                             argLst.Add(ref)
                         Else
-                            argLst.Add(ref.Resolve())
+                            argLst.Add(ref.GetValue())
                         End If
                     End If
                 Next
@@ -2281,7 +2304,7 @@ Namespace Calculator.Evaluator
                     If TypeOf ref.ResolveObj() Is Lambda Then
                         ' remove the first item in the arguments, which is set to the lambda expression itself
                         argLst.RemoveAt(0)
-                        Dim lambda As ObjectTypes.Lambda = DirectCast(ref.ResolveObj(), ObjectTypes.Lambda)
+                        Dim lambda As Lambda = DirectCast(ref.ResolveObj(), Lambda)
 
                         If lambda.Args.Count <> argLst.Count Then
                             ' incorrect parameter count
@@ -2289,11 +2312,11 @@ Namespace Calculator.Evaluator
                                                           ": " & lambda.Args.Count & " parameter(s) expected")
                         Else
                             ' execute
-                            Dim tmpEval As Evaluator = ci.UserClass.Evaluator.SubEvaluator()
-                            tmpEval.Scope = ci.InnerScope
-                            tmpEval.SubScope()
-                            tmpEval.SetDefaultVariable(New Reference(ci))
-                            lst.Add(ObjectTypes.DetectType(lambda.Execute(tmpEval, argLst, tmpEval.Scope)))
+                            Dim tmpEvaluator As Evaluator = ci.UserClass.Evaluator.SubEvaluator()
+                            tmpEvaluator.Scope = ci.InnerScope
+                            tmpEvaluator.SubScope()
+                            tmpEvaluator.SetDefaultVariable(New Reference(ci))
+                            lst.Add(DetectType(lambda.Execute(tmpEvaluator, argLst, tmpEvaluator.Scope), True))
                         End If
                         Return lst
                     Else
@@ -2316,27 +2339,28 @@ Namespace Calculator.Evaluator
 
                 ElseIf HasUserFunction(fn) Then ' user functions
 
-                    Dim execResult As Object = ExecUserFunction(fn, argLst)
-                    lst.Add(ObjectTypes.DetectType(execResult, True))
+                    Dim execResult As Object = ExecUserFunction(fn, argLst, tmpEval)
+                    lst.Add(DetectType(execResult, True))
                     Return lst
 
                 ElseIf HasVariable(fn) AndAlso ObjectTypes.Lambda.IsType(GetVariableRef(fn).ResolveObj()) Then
                     ' lambda expression/function pointer
 
-                    Dim lambda As ObjectTypes.Lambda = DirectCast(GetVariableRef(fn).ResolveObj(), ObjectTypes.Lambda)
+                    Dim lambda As ObjectTypes.Lambda = DirectCast(GetVariableRef(fn).ResolveObj(), Lambda)
                     If lambda.Args.Count <> argLst.Count Then
                         Throw New EvaluatorException(fn & ": " & lambda.Args.Count & " parameter(s) expected" &
                                                     If(Not baseObj Is Nothing, "(self-referring resolution on)", ""))
                     Else
-                        lst.Add(ObjectTypes.DetectType(lambda.Execute(Me, argLst)))
+                        lst.Add(DetectType(lambda.Execute(Me, argLst), True))
                     End If
                     Return lst
 
                 Else ' internal functions defined in EvalFunctions
-                    lst.Add(ObjectTypes.DetectType(ExecInternalFunction(fn, argLst)))
+                    lst.Add(DetectType(ExecInternalFunction(fn, argLst), True))
                     Return lst
                 End If
             Next
+
             Throw New EvaluatorException("Function ''" & str.ToLowerInvariant().Trim() & "'' is undefined")
         End Function
 
@@ -2719,14 +2743,22 @@ Namespace Calculator.Evaluator
                 Throw New EvaluatorException("Error: Invalid Function Name")
             End If
 
+            Dim defaults As New List(Of Object)
+
             For i As Integer = 0 To args.Count - 1
                 args(i) = args(i).Trim()
+                If args(i).Contains("=") Then ' default
+                    defaults.Add(EvalExprRaw(args(i).Substring(args(i).IndexOf("=") + 1).Trim(), True, True))
+                    args(i) = args(i).Remove(args(i).IndexOf("=")).Trim()
+                Else
+                    defaults.Add(Double.NaN)
+                End If
                 If Not IsValidIdentifier(args(i)) Then Throw New EvaluatorException("Invalid Argument Name: " & args(i))
             Next
 
             If String.IsNullOrWhiteSpace(def) Then RemUserFunction(name)
 
-            UserFunctions(scope & SCOPE_SEP & name) = New UserFunction(name, def, args, scope, modifiers)
+            UserFunctions(scope & SCOPE_SEP & name) = New UserFunction(name, def, args, scope, modifiers, defaults)
         End Sub
 
         ''' <summary>
@@ -2832,8 +2864,9 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Execute the function with the given arguments
         ''' </summary>
-        ''' <param name="name"></param>
-        Public Function ExecUserFunction(name As String, args As IEnumerable(Of Object)) As Object
+        ''' <param name="optionalArgsSrcEval">The evaluator to get optional arguments from, as variables</param>
+        Public Function ExecUserFunction(name As String, args As IEnumerable(Of Object),
+                                         Optional optionalArgsSrcEval As Evaluator = Nothing) As Object
             Dim scope As String = _Scope
             name = RemoveRedundantScope(name, scope)
             If HasUserFunction(name) Then
@@ -2858,12 +2891,26 @@ Namespace Calculator.Evaluator
 
                 Dim argnames As List(Of String) = uf.Args
 
-                If args.Count = argnames.Count Then
+                If args.Count <= argnames.Count AndAlso (args.Count = argnames.Count OrElse
+                    args.Count >= uf.MinArgsCount AndAlso Not optionalArgsSrcEval Is Nothing) Then
                     For i As Integer = 0 To args.Count - 1
                         tmpEval.SetVariable(argnames(i), args(i))
                     Next
+
+                    ' named args
+                    If args.Count < argnames.Count Then
+                        For i As Integer = args.Count To argnames.Count - 1
+                            If Not optionalArgsSrcEval.GetVariableRef(argnames(i)) Is Nothing AndAlso
+                                 optionalArgsSrcEval.GetVariableRef(argnames(i)).ToString() <> "Undefined" Then
+                                tmpEval.SetVariable(argnames(i), optionalArgsSrcEval.GetVariableRef(argnames(i)))
+                            Else
+                                tmpEval.SetVariable(argnames(i), uf.Defaults(i))
+                            End If
+                        Next
+                    End If
                 Else
-                    Throw New EvaluatorException(name & ": " & argnames.Count & " parameter(s) expected")
+                    Throw New EvaluatorException(name & " Then :
+                                 " & argnames.Count & " parameter(s) expected")
                 End If
 
                 ' execute the function in a new scope
@@ -2882,10 +2929,14 @@ Namespace Calculator.Evaluator
                     End If
                 End Try
             Else
-                Throw New EvaluatorException("User Function " & name & " is Undefined")
+                Throw New EvaluatorException("User Function " & name & " Is Undefined")
             End If
         End Function
 
+        ''' <summary>
+        ''' Execute an internal function with the given name and arguments
+        ''' </summary>
+        ''' <returns></returns>
         Public Function ExecInternalFunction(name As String, args As List(Of Object)) As Object
             Dim info As Reflection.MethodInfo
 
@@ -2914,10 +2965,10 @@ Namespace Calculator.Evaluator
 
                         If paramTypeName.Contains("`") Then paramTypeName = paramTypeName.Remove(paramTypeName.IndexOf("`"))
 
-                        Throw New EvaluatorException(name.ToLowerInvariant() & ": Parameter " & maxParamCt + 1 &
-                                                    ": '" & paramTypeName & "' Type Expected")
+                        Throw New EvaluatorException(name.ToLowerInvariant() & " Parameter " & maxParamCt + 1 &
+                                                    " '" & paramTypeName & "' Type Expected")
                     End If
-                    maxParamCt += 1
+                            maxParamCt += 1
                 Next
 
                 If parameterMismatch OrElse args.Count > maxParamCt Then
@@ -3256,12 +3307,13 @@ Namespace Calculator.Evaluator
             Next
 
             Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
+            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
 
             ' if no scope name is given then give it the next anonymous scope
             If subScopeName = "" Then subScopeName = GetAnonymousSubscope()
 
             Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode,
-                                 Me.SpacesPerTab, Me.ExplicitMode, Me.PrevAns, varsCopy, funcCopy,
+                                 Me.SpacesPerTab, Me.ExplicitMode, Me.PrevAns, varsCopy, funcCopy, classesCopy,
                                           lineNumber, _Scope & SCOPE_SEP & subScopeName, False)
             For Each import As String In GetAllAccessibleScopes()
                 res.Import(import)
@@ -3271,7 +3323,7 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' Create an identical copy of the evaluator containing COPIES of the same user functions, variables, and functions
+        ''' Create an identical copy of the evaluator containing deep copies of the same user functions, variables, and functions
         ''' </summary>
         ''' <returns></returns>
         Public Function DeepCopy(Optional scopeName As String = "") As Evaluator
@@ -3289,9 +3341,38 @@ Namespace Calculator.Evaluator
             End Try
 
             Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
+            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
 
             Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
-                                 Me.PrevAns, varsCopy, funcCopy, Me._baseLine, If(scopeName = "", Me._Scope, scopeName), False)
+                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine, If(scopeName = "", Me._Scope, scopeName), False)
+            For Each import As String In GetAllAccessibleScopes()
+                res.Import(import)
+            Next
+            Return res
+        End Function
+
+        ''' <summary>
+        ''' Create an identical copy of the evaluator containing references to the same user functions, variables, and functions
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function ShallowCopy(Optional scopeName As String = "") As Evaluator
+            Dim varsCopy As New Dictionary(Of String, Variable)
+            Try
+                For Each k As KeyValuePair(Of String, Variable) In
+                    Variables.ToArray()
+                    If TypeOf k.Value.Reference.Resolve() Is Double AndAlso
+                    Double.IsNaN(CDbl(k.Value.Reference.Resolve())) Then Continue For ' skip undefined vars
+                    varsCopy.Add(k.Key, New Variable(k.Value.Name, k.Value.
+                                                     Reference, k.Value.DeclaringScope))
+                Next
+            Catch
+            End Try
+
+            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
+            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
+
+            Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
+                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine, If(scopeName = "", Me._Scope, scopeName), False)
             For Each import As String In GetAllAccessibleScopes()
                 res.Import(import)
             Next

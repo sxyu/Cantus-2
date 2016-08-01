@@ -48,9 +48,6 @@ Namespace Calculator
 
         <STAThread>
         Public Sub Main()
-            EmbeddedAssembly.Load("Cantus.ScintillaNET.dll", "ScintillaNET.dll")
-            AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
-
             ' setup folders, etc.
             Dim requiredFolders As String() = {"plugin", "include", "init"}
             For Each dir As String In requiredFolders
@@ -128,6 +125,9 @@ Namespace Calculator
                 SendKeys.SendWait("{ENTER}")
                 Exit Sub
             Else
+                EmbeddedAssembly.Load("Cantus.ScintillaNET.dll", "ScintillaNET.dll")
+                AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
+
                 '  open form
                 Application.EnableVisualStyles()
                 Application.Run(FrmCalc)

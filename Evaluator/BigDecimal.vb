@@ -142,7 +142,7 @@ Namespace Calculator.Evaluator.CommonTypes
 
         Private Shared Function NumberOfDigits(value As BigInteger) As Integer
             ' do not count the sign
-            'return (value * value.Sign).ToString().Length;
+            If value = 0 Then Return 1 ' deal with zero (prevent Log(0))
             ' faster version
             Return CInt(Math.Ceiling(BigInteger.Log10(value * value.Sign)))
         End Function
@@ -391,7 +391,6 @@ Namespace Calculator.Evaluator.CommonTypes
 
         Public Overrides Function GetHashCode() As Integer
             Return (Mantissa.GetHashCode() * 397) Xor Exponent
-
         End Function
 
         Public Function CompareTo(obj As Object) As Integer Implements IComparable.CompareTo

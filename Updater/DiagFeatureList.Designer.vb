@@ -106,7 +106,7 @@ Partial Class DiagFeatureList
         Me.btnLicense.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
         Me.btnLicense.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLicense.ForeColor = System.Drawing.Color.White
-        Me.btnLicense.Location = New System.Drawing.Point(816, 0)
+        Me.btnLicense.Location = New System.Drawing.Point(816, -1)
         Me.btnLicense.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
         Me.btnLicense.Name = "btnLicense"
         Me.btnLicense.Size = New System.Drawing.Size(128, 50)
@@ -139,11 +139,12 @@ Partial Class DiagFeatureList
         Me.lbNote.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.lbNote.AutoSize = True
         Me.lbNote.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lbNote.Location = New System.Drawing.Point(12, 15)
+        Me.lbNote.Location = New System.Drawing.Point(12, 14)
         Me.lbNote.Name = "lbNote"
-        Me.lbNote.Size = New System.Drawing.Size(531, 20)
+        Me.lbNote.Size = New System.Drawing.Size(577, 20)
         Me.lbNote.TabIndex = 0
-        Me.lbNote.Text = "Tip: Click the version number in the setings view to reopen this window later on"
+        Me.lbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" &
+    "is dialog"
         '
         'btnClose
         '

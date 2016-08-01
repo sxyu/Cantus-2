@@ -253,7 +253,7 @@ Namespace Calculator.Evaluator
             Register(New Statement({"return"}, AddressOf StatementReturn, False))
             Register(New Statement({"break"}, AddressOf StatementBreak, False,
                      New Dictionary(Of String, Boolean) From {{"break", False}}))
-            Register(New Statement({"continue"}, AddressOf StatementBreak, False,
+            Register(New Statement({"continue"}, AddressOf StatementContinue, False,
                      New Dictionary(Of String, Boolean) From {{"continue", False}}))
 
             ' use to declare local scoped variables or override global variable names
@@ -486,6 +486,7 @@ Namespace Calculator.Evaluator
             Dim result As New StatementResult(Double.NaN)
             Dim ct As Integer = 0
 
+            ' for ... in ...
             If arg.ToLowerInvariant().Contains(" in ") Then
                 Dim vars As String() = arg.Remove(arg.ToLowerInvariant().IndexOf(" in ")).Split(","c)
                 For i As Integer = 0 To vars.Length - 1
@@ -537,7 +538,8 @@ Namespace Calculator.Evaluator
                     End Select
                     ct += 1
                 Next
-            ElseIf arg.ToLowerInvariant().Contains(" to ") Then
+
+            ElseIf arg.ToLowerInvariant().Contains(" to ") Then ' for ... = ... to ... step ...
                 Dim varname As String = arg.Remove(
                                       arg.ToLowerInvariant().IndexOf(" to "))
 
@@ -548,22 +550,22 @@ Namespace Calculator.Evaluator
 
                 Dim lim As BigDecimal = 0
                 Dim delta As BigDecimal = 1
-                If lim < var Then delta = -1
 
                 If arg.ToLowerInvariant.Contains(" step ") AndAlso
                     arg.ToLowerInvariant().IndexOf(" to ") < arg.ToLowerInvariant().IndexOf(" step ") Then
 
                     delta = New Number(CType(_eval.EvalExprRaw(arg.Substring(arg.ToLowerInvariant().IndexOf(" step ") + 6), True), BigDecimal)).BigDecValue()
                     lim = New Number(CType(_eval.EvalExprRaw(arg.Remove(arg.ToLowerInvariant().IndexOf(" step ")).
-                                        Substring(arg.ToLowerInvariant().IndexOf(" to ") + 4), True), BigDecimal)).BigDecValue()
+                                        Substring(arg.ToLowerInvariant().IndexOf(" to ") + 4), True), BigDecimal)).BigDecValue().Truncate()
                 Else
                     lim = New Number(CType(_eval.EvalExprRaw(arg.Substring(arg.ToLowerInvariant().IndexOf(" to ") + 4), True), BigDecimal)).
-                        BigDecValue()
+                        BigDecValue().Truncate()
                 End If
 
                 If delta = 0 Then Throw New SyntaxException("Step of 0 not allowed")
 
                 For i As BigDecimal = var To lim Step delta
+                    i = i.Truncate(10)
                     If i = lim Then Exit For ' exclusive
                     If LimitLoops AndAlso ct > LoopLimit Then Throw New EvaluatorException("Loop limit reached")
                     If _die Then Throw New EvaluatorException("")

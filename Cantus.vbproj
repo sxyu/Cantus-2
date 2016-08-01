@@ -102,7 +102,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Alex Yu Self-Signed.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -132,7 +133,7 @@
     <Import Include="System.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CantusLexer.vb" />
+    <Compile Include="ScintillaForCantus.vb" />
     <Compile Include="EmbeddedAssembly.vb" />
     <Compile Include="Main.vb" />
     <Compile Include="Evaluator\BigDecimal.vb" />
@@ -234,7 +235,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Alex Yu Self-Signed.pfx" />
     <None Include="app.config" />
     <None Include="bin\Release\ver" />
     <None Include="LICENSE" />

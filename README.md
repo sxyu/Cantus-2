@@ -317,6 +317,7 @@ The `start(path)` and `startwait(path)` functions facilitate adding new function
 
 Cantus also supports basic OOP: you can create classes and use inheritance.
 Example of some classes:
+```python
 class pet
 	name = ""
 	function init(name)
@@ -335,7 +336,7 @@ class cat : pet
 myCat = cat("Alex")
 alert(myCat) # alerts Cat name: Alex
 alert(myCat.speak()) # alerts Meow!
-
+```
 
 
 ### License

@@ -22,8 +22,16 @@ Namespace Calculator
 
         Private Const RELEASE_TYPE As String = "Alpha"
 
-        ' the main evaluator
+        ''' <summary>
+        ''' The main evaluator
+        ''' </summary>
         Private _eval As Evaluator.Evaluator
+
+        ''' <summary>
+        ''' The path to the file currently open in the editor. 
+        ''' If no file is open, stores an empty string.
+        ''' </summary>
+        Public ReadOnly Property File As String = ""
 
         ' expression memory (up/down arrow keys)
         Private _prevExp As New List(Of String)
@@ -52,6 +60,11 @@ Namespace Calculator
         ''' </summary>
         Private _cantusLexer As New CantusLexer()
 
+        ''' <summary>
+        ''' Counter used for lazy evaluation of expressions
+        ''' </summary>
+        Private _editCt As Integer = 0
+
 #End Region
 #Region "Form Events"
         Private Sub FrmCalc_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -60,7 +73,6 @@ Namespace Calculator
             If My.Settings.ReqUpgrade Then
                 My.Settings.Upgrade()
                 My.Settings.ReqUpgrade = False
-                Me.Hide()
                 _displayUpdateMessage = True
             End If
 
@@ -95,9 +107,6 @@ Namespace Calculator
                 End If
             Next
 
-            ' delay remaining tasks to avoid flickering
-            TmrLoad.Start()
-
             def = def.Trim().Trim({ControlChars.Quote, "'"c})
             If opengraph Then
                 Graphing.FrmGraph.tb.Text = "0"
@@ -111,63 +120,6 @@ Namespace Calculator
             Else
                 tb.Text = def
             End If
-
-            ' scintilla setup
-            tb.StyleResetDefault()
-
-            With tb.Styles(Style.Default)
-                .BackColor = Color.FromArgb(34, 34, 34)
-                .Font = "Consolas"
-                .Size = 13
-            End With
-
-            tb.SetSelectionBackColor(True, Color.GhostWhite)
-            tb.SetSelectionForeColor(True, Color.Black)
-
-            tb.StyleClearAll()
-            tb.WrapMode = WrapMode.Word
-
-            tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
-            tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
-            tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
-            tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
-            tb.Styles(CantusLexer.StyleNumber).ForeColor = Color.FromArgb(255, 205, 34)
-            tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
-            tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
-
-            tb.Lexer = Lexer.Container
-
-            tb.IndentWidth = 4
-
-            With tb.Styles(Style.LineNumber)
-                .BackColor = Color.FromArgb(34, 34, 34)
-                .ForeColor = Color.DarkGray
-                .Size = 13
-            End With
-
-            tb.IndentationGuides = IndentView.Real
-
-            tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
-            tb.Styles(Style.BraceLight).BackColor = Color.LightGray
-
-            tb.Styles(Style.BraceBad).ForeColor = Color.White
-            tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
-
-            tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
-
-            Dim margin As Margin = tb.Margins(0)
-            margin.Width = 45
-
-            tb.TabWidth = 4
-
-            tb.ScrollWidth = tb.Width - 2 * margin.Width - 5
-
-            tb.AutoCIgnoreCase = True
-        End Sub
-
-        Dim ct As Integer = 0
-        Public Sub TmrLoad_Tick(sender As Object, e As EventArgs) Handles TmrLoad.Tick
-            TmrLoad.Stop()
 
             ' setup keyboards
             Me.RSnap = My.Settings.ROskSnap
@@ -211,7 +163,6 @@ Namespace Calculator
                     diag.ShowDialog()
                 End Using
 
-                Me.Show()
                 tb.Focus()
             End If
 
@@ -245,6 +196,8 @@ Namespace Calculator
                 btnAngleRepr.Text = "Gradian"
             End If
 
+            ' set up scintilla
+            SetTheme("dark")
 
             ' check for update
             If My.Settings.AutoUpdate Then
@@ -279,70 +232,21 @@ Namespace Calculator
                 If RSnap Then Keyboards.OskRight.Show()
             End If
         End Sub
-        Private Sub tb_KeyUp(sender As Object, e As KeyEventArgs) Handles tb.KeyUp
-            Try
-                If e.KeyCode = Keys.Enter And e.Alt Then
-                    EvaluateExpr()
-                ElseIf e.KeyCode = Keys.F12
-                    Using diag As New SaveFileDialog()
-                        diag.Filter = "Cantus Script (.can)|*.can"
-                        diag.RestoreDirectory = True
-                        diag.Title = "Save To Script"
-                        If diag.ShowDialog = DialogResult.OK Then
-                            IO.File.WriteAllText(diag.FileName, tb.Text, System.Text.Encoding.UTF8)
-                        End If
-                    End Using
 
-                ElseIf e.KeyCode = Keys.F11
-                    Using diag As New OpenFileDialog()
-                        diag.Filter = "Cantus Script (.can)|*.can"
-                        diag.RestoreDirectory = True
-                        diag.Multiselect = False
-                        diag.Title = "Open Script"
-                        If diag.ShowDialog = DialogResult.OK Then
-                            tb.Text = IO.File.ReadAllText(diag.FileName).Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).
-                                Replace(vbLf, vbNewLine) ' fix line endings
-                        End If
-                    End Using
-
-                ElseIf e.KeyCode = Keys.F6
-                    Using diag As New OpenFileDialog()
-                        diag.Filter = "Cantus Script (.can)|*.can"
-                        diag.RestoreDirectory = True
-                        diag.Multiselect = False
-                        diag.Title = "Import Script"
-                        If diag.ShowDialog = DialogResult.OK Then
-                            _eval.Load(diag.FileName, False, True)
-                        End If
-                    End Using
-
-                ElseIf e.KeyCode = Keys.F5
-                    Using diag As New OpenFileDialog()
-                        diag.Filter = "Cantus Script (.can)|*.can"
-                        diag.RestoreDirectory = True
-                        diag.Multiselect = False
-                        diag.Title = "Run Script"
-                        If diag.ShowDialog = DialogResult.OK Then
-                            _eval.EvalAsync(IO.File.ReadAllText(diag.FileName))
-                        End If
-                    End Using
-                End If
-            Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground, "File Read/Save Operation Failed")
-            End Try
-        End Sub
-
+        Dim _ignoreNextKey As Boolean = False
         Private Sub FrmCalc_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, tb.KeyUp
-            If e.Control AndAlso e.Alt Then
+            If e.KeyCode = Keys.Enter And e.Alt Then
+                EvaluateExpr()
+            ElseIf e.Control AndAlso e.Alt Then
                 If e.KeyCode = Keys.P Then
                     btnAngleRep_Click(btnAngleRepr, New EventArgs)
                 ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
                     If e.KeyCode = Keys.D Then
-                        _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree
+                        _eval.AngleMode = eAngleRepresentation.Degree
                     ElseIf e.KeyCode = Keys.R
-                        _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Radian
+                        _eval.AngleMode = eAngleRepresentation.Radian
                     Else
-                        _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Gradian
+                        _eval.AngleMode = eAngleRepresentation.Gradian
                     End If
                     btnAngleRepr.Text = _eval.AngleMode.ToString()
                     EvaluateExpr()
@@ -350,7 +254,7 @@ Namespace Calculator
                     btnOMode_Click(btnOutputFormat, New EventArgs)
                 ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.L Then
                     If e.KeyCode = Keys.M Then
-                        _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math
+                        _eval.OutputFormat = eOutputFormat.Math
                         e.SuppressKeyPress = True
                     ElseIf e.KeyCode = Keys.L
                         _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Raw
@@ -365,93 +269,21 @@ Namespace Calculator
             End If
         End Sub
 
-        'Private Sub tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
-        '    ' auto-insert brackets
-        '    If e.KeyChar = "(" OrElse e.KeyChar = "[" OrElse e.KeyChar = "{" Then
-        '        Dim endSign As Char = ")"c
-        '        If e.KeyChar = "["c Then
-        '            endSign = "]"c
-        '        ElseIf e.KeyChar = "{"c
-        '            endSign = "}"c
-        '        End If
-
-        '        Dim start As Integer = tb.SelectionStart
-        '        Dim ct As Integer = 0
-
-        '        For Each c As Char In tb.Text
-        '            If c = e.KeyChar Then
-        '                ct += 1
-        '            ElseIf c = endSign
-        '                ct -= 1
-        '            End If
-        '        Next
-
-        '        tb.Text = tb.Text.Remove(tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, e.KeyChar)
-        '        If ct >= 0 Then
-        '            tb.Text = tb.Text.Insert(start + 1, endSign)
-        '        End If
-        '        tb.SelectionStart = start + 1
-        '        e.Handled = True
-
-        '    ElseIf e.KeyChar = ")" OrElse e.KeyChar = "]" OrElse e.KeyChar = "}"
-        '        tb.Focus()
-        '        Dim openBr As Char = "("c
-        '        Dim closeBr As Char = e.KeyChar
-
-        '        If e.KeyChar = "]" Then
-        '            openBr = "["c
-        '        ElseIf e.KeyChar = "}" Then
-        '            openBr = "{"c
-        '        End If
-
-        '        Dim start As Integer = tb.SelectionStart
-        '        tb.Text = tb.Text.Remove(tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart)
-
-        '        Dim insertStart As Boolean = True
-        '        For i As Integer = Math.Min(start, tb.Text.Length - 1) To 0 Step -1
-        '            If tb.Text(i) = closeBr Then
-        '                Exit For
-        '            ElseIf tb.Text(i) = openBr
-        '                insertStart = False
-        '                Exit For
-        '            End If
-        '        Next
-        '        If insertStart Then
-        '            For i As Integer = start To -1 Step -1
-        '                If i = -1 OrElse
-        '                    tb.Text.Length > i AndAlso (tb.Text(i) = ControlChars.Lf OrElse tb.Text(i) = ControlChars.Cr) Then
-        '                    tb.Text = tb.Text.Insert(i + 1, openBr)
-        '                    Exit For
-        '                End If
-        '            Next
-        '            tb.Text = tb.Text.Insert(start + 1, closeBr)
-        '        Else
-        '            tb.Text = tb.Text.Insert(start, closeBr)
-        '        End If
-        '        tb.SelectionStart = start + 2
-        '        tb.SelectionEnd = start + 2
-        '        e.Handled = True
-        '    End If
-        'End Sub
+        Private Sub FrmCalc_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
+            If _ignoreNextKey Then
+                _ignoreNextKey = False
+                e.Handled = True
+            End If
+        End Sub
 #End Region
 #Region "Shared functions"
         ''' <summary>
         ''' Send the event to asynchroneously evalute the expression
         ''' </summary>
-        Private Sub EvaluateExpr()
-            tb.Focus()
-            lbResult.Text = "="
+        Private Sub EvaluateExpr(Optional noSaveAns As Boolean = False)
+            _eval.EvalAsync(tb.Text, noSaveAns) ' evaluate & wait for event
 
-            ' evaluae
-            _eval.EvalAsync(tb.Text)
-        End Sub
-
-        Private Sub EvalComplete(sender As Object, result As Object)
-            If lbResult.InvokeRequired Then
-                lbResult.BeginInvoke(Sub() EvalComplete(sender, result))
-            Else
-                Dim ans As String = result.ToString()
-
+            If Not noSaveAns Then
                 ' save previous expressions 
                 If _prevExp.Count = 0 OrElse _prevExp(_prevExp.Count - 1) <> tb.Text Then
                     _prevExp.Add(tb.Text)
@@ -464,6 +296,14 @@ Namespace Calculator
                     _prevExp.RemoveAt(0) 'max expressions
                     _curExpId -= 1
                 End If
+            End If
+        End Sub
+
+        Private Sub EvalComplete(sender As Object, result As Object)
+            If lbResult.InvokeRequired Then
+                lbResult.BeginInvoke(Sub() EvalComplete(sender, result))
+            Else
+                Dim ans As String = result.ToString()
 
                 ' display answer
                 lbResult.Text = AutoTrimDisplayText(ans)
@@ -501,6 +341,72 @@ Namespace Calculator
             Return res
         End Function
 
+
+        Public Sub SetTheme(name As String)
+            tb.StyleResetDefault()
+
+            Select Case name
+                Case "dark"
+                    With tb.Styles(Style.Default)
+                        .BackColor = Color.FromArgb(34, 34, 34)
+                        .Font = "Consolas"
+                        .Size = 13
+                    End With
+
+                    tb.SetSelectionBackColor(True, Color.GhostWhite)
+                    tb.SetSelectionForeColor(True, Color.Black)
+
+                    tb.StyleClearAll()
+                    tb.WrapMode = WrapMode.Word
+
+                    tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
+
+                    tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
+                    tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
+
+                    tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
+                    tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
+
+                    tb.Styles(CantusLexer.StyleNumber).ForeColor = Color.FromArgb(255, 205, 34)
+                    tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
+
+                    tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
+
+                    tb.Lexer = Lexer.Container
+
+                    tb.IndentWidth = 4
+
+                    With tb.Styles(Style.LineNumber)
+                        .BackColor = Color.FromArgb(34, 34, 34)
+                        .ForeColor = Color.DarkGray
+                        .Size = 13
+                    End With
+
+                    tb.IndentationGuides = IndentView.Real
+
+                    tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
+                    tb.Styles(Style.BraceLight).BackColor = Color.LightGray
+
+                    tb.Styles(Style.BraceBad).ForeColor = Color.White
+                    tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
+
+                    tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
+
+                    Dim margin As Margin = tb.Margins(0)
+                    margin.Width = 45
+
+                    tb.TabWidth = 4
+
+                    tb.ScrollWidth = tb.Width - 2 * margin.Width - 5
+
+                    tb.AutoCIgnoreCase = True
+            End Select
+        End Sub
+
+
+        ''' <summary>
+        ''' Save all settings to the init.can file
+        ''' </summary>
         Public Sub SaveSettings()
             My.Settings.ROskSnap = Me.RSnap
             My.Settings.LOskSnap = Me.LSnap
@@ -533,11 +439,12 @@ Namespace Calculator
         End Sub
 #End Region
 #Region "main buttons"
-        Private Sub btnCalc_click(sender As Object, e As System.EventArgs) Handles btnCalc.Click
+        Private Sub btnCalc_Click(sender As Object, e As System.EventArgs) Handles btnEval.Click
+            tb.Focus()
             EvaluateExpr()
         End Sub
 
-        Private Sub btnGraph_click(sender As Object, e As EventArgs) Handles btnGraph.Click
+        Private Sub btnGraph_Click(sender As Object, e As EventArgs) Handles btnGraph.Click
             ' open graphing window
             tb.Focus()
             If Graphing.FrmGraph.Visible Then
@@ -548,9 +455,79 @@ Namespace Calculator
             btnMin.PerformClick()
         End Sub
 
+        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
+            tb.Focus()
+            Using diag As New DiagFunctions
+                If diag.ShowDialog() = DialogResult.OK Then
+                    Dim start As Integer = tb.SelectionStart
+                    tb.Text = tb.Text.Remove(
+                                tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, diag.Result)
+
+                    If diag.Result.Contains("(") Then
+                        tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
+                    Else
+                        tb.SelectionStart = start + diag.Result.Count
+                    End If
+                End If
+            End Using
+        End Sub
+
+        ''' <summary>
+        ''' Open a 'save as' dialogue to save as another file
+        ''' </summary>
+        Private Sub OpenSaveAs()
+            Using diag As New SaveFileDialog()
+                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.RestoreDirectory = True
+                diag.Title = "Save As Script"
+                If diag.ShowDialog = DialogResult.OK Then
+                    IO.File.WriteAllText(diag.FileName, tb.Text, Encoding.UTF8)
+                    _File = diag.FileName ' set new file name
+                End If
+            End Using
+        End Sub
+
+        ''' <summary>
+        ''' Open the 'open script' dialog to open a script
+        ''' </summary>
+        Private Sub Open()
+            Using diag As New OpenFileDialog()
+                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.RestoreDirectory = True
+                diag.Multiselect = False
+                diag.Title = "Open Script"
+                If diag.ShowDialog = DialogResult.OK Then
+                    tb.Text = IO.File.ReadAllText(diag.FileName).Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).
+                                Replace(vbLf, vbNewLine) ' fix line endings
+                    _File = diag.FileName
+                End If
+            End Using
+        End Sub
+
+        ''' <summary>
+        ''' Save the file; if the editor is not linked to any file, opens the save as dialogue.
+        ''' </summary>
+        Private Sub Save()
+            If String.IsNullOrEmpty(Me.File) Then
+                OpenSaveAs()
+            Else
+                IO.File.WriteAllText(File, tb.Text, Encoding.UTF8)
+            End If
+        End Sub
+
+        Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+            tb.Focus()
+            Save()
+            SaveSettings()
+        End Sub
+
+        Private Sub btnOpen_Click(sender As Object, e As EventArgs) Handles btnOpen.Click
+            tb.Focus()
+            Open()
+        End Sub
 #Region "textbox & labels"
 
-        Private Sub tb_keydown(sender As Object, e As KeyEventArgs) Handles tb.KeyDown
+        Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles tb.KeyDown
             If e.Alt Then
                 If e.KeyCode = Keys.Up Then
                     If _curExpId > 1 And _prevExp.Count > 1 Then
@@ -572,18 +549,52 @@ Namespace Calculator
                     End If
                 ElseIf e.KeyCode = Keys.F Then
                     btnFunctions.PerformClick()
+                ElseIf e.KeyCode = Keys.S Then
+                    btnSettings.PerformClick()
+                ElseIf e.KeyCode = Keys.G Then
+                    btnGraph.PerformClick()
                 End If
+            ElseIf e.KeyCode = Keys.F12
+                OpenSaveAs()
+            ElseIf e.KeyCode = Keys.S AndAlso e.Control
+                _ignoreNextKey = True
+                Save()
+            ElseIf e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.O AndAlso e.Control
+                _ignoreNextKey = True
+                Open()
+
+            ElseIf e.KeyCode = Keys.F6
+                Using diag As New OpenFileDialog()
+                    diag.Filter = "Cantus Script (.can)|*.can"
+                    diag.RestoreDirectory = True
+                    diag.Multiselect = False
+                    diag.Title = "Import Script"
+                    If diag.ShowDialog = DialogResult.OK Then
+                        _eval.Load(diag.FileName, False, True)
+                    End If
+                End Using
+
+            ElseIf e.KeyCode = Keys.F5
+                Using diag As New OpenFileDialog()
+                    diag.Filter = "Cantus Script (.can)|*.can"
+                    diag.RestoreDirectory = True
+                    diag.Multiselect = False
+                    diag.Title = "Run Script"
+                    If diag.ShowDialog = DialogResult.OK Then
+                        _eval.EvalAsync(IO.File.ReadAllText(diag.FileName))
+                    End If
+                End Using
             End If
 
         End Sub
 
-        Private Sub lbResult_textchanged(sender As Object, e As EventArgs) Handles lbResult.TextChanged
+        Private Sub lbResult_TextChanged(sender As Object, e As EventArgs) Handles lbResult.TextChanged
             Keyboards.OskRight.lbResult.Text = lbResult.Text
         End Sub
 #End Region
 #End Region
 #Region "memory ui"
-        Private Sub btnSettings_click(sender As Object, e As EventArgs) Handles btnSettings.Click
+        Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
             If Not pnlSettings.Visible Then
                 If pnlSettings.BackgroundImage Is Nothing Then pnlSettings.BackgroundImage = New Bitmap(pnlSettings.Width, pnlSettings.Height)
 
@@ -601,7 +612,7 @@ Namespace Calculator
             End If
         End Sub
 
-        Private Sub btnLetters_click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btnT.Click, btnM.Click
+        Private Sub btnLetters_Click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btnT.Click, btnM.Click
             Dim btn As Button = DirectCast(sender, Button)
             SetVariable(btn.Tag.ToString()(0), _eval.GetLastAns())
             UpdateLetterTT()
@@ -616,7 +627,7 @@ Namespace Calculator
         ''' </summary>
         Private Sub UpdateLetterTT()
             For Each c As Control In pnlSettings.Controls
-                If c.Tag.ToString() = "-" Then Continue For
+                If c.Tag Is Nothing OrElse c.Tag.ToString() = "-" Then Continue For
 
                 Dim val As String
                 Try
@@ -716,7 +727,7 @@ Namespace Calculator
             If RSnap Then Keyboards.OskRight.Hide()
         End Sub
 
-        Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles btnGraph.Enter, btnSettings.Enter, btnCalc.Enter, btnMin.Enter, btnClose.Enter
+        Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles btnGraph.Enter, btnSettings.Enter, btnEval.Enter, btnMin.Enter, btnClose.Enter
             tb.Focus()
         End Sub
         Private Sub pnlMemLtrs_VisibleChanged(sender As Object, e As EventArgs) Handles pnlSettings.VisibleChanged
@@ -859,6 +870,7 @@ Namespace Calculator
         Private Sub pnlSettings_Click(sender As Object, e As EventArgs) Handles pnlSettings.Click, lbSettings.Click
             btnSettings.PerformClick()
         End Sub
+
         Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles lbAbout.Click, btnLog.Click
             Using diag As New DiagFeatureList()
                 diag.ShowDialog()
@@ -897,48 +909,32 @@ Namespace Calculator
         End Sub
 
         Private Sub tb_TextChanged(sender As Object, e As EventArgs) Handles tb.TextChanged
-            ct = 2
+            _editCt = 2
             TmrReCalc.Start()
         End Sub
 
         Private Sub TmrReCalc_Tick(sender As Object, e As EventArgs) Handles TmrReCalc.Tick
-            If ct <= 0 Then
+            If _editCt <= 0 Then
                 TmrReCalc.Stop()
-                btnCalc.PerformClick()
+                If Not String.IsNullOrEmpty(File) Then Save() ' save if file available
+                EvaluateExpr(True)
             End If
-            ct -= 1
+            _editCt -= 1
         End Sub
 
         Private Sub btnExplicit_Click(sender As Object, e As EventArgs) Handles btnExplicit.Click
             _eval.ExplicitMode = Not _eval.ExplicitMode
             If _eval.ExplicitMode Then
-                btnExplicit.BackColor = btnCalc.BackColor
-                btnExplicit.ForeColor = btnCalc.ForeColor
-                btnExplicit.FlatAppearance.MouseOverBackColor = btnCalc.FlatAppearance.MouseOverBackColor
-                btnExplicit.FlatAppearance.MouseDownBackColor = btnCalc.FlatAppearance.MouseDownBackColor
+                btnExplicit.BackColor = btnEval.BackColor
+                btnExplicit.ForeColor = btnEval.ForeColor
+                btnExplicit.FlatAppearance.MouseOverBackColor = btnEval.FlatAppearance.MouseOverBackColor
+                btnExplicit.FlatAppearance.MouseDownBackColor = btnEval.FlatAppearance.MouseDownBackColor
             Else
                 btnExplicit.BackColor = btnX.BackColor
                 btnExplicit.ForeColor = btnX.ForeColor
                 btnExplicit.FlatAppearance.MouseOverBackColor = btnX.FlatAppearance.MouseOverBackColor
                 btnExplicit.FlatAppearance.MouseDownBackColor = btnX.FlatAppearance.MouseDownBackColor
             End If
-        End Sub
-
-        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
-            tb.Focus()
-            Using diag As New DiagFunctions
-                If diag.ShowDialog() = DialogResult.OK Then
-                    Dim start As Integer = tb.SelectionStart
-                    tb.Text = tb.Text.Remove(
-                                tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, diag.Result)
-
-                    If diag.Result.Contains("(") Then
-                        tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
-                    Else
-                        tb.SelectionStart = start + diag.Result.Count
-                    End If
-                End If
-            End Using
         End Sub
 
         Private Sub btnLog_MouseEnter(sender As Object, e As EventArgs) Handles btnLog.MouseEnter
@@ -1021,9 +1017,11 @@ Namespace Calculator
         End Sub
 
         Private Sub tb_CharAdded(sender As Object, e As CharAddedEventArgs) Handles tb.CharAdded
+
             ' autocomplete
             Dim currentPos As Integer = tb.CurrentPosition
             Dim wordStartPos As Integer = tb.CurrentPosition
+
             While wordStartPos - 1 >= 0 AndAlso (
                   tb.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso tb.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse
                   tb.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso tb.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse
@@ -1040,9 +1038,7 @@ Namespace Calculator
 
             If lenEntered > 0 Then
 
-
-                Dim curLineText As String = tb.GetTextRange(tb.Lines(tb.CurrentLine).Position,
-                                                            tb.CurrentPosition - tb.Lines(tb.CurrentLine).Position)
+                Dim curLineText As String = tb.Lines(tb.CurrentLine).Text
                 Dim keyword As String = curLineText
 
                 Dim blockKwd As String() = ("class function namespace").Split(" "c)
@@ -1050,20 +1046,23 @@ Namespace Calculator
                 If keyword.Contains(" ") Then keyword = keyword.Remove(keyword.IndexOf(" "))
 
                 If blockKwd.Contains(keyword) Then Return ' do not autocomplete class, function, namespace names 
+
                 ' do not autocomplete variable declarations unless after keyword
-                If (keyword = "let" OrElse keyword = "global") AndAlso Not curLineText.Contains("=") Then Return
+                If (keyword = "let" OrElse keyword = "global") AndAlso
+                    Not curLineText.Contains("=") Then Return
+
                 Dim keywords As String() = "function global let private public static".Split(" "c)
 
                 Dim autoCList As New List(Of String)
 
-                If keywords.Contains(keyword) Then
+                If keywords.Contains(keyword) AndAlso Not curLineText.Contains("=") Then
                     autoCList.AddRange(keywords)
                 Else
                     Dim nsMode As Boolean = enteredWord.Contains(".")
 
                     If Not nsMode Then
                         autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
-                                   "let static global " &
+                                   "let static global ref " &
                                    "switch case run try catch finally while until with in step to choose").Split(" "c))
 
                         autoCList.Add(ROOT_NAMESPACE)
@@ -1095,26 +1094,34 @@ Namespace Calculator
                                     Dim ci As ClassInstance = DirectCast(v.Reference.Resolve(), ClassInstance)
                                     For Each f As String In ci.Fields.Keys
                                         autoCList.Add(CombineScope(partialName,
-                                                   f & If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "()", "")))
+                                                   f &
+                                            If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" &
+                                                  If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
+                                              "")))
                                     Next
                                 End If
                             Else
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(v.FullName, _eval.Scope))
+                            autoCList.Add(RemoveRedundantScope(v.FullName, _eval.Scope) &
+                                          If(TypeOf v.Value Is Lambda, "(" &
+                                          If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
                         End If
                     Next
 
+                    ' internal functions
                     Dim info As MethodInfo() = GetType(InternalFunctions).GetMethods(
-                    Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
-                Reflection.BindingFlags.DeclaredOnly)
+                        Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
+                        Reflection.BindingFlags.DeclaredOnly)
 
                     For Each fn As MethodInfo In info
                         If nsMode AndAlso enteredWord.StartsWith("cantus") Then
-                            autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "()")
+                            autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" &
+                                          If(fn.GetParameters().Count = 0, "", "_") & ")")
                         ElseIf Not nsMode
-                            autoCList.Add(fn.Name.ToLower() & "()")
+                            autoCList.Add(fn.Name.ToLower() & "(" &
+                                          If(fn.GetParameters().Count = 0, "", "_") & ")")
                         End If
                     Next
 
@@ -1131,14 +1138,17 @@ Namespace Calculator
 
                         If nsMode Then ' filter namespace
                             If fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(fn.FullName)
+                                autoCList.Add(fn.FullName & "(" &
+                                          If(fn.Args.Count = 0, "", "_") & ")")
                             ElseIf RemoveRedundantScope(fn.FullName, _eval.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope))
+                                autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "(" &
+                                          If(fn.Args.Count = 0, "", "_") & ")")
                             Else
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "()")
+                            autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "(" &
+                                          If(fn.Args.Count = 0, "", "_") & ")")
                         End If
                     Next
 
@@ -1155,17 +1165,19 @@ Namespace Calculator
 
                         If nsMode Then ' filter namespace
                             If uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(uc.FullName)
+                                autoCList.Add(uc.FullName & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                             ElseIf RemoveRedundantScope(uc.FullName, _eval.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope))
+                                autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope) & "(" &
+                                              If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                             Else
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope) & "()")
+                            autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope) & "(" &
+                                          If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                         End If
                     Next
-                    autoCList.Sort()
+                    autoCList.Sort(New AutoCompleteComparer())
                 End If
 
                 If autoCList.Count = 0 Then Return
@@ -1176,29 +1188,39 @@ Namespace Calculator
             If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse
                e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
 
-                Dim curText As String = tb.Lines(tb.CurrentLine).Text
+                Dim startPos As Integer
+                Dim curLine As Integer = tb.CurrentLine
+                Dim curText As String = tb.Lines(curLine).Text
+
+                While curLine > 0 AndAlso tb.Lines(curLine - 1).Text.EndsWith(" _") ' connect _
+                    curLine -= 1
+                    curText = tb.Lines(curLine).Text.Remove(tb.Lines(curLine).Text.Length - 2) & curText
+                End While
+                startPos = tb.Lines(curLine).Position
+
                 Dim startBr As Char = ChrW(e.Char)
                 Dim endBr As Char
                 Dim reverse As Boolean = False
-
-                If e.Char = AscW("("c) Then
-                    endBr = ")"c
-                ElseIf e.Char = AscW("["c) Then
-                    endBr = "]"c
-                ElseIf e.Char = AscW("{"c) Then
-                    endBr = "}"c
-                ElseIf e.Char = AscW(")"c)
-                    endBr = "("c
-                    reverse = True
-                ElseIf e.Char = AscW("]"c)
-                    endBr = "["c
-                    reverse = True
-                ElseIf e.Char = AscW("}"c)
-                    endBr = "{"c
-                    reverse = True
-                End If
-
                 Dim ct As Integer = 0
+
+                Select Case ChrW(e.Char)
+                    Case "("c
+                        endBr = ")"c
+                    Case "["c
+                        endBr = "]"c
+                    Case "{"c
+                        endBr = "}"c
+                    Case ")"c
+                        endBr = "("c
+                        reverse = True
+                    Case "]"c
+                        endBr = "["c
+                        reverse = True
+                    Case "}"c
+                        endBr = "{"c
+                        reverse = True
+                End Select
+
                 For i As Integer = 0 To curText.Length - 1
                     If curText(i) = startBr Then ct += 1
                     If curText(i) = endBr Then ct -= 1
@@ -1206,7 +1228,7 @@ Namespace Calculator
 
                 If ct > 0 Then
                     If reverse Then
-                        Dim len As Integer = tb.CurrentPosition - tb.Lines(tb.CurrentLine).Position
+                        Dim len As Integer = tb.CurrentPosition - startPos
                         If curText.Length > len Then curText = curText.Remove(len)
 
                         Dim braceList As Char() = {"["c, "("c, "{"c}
@@ -1215,7 +1237,7 @@ Namespace Calculator
                             New List(Of Integer)({0}), New List(Of Integer)({0})}
                         Dim pos As Integer = 0
 
-                        For i As Integer = 0 To curText.Length - 1
+                        For i As Integer = 0 To curText.Length - 2
                             For j As Integer = 0 To braceList.Count - 1
                                 If braceList(j) = curText(i) Then
                                     lvl(j).Add(i + 1)
@@ -1229,21 +1251,32 @@ Namespace Calculator
                             pos = Math.Max(lvl(j)(lvl(j).Count - 1), pos)
                         Next
 
-                        tb.InsertText(tb.Lines(tb.CurrentLine).Position + pos, endBr.ToString())
+                        tb.InsertText(tb.Lines(tb.CurrentLine).Position + pos, endBr)
                     Else
-                        tb.InsertText(tb.CurrentPosition, endBr.ToString())
+                        tb.InsertText(tb.CurrentPosition, endBr)
                     End If
                 End If
+
+            ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) Then
+
+                Dim curText As String = tb.Lines(tb.CurrentLine).Text
+                Dim ct As Boolean = False
+
+                For i As Integer = 0 To curText.Length - 1
+                    If curText(i) = ChrW(e.Char) Then ct = Not ct
+                Next
+
+                If ct Then tb.InsertText(tb.CurrentPosition, ChrW(e.Char))
             End If
         End Sub
 
         Private Sub tb_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs) Handles tb.AutoCCompleted
-            If e.Text.EndsWith(")") Then
+            If e.Text.EndsWith("(_)") Then
+                tb.DeleteRange(tb.SelectionStart - 2, 1)
                 tb.SelectionStart -= 1
                 tb.SelectionEnd -= 1
             End If
         End Sub
-
 #End Region
     End Class
 End Namespace
