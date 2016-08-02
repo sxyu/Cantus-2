@@ -1,17 +1,16 @@
 ﻿Imports System.Text
-Imports Cantus.Calculator.Evaluator.CommonTypes
-Imports Cantus.Calculator.Evaluator.Exceptions
-Imports Cantus.Calculator.Evaluator.ObjectTypes
+Imports Cantus.Evaluator.CommonTypes
+Imports Cantus.Evaluator.Exceptions
 Imports System.Collections.Specialized
 Imports System.Net
 Imports System.Security.Cryptography
 Imports System.IO
 Imports System.Threading
 Imports System.Text.RegularExpressions
-Imports Cantus.Calculator.Evaluator.Evaluator
-Imports Microsoft.Win32
+Imports Cantus.Evaluator.Evaluator
+Imports Cantus.Evaluator.ObjectTypes
 
-Namespace Calculator.Evaluator
+Namespace Evaluator
     ' Define functions here (name is case insensitive)
     ' All public functions are directly accessible when evaluating an expressionession (though may be overrided by user functions)
     ' All private and friend functions are hidden
@@ -2984,35 +2983,42 @@ Namespace Calculator.Evaluator
         End Function
 
         ''' <summary>
-        ''' Add a blank row to the specified matrix
+        ''' Add a vector as a row in the matrix. If no vector is specified, adds a blank row.
         ''' </summary>
-        ''' <param name="lst"></param>
-        ''' <returns></returns>
-        Public Function AddRow(lst As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
-            Dim mat As New Matrix(DirectCast(lst, IEnumerable(Of Reference)))
+        Public Function AddRow(lst As IEnumerable(Of Reference),
+                               Optional vec As IEnumerable(Of Reference) = Nothing) As IEnumerable(Of Reference)
+            Dim mat As New Matrix(lst)
             mat.Resize(mat.Height + 1, mat.Width)
+
+            If Not vec Is Nothing Then
+                For i As Integer = 0 To mat.Width - 1
+                    If vec.Count() > i Then mat.SetCoord(mat.Height - 1, i, vec(i))
+                Next
+            End If
+
             Return DirectCast(mat.GetValue(), IEnumerable(Of Reference))
-            Return lst
         End Function
 
         ''' <summary>
-        ''' Add a blank column to the specified matrix
+        ''' Add a vector as a column in the matrix. If no vector is specified, adds a blank column.
         ''' </summary>
-        ''' <param name="lst"></param>
-        ''' <returns></returns>
-        Public Function AddCol(lst As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
-            Dim mat As New Matrix(DirectCast(lst, IEnumerable(Of Reference)))
+        Public Function AddCol(lst As IEnumerable(Of Reference),
+                               Optional vec As IEnumerable(Of Reference) = Nothing) As IEnumerable(Of Reference)
+            Dim mat As New Matrix(lst)
             mat.Resize(mat.Height, mat.Width + 1)
+
+            If Not vec Is Nothing Then
+                For i As Integer = 0 To mat.Height - 1
+                    If vec.Count() > i Then mat.SetCoord(i, mat.Width - 1, vec(i))
+                Next
+            End If
+
             Return DirectCast(mat.GetValue(), IEnumerable(Of Reference))
-            Return lst
         End Function
 
         ''' <summary>
         ''' Append the second list onto the first list
         ''' </summary>
-        ''' <param name="lst"></param>
-        ''' <param name="val"></param>
-        ''' <returns></returns>
         Public Function Append(lst As IEnumerable(Of Reference), val As IEnumerable(Of Reference)) As IEnumerable(Of Reference)
             If TypeOf lst Is List(Of Reference) Then
                 DirectCast(lst, List(Of Reference)).AddRange(val.ToArray())
@@ -3811,26 +3817,7 @@ Namespace Calculator.Evaluator
         Public Function Rref(mat As IEnumerable(Of Reference),
                              Optional aug As List(Of Reference) = Nothing) As IEnumerable(Of Reference)
             If Not aug Is Nothing Then
-                Dim augmented As Matrix = New Matrix(aug)
-                Dim augmented2 As Matrix = New Matrix(aug)
-                Dim ret As IEnumerable(Of Reference) =
-                    DirectCast(New Matrix(mat).Rref(augmented).GetValue(), IEnumerable(Of Reference))
-
-                Try
-                    For i As Integer = 0 To augmented.Height - 1
-                        For j As Integer = 0 To augmented.Width - 1
-                            Dim val As Object = augmented.GetCoord(i, j)
-                            If TypeOf val Is BigDecimal Then
-                                augmented2.SetCoord(i, j, SigFig(CDbl(DirectCast(val, BigDecimal).Truncate(10)), 9))
-                            Else
-                                augmented2.SetCoord(i, j, val)
-                            End If
-                        Next
-                    Next
-                Catch ex As Exception
-                    MsgBox(ex.ToString)
-                End Try
-                Return ret
+                Return DirectCast(New Matrix(mat).Rref(New Matrix(aug)).GetValue(), IEnumerable(Of Reference))
             Else
                 Return DirectCast(New Matrix(mat).Rref().GetValue(), IEnumerable(Of Reference))
             End If
@@ -4995,12 +4982,13 @@ Namespace Calculator.Evaluator
         End Function
 
         Public Function Ver() As String
-            Return Environment.Version.ToString()
+            Dim versionInfo As FileVersionInfo = FileVersionInfo.GetVersionInfo(CantusPath())
+            Return versionInfo.ProductVersion
         End Function
 
         Private Function HKLM_GetString(path As String, key As String) As String
             Try
-                Dim rk As RegistryKey = Registry.LocalMachine.OpenSubKey(path)
+                Dim rk As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(path)
                 If rk Is Nothing Then
                     Return ""
                 End If

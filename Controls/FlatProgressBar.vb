@@ -1,24 +1,24 @@
-﻿Namespace Calculator.UserControls
+﻿Namespace UI.UserControls
     ''' <summary>
     ''' A flat progress bar
     ''' </summary>
     Public Class FlatProgressBar : Inherits ProgressBar
         ''' <summary>
-        ''' the color of the progress bar
+        ''' The color of the progress bar
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Property ProgressColor As Color
         ''' <summary>
-        ''' text to display on progressbar
+        ''' Text to display on progressbar
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Property ProgressText As String
         ''' <summary>
-        ''' specifies if a border should be drawn
+        ''' Specifies if a border should be drawn
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>

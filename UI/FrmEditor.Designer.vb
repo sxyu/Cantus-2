@@ -1,6 +1,6 @@
-﻿Namespace Calculator
+﻿Namespace UI
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-    Partial Class FrmCalc
+    Partial Class FrmEditor
         Inherits System.Windows.Forms.Form
 
         'Form overrides dispose to clean up the component list.
@@ -24,7 +24,7 @@
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
-            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmCalc))
+            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmEditor))
             Me.tb = New ScintillaNET.Scintilla()
             Me.pnlSettings = New System.Windows.Forms.Panel()
             Me.lbSettings = New System.Windows.Forms.Label()
@@ -45,15 +45,14 @@
             Me.pnlResults = New System.Windows.Forms.Panel()
             Me.btnClose = New System.Windows.Forms.Button()
             Me.btnMin = New System.Windows.Forms.Button()
-            Me.btnGraph = New System.Windows.Forms.Button()
             Me.btnSettings = New System.Windows.Forms.Button()
             Me.TTLetters = New System.Windows.Forms.ToolTip(Me.components)
             Me.btnFunctions = New System.Windows.Forms.Button()
             Me.btnSave = New System.Windows.Forms.Button()
             Me.btnOpen = New System.Windows.Forms.Button()
             Me.pnlTb = New System.Windows.Forms.Panel()
-            Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
             Me.TmrReCalc = New System.Windows.Forms.Timer(Me.components)
+            Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
             Me.pnlSettings.SuspendLayout()
             CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.pnlResults.SuspendLayout()
@@ -357,7 +356,7 @@
             Me.btnEval.Name = "btnEval"
             Me.btnEval.Size = New System.Drawing.Size(56, 52)
             Me.btnEval.TabIndex = 1
-            Me.TTLetters.SetToolTip(Me.btnEval, "Evaluate the expression (Alt+Enter)")
+            Me.TTLetters.SetToolTip(Me.btnEval, "Run & Record (Alt+Enter)")
             Me.btnEval.UseVisualStyleBackColor = False
             '
             'lbResult
@@ -424,26 +423,6 @@
             Me.TTLetters.SetToolTip(Me.btnMin, "Minimize (Win+Down)")
             Me.btnMin.UseVisualStyleBackColor = False
             '
-            'btnGraph
-            '
-            Me.btnGraph.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnGraph.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnGraph.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnGraph.FlatAppearance.BorderSize = 0
-            Me.btnGraph.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnGraph.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnGraph.Font = New System.Drawing.Font("Segoe UI Semilight", 1.0!)
-            Me.btnGraph.ForeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnGraph.Image = CType(resources.GetObject("btnGraph.Image"), System.Drawing.Image)
-            Me.btnGraph.Location = New System.Drawing.Point(675, 96)
-            Me.btnGraph.Name = "btnGraph"
-            Me.btnGraph.Size = New System.Drawing.Size(53, 47)
-            Me.btnGraph.TabIndex = 2
-            Me.btnGraph.TextAlign = System.Drawing.ContentAlignment.TopRight
-            Me.TTLetters.SetToolTip(Me.btnGraph, "Open the graphing window (Alt+G)")
-            Me.btnGraph.UseVisualStyleBackColor = False
-            '
             'btnSettings
             '
             Me.btnSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -456,7 +435,7 @@
             Me.btnSettings.Font = New System.Drawing.Font("Segoe UI Semilight", 1.0!)
             Me.btnSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnSettings.Image = CType(resources.GetObject("btnSettings.Image"), System.Drawing.Image)
-            Me.btnSettings.Location = New System.Drawing.Point(675, 142)
+            Me.btnSettings.Location = New System.Drawing.Point(674, 101)
             Me.btnSettings.Name = "btnSettings"
             Me.btnSettings.Size = New System.Drawing.Size(53, 47)
             Me.btnSettings.TabIndex = 3
@@ -545,15 +524,15 @@
             Me.pnlTb.Size = New System.Drawing.Size(678, 361)
             Me.pnlTb.TabIndex = 0
             '
-            'TmrLoad
-            '
-            Me.TmrLoad.Interval = 50
-            '
             'TmrReCalc
             '
             Me.TmrReCalc.Interval = 150
             '
-            'FrmCalc
+            'TmrLoad
+            '
+            Me.TmrLoad.Interval = 50
+            '
+            'FrmEditor
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
@@ -567,7 +546,6 @@
             Me.Controls.Add(Me.btnSave)
             Me.Controls.Add(Me.pnlResults)
             Me.Controls.Add(Me.pnlTb)
-            Me.Controls.Add(Me.btnGraph)
             Me.Controls.Add(Me.btnSettings)
             Me.Controls.Add(Me.btnEval)
             Me.Controls.Add(Me.btnFunctions)
@@ -577,9 +555,9 @@
             Me.MaximizeBox = False
             Me.MaximumSize = New System.Drawing.Size(728, 400)
             Me.MinimumSize = New System.Drawing.Size(728, 400)
-            Me.Name = "FrmCalc"
+            Me.Name = "FrmEditor"
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
-            Me.Text = "Cantus"
+            Me.Text = "Editor - Cantus"
             Me.TopMost = True
             Me.pnlSettings.ResumeLayout(False)
             Me.pnlSettings.PerformLayout()
@@ -601,7 +579,6 @@
         Friend WithEvents btnM As System.Windows.Forms.Button
         Friend WithEvents btnT As System.Windows.Forms.Button
         Friend WithEvents TTLetters As System.Windows.Forms.ToolTip
-        Friend WithEvents btnGraph As Button
         Friend WithEvents btnClose As Button
         Friend WithEvents pnlTb As Panel
         Friend WithEvents btnMin As Button
@@ -609,7 +586,6 @@
         Friend WithEvents lbAbout As Label
         Friend WithEvents cbAutoUpd As CheckBox
         Friend WithEvents btnUpdate As Button
-        Friend WithEvents TmrLoad As Timer
         Friend WithEvents TmrReCalc As Timer
         Friend WithEvents btnExplicit As Button
         Friend WithEvents btnFunctions As Button
@@ -618,5 +594,6 @@
         Friend WithEvents btnSave As Button
         Friend WithEvents btnOpen As Button
         Friend WithEvents PictureBox1 As PictureBox
+        Friend WithEvents TmrLoad As Timer
     End Class
 End Namespace

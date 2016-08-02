@@ -1,11 +1,11 @@
-﻿Imports Cantus.Calculator.Evaluator.Exceptions
-Imports Cantus.Calculator.Evaluator
-Imports Cantus.Calculator.Evaluator.StatementRegistar.StatementResult
-Imports Cantus.Calculator.Evaluator.ObjectTypes
-Imports Cantus.Calculator.Evaluator.CommonTypes
-Imports Cantus.Calculator.Evaluator.Evaluator
+﻿Imports Cantus.Evaluator.Exceptions
+Imports Cantus.Evaluator
+Imports Cantus.Evaluator.StatementRegistar.StatementResult
+Imports Cantus.Evaluator.ObjectTypes
+Imports Cantus.Evaluator.CommonTypes
+Imports Cantus.Evaluator.Evaluator
 
-Namespace Calculator.Evaluator
+Namespace Evaluator
 
     Public Class StatementRegistar
         Implements IDisposable

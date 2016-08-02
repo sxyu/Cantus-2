@@ -1,8 +1,8 @@
 ﻿Imports System.Text.RegularExpressions
-Imports Cantus.Calculator.Evaluator.CommonTypes
+Imports Cantus.Evaluator.CommonTypes
 Imports ScintillaNET
 
-Namespace Calculator.ScintillaForCantus
+Namespace UI.ScintillaForCantus
     ''' <summary>
     ''' Custom lexer for the Cantus language for Scintilla.Net. Code adapted from Scintilla wiki
     ''' https://github.com/jacobslusser/ScintillaNET/wiki/Custom-Syntax-Highlighting
@@ -81,6 +81,7 @@ Namespace Calculator.ScintillaForCantus
             ' Back up to the line start
             Dim line As Integer = scintilla.LineFromPosition(startPos)
             Dim lineText As String = scintilla.Lines(line).Text
+            Dim initPos As Integer = startPos
             Dim styleText As String = scintilla.GetTextRange(startPos, endPos)
 
             Dim uline As Integer = line
@@ -89,12 +90,20 @@ Namespace Calculator.ScintillaForCantus
                 lineText = scintilla.Lines(uline).Text.Remove(scintilla.Lines(uline).Text.Length - 2) & lineText
             End While
 
+            Dim state As Integer = eState.unknown
+
+            Dim tripleQuote As String = ControlChars.Quote & ControlChars.Quote & ControlChars.Quote
+            If Evaluator.Globals.Evaluator.InternalFunctions.Count(
+                scintilla.GetTextRange(0, scintilla.Lines(line).Position), tripleQuote) Mod 2 = 1 Then
+                state = eState.string
+            End If
+
             startPos = scintilla.Lines(line).Position
 
             Dim length As Integer = 0
-            Dim state As Integer = eState.unknown
 
             Dim c As Char = Nothing
+
             ' Start styling
             scintilla.StartStyling(startPos)
             While startPos < endPos
@@ -136,7 +145,7 @@ Namespace Calculator.ScintillaForCantus
                             If prevC = "\" Then
                                 Dim endChar As Char = If(state = eState.string, ControlChars.Quote, "'"c)
                                 Dim restOfLine As String = lineText
-                                If lineText.Length > startPos + 1 Then restOfLine = lineText.Remove(startPos + 1)
+                                If lineText.Length > startPos - initPos + 1 Then restOfLine = lineText.Remove(startPos - initPos + 1)
 
                                 If _rawString OrElse prevC <> "\" OrElse Not restOfLine.Contains(endChar) Then
                                     state = eState.unknown
@@ -175,11 +184,14 @@ Namespace Calculator.ScintillaForCantus
                                 If lineText.Length > startPos + 1 Then restOfLine = lineText.Remove(startPos + 1).Trim()
 
                                 If not restOfLine.Contains("=") Then
-                                    Dim res As Object = Evaluator.Globals.Evaluator.EvalExprRaw(identifier, True)
-                                    If (Not TypeOf res Is Double OrElse Not Double.IsNaN(CDbl(res))) AndAlso
+                                    Try
+                                        Dim res As Object = Evaluator.Globals.Evaluator.EvalExprRaw(identifier, True)
+                                        If (Not TypeOf res Is Double OrElse Not Double.IsNaN(CDbl(res))) AndAlso
                                        (Not TypeOf res Is BigDecimal OrElse Not DirectCast(res, BigDecimal).IsUndefined) Then
-                                        identifierStyle = StyleIdentifier
-                                    End If
+                                            identifierStyle = StyleIdentifier
+                                        End If
+                                    Catch ' do nothing, display error style
+                                    End Try
                                 End If
                             End If
 

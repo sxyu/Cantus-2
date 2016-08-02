@@ -1,18 +1,23 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.Linq.Expressions
 Imports System.Numerics
 Imports System.Reflection
+Imports System.Reflection.Emit
 Imports System.Text
-Imports Cantus.Calculator.Evaluator
-Imports Cantus.Calculator.Evaluator.CommonTypes
-Imports Cantus.Calculator.Evaluator.Evaluator
-Imports Cantus.Calculator.Evaluator.Exceptions
-Imports Cantus.Calculator.Evaluator.ObjectTypes
+Imports Cantus.Evaluator.CommonTypes
+Imports Cantus.Evaluator.ObjectTypes
+Imports Cantus.Evaluator.Evaluator
+Imports Cantus.Evaluator.Exceptions
 
-Namespace Calculator.Evaluator
+Namespace Evaluator
     ' To define a new type for use with the evaluator, add a class implementing IEvalType in this namespace, 
     '    change the StrDetectType function and add converter functions as necessary
 
     Public Class ObjectTypes
+        ' a pre-computed list of valid object types
+        Private Shared _types As IEnumerable(Of Type) = From t As Type In GetType(ObjectTypes).GetNestedTypes(BindingFlags.Public)
+                                                        Select t Where (Not t.IsInterface AndAlso Not t.IsAbstract AndAlso
+                                                        t.IsSubclassOf(GetType(EvalObjectBase)))
         ''' <summary>
         ''' Automatically converts the object to a IEvalObject
         ''' </summary>
@@ -22,15 +27,12 @@ Namespace Calculator.Evaluator
         Public Shared Function DetectType(obj As Object, Optional identifierAsText As Boolean = False) As EvalObjectBase
             If obj Is Nothing Then Return Nothing ' null
 
-            If obj.GetType().ToString().StartsWith("Cantus.Calculator.Evaluator.ObjectTypes") AndAlso
+            If obj.GetType().ToString().StartsWith("Cantus.Evaluator.ObjectTypes") AndAlso
                 Not obj.GetType().ToString().EndsWith("[]") Then
                 Return DirectCast(obj, EvalObjectBase)
             End If
 
-            For Each t As Type In GetType(ObjectTypes).GetNestedTypes(BindingFlags.Public)
-                If t.IsAbstract OrElse t.IsInterface OrElse Not t.IsSubclassOf(GetType(EvalObjectBase)) Then
-                    Continue For ' ignore abstract classes, interfaces, unrelated types
-                End If
+            For Each t As Type In _types
                 ' identifiers & text are both strings, so we need to look at the identifierAsText flag
                 If identifierAsText AndAlso t = GetType(Identifier) Then Continue For
                 If Not identifierAsText AndAlso t = GetType(Text) Then Continue For
@@ -59,10 +61,7 @@ Namespace Calculator.Evaluator
                 Return New [Boolean](str)
             Else
                 If Not primitiveOnly Then
-                    For Each t As Type In GetType(ObjectTypes).GetNestedTypes(BindingFlags.Public)
-                        If t.IsAbstract OrElse t.IsInterface OrElse Not t.IsSubclassOf(GetType(EvalObjectBase)) Then
-                            Continue For ' ignore abstract classes, interfaces, unrelated types
-                        End If
+                    For Each t As Type In _types
                         ' identifiers & text are both strings, so we need to look at the identifierAsText flag
                         If identifierAsText AndAlso t = GetType(Identifier) Then Continue For
                         If Not identifierAsText AndAlso t = GetType(Text) Then Continue For
@@ -85,16 +84,8 @@ Namespace Calculator.Evaluator
             End If
         End Function
 
-        Public Interface IEvalObject
-            Function GetValue() As Object
-            Sub SetValue(obj As Object)
-            Function ToString() As String
-            Function GetHashCode() As Integer
-        End Interface
-
         Public MustInherit Class EvalObjectBase
             Inherits Object
-            Implements IEvalObject
             Implements IEquatable(Of EvalObjectBase)
             Implements IComparable
             Implements IComparable(Of EvalObjectBase)
@@ -103,18 +94,18 @@ Namespace Calculator.Evaluator
             ''' Get the system type value represented by this object. 
             ''' If the object represents no specific system type, then this should return the object itself.
             ''' </summary>
-            Public MustOverride Function GetValue() As Object Implements IEvalObject.GetValue
+            Public MustOverride Function GetValue() As Object
 
             ''' <summary>
             ''' Set the value represented by this object.
             ''' If the object represents no specific system type, this should be used to copy from another object of the same type
             ''' </summary>
-            Public MustOverride Sub SetValue(obj As Object) Implements IEvalObject.SetValue
+            Public MustOverride Sub SetValue(obj As Object)
 
             ''' <summary>
             ''' Convert this object to a human readable string
             ''' </summary>
-            Public Overrides Function ToString() As String Implements IEvalObject.ToString
+            Public Overrides Function ToString() As String
                 Return GetValue().ToString()
             End Function
 
@@ -135,7 +126,7 @@ Namespace Calculator.Evaluator
             ''' <summary>
             ''' Generate a (usually) unique integer identifying the object
             ''' </summary>
-            Public MustOverride Overrides Function GetHashCode() As Integer Implements IEvalObject.GetHashCode
+            Public MustOverride Overrides Function GetHashCode() As Integer
 
             ''' <summary>
             ''' Create a brand new copy of this object, so that the new copy will not affect the old
@@ -537,7 +528,7 @@ Namespace Calculator.Evaluator
                 If String.IsNullOrWhiteSpace(str.Trim()) Then Return False ' check if empty
                 If Char.IsDigit(str(0)) Then Return False ' check if starts with number
 
-                Dim disallowed As New HashSet(Of Char)("&+-*/{}[]()';^$@#!%=<>,:|\`~ ")
+                Dim disallowed As Char() = "&+-*/{}[]()';^$@#!%=<>,:|\`~ ".ToCharArray()
                 For Each c As Char In str
                     If disallowed.Contains(c) Then Return False
                 Next
@@ -704,7 +695,7 @@ Namespace Calculator.Evaluator
                 Dim str As New StringBuilder("(")
                 For Each k As Reference In _value
                     If Not str.Length = 1 Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
+                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
                     str.Append(ef.O(k.GetRefObject()))
                 Next
                 str.Append(")")
@@ -949,6 +940,8 @@ Namespace Calculator.Evaluator
             ''' <param name="b"></param>
             ''' <returns></returns>
             Public Function MultiplyScalar(b As Object) As Matrix
+                If TypeOf b Is Double Then b = CType(CDbl(b), BigDecimal)
+
                 For row As Integer = 0 To Height - 1
                     Dim currow As New List(Of Reference)
                     For col As Integer = 0 To Width - 1
@@ -957,10 +950,10 @@ Namespace Calculator.Evaluator
                             If Not TypeOf cur Is Numerics.Complex Then cur = New Numerics.Complex(CDbl(cur), 0)
                             If Not TypeOf b Is Numerics.Complex Then b = New Numerics.Complex(CDbl(b), 0)
                             SetCoord(row, col, CType(cur, Numerics.Complex) * CType(b, Numerics.Complex))
-                        ElseIf TypeOf cur Is Double OrElse TypeOf b Is Double Then
-                            SetCoord(row, col, CDbl(cur) * CDbl(b))
-                        ElseIf TypeOf cur Is BigDecimal OrElse TypeOf b Is BigDecimal Then
-                            SetCoord(row, col, CType(cur, BigDecimal) * CType(b, BigDecimal))
+                        ElseIf TypeOf cur Is BigDecimal AndAlso TypeOf b Is BigDecimal Then
+                            SetCoord(row, col, CType(cur, BigDecimal) * DirectCast(b, BigDecimal))
+                        ElseIf TypeOf cur Is Double AndAlso TypeOf b Is BigDecimal Then
+                            SetCoord(row, col, CType(CDbl(cur), BigDecimal) * DirectCast(b, BigDecimal))
                         Else
                             Throw New EvaluatorException("Invalid type in matrix for scalar multiplication. Only numbers and complex values are allowed.")
                         End If
@@ -1017,7 +1010,7 @@ Namespace Calculator.Evaluator
                     Dim evalStr As String = GetCoord(j, 0).ToString() & "*" & other.GetCoord(k, 0).ToString() & "-" &
                     GetCoord(k, 0).ToString() & "*" & other.GetCoord(j, 0).ToString()
 
-                    Dim result As EvalObjectBase = ObjectTypes.DetectType(New Evaluator().EvalExprRaw(
+                    Dim result As EvalObjectBase = DetectType(New Evaluator(reloadDefault:=False).EvalExprRaw(
                                                               evalStr.ToString(), True))
                     If TypeOf result Is Reference Then
                         newValue.Add(DirectCast(result, Reference))
@@ -1199,62 +1192,62 @@ Namespace Calculator.Evaluator
                 ' deep copy everything before doing anything to avoid messing up due to references
                 Dim mat As Matrix = DirectCast(Me.GetDeepCopy(), Matrix)
 
-                    '' convert all rows to matrices
-                    'If mat.Width = 1 Then
-                    '    Dim lst As List(Of Reference) = DirectCast(mat.GetValue(), List(Of Reference))
-                    '    For i As Integer = 0 To mat.Height - 1
-                    '        lst(i) = New Reference(New Matrix({lst(i).ResolveObj()}))
-                    '    Next
-                    'End If
+                '' convert all rows to matrices
+                'If mat.Width = 1 Then
+                '    Dim lst As List(Of Reference) = DirectCast(mat.GetValue(), List(Of Reference))
+                '    For i As Integer = 0 To mat.Height - 1
+                '        lst(i) = New Reference(New Matrix({lst(i).ResolveObj()}))
+                '    Next
+                'End If
 
-                    Dim pivot As New Dictionary(Of Integer, Integer)
-                    Dim curRow As Integer = 0
-                    For col As Integer = 0 To mat.Width - 1
-                        If curRow >= mat.Height Then Return mat
-                        Dim success As Boolean = True
+                Dim pivot As New Dictionary(Of Integer, Integer)
+                Dim curRow As Integer = 0
+                For col As Integer = 0 To mat.Width - 1
+                    If curRow >= mat.Height Then Return mat
+                    Dim success As Boolean = True
 
-                        For swapRow As Integer = curRow To mat.Height
-                            If swapRow = mat.Height Then ' reached end, failed to find an appropriate row
-                                success = False
-                                Exit For
-                            End If
-                            Dim val As Object = mat.GetCoord(swapRow, col)
-                            If (TypeOf val Is Double AndAlso CDbl(val) <> 0.0) OrElse (TypeOf val Is BigDecimal AndAlso
-                                CType(val, BigDecimal) <> 0.0) OrElse
-                                TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
-                                mat.SwapRows(curRow, swapRow, augmented)
-                                mat.ScaleRow(curRow, AutoReciprocal(val), augmented)
-                                pivot(curRow) = col
-                                Exit For
-                            End If
-                        Next
-
-                        If Not success Then Continue For
-
-                        For zeroOutRow As Integer = 0 To Height - 1
-                            If zeroOutRow = curRow Then Continue For
-                            Dim val As Object = mat.GetCoord(zeroOutRow, col)
-                            If (TypeOf val Is Double AndAlso CDbl(val) <> 0.0) OrElse (TypeOf val Is BigDecimal AndAlso
-                                CType(val, BigDecimal) <> 0.0) OrElse
-                                TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
-                                mat.ScaleRow(zeroOutRow, AutoReciprocal(val), augmented)
-                                mat.SubtractRow(zeroOutRow, curRow, augmented)
-
-                                ' if the row was already processed then we need to scale its pivot back to one
-                                If zeroOutRow < curRow Then
-                                    mat.ScaleRow(zeroOutRow, AutoReciprocal(mat.GetCoord(zeroOutRow, pivot(zeroOutRow))), augmented)
-                                End If
-                            End If
-                        Next
-                        curRow += 1
+                    For swapRow As Integer = curRow To mat.Height
+                        If swapRow = mat.Height Then ' reached end, failed to find an appropriate row
+                            success = False
+                            Exit For
+                        End If
+                        Dim val As Object = mat.GetCoord(swapRow, col)
+                        If (TypeOf val Is Double AndAlso CDbl(val) <> 0.0) OrElse (TypeOf val Is BigDecimal AndAlso
+                            CType(val, BigDecimal) <> 0.0) OrElse
+                            TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
+                            mat.SwapRows(curRow, swapRow, augmented)
+                            mat.ScaleRow(curRow, AutoReciprocal(val), augmented)
+                            pivot(curRow) = col
+                            Exit For
+                        End If
                     Next
 
-                    While curRow < mat.Height
-                        mat.ScaleRow(curRow, 0, augmented)
-                        curRow += 1
-                    End While
+                    If Not success Then Continue For
 
-                    Return mat
+                    For zeroOutRow As Integer = 0 To Height - 1
+                        If zeroOutRow = curRow Then Continue For
+                        Dim val As Object = mat.GetCoord(zeroOutRow, col)
+                        If (TypeOf val Is Double AndAlso CDbl(val) <> 0.0) OrElse (TypeOf val Is BigDecimal AndAlso
+                            CType(val, BigDecimal) <> 0.0) OrElse
+                            TypeOf val Is Numerics.Complex AndAlso Math.Round(DirectCast(val, Numerics.Complex).Magnitude, 12) <> 0 Then
+                            mat.ScaleRow(zeroOutRow, AutoReciprocal(val), augmented)
+                            mat.SubtractRow(zeroOutRow, curRow, augmented)
+
+                            ' if the row was already processed then we need to scale its pivot back to one
+                            If zeroOutRow < curRow Then
+                                mat.ScaleRow(zeroOutRow, AutoReciprocal(mat.GetCoord(zeroOutRow, pivot(zeroOutRow))), augmented)
+                            End If
+                        End If
+                    Next
+                    curRow += 1
+                Next
+
+                While curRow < mat.Height
+                    mat.ScaleRow(curRow, 0, augmented)
+                    curRow += 1
+                End While
+
+                Return mat
             End Function
 
             ''' <summary>
@@ -1319,7 +1312,7 @@ Namespace Calculator.Evaluator
                 Dim str As New StringBuilder("[")
                 For Each k As Reference In _value
                     If Not str.Length = 1 Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
+                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
                     str.Append(ef.O(k.GetRefObject()))
                 Next
                 str.Append("]")
@@ -1388,7 +1381,8 @@ Namespace Calculator.Evaluator
                     ElseIf width = 1 Then
                         ' if single column, expand to column vector
                         If TypeOf r.ResolveObj() Is Matrix Then
-                            r.SetValue(DirectCast(r.Resolve(), List(Of Reference))(0).ResolveObj())
+                            Dim lst As List(Of Reference) = DirectCast(r.Resolve(), List(Of Reference))
+                            If lst.Count = 0 Then r.SetValue(Double.NaN) Else r.SetValue(lst(0).ResolveObj())
                         End If
                     End If
                 Next
@@ -1439,15 +1433,19 @@ Namespace Calculator.Evaluator
             ''' <summary>
             ''' Create a new matrix from a list of references
             ''' </summary>
-            Public Sub New(value As System.Collections.Generic.IEnumerable(Of Reference))
-                Me._value = value.ToList()
+            Public Sub New(value As IEnumerable(Of Reference))
+                If TypeOf value Is List(Of Reference) Then
+                    Me._value = DirectCast(value, List(Of Reference))
+                Else
+                    Me._value = value.ToList()
+                End If
                 Me.Normalize()
             End Sub
 
             ''' <summary>
             ''' Create a new matrix from a list of evaluator objects
             ''' </summary>
-            Public Sub New(value As System.Collections.Generic.IEnumerable(Of EvalObjectBase))
+            Public Sub New(value As IEnumerable(Of EvalObjectBase))
                 Me._value = New List(Of Reference)()
                 For Each v As EvalObjectBase In value
                     If TypeOf v Is Reference Then
@@ -1462,7 +1460,7 @@ Namespace Calculator.Evaluator
             ''' <summary>
             ''' Create a new matrix from a list of system objects
             ''' </summary>
-            Public Sub New(value As System.Collections.Generic.IEnumerable(Of Object))
+            Public Sub New(value As IEnumerable(Of Object))
                 Me._value = New List(Of Reference)()
                 For Each v As Object In value
                     Me._value.Add(New Reference(ObjectTypes.DetectType(v, True)))
@@ -1567,7 +1565,7 @@ Namespace Calculator.Evaluator
                 Dim str As New StringBuilder("{")
                 For Each k As KeyValuePair(Of Reference, Reference) In _value
                     If Not str.Length = 1 Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
+                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
                     str.Append(ef.O(k.Key.GetRefObject()))
                     If Not k.Value Is Nothing Then
                         str.Append(":" & ef.O(k.Value.GetRefObject()))
@@ -1673,7 +1671,7 @@ Namespace Calculator.Evaluator
                 Dim str As New StringBuilder("HashSet({")
                 For Each k As KeyValuePair(Of Reference, Reference) In _value
                     If Not str.Chars(str.Length - 1) = "{" Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
+                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
                     str.Append(ef.O(k.Key.GetRefObject()))
                     If Not k.Value Is Nothing Then
                         str.Append(":" & ef.O(k.Value.GetRefObject()))
@@ -1849,7 +1847,7 @@ Namespace Calculator.Evaluator
                 Dim init As Boolean = True
                 For Each r As Reference In _value
                     If Not init Then str.Append(", ") Else init = False
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator())
+                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
                     str.Append(ef.O(r.GetRefObject()))
                 Next
                 str.Append("])")
@@ -2397,7 +2395,7 @@ Namespace Calculator.Evaluator
             Public Function ResolveField(fieldName As String, scope As String) As Reference
                 If String.IsNullOrWhiteSpace(fieldName) Then Throw New Exception("Field name cannot be blank")
                 Try
-                    Dim spl As String() = fieldName.Split(SCOPE_SEP)
+                    Dim spl As String() = fieldName.Split(Evaluator.SCOPE_SEP)
                     Dim curVar As Reference = New Reference(Me)
 
                     For i As Integer = 0 To spl.Length - 1
@@ -2469,7 +2467,7 @@ Namespace Calculator.Evaluator
                 ' add 'instaneid' function
                 Dim iidFn As New UserFunction("type", String.Format("return " & ControlChars.Quote & Me.InnerScope &
                                                                     ControlChars.Quote,
-                                                                    ROOT_NAMESPACE, SCOPE_SEP),
+                                                                    Evaluator.ROOT_NAMESPACE, Evaluator.SCOPE_SEP),
                                                New List(Of String), Me.InnerScope)
                 iidFn.Modifiers.Add("internal")
                 Me.Fields(iidFn.Name) = New Reference(New Lambda(iidFn, True))
@@ -2575,7 +2573,7 @@ Namespace Calculator.Evaluator
     End Class
 End Namespace
 
-Namespace Calculator.Evaluator.CommonTypes
+Namespace Evaluator.CommonTypes
     ''' <summary>
     ''' Custom comparer that works for all types, used for our non type-specific sets, dictionaries, and sorts
     ''' </summary>

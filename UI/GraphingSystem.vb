@@ -1,13 +1,12 @@
-﻿
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Drawing.Drawing2D
 Imports System.Text
 Imports System.Threading
-Imports Cantus.Calculator.Evaluator
-Imports Cantus.Calculator.Graphing
+Imports Cantus.Evaluator
+Imports Cantus.UI.Graphing
 
-Namespace Calculator.Graphing
-    Public Class FrmGraph
+Namespace UI.Graphing
+    Public Class GraphingSystem
         Private Const WID As Integer = 4096
         Private Const HIGH As Integer = 2160
         Private Const PRECISION As Integer = 4
@@ -63,7 +62,6 @@ Namespace Calculator.Graphing
 
         Private Sub FrmGraph_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             ' set icon, styles, etc.
-            Me.Icon = My.Resources.Calculator
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
             Me.split.SplitterDistance = Me.Height - My.Settings.GrpSplitDistance
 
@@ -71,7 +69,7 @@ Namespace Calculator.Graphing
             Me.Top = Screen.PrimaryScreen.WorkingArea.Top
             Me.Left = Screen.PrimaryScreen.WorkingArea.Left
             Me.Height = Screen.PrimaryScreen.WorkingArea.Height
-            Me.Width = Screen.PrimaryScreen.WorkingArea.Width - FrmCalc.Width
+            Me.Width = Screen.PrimaryScreen.WorkingArea.Width - FrmEditor.Width
 
             ' initialize buffers
             _buffer = New Bitmap(WID, HIGH)
@@ -322,7 +320,7 @@ Namespace Calculator.Graphing
                 Select Case _functiontype(fnid)
                     Case FunctionType.Cartesian
                         Dim prevx As Object = GetX()
-                        Dim hstep As Double = selectScale(_scaleBackup.X)
+                        Dim hstep As Double = SelectScale(_scaleBackup.X)
                         Dim i As Double = 0
                         Dim prev As Double = Double.NaN
                         Dim delta As Double = 0.5
@@ -396,12 +394,12 @@ Namespace Calculator.Graphing
                                 i += delta
                                 pts.Add(New PointF(CSng(x), CSng(y)))
                             End If
-                                prev = y
+                            prev = y
                         End While
                         SetX(prevx)
                     Case FunctionType.Inverse
                         Dim prevy As Object = GetY()
-                        Dim vstep As Double = selectScale(_scaleBackup.Y)
+                        Dim vstep As Double = SelectScale(_scaleBackup.Y)
                         Dim i As Double = 0
                         Dim prev As Double = Double.NaN
                         Dim delta As Double = 0.5
@@ -578,8 +576,8 @@ Namespace Calculator.Graphing
                         End While
                     Case FunctionType.Differential
                         Dim prevy As Object = GetY()
-                        Dim hstep As Double = selectScale(_scaleBackup.X)
-                        Dim vstep As Double = selectScale(_scaleBackup.Y)
+                        Dim hstep As Double = SelectScale(_scaleBackup.X)
+                        Dim vstep As Double = SelectScale(_scaleBackup.Y)
                         Dim deltax As Double = cdfcx(hstep)
                         Dim deltay As Double = cdfcy(vstep)
                         If preview Then
@@ -640,7 +638,7 @@ Namespace Calculator.Graphing
                 Using b As New SolidBrush(Color.FromArgb(100, 100, 100))
                     Dim sui As New Font("Segoe UI", 15)
 
-                    Dim hstep As Double = selectScale(_scaleBackup.X)
+                    Dim hstep As Double = SelectScale(_scaleBackup.X)
 
                     Dim offset As Double = center.X Mod (hstep * SCREENFACT / _scaleBackup.X)
                     For i As Double = 0 To WID \ 2 Step hstep * SCREENFACT / _scaleBackup.X
@@ -648,7 +646,7 @@ Namespace Calculator.Graphing
                         g.DrawLine(p, CSng(WID / 2 + offset - i), 0, CSng(WID / 2 + offset - i), HIGH)
                     Next
 
-                    Dim vstep As Double = selectScale(_scaleBackup.Y)
+                    Dim vstep As Double = SelectScale(_scaleBackup.Y)
 
                     offset = center.Y Mod (vstep * SCREENFACT / _scaleBackup.Y)
                     For i As Double = 0 To HIGH \ 2 Step vstep * SCREENFACT / _scaleBackup.Y
@@ -896,6 +894,7 @@ Namespace Calculator.Graphing
             Dim rt As Double = cscx(canvas.Width)
             Dim bt As Double = cscy(canvas.Height)
             If lf <= 0 OrElse tp <= 0 OrElse rt >= WID OrElse bt >= HIGH Then
+                If Not DrawWorker.IsBusy Then DrawWorker.RunWorkerAsync()
                 Return
             End If
             Dim g As Graphics = e.Graphics
@@ -921,7 +920,7 @@ Namespace Calculator.Graphing
                     g.DrawString(s, sui, b, canvas.Width - sz.Width - 1, CSng(canvas.Height / 2) - 2)
 
                     s = SigFig(ccfy(cscy(canvas.Height)), PRECISION).ToString
-                    g.DrawString(sigfig(ccfy(cscy(0)), PRECISION).ToString,
+                    g.DrawString(SigFig(ccfy(cscy(0)), PRECISION).ToString,
                                  sui, b, CSng(canvas.Width / 2) - 2, 1)
                     sz = g.MeasureString(s, sui)
                     g.DrawString(s, sui, b, CSng(canvas.Width / 2) - 2, canvas.Height - sz.Height - 1)
@@ -1047,7 +1046,7 @@ Namespace Calculator.Graphing
             End Using
         End Sub
 
-        Private Function selectScale(scale As Double) As Double
+        Private Function SelectScale(scale As Double) As Double
             Dim pow10 As Double = Math.Pow(10, Math.Floor(Math.Log10(scale)))
             Dim propscale As Double = scale / pow10
 
@@ -1119,13 +1118,6 @@ Namespace Calculator.Graphing
             Else
                 MsgBox("Function number limit reached")
             End If
-        End Sub
-        Private Sub FrmGraph_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-            _ended = True
-            _buffer.Dispose()
-            My.Settings.GrpSplitDistance = Me.Height - split.SplitterDistance
-            My.Settings.Save()
-            FrmCalc.WindowState = FormWindowState.Normal
         End Sub
 
         Private Sub pnlInput_MouseDown(sender As Object, e As MouseEventArgs) Handles pnlInput.MouseDown
@@ -1209,6 +1201,7 @@ Namespace Calculator.Graphing
             End If
 
             preview = True
+            If Not DrawWorker.IsBusy Then DrawWorker.RunWorkerAsync()
             TmrHighQuality.Start()
         End Sub
 
@@ -2140,8 +2133,8 @@ Namespace Calculator.Graphing
                     'Dim offsetx As Double = (_loc.X + WID / 2) Mod (hstep * SCREENFACT / _scale.X)
                     Dim sx As Double = CSng((r - l) * (CDbl(SCREENFACT) / canvas.Width))
                     Dim sy As Double = CSng((t - b) * (CDbl(SCREENFACT) / canvas.Height))
-                    Dim nsx As Double = selectScale(sx)
-                    Dim nsy As Double = selectScale(sy)
+                    Dim nsx As Double = SelectScale(sx)
+                    Dim nsy As Double = SelectScale(sy)
                     If nsx < MINSCALE OrElse nsy < MINSCALE Then
                         MsgBox("Range is below the lower limit. The axis scale must be no smaller than " & MINSCALE &
                            ".", MsgBoxStyle.Exclamation, "Range too small")
@@ -2214,9 +2207,10 @@ Namespace Calculator.Graphing
         End Sub
         Dim _drct As Integer = 0
         Private Sub tmrDelayRedraw_Tick(sender As Object, e As EventArgs) Handles tmrDelayRedraw.Tick
-            UpdateGraph()
             If _drct <= 0 Then
                 tmrDelayRedraw.Stop()
+                UpdateGraph()
+                If Not DrawWorker.IsBusy Then DrawWorker.RunWorkerAsync()
             Else
                 _drct -= 1
             End If
@@ -2225,12 +2219,16 @@ Namespace Calculator.Graphing
         Private Sub DrawWorker_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles DrawWorker.DoWork
             While Not _ended
                 Try
-                    Redraw(preview)
-                    DrawWorker.ReportProgress(0)
-                    Thread.Sleep(60)
-                Catch ex As Exception
-                    DrawWorker.ReportProgress(1, ex.ToString)
-                    Exit While
+                    If preview Then
+                        Redraw(True)
+                        DrawWorker.ReportProgress(0)
+                        Thread.Sleep(60)
+                    Else
+                        Redraw(False)
+                        DrawWorker.ReportProgress(0)
+                        Exit While
+                    End If
+                Catch 'ex As Exception
                 End Try
             End While
         End Sub
@@ -2240,15 +2238,15 @@ Namespace Calculator.Graphing
             _buffer = _tmpbuffer
             _tmpbuffer = tmp
             canvas.Invalidate()
-            If e.ProgressPercentage <> 0 Then
-                MsgBox(e.UserState)
-                If Not DrawWorker.IsBusy Then
-                    DrawWorker.RunWorkerAsync()
-                End If
-            End If
+            'If e.ProgressPercentage <> 0 Then
+            '    If Not DrawWorker.IsBusy Then
+            '        DrawWorker.RunWorkerAsync()
+            '    End If
+            'End If
         End Sub
 
         Private Sub TmrHighQuality_Tick(sender As Object, e As EventArgs) Handles TmrHighQuality.Tick
+            TmrHighQuality.Stop()
             preview = False
         End Sub
     End Class

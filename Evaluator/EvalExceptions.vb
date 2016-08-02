@@ -1,4 +1,4 @@
-﻿Namespace Calculator.Evaluator.Exceptions
+﻿Namespace Evaluator.Exceptions
     ''' <summary>
     ''' Represents any exception that occurs during evaluation
     ''' </summary>
@@ -8,7 +8,7 @@
             MyBase.New()
         End Sub
         Public Sub New(message As String, Optional line As Integer = 0)
-            MyBase.New(New Evaluator().InternalFunctions.Replace(message, " \[Line [0-9]*\]", "") &
+            MyBase.New(New Evaluator(reloadDefault:=False).InternalFunctions.Replace(message, " \[Line [0-9]*\]", "") &
                                                      If(line > 0, " [Line " & line & "]", ""))
             Me.Line = line
         End Sub

@@ -1,6 +1,6 @@
-﻿Imports Cantus.Calculator.Evaluator.Exceptions
-Imports Cantus.Calculator.Evaluator.CommonTypes
-Namespace Calculator.Evaluator
+﻿Imports Cantus.Evaluator.Exceptions
+Imports Cantus.Evaluator.CommonTypes
+Namespace Evaluator
     Public Class OperatorRegistar
 #Region "Enums"
         ''' <summary>
@@ -139,7 +139,33 @@ Namespace Calculator.Evaluator
         ''' Evaluated before all other operators, on tokenization
         ''' </summary>
         Public Class Bracket : Inherits [Operator]
+            ''' <summary>
+            ''' A list of signs for this bracket
+            ''' </summary>
             Public Overrides ReadOnly Property Signs As New List(Of String)
+
+            ''' <summary>
+            ''' Get the open bracket of this bracket
+            ''' </summary>
+            Public ReadOnly Property OpenBracket As String
+                Get
+                    Return Signs(0)
+                End Get
+            End Property
+
+            ''' <summary>
+            ''' Get the close bracket of this bracket
+            ''' </summary>
+            Public ReadOnly Property CloseBracket As String
+                Get
+                    If Signs.Count > 1 Then
+                        Return Signs(1)
+                    Else
+                        Return Signs(0)
+                    End If
+                End Get
+            End Property
+
             Public Overrides ReadOnly Property Precedence As ePrecedence
                 Get
                     Return Nothing ' not used
@@ -169,19 +195,19 @@ Namespace Calculator.Evaluator
                 Me.Stackable = stackable
             End Sub
 
-            ''' <summary>
-            ''' Create a new bracket operator with one start sign and many end signs
-            ''' </summary>
-            ''' <param name="signStart">The sign that begins the operator (eg. '(')</param>
-            ''' <param name="signsEnd">A list of signs that end the bracket (eg. ')')</param>
-            ''' <param name="execute">The operator definition (use AddressOf)</param>
-            Public Sub New(signStart As String, signsEnd As IEnumerable(Of String), execute As BracketDelegate, Optional stackable As Boolean = True)
-                Me.Signs = New List(Of String)
-                Me.Signs.Add(signStart)
-                Me.Signs.AddRange(signsEnd)
-                Me.Execute = execute
-                Me.Stackable = stackable
-            End Sub
+            '''' <summary>
+            '''' Create a new bracket operator with one start sign and many end signs
+            '''' </summary>
+            '''' <param name="signStart">The sign that begins the operator (eg. '(')</param>
+            '''' <param name="signsEnd">A list of signs that end the bracket (eg. ')')</param>
+            '''' <param name="execute">The operator definition (use AddressOf)</param>
+            'Public Sub New(signStart As String, signsEnd As IEnumerable(Of String), execute As BracketDelegate, Optional stackable As Boolean = True)
+            '    Me.Signs = New List(Of String)
+            '    Me.Signs.Add(signStart)
+            '    Me.Signs.AddRange(signsEnd)
+            '    Me.Execute = execute
+            '    Me.Stackable = stackable
+            'End Sub
 
             ''' <summary>
             ''' Create a new bracket operator with one sign (for example '|x|')
@@ -202,8 +228,8 @@ Namespace Calculator.Evaluator
             ''' <param name="expr">The part of the expression after (not including) the open bracket</param>
             ''' <returns></returns>
             Public Function FindCloseBracket(expr As String, opReg As OperatorRegistar) As Integer
-                Dim startSign As String = Me.Signs(0)
-                Dim endSign As New HashSet(Of String)({If(Me.Signs.Count < 2, startSign, Me.Signs(1))})
+                Dim startSign As String = Me.OpenBracket
+                Dim endSign As New HashSet(Of String)({If(Me.Signs.Count < 2, startSign, CloseBracket)})
                 For i As Integer = 2 To Me.Signs.Count - 1
                     endSign.Add(Me.Signs(i))
                 Next
@@ -228,6 +254,7 @@ Namespace Calculator.Evaluator
                     ' end sign not found, try to find start sign
                     If Not foundEndSign Then
                         If expr(endIdx) = "\"c Then
+                            ' start escape sequence
                             lastFound = endIdx + 1 ' save the time we last found an escaped end sign
                             endIdx += 1
                         ElseIf Stackable Then
@@ -237,15 +264,9 @@ Namespace Calculator.Evaluator
 
                             Else ' try to find other brackets
                                 For Each b As Bracket In opReg.Brackets
-                                    If expr.Substring(endIdx).StartsWith(b.Signs(0)) Then
-                                        ' start escape sequence
-                                        If b.Signs.Count = 1 Then
-                                            endIdx += b.FindCloseBracket(expr.Substring(endIdx + b.Signs(0).Length), opReg) +
-                                                b.Signs(0).Length
-                                        Else ' >1
-                                            endIdx += b.FindCloseBracket(expr.Substring(endIdx + b.Signs(0).Length), opReg) +
-                                                    b.Signs(1).Length
-                                        End If
+                                    If expr.Substring(endIdx).StartsWith(b.OpenBracket) Then
+                                        endIdx += b.FindCloseBracket(expr.Substring(endIdx + b.OpenBracket.Length), opReg) +
+                                                b.CloseBracket.Length
                                         Exit For
                                     End If
                                 Next
@@ -256,10 +277,10 @@ Namespace Calculator.Evaluator
 
                 ' if we can't find anything unescaped we'll ignore the last escape sequence
                 If lastFound = -1 Then
-                        Return expr.Length
-                    Else
-                        Return lastFound
-                    End If
+                    Return expr.Length
+                Else
+                    Return lastFound
+                End If
             End Function
         End Class
 
@@ -433,6 +454,12 @@ Namespace Calculator.Evaluator
             Register(New Bracket("r" & ControlChars.Quote, ControlChars.Quote, AddressOf BracketOperatorRawText, False))
             Register(New Bracket(ControlChars.Quote, AddressOf BracketOperatorQuotedText))
             Register(New Bracket("'", AddressOf BracketOperatorQuotedText))
+
+            ' multiline / triple-quoted
+            Register(New Bracket(ControlChars.Quote & ControlChars.Quote & ControlChars.Quote, AddressOf BracketOperatorQuotedText))
+            Register(New Bracket("r" & ControlChars.Quote & ControlChars.Quote & ControlChars.Quote,
+                                 ControlChars.Quote & ControlChars.Quote & ControlChars.Quote,
+                                 AddressOf BracketOperatorRawText))
 
             Me.DefaultOperator = OperatorWithSign("*")
         End Sub

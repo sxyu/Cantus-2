@@ -265,7 +265,7 @@ As in Python, blocks are formatted using indentation. However, unlike Python, bl
 * Use the `_stopall()` Function` to stop these threads and recover resouces. You may (rarely, but occasionally) need to call this more than once if some threads aren't responding.
 
 #### Running Scripts
-After writing a script, save it as a .can (Cantus Script) file. You can do this by pressing `F12` in the editor.
+After writing a script, save it as a .can (Cantus Script) file. You can do this by pressing `Ctrl` + `S` in the editor.
 
 To run the script later, you can do one of the following:
 * Go in command prompt (cmd) and type (without quotes or angle brackets) 	
@@ -274,7 +274,7 @@ To run the script later, you can do one of the following:
 * Press `F5` in the editor and select the file (result written to label)
 * Use the run(path) function (async) or runwait(path) function (single threaded)
 
-To open the script for editing later, press `F11` in the editor and select the file. Line endings CR LF, CR, etc. will automatically standardized based on the platform.
+To open the script for editing later, press `Ctrl` + `O` in the editor and select the file. Line endings CR LF, CR, etc. will automatically standardized based on the platform.
 
 #### Extending Cantus
 

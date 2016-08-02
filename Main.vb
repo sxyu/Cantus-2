@@ -1,9 +1,9 @@
 ﻿Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Text
-Imports Cantus.Calculator.Evaluator
+Imports Cantus.Evaluator
 
-Namespace Calculator
+Namespace UI
     Module MainModule
         ' Win32 API to use console
         <DllImport("kernel32.dll")>
@@ -51,9 +51,9 @@ Namespace Calculator
             ' setup folders, etc.
             Dim requiredFolders As String() = {"plugin", "include", "init"}
             For Each dir As String In requiredFolders
-                If Not IO.Directory.Exists(Dir) Then
+                If Not IO.Directory.Exists(dir) Then
                     Try
-                        IO.Directory.CreateDirectory(Dir)
+                        IO.Directory.CreateDirectory(dir)
                     Catch
                     End Try
                 End If
@@ -78,6 +78,7 @@ Namespace Calculator
                         MsgBox("Error occurred while processing init.can." & vbNewLine & "Variables and functions may not load." &
                                vbNewLine & vbNewLine & "Message:" & vbNewLine & ex.Message,
                                MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Critical, "Initialization Error")
+                        MsgBox(ex.ToString)
                     Else
                         MsgBox("Error occurred while loading ''" & file.Replace(IO.Path.DirectorySeparatorChar,
                                                                                 Evaluator.Evaluator.SCOPE_SEP).
@@ -130,7 +131,7 @@ Namespace Calculator
 
                 '  open form
                 Application.EnableVisualStyles()
-                Application.Run(FrmCalc)
+                Application.Run(SplashScreen)
             End If
         End Sub
 

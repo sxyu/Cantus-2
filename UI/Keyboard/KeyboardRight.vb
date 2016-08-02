@@ -1,6 +1,5 @@
-﻿Imports Cantus.Calculator.Evaluator
-Namespace Calculator.Keyboards
-    Public Class OskRight
+﻿Namespace UI.Keyboards
+    Public Class KeyboardRight
         Protected Overloads Overrides ReadOnly Property CreateParams() As CreateParams
             Get
                 Dim cp As CreateParams = MyBase.CreateParams
@@ -12,28 +11,6 @@ Namespace Calculator.Keyboards
 
         Public Snap As Boolean = False
 
-        Private Sub TmrLoad_Tick(sender As Object, e As EventArgs) Handles TmrLoad.Tick
-            Me.Show()
-            TmrLoad.Stop()
-            Me.Snap = My.Settings.OskLock
-            Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
-
-            For Each c As Control In Me.pnl.Controls
-                AddHandler c.Enter, AddressOf osk_Enter
-            Next
-
-            If (My.Settings.RightKbdPos <> "") Then
-                Dim spl() As String = My.Settings.RightKbdPos.Split(","c)
-                Me.Left = CInt(spl(0))
-                Me.Top = CInt(spl(1))
-            Else
-                Me.Left = FrmCalc.Right - Me.Width
-                Me.Top = FrmCalc.Bottom
-                My.Settings.RightKbdPos = Me.Left & "," & Me.Top
-                My.Settings.Save()
-            End If
-        End Sub
-
         Private Sub GenericButtonClick(sender As Object, e As EventArgs) Handles btnFact.Click, btnMul.Click,
             btnDiv.Click, btnAdd.Click, btnMin.Click,
             btnEquals.Click, btnLessThan.Click, btnMoreThan.Click, btnAns.Click, btnExp.Click, btnPt.Click,
@@ -41,9 +18,9 @@ Namespace Calculator.Keyboards
             btnT.Click, btnM.Click, btnX.Click, btnY.Click, btnComma.Click, btnN.Click, btnTick.Click
 
             Dim btn As Button = DirectCast(sender, Button)
-            FrmCalc.tb.Focus()
-            FrmCalc.tb.DeleteRange(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
-            FrmCalc.tb.AddText(btn.Text)
+            FrmEditor.tb.Focus()
+            FrmEditor.tb.DeleteRange(FrmEditor.tb.SelectionStart, FrmEditor.tb.SelectionEnd - FrmEditor.tb.SelectionStart)
+            FrmEditor.tb.AddText(btn.Text)
         End Sub
 
         ''' <summary>
@@ -52,49 +29,49 @@ Namespace Calculator.Keyboards
         ''' <param name="s"></param>
         ''' <param name="sep"></param>
         Private Sub WriteFunction(ByVal s As String, Optional ByVal sep As String = "(")
-            FrmCalc.tb.Focus()
-            Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.DeleteRange(start, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
-            FrmCalc.tb.InsertText(start, s)
+            FrmEditor.tb.Focus()
+            Dim start As Integer = FrmEditor.tb.SelectionStart
+            FrmEditor.tb.DeleteRange(start, FrmEditor.tb.SelectionEnd - FrmEditor.tb.SelectionStart)
+            FrmEditor.tb.InsertText(start, s)
 
             If s.Contains(sep) Then
-                FrmCalc.tb.SelectionStart = start + s.IndexOf(sep) + 1
+                FrmEditor.tb.SelectionStart = start + s.IndexOf(sep) + 1
             Else
-                FrmCalc.tb.SelectionStart = start + s.Count()
+                FrmEditor.tb.SelectionStart = start + s.Count()
             End If
-            FrmCalc.tb.Focus()
+            FrmEditor.tb.Focus()
         End Sub
 
         Private Sub btnCalc_Click(sender As Object, e As EventArgs) Handles btnCalc.Click
-            FrmCalc.tb.Focus()
+            FrmEditor.tb.Focus()
             WriteFunction(vbNewLine)
         End Sub
 
         Private Sub btnNext_Click(sender As Object, e As EventArgs) Handles btnNext.Click
-            FrmCalc.tb.Focus()
-            If FrmCalc.tb.SelectionStart < FrmCalc.tb.Text.Length Then
-                FrmCalc.tb.SelectionStart += 1
+            FrmEditor.tb.Focus()
+            If FrmEditor.tb.SelectionStart < FrmEditor.tb.Text.Length Then
+                FrmEditor.tb.SelectionStart += 1
             End If
         End Sub
 
         Private Sub btnPrev_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
-            FrmCalc.tb.Focus()
-            If (FrmCalc.tb.SelectionStart > 0) Then
-                FrmCalc.tb.SelectionStart -= 1
+            FrmEditor.tb.Focus()
+            If (FrmEditor.tb.SelectionStart > 0) Then
+                FrmEditor.tb.SelectionStart -= 1
             End If
         End Sub
 
         Private Sub btnEnd_Click(sender As Object, e As EventArgs) Handles btnEnd.Click
-            FrmCalc.tb.Focus()
-            FrmCalc.tb.SelectionEnd = 0
-            FrmCalc.tb.SelectionStart = FrmCalc.tb.Text.Length
-            FrmCalc.VerticalScroll.Value = FrmCalc.VerticalScroll.Maximum
+            FrmEditor.tb.Focus()
+            FrmEditor.tb.SelectionEnd = 0
+            FrmEditor.tb.SelectionStart = FrmEditor.tb.Text.Length
+            FrmEditor.VerticalScroll.Value = FrmEditor.VerticalScroll.Maximum
         End Sub
         Private Sub btnRet_Click(sender As Object, e As EventArgs) Handles btnRet.Click
-            FrmCalc.tb.Focus()
-            FrmCalc.tb.SelectionStart = 0
-            FrmCalc.tb.SelectionEnd = 0
-            FrmCalc.VerticalScroll.Value = 0
+            FrmEditor.tb.Focus()
+            FrmEditor.tb.SelectionStart = 0
+            FrmEditor.tb.SelectionEnd = 0
+            FrmEditor.VerticalScroll.Value = 0
         End Sub
 
         Private Sub btnSqrt_MouseUp(sender As Object, e As MouseEventArgs) Handles btnSqrt.MouseUp
@@ -108,26 +85,26 @@ Namespace Calculator.Keyboards
         End Sub
 
         Private Sub btnDel_Click(sender As Object, e As EventArgs) Handles btnDel.Click
-            FrmCalc.tb.Focus()
-            If FrmCalc.tb.Text.Length > 0 Then
-                Dim start As Integer = FrmCalc.tb.SelectionStart
-                If FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart > 0 Then
-                    FrmCalc.tb.Text = FrmCalc.tb.Text.Substring(0, FrmCalc.tb.SelectionStart) &
-                        FrmCalc.tb.Text.Substring(FrmCalc.tb.SelectionStart + FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
-                    FrmCalc.tb.SelectionStart = start
-                ElseIf FrmCalc.tb.SelectionStart > 0 Then
-                    FrmCalc.tb.Text = FrmCalc.tb.Text.Substring(0, FrmCalc.tb.SelectionStart - 1) &
-                        FrmCalc.tb.Text.Substring(FrmCalc.tb.SelectionStart)
-                    FrmCalc.tb.SelectionStart = start - 1
+            FrmEditor.tb.Focus()
+            If FrmEditor.tb.Text.Length > 0 Then
+                Dim start As Integer = FrmEditor.tb.SelectionStart
+                If FrmEditor.tb.SelectionEnd - FrmEditor.tb.SelectionStart > 0 Then
+                    FrmEditor.tb.Text = FrmEditor.tb.Text.Substring(0, FrmEditor.tb.SelectionStart) &
+                        FrmEditor.tb.Text.Substring(FrmEditor.tb.SelectionStart + FrmEditor.tb.SelectionEnd - FrmEditor.tb.SelectionStart)
+                    FrmEditor.tb.SelectionStart = start
+                ElseIf FrmEditor.tb.SelectionStart > 0 Then
+                    FrmEditor.tb.Text = FrmEditor.tb.Text.Substring(0, FrmEditor.tb.SelectionStart - 1) &
+                        FrmEditor.tb.Text.Substring(FrmEditor.tb.SelectionStart)
+                    FrmEditor.tb.SelectionStart = start - 1
                 Else
-                    FrmCalc.tb.Text = FrmCalc.tb.Text.Substring(1)
-                    'frmCalc.tb.SelectionStart = start
+                    FrmEditor.tb.Text = FrmEditor.tb.Text.Substring(1)
+                    'FrmEditor.tb.SelectionStart = start
                 End If
             End If
         End Sub
 
         Private Sub btnPans_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
-            Using diag As New DiagFunctions
+            Using diag As New Dialogs.DiagFunctions
                 If diag.ShowDialog() = DialogResult.OK Then
                     WriteFunction(diag.Result)
                 End If
@@ -136,9 +113,9 @@ Namespace Calculator.Keyboards
 
         Private Sub btnAC_Click(sender As Object, e As EventArgs) Handles btnAC.Click
             pnl.Focus()
-            'frmCalc.BringToFront()
-            FrmCalc.tb.Text = ""
-            FrmCalc.lbResult.Text = "= "
+            'FrmEditor.BringToFront()
+            FrmEditor.tb.Text = ""
+            FrmEditor.lbResult.Text = "= "
         End Sub
 
         Private Sub btnFn_Click(sender As Object, e As EventArgs) Handles btnAsin.Click, btnAcos.Click,
@@ -157,7 +134,7 @@ Namespace Calculator.Keyboards
         End Sub
 
         Private Sub OskRight_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-            FrmCalc.Close()
+            FrmEditor.Close()
         End Sub
         Private _isMoving As Boolean
         Private _movingPrevPt As Point
@@ -173,77 +150,85 @@ Namespace Calculator.Keyboards
             If _isMoving Then
                 Me.Left += e.X - _movingPrevPt.X
                 Me.Top += e.Y - _movingPrevPt.Y
-                If FrmCalc.RSnap Then
-                    FrmCalc.Left += e.X - _movingPrevPt.X
-                    FrmCalc.Top += e.Y - _movingPrevPt.Y
-                    If FrmCalc.LSnap Then
-                        OskLeft.Left += e.X - _movingPrevPt.X
-                        OskLeft.Top += e.Y - _movingPrevPt.Y
+                If FrmEditor.RSnap Then
+                    FrmEditor.Left += e.X - _movingPrevPt.X
+                    FrmEditor.Top += e.Y - _movingPrevPt.Y
+                    If FrmViewer.Snap Then
+                        FrmViewer.Left += e.X - _movingPrevPt.X
+                        FrmViewer.Top += e.Y - _movingPrevPt.Y
                     End If
-                ElseIf OskLeft.Snap Then
-                    OskLeft.Left += e.X - _movingPrevPt.X
-                    OskLeft.Top += e.Y - _movingPrevPt.Y
+                End If
+                If KeyboardLeft.Snap Then
+                    KeyboardLeft.Left += e.X - _movingPrevPt.X
+                    KeyboardLeft.Top += e.Y - _movingPrevPt.Y
                 End If
             End If
         End Sub
 
         Private Sub osk_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, pnl.MouseUp, lbResult.MouseUp
             If e.Button = MouseButtons.Right Then
-                If FrmCalc.RSnap Then
-                    FrmCalc.RSnap = False
+                If FrmEditor.RSnap Then
+                    FrmEditor.RSnap = False
                     Me.Top += 6
                     If Snap Then
-                        FrmCalc.LSnap = False
-                        OskLeft.Top += 6
+                        FrmEditor.LSnap = False
+                        KeyboardLeft.Top += 6
                     End If
                 End If
                 If Snap Then
                     Me.Snap = False
-                    OskLeft.Snap = False
-                    If Me.Left < OskLeft.Left Then
+                    KeyboardLeft.Snap = False
+                    If Me.Left < KeyboardLeft.Left Then
                         Me.Left -= 9
-                        OskLeft.Left += 9
+                        KeyboardLeft.Left += 9
                     Else
                         Me.Left += 9
-                        OskLeft.Left -= 9
+                        KeyboardLeft.Left -= 9
                     End If
                 End If
             Else
                 _isMoving = False
-                If Me.Left < OskLeft.Right AndAlso Me.Left > OskLeft.Left AndAlso Me.Bottom > OskLeft.Top - 40 AndAlso Me.Top < OskLeft.Bottom + 100 Then
-                    Me.Left = OskLeft.Right - 12
-                    Me.Top = OskLeft.Top
+                If Me.Left < KeyboardLeft.Right AndAlso Me.Left > KeyboardLeft.Left AndAlso
+                    Me.Bottom > KeyboardLeft.Top - 40 AndAlso Me.Top < KeyboardLeft.Bottom + 100 Then
+                    Me.Left = KeyboardLeft.Right - 12
+                    Me.Top = KeyboardLeft.Top
                     Me.Snap = True
-                    OskLeft.Snap = True
-                    If FrmCalc.LSnap Then FrmCalc.RSnap = True
-                ElseIf Me.Right > OskLeft.Left AndAlso Me.Right < OskLeft.Right AndAlso (Me.Bottom < OskLeft.Top + 100 AndAlso Me.Top > OskLeft.Bottom - 100) Then
-                    Me.Left = OskLeft.Left - Me.Width + 12
-                    Me.Top = OskLeft.Top
+                    KeyboardLeft.Snap = True
+                    If FrmEditor.LSnap Then FrmEditor.RSnap = True
+                ElseIf Me.Right > KeyboardLeft.Left AndAlso Me.Right < KeyboardLeft.Right AndAlso
+                    (Me.Bottom < KeyboardLeft.Top + 100 AndAlso Me.Top > KeyboardLeft.Bottom - 100) Then
+                    Me.Left = KeyboardLeft.Left - Me.Width + 12
+                    Me.Top = KeyboardLeft.Top
                     Me.Snap = True
-                    OskLeft.Snap = True
-                    If FrmCalc.LSnap Then FrmCalc.RSnap = True
-                ElseIf Me.Right > Screen.PrimaryScreen.WorkingArea.Right
+                    KeyboardLeft.Snap = True
+                    If FrmEditor.LSnap Then FrmEditor.RSnap = True
+                ElseIf Me.Right > Screen.PrimaryScreen.WorkingArea.Right AndAlso Not FrmEditor.RSnap
                     Me.Left = Screen.PrimaryScreen.WorkingArea.Right - Me.Width + 12
-                ElseIf Me.Left < 0
+                ElseIf Me.Left < 0 AndAlso Not FrmEditor.RSnap
                     Me.Left = -12
                 End If
-                If Me.Top < FrmCalc.Bottom AndAlso Me.Top > FrmCalc.Top AndAlso Me.Left < FrmCalc.Right - 47 AndAlso Me.Right > FrmCalc.Left - 1 Then
-                    Me.Left = FrmCalc.Right - Me.Width
-                    Me.Top = FrmCalc.Bottom
-                    FrmCalc.RSnap = True
-                    If Me.Snap Then
-                        OskLeft.Left = FrmCalc.Left
-                        OskLeft.Top = FrmCalc.Bottom
-                        FrmCalc.LSnap = True
-                    End If
+                If Me.Top <= FrmEditor.Bottom AndAlso Me.Top > FrmEditor.Top AndAlso
+                    Me.Left < FrmEditor.Right - 47 AndAlso Me.Right > FrmEditor.Left - 1 Then
+                    Me.Left = FrmEditor.Right - Me.Width
+                    Me.Top = FrmEditor.Bottom
+                    FrmEditor.RSnap = True
                 End If
             End If
-            My.Settings.MainPos = FrmCalc.Left & "," & FrmCalc.Top
+            If FrmEditor.RSnap Then
+                Me.Left = FrmEditor.Right - Me.Width
+                Me.Top = FrmEditor.Bottom
+                If Me.Snap Then
+                    KeyboardLeft.Left = FrmEditor.Left
+                    KeyboardLeft.Top = FrmEditor.Bottom
+                    FrmEditor.LSnap = True
+                End If
+            End If
+            My.Settings.MainPos = FrmEditor.Left & "," & FrmEditor.Top
             My.Settings.RightKbdPos = Me.Left & "," & Me.Top
-            My.Settings.LeftKbdPos = OskLeft.Left & "," & OskLeft.Top
+            My.Settings.LeftKbdPos = KeyboardLeft.Left & "," & KeyboardLeft.Top
             My.Settings.OskLock = Me.Snap
-            My.Settings.LOskSnap = FrmCalc.LSnap
-            My.Settings.ROskSnap = FrmCalc.RSnap
+            My.Settings.LOskSnap = FrmEditor.LSnap
+            My.Settings.ROskSnap = FrmEditor.RSnap
             My.Settings.Save()
         End Sub
 
@@ -253,8 +238,7 @@ Namespace Calculator.Keyboards
 
         Private Sub osk_Enter(sender As Object, e As EventArgs)
             pnl.Focus()
-            FrmCalc.tb.Focus()
-            'frmCalc.BringToFront()
+            FrmEditor.tb.Focus()
         End Sub
 
         Private Sub btnBrLft_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrLft.MouseUp, btnSqBrL.MouseUp, btnCBL.MouseUp
@@ -262,14 +246,14 @@ Namespace Calculator.Keyboards
             Dim endSign As Char = ")"c
             If startSign = "["c Then
                 endSign = "]"c
-            ElseIf startSign = "}"c
+            ElseIf startSign = "{"c
                 endSign = "}"c
             End If
 
-            Dim start As Integer = FrmCalc.tb.SelectionStart
+            Dim start As Integer = FrmEditor.tb.SelectionStart
             Dim ct As Integer = 0
 
-            For Each c As Char In FrmCalc.tb.Text
+            For Each c As Char In FrmEditor.tb.Text
                 If c = startSign Then
                     ct += 1
                 ElseIf c = endSign
@@ -277,17 +261,17 @@ Namespace Calculator.Keyboards
                 End If
             Next
 
-            FrmCalc.tb.DeleteRange(start, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
-            FrmCalc.tb.AddText(startSign)
+            FrmEditor.tb.DeleteRange(start, FrmEditor.tb.SelectionEnd - FrmEditor.tb.SelectionStart)
+            FrmEditor.tb.AddText(startSign)
             If ct >= 0 Then
-                FrmCalc.tb.AddText(endSign)
-                FrmCalc.tb.SelectionStart -= 1
-                FrmCalc.tb.SelectionEnd -= 1
+                FrmEditor.tb.AddText(endSign)
+                FrmEditor.tb.SelectionStart -= 1
+                FrmEditor.tb.SelectionEnd -= 1
             End If
         End Sub
 
         Private Sub btnBrRt_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrRt.MouseUp
-            FrmCalc.tb.Focus()
+            FrmEditor.tb.Focus()
             Dim openBr As Char = "("c
             Dim closeBr As Char = ")"c
 
@@ -299,14 +283,14 @@ Namespace Calculator.Keyboards
                 closeBr = "}"c
             End If
 
-            Dim start As Integer = FrmCalc.tb.SelectionStart
-            FrmCalc.tb.Text = FrmCalc.tb.Text.Remove(FrmCalc.tb.SelectionStart, FrmCalc.tb.SelectionEnd - FrmCalc.tb.SelectionStart)
+            Dim start As Integer = FrmEditor.tb.SelectionStart
+            FrmEditor.tb.Text = FrmEditor.tb.Text.Remove(FrmEditor.tb.SelectionStart, FrmEditor.tb.SelectionEnd - FrmEditor.tb.SelectionStart)
 
             Dim insertStart As Boolean = True
-            For i As Integer = Math.Min(start, FrmCalc.tb.Text.Length - 1) To 0 Step -1
-                If FrmCalc.tb.Text(i) = closeBr Then
+            For i As Integer = Math.Min(start, FrmEditor.tb.Text.Length - 1) To 0 Step -1
+                If FrmEditor.tb.Text(i) = closeBr Then
                     Exit For
-                ElseIf FrmCalc.tb.Text(i) = openBr
+                ElseIf FrmEditor.tb.Text(i) = openBr
                     insertStart = False
                     Exit For
                 End If
@@ -315,19 +299,19 @@ Namespace Calculator.Keyboards
             If insertStart Then
                 For i As Integer = start - 1 To -1 Step -1
                     If i = -1 OrElse
-                        FrmCalc.tb.Text.Length > i AndAlso (FrmCalc.tb.Text(i) = ControlChars.Lf OrElse
-                                                                     FrmCalc.tb.Text(i) = ControlChars.Cr) Then
-                        FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(i + 1, openBr)
+                        FrmEditor.tb.Text.Length > i AndAlso (FrmEditor.tb.Text(i) = ControlChars.Lf OrElse
+                                                                     FrmEditor.tb.Text(i) = ControlChars.Cr) Then
+                        FrmEditor.tb.Text = FrmEditor.tb.Text.Insert(i + 1, openBr)
                         Exit For
                     End If
                 Next
-                FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start + 1, closeBr)
+                FrmEditor.tb.Text = FrmEditor.tb.Text.Insert(start + 1, closeBr)
             Else
-                FrmCalc.tb.Text = FrmCalc.tb.Text.Insert(start, closeBr)
+                FrmEditor.tb.Text = FrmEditor.tb.Text.Insert(start, closeBr)
             End If
 
-            FrmCalc.tb.SelectionStart = start + 2
-            FrmCalc.tb.SelectionEnd = start + 2
+            FrmEditor.tb.SelectionStart = start + 2
+            FrmEditor.tb.SelectionEnd = start + 2
         End Sub
 
         Private Sub btnln_MouseUp(sender As Object, e As MouseEventArgs) Handles btnlog.MouseUp
@@ -388,8 +372,26 @@ Namespace Calculator.Keyboards
             WriteFunction("yesno()")
         End Sub
 
-        Private Sub btnBrRt_Click(sender As Object, e As EventArgs) Handles btnBrRt.Click
+        Private Sub KeyboardRight_Load(sender As Object, e As EventArgs) Handles Me.Load
+            Me.Hide()
+            Me.Snap = My.Settings.OskLock
+            Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
 
+            For Each c As Control In Me.pnl.Controls
+                AddHandler c.Enter, AddressOf osk_Enter
+            Next
+        End Sub
+        Public Sub InitPosition()
+            If My.Settings.RightKbdPos <> "" AndAlso Not FrmEditor.RSnap Then
+                Dim spl() As String = My.Settings.RightKbdPos.Split(","c)
+                Me.Left = CInt(spl(0))
+                Me.Top = CInt(spl(1))
+            Else
+                Me.Left = FrmEditor.Right - Me.Width
+                Me.Top = FrmEditor.Bottom
+                My.Settings.RightKbdPos = Me.Left & "," & Me.Top
+                My.Settings.Save()
+            End If
         End Sub
     End Class
 End Namespace

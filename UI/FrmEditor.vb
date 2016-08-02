@@ -3,16 +3,16 @@ Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Cantus.Calculator.Evaluator
-Imports Cantus.Calculator.Evaluator.CommonTypes
-Imports Cantus.Calculator.Evaluator.Evaluator
-Imports Cantus.Calculator.Evaluator.Exceptions
-Imports Cantus.Calculator.Evaluator.ObjectTypes
-Imports Cantus.Calculator.ScintillaForCantus
+Imports Cantus.Evaluator
+Imports Cantus.Evaluator.CommonTypes
+Imports Cantus.Evaluator.Evaluator
+Imports Cantus.Evaluator.Exceptions
+Imports Cantus.Evaluator.ObjectTypes
+Imports Cantus.UI.ScintillaForCantus
 Imports ScintillaNET
 
-Namespace Calculator
-    Public Class FrmCalc
+Namespace UI
+    Public Class FrmEditor
 #Region "Declarations"
         ''' <summary>
         ''' Maximum length of text to display on the tooltip
@@ -67,7 +67,10 @@ Namespace Calculator
 
 #End Region
 #Region "Form Events"
-        Private Sub FrmCalc_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Private Sub FrmEditor_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+            SplashScreen.Show()
+            SplashScreen.BringToFront()
+            TmrLoad.Start()
 
             ' new version? upgrade settings from previous version + show message
             If My.Settings.ReqUpgrade Then
@@ -78,15 +81,6 @@ Namespace Calculator
 
             ' icon
             Me.Icon = My.Resources.Calculator
-
-            ' set location
-            If (My.Settings.MainPos <> "") Then
-                Dim spl() As String = My.Settings.MainPos.Split(","c)
-                Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
-            Else
-                Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
-                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 4 - Me.Height / 3)
-            End If
 
             ' setup evaluator
             Me._eval = Globals.Evaluator
@@ -109,14 +103,8 @@ Namespace Calculator
 
             def = def.Trim().Trim({ControlChars.Quote, "'"c})
             If opengraph Then
-                Graphing.FrmGraph.tb.Text = "0"
-                Graphing.FrmGraph.Show()
-                Graphing.FrmGraph.BringToFront()
-                Graphing.FrmGraph.btnGraph.PerformClick()
                 btnMin.PerformClick()
-                Graphing.FrmGraph.tb.Text = def
-                Graphing.FrmGraph.tb.Focus()
-                Graphing.FrmGraph.tb.SelectAll()
+                ' GRAPH
             Else
                 tb.Text = def
             End If
@@ -124,7 +112,6 @@ Namespace Calculator
             ' setup keyboards
             Me.RSnap = My.Settings.ROskSnap
             Me.LSnap = My.Settings.LOskSnap
-            Me.BringToFront()
 
             Try
                 ' delete updater backups if found
@@ -159,15 +146,10 @@ Namespace Calculator
                 Catch
                 End Try
 
-                Using diag As New DiagFeatureList()
+                Using diag As New Dialogs.DiagFeatureList()
                     diag.ShowDialog()
                 End Using
-
-                tb.Focus()
             End If
-
-            ' save location
-            My.Settings.MainPos = Me.Left & "," & Me.Top
 
             ' update tooltips
             UpdateLetterTT()
@@ -177,7 +159,12 @@ Namespace Calculator
             cbAutoUpd.Checked = My.Settings.AutoUpdate
             lbAbout.Text = lbAbout.Text.Replace("{VER}", Application.ProductVersion & " " & RELEASE_TYPE)
 
-            ' defaults
+            ' load other forms
+            Keyboards.KeyboardLeft.Show()
+            Keyboards.KeyboardRight.Show()
+            FrmViewer.Show()
+
+            ' faster drawing
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
 
             ' set up modes
@@ -211,31 +198,33 @@ Namespace Calculator
         End Sub
 
         ' form events
-        Private Sub FrmCalc_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        Private Sub FrmEditor_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
             Try
                 SaveSettings()
                 _eval.Dispose()
                 Thread.Sleep(250)
             Catch
             End Try
+            SplashScreen.Close()
         End Sub
-        Private Sub FrmCalc_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, tb.MouseUp, lbResult.MouseUp, pnlTb.MouseUp
+        Private Sub FrmEditor_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, tb.MouseUp, lbResult.MouseUp, pnlTb.MouseUp
             tb.Focus()
             pnlSettings.Hide()
         End Sub
-        Private Sub FrmCalc_Leave(sender As Object, e As EventArgs) Handles MyBase.Deactivate
+        Private Sub FrmEditor_Leave(sender As Object, e As EventArgs) Handles MyBase.Deactivate
             pnlSettings.Hide()
         End Sub
-        Private Sub FrmCalc_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
+        Private Sub FrmEditor_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
             If Me.WindowState = FormWindowState.Normal AndAlso My.Settings.ShowKbd Then
-                If LSnap Then Keyboards.OskLeft.Show()
-                If RSnap Then Keyboards.OskRight.Show()
+                If LSnap Then Keyboards.KeyboardLeft.Show()
+                If RSnap Then Keyboards.KeyboardRight.Show()
             End If
         End Sub
 
         Dim _ignoreNextKey As Boolean = False
-        Private Sub FrmCalc_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, tb.KeyUp
+        Private Sub FrmEditor_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, tb.KeyUp
             If e.KeyCode = Keys.Enter And e.Alt Then
+                If sender Is Me Then Return
                 EvaluateExpr()
             ElseIf e.Control AndAlso e.Alt Then
                 If e.KeyCode = Keys.P Then
@@ -249,7 +238,7 @@ Namespace Calculator
                         _eval.AngleMode = eAngleRepresentation.Gradian
                     End If
                     btnAngleRepr.Text = _eval.AngleMode.ToString()
-                    EvaluateExpr()
+                    EvaluateExpr(True)
                 ElseIf e.KeyCode = Keys.O Then
                     btnOMode_Click(btnOutputFormat, New EventArgs)
                 ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.L Then
@@ -262,14 +251,14 @@ Namespace Calculator
                         _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific
                     End If
                     btnOutputFormat.Text = _eval.OutputFormat.ToString()
-                    EvaluateExpr()
+                    EvaluateExpr(True)
                 ElseIf e.KeyCode = Keys.T Then
                     btnExplicit_Click(btnExplicit, New EventArgs())
                 End If
             End If
         End Sub
 
-        Private Sub FrmCalc_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
+        Private Sub FrmEditor_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
             If _ignoreNextKey Then
                 _ignoreNextKey = False
                 e.Handled = True
@@ -296,9 +285,20 @@ Namespace Calculator
                     _prevExp.RemoveAt(0) 'max expressions
                     _curExpId -= 1
                 End If
+
+                Dim logText As String = "'"
+                If tb.TextLength > 103 Then
+                    logText = tb.GetTextRange(0, 100) & "..."
+                Else
+                    logText = tb.Text
+                End If
+
+                ' write expression to log
+                FrmViewer.WriteLogSection(logText)
             End If
         End Sub
 
+        Private _lastAnsCount As Integer = 0
         Private Sub EvalComplete(sender As Object, result As Object)
             If lbResult.InvokeRequired Then
                 lbResult.BeginInvoke(Sub() EvalComplete(sender, result))
@@ -307,6 +307,10 @@ Namespace Calculator
 
                 ' display answer
                 lbResult.Text = AutoTrimDisplayText(ans)
+                If _eval.PrevAns.Count > _lastAnsCount Then
+                    FrmViewer.WriteLog("= " & ans)
+                End If
+                _lastAnsCount = _eval.PrevAns.Count
 
                 tb.Focus()
             End If
@@ -444,20 +448,16 @@ Namespace Calculator
             EvaluateExpr()
         End Sub
 
-        Private Sub btnGraph_Click(sender As Object, e As EventArgs) Handles btnGraph.Click
+        Private Sub btnGraph_Click(sender As Object, e As EventArgs)
             ' open graphing window
             tb.Focus()
-            If Graphing.FrmGraph.Visible Then
-                Graphing.FrmGraph.BringToFront()
-            Else
-                Graphing.FrmGraph.Show()
-            End If
+            ' GRAPH
             btnMin.PerformClick()
         End Sub
 
         Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
             tb.Focus()
-            Using diag As New DiagFunctions
+            Using diag As New Dialogs.DiagFunctions
                 If diag.ShowDialog() = DialogResult.OK Then
                     Dim start As Integer = tb.SelectionStart
                     tb.Text = tb.Text.Remove(
@@ -552,7 +552,17 @@ Namespace Calculator
                 ElseIf e.KeyCode = Keys.S Then
                     btnSettings.PerformClick()
                 ElseIf e.KeyCode = Keys.G Then
-                    btnGraph.PerformClick()
+                    FrmViewer.View = FrmViewer.eView.graphing
+                    Try
+                        FrmViewer.pnl.Controls(0).Select()
+                    Catch
+                    End Try
+                ElseIf e.KeyCode = Keys.R Then
+                    FrmViewer.View = FrmViewer.eView.log
+                    Try
+                        FrmViewer.pnl.Controls(0).Select()
+                    Catch
+                    End Try
                 End If
             ElseIf e.KeyCode = Keys.F12
                 OpenSaveAs()
@@ -589,7 +599,7 @@ Namespace Calculator
         End Sub
 
         Private Sub lbResult_TextChanged(sender As Object, e As EventArgs) Handles lbResult.TextChanged
-            Keyboards.OskRight.lbResult.Text = lbResult.Text
+            Keyboards.KeyboardRight.lbResult.Text = lbResult.Text
         End Sub
 #End Region
 #End Region
@@ -607,7 +617,7 @@ Namespace Calculator
                 btnOutputFormat.Text = _eval.OutputFormat.ToString()
                 pnlSettings.Show()
             Else
-                EvaluateExpr()
+                EvaluateExpr(True)
                 pnlSettings.Hide()
             End If
         End Sub
@@ -705,14 +715,14 @@ Namespace Calculator
             _updateStarted = False
         End Sub
         Private Sub ShowUpdForm()
-            Keyboards.OskLeft.Visible = False
-            Keyboards.OskRight.Visible = False
+            Keyboards.KeyboardLeft.Visible = False
+            Keyboards.KeyboardRight.Visible = False
             Me.Visible = False
             Using fup As New Updater.FrmUpdate
                 Updater.FrmUpdate.ShowDialog()
                 Updater.FrmUpdate.BringToFront()
-                Keyboards.OskLeft.SendToBack()
-                Keyboards.OskRight.SendToBack()
+                Keyboards.KeyboardLeft.SendToBack()
+                Keyboards.KeyboardRight.SendToBack()
             End Using
         End Sub
 #End Region
@@ -723,11 +733,11 @@ Namespace Calculator
 
         Private Sub btnMin_Click(sender As Object, e As EventArgs) Handles btnMin.Click
             Me.WindowState = FormWindowState.Minimized
-            If LSnap Then Keyboards.OskLeft.Hide()
-            If RSnap Then Keyboards.OskRight.Hide()
+            If LSnap Then Keyboards.KeyboardLeft.Hide()
+            If RSnap Then Keyboards.KeyboardRight.Hide()
         End Sub
 
-        Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles btnGraph.Enter, btnSettings.Enter, btnEval.Enter, btnMin.Enter, btnClose.Enter
+        Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles btnSettings.Enter, btnEval.Enter, btnMin.Enter, btnClose.Enter
             tb.Focus()
         End Sub
         Private Sub pnlMemLtrs_VisibleChanged(sender As Object, e As EventArgs) Handles pnlSettings.VisibleChanged
@@ -756,31 +766,22 @@ Namespace Calculator
             If _isMoving Then
                 Dim newLft As Integer = Me.Left + e.X - _movingPrevPt.X
                 Dim newTop As Integer = Me.Top + e.Y - _movingPrevPt.Y
-                If e.Y > 0 Then
-                    Me.Left = newLft
-                    Me.Top = newTop
-                    If LSnap Then
-                        Keyboards.OskLeft.Left = newLft
-                        Keyboards.OskLeft.Top = newTop + Me.Height - 1
-                    End If
-                    If RSnap Then
-                        Keyboards.OskRight.Left = newLft + Me.Width - Keyboards.OskRight.Width
-                        Keyboards.OskRight.Top = newTop + Me.Height - 1
-                    End If
-                Else
-                    If LSnap Then
-                        Keyboards.OskLeft.Left = newLft
-                        Keyboards.OskLeft.Top = newTop + Me.Height - 1
-                    End If
-                    If RSnap Then
-                        Keyboards.OskRight.Left = newLft + Me.Width - Keyboards.OskRight.Width
-                        Keyboards.OskRight.Top = newTop + Me.Height - 1
-                    End If
-                    Me.Left = newLft
-                    Me.Top = newTop
-                    Keyboards.OskLeft.BringToFront()
-                    Keyboards.OskRight.BringToFront()
+                Me.Left = newLft
+                Me.Top = newTop
+                If LSnap Then
+                    Keyboards.KeyboardLeft.Left = newLft
+                    Keyboards.KeyboardLeft.Top = newTop + Me.Height - 1
                 End If
+                If RSnap Then
+                    Keyboards.KeyboardRight.Left = newLft + Me.Width - Keyboards.KeyboardRight.Width
+                    Keyboards.KeyboardRight.Top = newTop + Me.Height - 1
+                End If
+                If FrmViewer.Snap Then
+                    FrmViewer.Left = newLft - FrmViewer.Width
+                    FrmViewer.Top = newTop
+                End If
+                Keyboards.KeyboardLeft.BringToFront()
+                Keyboards.KeyboardRight.BringToFront()
             End If
         End Sub
 
@@ -792,36 +793,59 @@ Namespace Calculator
                     Me.Top -= 6
                     My.Settings.ROskSnap = RSnap
                     My.Settings.LOskSnap = LSnap
-                    My.Settings.Save()
                 End If
+                If FrmViewer.Snap Then
+                    Me.Left += 6
+                    FrmViewer.Snap = False
+                    My.Settings.VSnap = False
+                End If
+                My.Settings.Save()
             Else
+                ' these parts are quite messy, and will need cleanup eventually
                 _isMoving = False
-                If Me.Bottom > Keyboards.OskRight.Top AndAlso Me.Bottom < Keyboards.OskRight.Bottom AndAlso Me.Left > Keyboards.OskRight.Left - 400 AndAlso Me.Right < Keyboards.OskRight.Right + 400 AndAlso Not RSnap Then
-                    Me.Left = Keyboards.OskRight.Right - Me.Width
-                    Me.Top = Keyboards.OskRight.Top - Me.Height
+                If Me.Right > FrmViewer.Left - 40 AndAlso Me.Left < FrmViewer.Right + 40 AndAlso
+                    (Me.Bottom > FrmViewer.Top AndAlso Me.Top < FrmViewer.Bottom) Then
+                    FrmViewer.Snap = True
+                    My.Settings.VSnap = True
+                    FrmViewer.Left = Me.Left - FrmViewer.Width
+                    FrmViewer.Top = Me.Top
+                End If
+                If Me.Bottom > Keyboards.KeyboardRight.Top AndAlso
+                    Me.Bottom < Keyboards.KeyboardRight.Top + Keyboards.KeyboardRight.Height / 2 AndAlso
+                    Me.Left > Keyboards.KeyboardRight.Left - 400 AndAlso
+                    Me.Right < Keyboards.KeyboardRight.Right + 400 AndAlso Not RSnap Then
+                    Me.Left = Keyboards.KeyboardRight.Right - Me.Width
+                    Me.Top = Keyboards.KeyboardRight.Top - Me.Height
                     Me.RSnap = True
                     If LSnap Then
-                        Keyboards.OskLeft.Left = Me.Left
-                        Keyboards.OskLeft.Top = Me.Bottom
+                        Keyboards.KeyboardLeft.Left = Me.Left
+                        Keyboards.KeyboardLeft.Top = Me.Bottom
                     End If
                 End If
-                If Me.Bottom >= Keyboards.OskLeft.Top AndAlso Me.Bottom < Keyboards.OskLeft.Bottom AndAlso (Me.Left > Keyboards.OskLeft.Left - 400 AndAlso Me.Right < Keyboards.OskLeft.Right + 400) AndAlso Not LSnap Then
-                    Me.Left = Keyboards.OskLeft.Left
-                    Me.Top = Keyboards.OskLeft.Top - Me.Height
+                If Me.Bottom >= Keyboards.KeyboardLeft.Top AndAlso
+                    Me.Bottom < Keyboards.KeyboardLeft.Top + Keyboards.KeyboardLeft.Height / 2 AndAlso
+                    (Me.Left > Keyboards.KeyboardLeft.Left - 400 AndAlso Me.Left < Keyboards.KeyboardLeft.Right + 400) AndAlso
+                    Not LSnap Then
+                    Me.Left = Keyboards.KeyboardLeft.Left
+                    Me.Top = Keyboards.KeyboardLeft.Top - Me.Height
                     Me.LSnap = True
                     If RSnap Then
-                        Keyboards.OskRight.Left = Me.Right - Keyboards.OskRight.Width
-                        Keyboards.OskRight.Top = Me.Bottom
+                        Keyboards.KeyboardRight.Left = Me.Right - Keyboards.KeyboardRight.Width
+                        Keyboards.KeyboardRight.Top = Me.Bottom
                     End If
                 End If
                 If LSnap AndAlso RSnap Then
-                    Keyboards.OskRight.Snap = True
-                    Keyboards.OskLeft.Snap = True
+                    Keyboards.KeyboardRight.Snap = True
+                    Keyboards.KeyboardLeft.Snap = True
                     My.Settings.OskLock = True
                 End If
+                If FrmViewer.Snap Then
+                    FrmViewer.Left = Me.Left - FrmViewer.Width
+                    FrmViewer.Top = Me.Top
+                End If
                 My.Settings.MainPos = Me.Left & "," & Me.Top
-                My.Settings.LeftKbdPos = Keyboards.OskLeft.Left & "," & Keyboards.OskLeft.Top
-                My.Settings.RightKbdPos = Keyboards.OskRight.Left & "," & Keyboards.OskRight.Top
+                My.Settings.LeftKbdPos = Keyboards.KeyboardLeft.Left & "," & Keyboards.KeyboardLeft.Top
+                My.Settings.RightKbdPos = Keyboards.KeyboardRight.Left & "," & Keyboards.KeyboardRight.Top
                 My.Settings.ROskSnap = RSnap
                 My.Settings.LOskSnap = LSnap
             End If
@@ -841,7 +865,7 @@ Namespace Calculator
             Else
                 btnOutputFormat.Text = "Raw"
             End If
-            EvaluateExpr()
+            EvaluateExpr(True)
         End Sub
 
         Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles btnAngleRepr.Click
@@ -857,7 +881,7 @@ Namespace Calculator
             Else
                 btnAngleRepr.Text = "Gradian"
             End If
-            EvaluateExpr()
+            EvaluateExpr(True)
         End Sub
 
         Private Sub pnlSettings_Paint(sender As Object, e As PaintEventArgs) Handles pnlSettings.Paint
@@ -872,7 +896,7 @@ Namespace Calculator
         End Sub
 
         Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles lbAbout.Click, btnLog.Click
-            Using diag As New DiagFeatureList()
+            Using diag As New Dialogs.DiagFeatureList()
                 diag.ShowDialog()
             End Using
             tb.Focus()
@@ -890,20 +914,20 @@ Namespace Calculator
             _updTh.Start()
         End Sub
         ' make sure the window doesn't get maximized - that would cause weird behaviour
-        Private Sub FrmCalc_LocationChanged(sender As Object, e As EventArgs) Handles Me.LocationChanged
+        Private Sub FrmEditor_LocationChanged(sender As Object, e As EventArgs) Handles Me.LocationChanged
             If Me.WindowState = FormWindowState.Maximized Then Me.WindowState = FormWindowState.Normal
-            If Keyboards.OskRight.WindowState = FormWindowState.Maximized Then
-                Keyboards.OskRight.WindowState = FormWindowState.Normal
+            If Keyboards.KeyboardRight.WindowState = FormWindowState.Maximized Then
+                Keyboards.KeyboardRight.WindowState = FormWindowState.Normal
                 If RSnap Then
-                    Keyboards.OskRight.Left = Me.Right - Keyboards.OskRight.Width
-                    Keyboards.OskRight.Top = Me.Bottom
+                    Keyboards.KeyboardRight.Left = Me.Right - Keyboards.KeyboardRight.Width
+                    Keyboards.KeyboardRight.Top = Me.Bottom
                 End If
             End If
-            If Keyboards.OskLeft.WindowState = FormWindowState.Maximized Then
-                Keyboards.OskLeft.WindowState = FormWindowState.Normal
+            If Keyboards.KeyboardLeft.WindowState = FormWindowState.Maximized Then
+                Keyboards.KeyboardLeft.WindowState = FormWindowState.Normal
                 If LSnap Then
-                    Keyboards.OskLeft.Left = Me.Left
-                    Keyboards.OskLeft.Top = Me.Bottom
+                    Keyboards.KeyboardLeft.Left = Me.Left
+                    Keyboards.KeyboardLeft.Top = Me.Bottom
                 End If
             End If
         End Sub
@@ -1038,7 +1062,17 @@ Namespace Calculator
 
             If lenEntered > 0 Then
 
-                Dim curLineText As String = tb.Lines(tb.CurrentLine).Text
+                Dim curLineText As String = tb.GetTextRange(tb.Lines(tb.CurrentLine).Position, tb.CurrentPosition)
+
+                Dim singleQuote As Boolean = False
+                Dim doubleQuote As Boolean = False
+                For i As Integer = 0 To curLineText.Count - 1
+                    If curLineText(i) = "'"c Then singleQuote = Not singleQuote
+                    If curLineText(i) = """"c Then doubleQuote = Not doubleQuote
+                Next
+                If singleQuote OrElse doubleQuote Then Return ' do not autocomplete string
+
+                curLineText = tb.Lines(tb.CurrentLine).Text
                 Dim keyword As String = curLineText
 
                 Dim blockKwd As String() = ("class function namespace").Split(" "c)
@@ -1115,11 +1149,35 @@ Namespace Calculator
                         Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
                         Reflection.BindingFlags.DeclaredOnly)
 
+                    Dim varname As String = ""
+                    Dim type As Type = Nothing
+                    If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso
+                        _eval.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
+
+                        varname = enteredWord.Remove(enteredWord.IndexOf("."))
+
+                        Dim var As Object = Nothing
+                        var = _eval.GetVariable(enteredWord.Remove(enteredWord.IndexOf(".")))
+                        If TypeOf var Is Reference AndAlso Not TypeOf DirectCast(var, Reference).GetRefObject() Is Reference Then
+                            type = DirectCast(var, Reference).Resolve().GetType
+                        Else
+                            type = var.GetType()
+                        End If
+                    End If
+
                     For Each fn As MethodInfo In info
-                        If nsMode AndAlso enteredWord.StartsWith("cantus") Then
-                            autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" &
-                                          If(fn.GetParameters().Count = 0, "", "_") & ")")
-                        ElseIf Not nsMode
+                        If nsMode Then
+                            If enteredWord.StartsWith("cantus") Then
+                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" &
+                                              If(fn.GetParameters().Count = 0, "", "_") & ")")
+
+                            ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) Then
+                                If fn.GetParameters(0).ParameterType.IsAssignableFrom(type) Then
+                                    autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" &
+                                          If(fn.GetParameters().Count <= 1, "", "_") & ")")
+                                End If
+                            End If
+                        Else
                             autoCList.Add(fn.Name.ToLower() & "(" &
                                           If(fn.GetParameters().Count = 0, "", "_") & ")")
                         End If
@@ -1276,6 +1334,32 @@ Namespace Calculator
                 tb.SelectionStart -= 1
                 tb.SelectionEnd -= 1
             End If
+        End Sub
+
+        Private Sub TmrLoad_Tick(sender As Object, e As EventArgs) Handles TmrLoad.Tick
+            SplashScreen.Progress.Value += 4
+            If SplashScreen.Progress.Value < 100 Then Return
+            TmrLoad.Stop()
+                SplashScreen.Hide()
+
+            ' set location
+            If (My.Settings.MainPos <> "") Then
+                Dim spl() As String = My.Settings.MainPos.Split(","c)
+                Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
+            Else
+                Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
+                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 4 - Me.Height / 3)
+            End If
+
+            ' save location
+            My.Settings.MainPos = Me.Left & "," & Me.Top
+
+            'set location for other forms
+            Keyboards.KeyboardLeft.Show()
+            Keyboards.KeyboardRight.Show()
+            FrmViewer.InitPosition()
+            Keyboards.KeyboardLeft.InitPosition()
+            Keyboards.KeyboardRight.InitPosition()
         End Sub
 #End Region
     End Class

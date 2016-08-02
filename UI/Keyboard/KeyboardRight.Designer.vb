@@ -1,6 +1,6 @@
-﻿Namespace Calculator.Keyboards
+﻿Namespace UI.Keyboards
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-    Partial Class OskRight
+    Partial Class KeyboardRight
         Inherits System.Windows.Forms.Form
 
         'Form overrides dispose to clean up the component list.
@@ -88,7 +88,6 @@
             Me.btnAC = New System.Windows.Forms.Button()
             Me.btnDel = New System.Windows.Forms.Button()
             Me.btnComma = New System.Windows.Forms.Button()
-            Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
             Me.tt = New System.Windows.Forms.ToolTip(Me.components)
             Me.pnl.SuspendLayout()
             Me.SuspendLayout()
@@ -1399,16 +1398,11 @@
             Me.btnComma.Text = ","
             Me.btnComma.UseVisualStyleBackColor = False
             '
-            'TmrLoad
-            '
-            Me.TmrLoad.Enabled = True
-            Me.TmrLoad.Interval = 20
-            '
             'tt
             '
             Me.tt.ShowAlways = True
             '
-            'OskRight
+            'KeyboardRight
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
@@ -1423,7 +1417,7 @@
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximumSize = New System.Drawing.Size(580, 300)
             Me.MinimumSize = New System.Drawing.Size(580, 300)
-            Me.Name = "OskRight"
+            Me.Name = "KeyboardRight"
             Me.ShowIcon = False
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
@@ -1468,7 +1462,6 @@
         Friend WithEvents btnQdtc As Button
         Friend WithEvents btnPow10 As Button
         Friend WithEvents lbResult As Label
-        Friend WithEvents TmrLoad As Timer
         Friend WithEvents tt As ToolTip
         Friend WithEvents btnPerm As Button
         Friend WithEvents btnChoose As Button

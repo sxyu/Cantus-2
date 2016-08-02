@@ -3,12 +3,12 @@ Imports System.IO
 Imports System.Reflection
 Imports System.Text
 Imports System.Threading
-Imports Cantus.Calculator.Evaluator.CommonTypes
-Imports Cantus.Calculator.Evaluator.Exceptions
-Imports Cantus.Calculator.Evaluator.ObjectTypes
-Imports Cantus.Calculator.Evaluator.StatementRegistar
+Imports Cantus.Evaluator.CommonTypes
+Imports Cantus.Evaluator.Exceptions
+Imports Cantus.Evaluator.ObjectTypes
+Imports Cantus.Evaluator.StatementRegistar
 
-Namespace Calculator.Evaluator
+Namespace Evaluator
     Public Module Globals
         Friend ReadOnly Property Evaluator As New Evaluator()
     End Module
@@ -81,7 +81,7 @@ Namespace Calculator.Evaluator
             ''' Get the minimum number of arguments required
             ''' </summary>
             ''' <returns></returns>
-            Public ReadOnly Property MinArgsCount As Integer
+            Public ReadOnly Property RequiredArgsCount As Integer
                 Get
                     For i As Integer = 0 To Defaults.Count - 1
                         If Not (Defaults(i) Is Nothing OrElse
@@ -1028,6 +1028,16 @@ Namespace Calculator.Evaluator
         Private _threads As New List(Of Thread)
 
         ''' <summary>
+        ''' The max number of threads to spawn before killing old threads
+        ''' </summary>
+        Private Const MAX_THREADS As Integer = 5
+
+        ''' <summary>
+        ''' Counter for determining how many threads have been started since the last kill operation
+        ''' </summary>
+        Private _threadCt As Integer = 1
+
+        ''' <summary>
         ''' The id used for the next unnamed scope created from this evaluator
         ''' </summary>
         Private _anonymousScopeID As Integer = 0
@@ -1219,9 +1229,9 @@ Namespace Calculator.Evaluator
             path = path.Trim()
 
             ' if file does not exist, see if it is using SCOPE_SEP notation instead of absolute path
-            If Not IO.File.Exists(path) Then
+            If Not File.Exists(path) Then
                 '
-                If IO.Directory.Exists(path) Then ' it's a directory, so load entire directory and exit
+                If Directory.Exists(path) Then ' it's a directory, so load entire directory and exit
                     LoadDir(path, asInternal, import)
                     Return
                 End If
@@ -1230,8 +1240,8 @@ Namespace Calculator.Evaluator
                 If path.EndsWith(IO.Path.DirectorySeparatorChar & "can") Then path = path.Remove(path.Length - 4)
                 If Not path.EndsWith(".can") Then path &= ".can"
 
-                If Not IO.File.Exists(path) Then
-                    If IO.Directory.Exists(path) Then ' load entire directory, with SCORE_SEP notation
+                If Not File.Exists(path) Then
+                    If Directory.Exists(path) Then ' load entire directory, with SCORE_SEP notation
                         LoadDir(path, asInternal, import)
                         Return
                     End If
@@ -1349,11 +1359,13 @@ Namespace Calculator.Evaluator
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, Eval(script, noSaveAns, declarative, internal))
+                                     Catch ex As ThreadAbortException ' do not return, do nothing
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
                                      Me._threads.Remove(Threading.Thread.CurrentThread)
                                  End Sub)
+            ManageThreads()
             Me._threads.Add(th)
             th.Start()
         End Sub
@@ -1415,8 +1427,20 @@ Namespace Calculator.Evaluator
                         ' multiline lambda
                         If fullLine.TrimEnd.EndsWith("=>") OrElse
                             (fullLine.TrimEnd().EndsWith("`") AndAlso
-                            fullLine.IndexOf("`") = fullLine.LastIndexOf("`")) Then
+                            InternalFunctions.Count(fullLine, "`") Mod 2 = 1) Then
                             lineNum += 1
+                            While lineNum < lines.Count
+                                fullLine = fullLine & vbNewLine & lines(lineNum)
+                                lineNum += 1
+                            End While
+                        End If
+
+                        ' multiline/triple quoted string
+                        Dim tripleQuote As String = ControlChars.Quote & ControlChars.Quote & ControlChars.Quote
+                        If fullLine.TrimEnd.Contains(tripleQuote) AndAlso
+                            InternalFunctions.Count(fullLine, tripleQuote) Mod 2 = 1 Then
+                            lineNum += 1
+
                             While lineNum < lines.Count
                                 fullLine = fullLine & vbNewLine & lines(lineNum)
                                 lineNum += 1
@@ -1425,9 +1449,9 @@ Namespace Calculator.Evaluator
 
                         ' update global line number (only update for non-blank lines and does not update within blocks)
                         If curBlock Is Nothing Then Me._curLine = Me._baseLine + lineNum
-                        End If
+                    End If
 
-                        Dim indent As Integer = LineIndentLevel(fullLine)
+                    Dim indent As Integer = LineIndentLevel(fullLine)
                     If rootIndentLevel < 0 Then rootIndentLevel = indent
 
                     ' allow inline expressions with ; (assume same indent level)
@@ -1618,8 +1642,8 @@ Namespace Calculator.Evaluator
                     Throw ex
                 End If
 
+            Catch ex As ThreadAbortException ' do nothing
             Catch ex As Exception
-                'MsgBox(ex.ToString)
                 Throw New EvaluatorException(ex.Message, _curLine + 1)
             End Try
         End Function
@@ -1637,11 +1661,13 @@ Namespace Calculator.Evaluator
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, EvalRaw(script, noSaveAns, declarative, internal))
+                                     Catch ex As ThreadAbortException ' do nothing
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
                                      Me._threads.Remove(Threading.Thread.CurrentThread)
                                  End Sub)
+            ManageThreads()
             Me._threads.Add(th)
             th.Start()
         End Sub
@@ -1686,11 +1712,13 @@ Namespace Calculator.Evaluator
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, EvalExpr(expr, noSaveAns, conditionMode))
+                                     Catch ex As ThreadAbortException ' do nothing
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
                                      Me._threads.Remove(Threading.Thread.CurrentThread)
                                  End Sub)
+            ManageThreads()
             Me._threads.Add(th)
             th.Start()
         End Sub
@@ -1752,11 +1780,13 @@ Namespace Calculator.Evaluator
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, EvalExprRaw(expr, noSaveAns, conditionMode))
+                                     Catch ex As ThreadAbortException ' do nothing
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
                                      Me._threads.Remove(Threading.Thread.CurrentThread)
                                  End Sub)
+            ManageThreads()
             Me._threads.Add(th)
             th.Start()
         End Sub
@@ -2236,6 +2266,7 @@ Namespace Calculator.Evaluator
             End If
 
             Dim argLst As New List(Of Object)
+            Dim optDict As New Dictionary(Of String, Object)
             If Not baseObj Is Nothing Then
                 If TypeOf baseObj Is Tuple Then ' if a tuple is used, supplies multiple parameters
                     For Each r As Reference In CType(CType(baseObj, Tuple).GetValue(),
@@ -2257,20 +2288,53 @@ Namespace Calculator.Evaluator
                 End If
             End If
 
-            Dim tmpEval As Evaluator = Me.ShallowCopy()
+            Dim lastIdx As Integer = 0
             If Not String.IsNullOrWhiteSpace(args) Then
-                Dim tuple As Object = New Tuple("(" & args & ")", tmpEval, False).GetValue()
-                Dim otherarglst As New List(Of Reference)
+                Dim tuple As New List(Of Reference)
 
-                If TypeOf tuple Is Reference() Then
-                    otherarglst.AddRange(DirectCast(tuple, Reference()))
-                ElseIf TypeOf tuple Is Reference
-                    otherarglst.Add(DirectCast(tuple, ObjectTypes.Reference))
-                Else
-                    otherarglst.Add(New ObjectTypes.Reference(tuple))
-                End If
+                For i As Integer = 0 To args.Length
+                    Dim c As Char = ","c
+                    If i < args.Length Then
+                        c = args(i)
+                        If OperatorRegistar.OperatorExists(c) Then
+                            Dim op As OperatorRegistar.Operator = OperatorRegistar.OperatorWithSign(c)
+                            If TypeOf op Is OperatorRegistar.Bracket AndAlso
+                                DirectCast(op, OperatorRegistar.Bracket).OpenBracket = c Then
+                                i += DirectCast(op, OperatorRegistar.Bracket).FindCloseBracket(
+                                                                                          args.Substring(i + 1),
+                                                                                          OperatorRegistar) - 1 +
+                                                                                          DirectCast(op,
+                                                                                          OperatorRegistar.Bracket).CloseBracket.Length
+                                Continue For
+                            End If
+                        End If
+                    End If
 
-                For Each ref As Reference In otherarglst
+                    If c = ","c Then
+                        Dim lastSect As String = args.Substring(lastIdx, i - lastIdx)
+                        lastIdx = i + 1
+                        Dim optVar As String = ""
+                        If lastSect.Contains("=") Then
+                            optVar = lastSect.Remove(lastSect.IndexOf("="))
+                            If lastSect.IndexOf("=") + 1 = lastSect.Length Then
+                                lastSect = ""
+                            Else
+                                lastSect = lastSect.Substring(lastSect.IndexOf("=") + 1)
+                            End If
+                        End If
+
+                        Dim resObj As Object = EvalExprRaw(lastSect, True, True)
+                        If optVar <> "" Then
+                            optDict(optVar) = resObj
+                        ElseIf optDict.Count > 0 Then ' cannot have normal arguments after named ones
+                            Throw New SyntaxException("Unnamed parameters must precede all named parameters")
+                        Else
+                            tuple.Add(New Reference(resObj))
+                        End If
+                    End If
+                Next
+
+                For Each ref As Reference In tuple
                     If ref Is Nothing Then
                         argLst.Add(Double.NaN)
                     Else
@@ -2339,7 +2403,7 @@ Namespace Calculator.Evaluator
 
                 ElseIf HasUserFunction(fn) Then ' user functions
 
-                    Dim execResult As Object = ExecUserFunction(fn, argLst, tmpEval)
+                    Dim execResult As Object = ExecUserFunction(fn, argLst, optDict)
                     lst.Add(DetectType(execResult, True))
                     Return lst
 
@@ -2864,9 +2928,9 @@ Namespace Calculator.Evaluator
         ''' <summary>
         ''' Execute the function with the given arguments
         ''' </summary>
-        ''' <param name="optionalArgsSrcEval">The evaluator to get optional arguments from, as variables</param>
+        ''' <param name="optionalArgs">A dictionary containing values for optional arguments</param>
         Public Function ExecUserFunction(name As String, args As IEnumerable(Of Object),
-                                         Optional optionalArgsSrcEval As Evaluator = Nothing) As Object
+                                         Optional optionalArgs As Dictionary(Of String, Object) = Nothing) As Object
             Dim scope As String = _Scope
             name = RemoveRedundantScope(name, scope)
             If HasUserFunction(name) Then
@@ -2892,25 +2956,21 @@ Namespace Calculator.Evaluator
                 Dim argnames As List(Of String) = uf.Args
 
                 If args.Count <= argnames.Count AndAlso (args.Count = argnames.Count OrElse
-                    args.Count >= uf.MinArgsCount AndAlso Not optionalArgsSrcEval Is Nothing) Then
+                    args.Count >= uf.RequiredArgsCount AndAlso Not optionalArgs Is Nothing) Then
                     For i As Integer = 0 To args.Count - 1
                         tmpEval.SetVariable(argnames(i), args(i))
                     Next
 
-                    ' named args
-                    If args.Count < argnames.Count Then
-                        For i As Integer = args.Count To argnames.Count - 1
-                            If Not optionalArgsSrcEval.GetVariableRef(argnames(i)) Is Nothing AndAlso
-                                 optionalArgsSrcEval.GetVariableRef(argnames(i)).ToString() <> "Undefined" Then
-                                tmpEval.SetVariable(argnames(i), optionalArgsSrcEval.GetVariableRef(argnames(i)))
-                            Else
-                                tmpEval.SetVariable(argnames(i), uf.Defaults(i))
-                            End If
-                        Next
-                    End If
+                    ' named/optional args
+                    For i As Integer = args.Count To argnames.Count - 1
+                        If optionalArgs.ContainsKey(argnames(i)) Then
+                            tmpEval.SetVariable(argnames(i), optionalArgs(argnames(i))) ' use provided value
+                        Else
+                            tmpEval.SetVariable(argnames(i), uf.Defaults(i)) ' use default value
+                        End If
+                    Next
                 Else
-                    Throw New EvaluatorException(name & " Then :
-                                 " & argnames.Count & " parameter(s) expected")
+                    Throw New EvaluatorException(name & " : " & argnames.Count & " parameter(s) expected")
                 End If
 
                 ' execute the function in a new scope
@@ -2968,7 +3028,7 @@ Namespace Calculator.Evaluator
                         Throw New EvaluatorException(name.ToLowerInvariant() & " Parameter " & maxParamCt + 1 &
                                                     " '" & paramTypeName & "' Type Expected")
                     End If
-                            maxParamCt += 1
+                    maxParamCt += 1
                 Next
 
                 If parameterMismatch OrElse args.Count > maxParamCt Then
@@ -3344,7 +3404,8 @@ Namespace Calculator.Evaluator
             Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
 
             Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
-                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine, If(scopeName = "", Me._Scope, scopeName), False)
+                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine,
+                                     If(scopeName = "", Me._Scope, scopeName), False)
             For Each import As String In GetAllAccessibleScopes()
                 res.Import(import)
             Next
@@ -3372,12 +3433,36 @@ Namespace Calculator.Evaluator
             Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
 
             Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
-                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine, If(scopeName = "", Me._Scope, scopeName), False)
+                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine,
+                                     If(scopeName = "", Me._Scope, scopeName), False)
             For Each import As String In GetAllAccessibleScopes()
                 res.Import(import)
             Next
             Return res
         End Function
+
+        ''' <summary>
+        ''' Internal function for managing threads before each async operation
+        ''' </summary>
+        Private Sub ManageThreads()
+            If Me._threads.Count > 0 Then
+                Me._threadCt += 1
+            Else
+                Me._threadCt = 0
+            End If
+
+            If Me._threadCt > MAX_THREADS Then
+                Try
+                    If Thread.CurrentThread.ManagedThreadId <> Me._threads(0).ManagedThreadId Then
+                        Me._threads(0).Abort()
+                        Me._threads.RemoveAt(0)
+                        _threadCt -= 1
+                    End If
+                Catch
+                End Try
+            End If
+
+        End Sub
 
         ''' <summary>
         ''' Stop all threads, optionally sparing the thread marked as haveMercy
@@ -3393,6 +3478,7 @@ Namespace Calculator.Evaluator
                 Catch
                 End Try
             Next
+            Me._threadCt = 0
         End Sub
 
         ''' <summary>

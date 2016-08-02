@@ -133,7 +133,13 @@
     <Import Include="System.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ScintillaForCantus.vb" />
+    <Compile Include="UI\FrmViewer.Designer.vb">
+      <DependentUpon>FrmViewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FrmViewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Scintilla\ScintillaForCantus.vb" />
     <Compile Include="EmbeddedAssembly.vb" />
     <Compile Include="Main.vb" />
     <Compile Include="Evaluator\BigDecimal.vb" />
@@ -145,24 +151,30 @@
     </Compile>
     <Compile Include="Evaluator\EvalOperators.vb" />
     <Compile Include="Evaluator\EvalObjectTypes.vb" />
-    <Compile Include="FrmCalc.vb">
+    <Compile Include="UI\FrmEditor.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmCalc.Designer.vb">
-      <DependentUpon>FrmCalc.vb</DependentUpon>
+    <Compile Include="UI\FrmEditor.Designer.vb">
+      <DependentUpon>FrmEditor.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Graphing\FrmGraph.Designer.vb">
-      <DependentUpon>FrmGraph.vb</DependentUpon>
+    <Compile Include="UI\GraphingSystem.Designer.vb">
+      <DependentUpon>GraphingSystem.vb</DependentUpon>
     </Compile>
-    <Compile Include="Graphing\FrmGraph.vb">
-      <SubType>Form</SubType>
+    <Compile Include="UI\GraphingSystem.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Evaluator\Evaluator.vb" />
-    <Compile Include="Keyboard\DiagFunctions.Designer.vb">
+    <Compile Include="UI\Keyboard\DiagFunctions.Designer.vb">
       <DependentUpon>DiagFunctions.vb</DependentUpon>
     </Compile>
-    <Compile Include="Keyboard\DiagFunctions.vb">
+    <Compile Include="UI\Keyboard\DiagFunctions.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SplashScreen.Designer.vb">
+      <DependentUpon>SplashScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SplashScreen.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Updater\DiagFeatureList.Designer.vb">
@@ -192,28 +204,34 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Keyboard\KeyboardRight.Designer.vb">
+    <Compile Include="UI\Keyboard\KeyboardRight.Designer.vb">
       <DependentUpon>KeyboardRight.vb</DependentUpon>
     </Compile>
-    <Compile Include="Keyboard\KeyboardRight.vb">
+    <Compile Include="UI\Keyboard\KeyboardRight.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Keyboard\KeyboardLeft.Designer.vb">
+    <Compile Include="UI\Keyboard\KeyboardLeft.Designer.vb">
       <DependentUpon>KeyboardLeft.vb</DependentUpon>
     </Compile>
-    <Compile Include="Keyboard\KeyboardLeft.vb">
+    <Compile Include="UI\Keyboard\KeyboardLeft.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FrmCalc.resx">
-      <DependentUpon>FrmCalc.vb</DependentUpon>
+    <EmbeddedResource Include="UI\FrmEditor.resx">
+      <DependentUpon>FrmEditor.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphing\FrmGraph.resx">
-      <DependentUpon>FrmGraph.vb</DependentUpon>
+    <EmbeddedResource Include="UI\FrmViewer.resx">
+      <DependentUpon>FrmViewer.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Keyboard\DiagFunctions.resx">
+    <EmbeddedResource Include="UI\GraphingSystem.resx">
+      <DependentUpon>GraphingSystem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Keyboard\DiagFunctions.resx">
       <DependentUpon>DiagFunctions.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SplashScreen.resx">
+      <DependentUpon>SplashScreen.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Updater\DiagFeatureList.resx">
       <DependentUpon>DiagFeatureList.vb</DependentUpon>
@@ -227,10 +245,10 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Keyboard\KeyboardRight.resx">
+    <EmbeddedResource Include="UI\Keyboard\KeyboardRight.resx">
       <DependentUpon>KeyboardRight.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Keyboard\KeyboardLeft.resx">
+    <EmbeddedResource Include="UI\Keyboard\KeyboardLeft.resx">
       <DependentUpon>KeyboardLeft.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -252,7 +270,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Calculator.ico" />
-    <EmbeddedResource Include="ScintillaNET.dll" />
+    <EmbeddedResource Include="Scintilla\ScintillaNET.dll" />
     <None Include="Resources\windowsettings.png" />
     <None Include="Resources\settings.png" />
     <None Include="Resources\UpdateMsg.txt" />

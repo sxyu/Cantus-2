@@ -27,7 +27,23 @@ Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resourc
 *********************************************************************************************
 What's new
 *********************************************************************************************
--Minor fix
+-New window (snappable to the editor) on the left side
+  -My Results: Store important answers here. 
+   Press Alt+Enter to evaluate the current expression and write it to this window
+  -Graph: Same as the old graphing window
+-Better support for optional/named arguments, now works as expected
+-Multiline strings: """ Use triple quotes 
+ """
+-Improved syntax highlighting and autocompletion in the editor
+-Added save and open buttons to the editor as well as the shortcuts Ctrl+S and Ctrl+O
+  (Older shortcuts F11 and F12 still available)
+-Editor is now slightly taller
+-Minor fixes
+
+*********************************************************************************************
+New from 2.1.3.89
+*********************************************************************************************
+-Minor fixes
 
 *********************************************************************************************
 New from 2.1.2.87

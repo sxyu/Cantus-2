@@ -1,12 +1,17 @@
-﻿Namespace Calculator.Graphing
+﻿Namespace UI.Graphing
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-    Partial Class FrmGraph
-        Inherits System.Windows.Forms.Form
+    Partial Class GraphingSystem
+        Inherits System.Windows.Forms.UserControl
 
         'Form overrides dispose to clean up the component list.
         <System.Diagnostics.DebuggerNonUserCode()>
         Protected Overrides Sub Dispose(ByVal disposing As Boolean)
             Try
+                _ended = True
+                _buffer.Dispose()
+                My.Settings.GrpSplitDistance = Me.Height - split.SplitterDistance
+                My.Settings.Save()
+
                 If disposing AndAlso components IsNot Nothing Then
                     components.Dispose()
                 End If
@@ -24,7 +29,7 @@
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
-            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmGraph))
+            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(GraphingSystem))
             Me.split = New System.Windows.Forms.SplitContainer()
             Me.btnScale = New System.Windows.Forms.Button()
             Me.pnlWindow = New System.Windows.Forms.Panel()
@@ -132,7 +137,7 @@
             Me.split.Panel2.Controls.Add(Me.pnlInput)
             Me.split.Panel2.Controls.Add(Me.lbFx)
             Me.split.Size = New System.Drawing.Size(984, 661)
-            Me.split.SplitterDistance = 623
+            Me.split.SplitterDistance = 626
             Me.split.SplitterWidth = 3
             Me.split.TabIndex = 0
             '
@@ -164,16 +169,16 @@
             'pnlWindow
             '
             Me.pnlWindow.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.pnlWindow.Controls.Add(Me.tbWBot)
+            Me.pnlWindow.Controls.Add(Me.tbWLft)
+            Me.pnlWindow.Controls.Add(Me.tbWTop)
+            Me.pnlWindow.Controls.Add(Me.tbWRht)
             Me.pnlWindow.Controls.Add(Me.btnWOK)
             Me.pnlWindow.Controls.Add(Me.btnWCancel)
             Me.pnlWindow.Controls.Add(Me.lbWLft)
-            Me.pnlWindow.Controls.Add(Me.tbWLft)
             Me.pnlWindow.Controls.Add(Me.lbWRht)
-            Me.pnlWindow.Controls.Add(Me.tbWRht)
             Me.pnlWindow.Controls.Add(Me.lbWBot)
-            Me.pnlWindow.Controls.Add(Me.tbWBot)
             Me.pnlWindow.Controls.Add(Me.lbWTop)
-            Me.pnlWindow.Controls.Add(Me.tbWTop)
             Me.pnlWindow.Controls.Add(Me.pnlWHeader)
             Me.pnlWindow.Location = New System.Drawing.Point(280, 160)
             Me.pnlWindow.Name = "pnlWindow"
@@ -228,7 +233,7 @@
             Me.lbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
             Me.lbWLft.AutoSize = True
             Me.lbWLft.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.lbWLft.Location = New System.Drawing.Point(80, 123)
+            Me.lbWLft.Location = New System.Drawing.Point(80, 117)
             Me.lbWLft.Name = "lbWLft"
             Me.lbWLft.Size = New System.Drawing.Size(48, 21)
             Me.lbWLft.TabIndex = 17
@@ -249,7 +254,7 @@
             Me.lbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
             Me.lbWRht.AutoSize = True
             Me.lbWRht.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.lbWRht.Location = New System.Drawing.Point(341, 124)
+            Me.lbWRht.Location = New System.Drawing.Point(341, 119)
             Me.lbWRht.Name = "lbWRht"
             Me.lbWRht.Size = New System.Drawing.Size(50, 21)
             Me.lbWRht.TabIndex = 15
@@ -270,7 +275,7 @@
             Me.lbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
             Me.lbWBot.AutoSize = True
             Me.lbWBot.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.lbWBot.Location = New System.Drawing.Point(211, 188)
+            Me.lbWBot.Location = New System.Drawing.Point(211, 182)
             Me.lbWBot.Name = "lbWBot"
             Me.lbWBot.Size = New System.Drawing.Size(48, 21)
             Me.lbWBot.TabIndex = 13
@@ -291,7 +296,7 @@
             Me.lbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
             Me.lbWTop.AutoSize = True
             Me.lbWTop.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.lbWTop.Location = New System.Drawing.Point(211, 61)
+            Me.lbWTop.Location = New System.Drawing.Point(211, 56)
             Me.lbWTop.Name = "lbWTop"
             Me.lbWTop.Size = New System.Drawing.Size(50, 21)
             Me.lbWTop.TabIndex = 11
@@ -462,7 +467,7 @@
             Me.canvas.Dock = System.Windows.Forms.DockStyle.Fill
             Me.canvas.Location = New System.Drawing.Point(0, 0)
             Me.canvas.Name = "canvas"
-            Me.canvas.Size = New System.Drawing.Size(984, 623)
+            Me.canvas.Size = New System.Drawing.Size(984, 626)
             Me.canvas.TabIndex = 0
             Me.canvas.TabStop = False
             '
@@ -899,24 +904,21 @@
             '
             'TmrHighQuality
             '
-            Me.TmrHighQuality.Interval = 2000
+            Me.TmrHighQuality.Interval = 600
             '
-            'FrmGraph
+            'GraphingSystem
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.AutoSize = True
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-            Me.ClientSize = New System.Drawing.Size(984, 661)
             Me.Controls.Add(Me.pnlFnType)
             Me.Controls.Add(Me.split)
             Me.Font = New System.Drawing.Font("Segoe UI Semilight", 10.0!)
             Me.ForeColor = System.Drawing.Color.White
             Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-            Me.Name = "FrmGraph"
-            Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
-            Me.Text = "Cantus Graphing Calculator © Alex Yu 2015-16"
-            Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
+            Me.Name = "GraphingSystem"
+            Me.Size = New System.Drawing.Size(984, 661)
             Me.split.Panel1.ResumeLayout(False)
             Me.split.Panel2.ResumeLayout(False)
             CType(Me.split, System.ComponentModel.ISupportInitialize).EndInit()

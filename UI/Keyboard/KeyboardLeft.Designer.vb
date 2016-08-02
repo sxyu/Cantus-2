@@ -1,6 +1,6 @@
-﻿Namespace Calculator.Keyboards
+﻿Namespace UI.Keyboards
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-    Partial Class OskLeft
+    Partial Class KeyboardLeft
         Inherits System.Windows.Forms.Form
 
         'Form overrides dispose to clean up the component list.
@@ -42,7 +42,6 @@
             Me.btnPi = New System.Windows.Forms.Button()
             Me.btnZ = New System.Windows.Forms.Button()
             Me.btnPt = New System.Windows.Forms.Button()
-            Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
             Me.tt = New System.Windows.Forms.ToolTip(Me.components)
             Me.pnl.SuspendLayout()
             Me.SuspendLayout()
@@ -383,16 +382,11 @@
             Me.btnPt.Text = "."
             Me.btnPt.UseVisualStyleBackColor = False
             '
-            'TmrLoad
-            '
-            Me.TmrLoad.Enabled = True
-            Me.TmrLoad.Interval = 20
-            '
             'tt
             '
             Me.tt.ShowAlways = True
             '
-            'OskLeft
+            'KeyboardLeft
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
@@ -407,7 +401,7 @@
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximumSize = New System.Drawing.Size(160, 300)
             Me.MinimumSize = New System.Drawing.Size(160, 300)
-            Me.Name = "OskLeft"
+            Me.Name = "KeyboardLeft"
             Me.ShowIcon = False
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
@@ -436,7 +430,6 @@
         Friend WithEvents btnPt As Button
         Friend WithEvents btnE As Button
         Friend WithEvents btnPi As Button
-        Friend WithEvents TmrLoad As Timer
         Friend WithEvents tt As ToolTip
     End Class
 End Namespace

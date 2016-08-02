@@ -185,6 +185,30 @@ Namespace My
                 Me("State") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ViewerPos() As String
+            Get
+                Return CType(Me("ViewerPos"),String)
+            End Get
+            Set
+                Me("ViewerPos") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property VSnap() As Boolean
+            Get
+                Return CType(Me("VSnap"),Boolean)
+            End Get
+            Set
+                Me("VSnap") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

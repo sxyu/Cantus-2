@@ -1,6 +1,6 @@
 ﻿Imports System.Net
 
-Namespace Calculator.Updater
+Namespace UI.Updater
 
     ''' <summary>
     ''' Very basic Google drive based updater for Cantus

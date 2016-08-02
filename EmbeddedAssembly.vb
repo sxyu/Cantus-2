@@ -4,7 +4,7 @@ Imports System.IO
 Imports System.Reflection
 Imports System.Security.Cryptography
 
-Namespace Calculator
+Namespace UI
     Friend Class EmbeddedAssembly
         ' Version 1.3
 

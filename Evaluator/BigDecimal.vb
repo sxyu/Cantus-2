@@ -1,8 +1,8 @@
 ﻿Imports System.Globalization
 Imports System.Numerics
 Imports System.Text
-Imports Cantus.Calculator.Evaluator.Exceptions
-Namespace Calculator.Evaluator.CommonTypes
+Imports Cantus.Evaluator.Exceptions
+Namespace Evaluator.CommonTypes
     ''' <summary>
     ''' Arbitrary precision decimal.
     ''' All operations are exact, except for division. Division never determines more digits than the given precision.
