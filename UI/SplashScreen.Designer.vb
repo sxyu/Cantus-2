@@ -164,7 +164,7 @@
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "SplashScreen"
-            Me.TopMost = True
+            Me.TopMost = False
             Me.ResumeLayout(False)
             Me.PerformLayout()
 

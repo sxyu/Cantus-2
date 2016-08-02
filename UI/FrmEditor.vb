@@ -18,7 +18,16 @@ Namespace UI
         ''' Maximum length of text to display on the tooltip
         ''' </summary>
         Private Const TT_LEN_LIMIT As Integer = 500
+
+        ''' <summary>
+        ''' Max number of previous expressions to store
+        ''' </summary>
         Private Const PREV_EXPRESSION_LIMIT As Integer = 15
+
+        ''' <summary>
+        ''' URL to get info about the latest version number of cantus
+        ''' </summary>
+        Private Const VERSION_URL As String = "https://drive.google.com/uc?export=download&id=0B314tJw3ioySY0k1THVWZFV6S00"
 
         Private Const RELEASE_TYPE As String = "Alpha"
 
@@ -138,22 +147,6 @@ Namespace UI
             Catch
             End Try
 
-            If _displayUpdateMessage Then
-                Try
-                    Process.Start(
-                    "cmd", "/c Assoc .can=Cantus.CBool  && Ftype Cantus.CantusScript=" &
-                    ControlChars.Quote & Application.ExecutablePath & ControlChars.Quote & " ""%1""")
-                Catch
-                End Try
-                Keyboards.KeyboardLeft.Hide()
-                Keyboards.KeyboardRight.Hide()
-                TmrLoad.Stop()
-                Using diag As New Dialogs.DiagFeatureList()
-                    diag.ShowDialog()
-                End Using
-                TmrLoad.Start()
-            End If
-
             ' update tooltips
             UpdateLetterTT()
 
@@ -214,13 +207,44 @@ Namespace UI
             tb.Focus()
             pnlSettings.Hide()
         End Sub
-        Private Sub FrmEditor_Leave(sender As Object, e As EventArgs) Handles MyBase.Deactivate
+
+        Dim deactivated As Boolean = False
+        Private Sub FrmEditor_Deactivate(sender As Object, e As EventArgs) Handles MyBase.Deactivate
             pnlSettings.Hide()
         End Sub
+        'Private Sub FrmEditor_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
+        '    If deactivated Then
+        '        Keyboards.KeyboardLeft.BringToFront()
+        '        Keyboards.KeyboardRight.BringToFront()
+        '        FrmViewer.BringToFront()
+        '        deactivated = False
+        '        Me.BringToFront()
+        '        deactivated = True
+        '    End If
+        'End Sub
+
         Private Sub FrmEditor_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
             If Me.WindowState = FormWindowState.Normal AndAlso My.Settings.ShowKbd Then
                 If LSnap Then Keyboards.KeyboardLeft.Show()
                 If RSnap Then Keyboards.KeyboardRight.Show()
+                If FrmViewer.Snap Then FrmViewer.Show()
+            End If
+
+            ' make sure the window doesn't get maximized - that would cause weird behaviour
+            If Me.WindowState = FormWindowState.Maximized Then Me.WindowState = FormWindowState.Normal
+            If Keyboards.KeyboardRight.WindowState = FormWindowState.Maximized Then
+                Keyboards.KeyboardRight.WindowState = FormWindowState.Normal
+                If RSnap Then
+                    Keyboards.KeyboardRight.Left = Me.Right - Keyboards.KeyboardRight.Width
+                    Keyboards.KeyboardRight.Top = Me.Bottom
+                End If
+            End If
+            If Keyboards.KeyboardLeft.WindowState = FormWindowState.Maximized Then
+                Keyboards.KeyboardLeft.WindowState = FormWindowState.Normal
+                If LSnap Then
+                    Keyboards.KeyboardLeft.Left = Me.Left
+                    Keyboards.KeyboardLeft.Top = Me.Bottom
+                End If
             End If
         End Sub
 
@@ -444,36 +468,6 @@ Namespace UI
 
             My.Settings.Save()
         End Sub
-#End Region
-#Region "main buttons"
-        Private Sub btnCalc_Click(sender As Object, e As System.EventArgs) Handles btnEval.Click
-            tb.Focus()
-            EvaluateExpr()
-        End Sub
-
-        Private Sub btnGraph_Click(sender As Object, e As EventArgs)
-            ' open graphing window
-            tb.Focus()
-            ' GRAPH
-            btnMin.PerformClick()
-        End Sub
-
-        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
-            tb.Focus()
-            Using diag As New Dialogs.DiagFunctions
-                If diag.ShowDialog() = DialogResult.OK Then
-                    Dim start As Integer = tb.SelectionStart
-                    tb.Text = tb.Text.Remove(
-                                tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, diag.Result)
-
-                    If diag.Result.Contains("(") Then
-                        tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
-                    Else
-                        tb.SelectionStart = start + diag.Result.Count
-                    End If
-                End If
-            End Using
-        End Sub
 
         ''' <summary>
         ''' Open a 'save as' dialogue to save as another file
@@ -518,6 +512,54 @@ Namespace UI
             End If
         End Sub
 
+        ''' <summary>
+        ''' Create and edit a new, empty script, closing the currently opened script
+        ''' </summary>
+        Private Sub NewScript()
+            If String.IsNullOrEmpty(Me.File) Then
+                If (tb.TextLength < 10 AndAlso String.IsNullOrWhiteSpace(tb.Text)) OrElse
+                    MsgBox("All unsaved changes will be lost. " & ControlChars.NewLine & "Are you sure you want to create a new script?",
+                           MsgBoxStyle.YesNo Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "New Script") =
+                           MsgBoxResult.Yes Then
+                    tb.Text = ""
+                End If
+            Else
+                Save()
+                Me._File = ""
+                tb.Text = ""
+            End If
+        End Sub
+#End Region
+#Region "main buttons"
+        Private Sub btnCalc_Click(sender As Object, e As System.EventArgs) Handles btnEval.Click
+            tb.Focus()
+            EvaluateExpr()
+        End Sub
+
+        Private Sub btnGraph_Click(sender As Object, e As EventArgs)
+            ' open graphing window
+            tb.Focus()
+            ' GRAPH
+            btnMin.PerformClick()
+        End Sub
+
+        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
+            tb.Focus()
+            Using diag As New Dialogs.DiagFunctions
+                If diag.ShowDialog() = DialogResult.OK Then
+                    Dim start As Integer = tb.SelectionStart
+                    tb.Text = tb.Text.Remove(
+                                tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, diag.Result)
+
+                    If diag.Result.Contains("(") Then
+                        tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
+                    Else
+                        tb.SelectionStart = start + diag.Result.Count
+                    End If
+                End If
+            End Using
+        End Sub
+
         Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
             tb.Focus()
             Save()
@@ -528,6 +570,30 @@ Namespace UI
             tb.Focus()
             Open()
         End Sub
+
+        Private Sub BtnTranslucent_Click(sender As Object, e As EventArgs) Handles BtnTranslucent.Click
+            tb.Focus()
+            If Me.Opacity = 1 Then
+                Me.Opacity = 0.5
+                BtnTranslucent.BackColor = btnEval.BackColor
+                BtnTranslucent.FlatAppearance.MouseOverBackColor = btnEval.BackColor
+                BtnTranslucent.FlatAppearance.MouseDownBackColor = btnEval.FlatAppearance.MouseDownBackColor
+            Else
+                Me.Opacity = 1
+                BtnTranslucent.BackColor = btnMin.BackColor
+                BtnTranslucent.FlatAppearance.MouseOverBackColor = btnMin.BackColor
+                BtnTranslucent.FlatAppearance.MouseDownBackColor = btnMin.FlatAppearance.MouseDownBackColor
+            End If
+            FrmViewer.Opacity = Me.Opacity
+            Keyboards.KeyboardLeft.Opacity = Me.Opacity
+            Keyboards.KeyboardRight.Opacity = Me.Opacity
+        End Sub
+
+        Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
+            tb.Focus()
+            NewScript()
+        End Sub
+
 #Region "textbox & labels"
 
         Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles tb.KeyDown
@@ -566,12 +632,17 @@ Namespace UI
                         FrmViewer.pnl.Controls(0).Select()
                     Catch
                     End Try
+                ElseIf e.KeyCode = Keys.T Then
+                    BtnTranslucent.PerformClick()
                 End If
             ElseIf e.KeyCode = Keys.F12
                 OpenSaveAs()
             ElseIf e.KeyCode = Keys.S AndAlso e.Control
                 _ignoreNextKey = True
                 Save()
+            ElseIf e.KeyCode = Keys.N AndAlso e.Control
+                _ignoreNextKey = True
+                NewScript()
             ElseIf e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.O AndAlso e.Control
                 _ignoreNextKey = True
                 Open()
@@ -670,13 +741,13 @@ Namespace UI
             Dim nv As String = ""
             Try
                 Using wc As New System.Net.WebClient()
-                    nv = wc.DownloadString("https://drive.google.com/uc?export=download&id=0B314tJw3ioySY0k1THVWZFV6S00")
+                    nv = wc.DownloadString(VERSION_URL)
                 End Using
                 Dim spl() As String = nv.Split("."c)
                 Dim curverspl() As String = Application.ProductVersion.Split("."c)
                 For i As Integer = 0 To spl.Length - 1
                     If CInt(spl(i)) > CInt(curverspl(i)) Then
-                        If Not promptuser OrElse MessageBox.Show(Me, "New version of Cantus: " & nv & " found." & vbCrLf & "Update now?", "Update Found",
+                        If MessageBox.Show(Me, "New version of Cantus: " & nv & " found." & vbCrLf & "Update now?", "Update Found",
                               MessageBoxButtons.YesNo, MessageBoxIcon.Information,
                               MessageBoxDefaultButton.Button1) = DialogResult.Yes Then
                             Exit For ' needs update
@@ -736,6 +807,7 @@ Namespace UI
 
         Private Sub btnMin_Click(sender As Object, e As EventArgs) Handles btnMin.Click
             Me.WindowState = FormWindowState.Minimized
+            If FrmViewer.Snap Then FrmViewer.Hide()
             If LSnap Then Keyboards.KeyboardLeft.Hide()
             If RSnap Then Keyboards.KeyboardRight.Hide()
         End Sub
@@ -790,6 +862,20 @@ Namespace UI
 
         Private Sub me_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, pnlResults.MouseUp, lbResult.MouseUp
             If e.Button = MouseButtons.Right Then
+                If FrmViewer.Snap Then
+                    Me.Left += 6
+                    FrmViewer.Snap = False
+                    My.Settings.VSnap = False
+                    FrmViewer.ShowInTaskbar = True
+                    FrmViewer.btnMin.Show()
+                    If Me.LSnap Then
+                        Keyboards.KeyboardLeft.Left += 6
+                    End If
+                    If Me.RSnap Then
+                        Keyboards.KeyboardRight.Left += 6
+                    End If
+                End If
+
                 If Me.LSnap Or Me.RSnap Then
                     Me.RSnap = False
                     Me.LSnap = False
@@ -797,22 +883,21 @@ Namespace UI
                     My.Settings.ROskSnap = RSnap
                     My.Settings.LOskSnap = LSnap
                 End If
-                If FrmViewer.Snap Then
-                    Me.Left += 6
-                    FrmViewer.Snap = False
-                    My.Settings.VSnap = False
-                End If
                 My.Settings.Save()
             Else
                 ' these parts are quite messy, and will need cleanup eventually
                 _isMoving = False
+
                 If Me.Right > FrmViewer.Left - 40 AndAlso Me.Left < FrmViewer.Right + 40 AndAlso
                     (Me.Bottom > FrmViewer.Top AndAlso Me.Top < FrmViewer.Bottom) Then
                     FrmViewer.Snap = True
                     My.Settings.VSnap = True
                     FrmViewer.Left = Me.Left - FrmViewer.Width
                     FrmViewer.Top = Me.Top
+                    FrmViewer.ShowInTaskbar = False
+                    FrmViewer.btnMin.Hide()
                 End If
+
                 If Me.Bottom > Keyboards.KeyboardRight.Top AndAlso
                     Me.Bottom < Keyboards.KeyboardRight.Top + Keyboards.KeyboardRight.Height / 2 AndAlso
                     Me.Left > Keyboards.KeyboardRight.Left - 400 AndAlso
@@ -915,24 +1000,6 @@ Namespace UI
                                           CheckUpdate(True)
                                       End Sub, ThreadStart))
             _updTh.Start()
-        End Sub
-        ' make sure the window doesn't get maximized - that would cause weird behaviour
-        Private Sub FrmEditor_LocationChanged(sender As Object, e As EventArgs) Handles Me.LocationChanged
-            If Me.WindowState = FormWindowState.Maximized Then Me.WindowState = FormWindowState.Normal
-            If Keyboards.KeyboardRight.WindowState = FormWindowState.Maximized Then
-                Keyboards.KeyboardRight.WindowState = FormWindowState.Normal
-                If RSnap Then
-                    Keyboards.KeyboardRight.Left = Me.Right - Keyboards.KeyboardRight.Width
-                    Keyboards.KeyboardRight.Top = Me.Bottom
-                End If
-            End If
-            If Keyboards.KeyboardLeft.WindowState = FormWindowState.Maximized Then
-                Keyboards.KeyboardLeft.WindowState = FormWindowState.Normal
-                If LSnap Then
-                    Keyboards.KeyboardLeft.Left = Me.Left
-                    Keyboards.KeyboardLeft.Top = Me.Bottom
-                End If
-            End If
         End Sub
 
         Private Sub tb_TextChanged(sender As Object, e As EventArgs) Handles tb.TextChanged
@@ -1343,15 +1410,38 @@ Namespace UI
             SplashScreen.Progress.Value += 4
             If SplashScreen.Progress.Value < 100 Then Return
             TmrLoad.Stop()
+
             SplashScreen.Hide()
+
+            If _displayUpdateMessage Then
+                Try
+                    Process.Start(
+                    "cmd", "/c Assoc .can=Cantus.CBool  && Ftype Cantus.CantusScript=" &
+                    ControlChars.Quote & Application.ExecutablePath & ControlChars.Quote & " ""%1""")
+                Catch
+                End Try
+                Keyboards.KeyboardLeft.Hide()
+                Keyboards.KeyboardRight.Hide()
+                TmrLoad.Stop()
+                Using diag As New Dialogs.DiagFeatureList()
+                    diag.ShowDialog()
+                End Using
+                TmrLoad.Start()
+            End If
 
             ' set location
             If (My.Settings.MainPos <> "") Then
                 Dim spl() As String = My.Settings.MainPos.Split(","c)
                 Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
+                If Me.Location.X <= -Me.Width OrElse Me.Location.Y <= -Me.Height OrElse
+                    Me.Right >= Screen.PrimaryScreen.WorkingArea.Width + Me.Width OrElse
+                    Me.Bottom >= Screen.PrimaryScreen.WorkingArea.Height + Me.Height Then
+                    Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 + FrmViewer.Width / 2 - Me.Width / 2)
+                    Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - FrmViewer.Height / 2)
+                End If
             Else
-                Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
-                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 4 - Me.Height / 3)
+                Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 + FrmViewer.Width / 2 - Me.Width / 2)
+                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - FrmViewer.Height / 2)
             End If
 
             ' save location
@@ -1364,6 +1454,7 @@ Namespace UI
             Keyboards.KeyboardLeft.InitPosition()
             Keyboards.KeyboardRight.InitPosition()
         End Sub
+
 #End Region
     End Class
 End Namespace

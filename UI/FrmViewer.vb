@@ -131,6 +131,8 @@ Namespace UI
                     Me.Left -= 6
                     Snap = False
                     My.Settings.VSnap = False
+                    Me.ShowInTaskbar = True
+                    btnMin.Show()
                 End If
             Else
                 If Me.Right > FrmEditor.Left - 40 AndAlso Me.Left < FrmEditor.Right + 40 AndAlso
@@ -139,6 +141,9 @@ Namespace UI
                     My.Settings.VSnap = True
                     Me.Left = FrmEditor.Left - Me.Width
                     Me.Top = FrmEditor.Top
+
+                    Me.ShowInTaskbar = False
+                    btnMin.Hide()
                 End If
             End If
             My.Settings.Save()
@@ -146,6 +151,7 @@ Namespace UI
 
         Private Sub btnTabs_Click(sender As Object, e As EventArgs)
             pnl.Focus()
+            Me.Text = DirectCast(sender, Button).Text & " - Cantus"
             Me.View = DirectCast([Enum].Parse(GetType(eView), DirectCast(sender, Button).Tag.ToString()), eView)
         End Sub
 
@@ -269,6 +275,9 @@ Namespace UI
                 ElseIf e.KeyCode = Keys.F Then
                     FrmEditor.BringToFront()
                     FrmEditor.btnFunctions.PerformClick()
+                ElseIf e.KeyCode = Keys.T Then
+                    FrmEditor.BtnTranslucent.PerformClick()
+                    DirectCast(sender, Control).Focus()
                 End If
             End If
         End Sub

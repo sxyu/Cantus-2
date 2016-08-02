@@ -43,6 +43,7 @@
             Me.btnEval = New System.Windows.Forms.Button()
             Me.lbResult = New System.Windows.Forms.Label()
             Me.pnlResults = New System.Windows.Forms.Panel()
+            Me.BtnTranslucent = New System.Windows.Forms.Button()
             Me.btnClose = New System.Windows.Forms.Button()
             Me.btnMin = New System.Windows.Forms.Button()
             Me.btnSettings = New System.Windows.Forms.Button()
@@ -53,6 +54,7 @@
             Me.pnlTb = New System.Windows.Forms.Panel()
             Me.TmrReCalc = New System.Windows.Forms.Timer(Me.components)
             Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
+            Me.btnNew = New System.Windows.Forms.Button()
             Me.pnlSettings.SuspendLayout()
             CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.pnlResults.SuspendLayout()
@@ -380,6 +382,7 @@
             Me.pnlResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.pnlResults.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.pnlResults.Controls.Add(Me.BtnTranslucent)
             Me.pnlResults.Controls.Add(Me.btnClose)
             Me.pnlResults.Controls.Add(Me.btnMin)
             Me.pnlResults.Controls.Add(Me.lbResult)
@@ -387,6 +390,24 @@
             Me.pnlResults.Name = "pnlResults"
             Me.pnlResults.Size = New System.Drawing.Size(730, 49)
             Me.pnlResults.TabIndex = 4
+            '
+            'BtnTranslucent
+            '
+            Me.BtnTranslucent.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnTranslucent.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnTranslucent.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnTranslucent.FlatAppearance.BorderSize = 0
+            Me.BtnTranslucent.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnTranslucent.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnTranslucent.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnTranslucent.ForeColor = System.Drawing.Color.White
+            Me.BtnTranslucent.Image = CType(resources.GetObject("BtnTranslucent.Image"), System.Drawing.Image)
+            Me.BtnTranslucent.Location = New System.Drawing.Point(564, 1)
+            Me.BtnTranslucent.Name = "BtnTranslucent"
+            Me.BtnTranslucent.Size = New System.Drawing.Size(53, 48)
+            Me.BtnTranslucent.TabIndex = 6
+            Me.TTLetters.SetToolTip(Me.BtnTranslucent, "Make Translucent (Alt+T)")
+            Me.BtnTranslucent.UseVisualStyleBackColor = False
             '
             'btnClose
             '
@@ -532,6 +553,27 @@
             '
             Me.TmrLoad.Interval = 50
             '
+            'btnNew
+            '
+            Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.btnNew.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.btnNew.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnNew.FlatAppearance.BorderSize = 0
+            Me.btnNew.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.btnNew.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.btnNew.Font = New System.Drawing.Font("Segoe UI Semilight", 13.0!)
+            Me.btnNew.ForeColor = System.Drawing.Color.White
+            Me.btnNew.Location = New System.Drawing.Point(675, 198)
+            Me.btnNew.Margin = New System.Windows.Forms.Padding(2)
+            Me.btnNew.Name = "btnNew"
+            Me.btnNew.Size = New System.Drawing.Size(53, 47)
+            Me.btnNew.TabIndex = 30
+            Me.btnNew.TabStop = False
+            Me.btnNew.Text = "+"
+            Me.TTLetters.SetToolTip(Me.btnNew, "New (Ctrl+N)")
+            Me.btnNew.UseVisualStyleBackColor = False
+            '
             'FrmEditor
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -542,6 +584,7 @@
             Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
             Me.ClientSize = New System.Drawing.Size(728, 400)
             Me.ControlBox = False
+            Me.Controls.Add(Me.btnNew)
             Me.Controls.Add(Me.btnOpen)
             Me.Controls.Add(Me.btnSave)
             Me.Controls.Add(Me.pnlResults)
@@ -595,5 +638,7 @@
         Friend WithEvents btnOpen As Button
         Friend WithEvents PictureBox1 As PictureBox
         Friend WithEvents TmrLoad As Timer
+        Friend WithEvents BtnTranslucent As Button
+        Friend WithEvents btnNew As Button
     End Class
 End Namespace

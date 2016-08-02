@@ -148,6 +148,17 @@ Off (gray): Variables can be used without
         AA8Swh+fiX9AYN/ZtgAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="BtnTranslucent.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgCAIKNCG6PVQXAAAA+klEQVRoQ+3Uz4pBcRjG
+        8YNGFljIyp+dklCzUdY2s7ASxU4Sms1YkigLM03NRs3KzgVpNnMbcw/H1+lNIzfwO3q+9SnnZfEsTjyl
+        lFJKKaWUUo+U7/s5vGKFuWnZ127H0Dw+8Y4qMpjigK79zN0Y2ccIcTsF8VxADxk7uRkD31Cxx2vcohgi
+        ayc3Y+Dl3X+2x2vcYugiZSc3Y2ADnf9D+ZzGBANE7OxmDExghgWSdhvjC/XgR67H0MvrssULatjh7rVy
+        OgYf8Wd+UbKvwhGDlzjhB2s7hydGt/GBPZp2Dk+MLmODbxTtHK4Y/oTgn0gppZRSSiml1E2edwauMORf
+        jkPcxAAAAABJRU5ErkJggg==
+</value>
+  </data>
   <data name="btnClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADUAAAAwCAYAAACxKzLDAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

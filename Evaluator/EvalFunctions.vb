@@ -1248,7 +1248,7 @@ Namespace Evaluator
         ''' Product: takes the product of expression over the range between l and r, inclusive
         ''' Alias for sigma()
         ''' </summary>
-        Public Function product(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
+        Public Function Product(ByVal func As Lambda, ByVal a As Double, ByVal b As Double,
                                 Optional ByVal [step] As Double = 1) As BigDecimal
             Try
                 ' step cannot be 0 or in the reverse direction
@@ -4404,8 +4404,8 @@ Namespace Evaluator
         Public Function Magnitude(val As Object) As Object
             If TypeOf val Is Numerics.Complex Then
                 Return DirectCast(val, Numerics.Complex).Magnitude
-            ElseIf TypeOf val Is IEnumerable(Of Reference)
-                Return New Matrix(DirectCast(val, IEnumerable(Of Reference))).Magnitude()
+            ElseIf TypeOf val Is ilist(Of Reference)
+                Return New Matrix(DirectCast(val, IList(Of Reference))).Magnitude()
             Else
                 Return Double.NaN
             End If

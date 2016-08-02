@@ -132,7 +132,7 @@
                     Me.Top = FrmEditor.Bottom
                     FrmEditor.LSnap = True
                     If Me.Snap Then
-                        KeyboardRight.Left = Me.Right
+                        KeyboardRight.Left = Me.Right - 12
                         KeyboardRight.Top = FrmEditor.Bottom
                         FrmEditor.RSnap = True
                     End If
@@ -142,7 +142,7 @@
                 Me.Left = FrmEditor.Left
                 Me.Top = FrmEditor.Bottom
                 If Me.Snap Then
-                    KeyboardRight.Left = Me.Right
+                    KeyboardRight.Left = Me.Right - 12
                     KeyboardRight.Top = FrmEditor.Bottom
                     FrmEditor.RSnap = True
                 End If

@@ -23,12 +23,14 @@
         'Do not modify it using the code editor.
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
+            Me.components = New System.ComponentModel.Container()
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmViewer))
             Me.lbTitle = New System.Windows.Forms.Label()
             Me.btnMin = New System.Windows.Forms.Button()
             Me.btnLog = New System.Windows.Forms.Button()
             Me.btnGraph = New System.Windows.Forms.Button()
             Me.pnl = New System.Windows.Forms.Panel()
+            Me.tt = New System.Windows.Forms.ToolTip(Me.components)
             Me.SuspendLayout()
             '
             'lbTitle
@@ -60,6 +62,7 @@
             Me.btnMin.TabStop = False
             Me.btnMin.Text = "-"
             Me.btnMin.UseVisualStyleBackColor = False
+            Me.btnMin.Visible = False
             '
             'btnLog
             '
@@ -80,6 +83,7 @@
             Me.btnLog.Tag = "log"
             Me.btnLog.Text = "My Results"
             Me.btnLog.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.tt.SetToolTip(Me.btnLog, "See saved results (Alt+R)")
             Me.btnLog.UseVisualStyleBackColor = False
             '
             'btnGraph
@@ -101,6 +105,7 @@
             Me.btnGraph.Tag = "graphing"
             Me.btnGraph.Text = "Graph"
             Me.btnGraph.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.tt.SetToolTip(Me.btnGraph, "Draw graphs (Alt+G)")
             Me.btnGraph.UseVisualStyleBackColor = False
             '
             'pnl
@@ -129,8 +134,9 @@
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.Name = "FrmViewer"
+            Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
-            Me.Text = "Cantus"
+            Me.Text = "My Results - Cantus"
             Me.TopMost = True
             Me.ResumeLayout(False)
             Me.PerformLayout()
@@ -142,5 +148,6 @@
         Friend WithEvents btnLog As Button
         Friend WithEvents btnGraph As Button
         Friend WithEvents pnl As Panel
+        Friend WithEvents tt As ToolTip
     End Class
 End Namespace

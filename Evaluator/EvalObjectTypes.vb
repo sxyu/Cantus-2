@@ -1028,9 +1028,12 @@ Namespace Evaluator
             ''' <returns></returns>
             Public Function Norm() As Object
                 If Me.Width <> 1 Then Throw New MathException("Can only get norm of column vectors")
+
                 Dim result As Object = 0.0
                 For i As Integer = 0 To Me.Height - 1
                     Dim a As Object = GetCoord(i, 0)
+                    If TypeOf a Is Reference Then a = DirectCast(a, Reference).Resolve()
+
                     If TypeOf result Is Numerics.Complex OrElse TypeOf a Is Numerics.Complex Then
 
                         If Not TypeOf a Is Numerics.Complex Then a = New Numerics.Complex(CDbl(a), 0)
@@ -1039,11 +1042,13 @@ Namespace Evaluator
                         result = DirectCast(result, Numerics.Complex) +
                             DirectCast(a, Numerics.Complex) * DirectCast(a, Numerics.Complex)
 
-                    ElseIf TypeOf result Is Double AndAlso TypeOf a Is Double
-                        result = CDbl(result) + CDbl(a) * CDbl(a)
+                    ElseIf TypeOf a Is Double
+                        If TypeOf result Is Double Then result = CType(CDbl(result), BigDecimal)
+                        result = CType(result, BigDecimal) + CDbl(a) * CDbl(a)
 
-                    ElseIf TypeOf result Is BigDecimal AndAlso TypeOf a Is BigDecimal
-                        result = DirectCast(result, BigDecimal) + DirectCast(a, BigDecimal) * DirectCast(a, BigDecimal)
+                    ElseIf TypeOf a Is BigDecimal
+                        If TypeOf result Is Double Then result = CType(CDbl(result), BigDecimal)
+                        result = CType(result, BigDecimal) + DirectCast(a, BigDecimal) * DirectCast(a, BigDecimal)
 
                     End If
                 Next
@@ -1055,7 +1060,9 @@ Namespace Evaluator
                 Dim norm As Object = Me.Norm()
                 If TypeOf norm Is Numerics.Complex Then
                     Return Numerics.Complex.Sqrt(DirectCast(norm, Numerics.Complex))
-                Else
+                ElseIf TypeOf norm Is BigDecimal
+                    Return Math.Sqrt(CDbl(DirectCast(norm, BigDecimal)))
+                ElseIf TypeOf norm Is Double
                     Return Math.Sqrt(CDbl(norm))
                 End If
             End Function

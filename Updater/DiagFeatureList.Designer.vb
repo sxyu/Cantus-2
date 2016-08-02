@@ -208,7 +208,7 @@
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "Welcome to Cantus"
-            Me.TopMost = True
+            Me.TopMost = False
             Me.pnlBottom.ResumeLayout(False)
             Me.pnlNote.ResumeLayout(False)
             Me.pnlNote.PerformLayout()

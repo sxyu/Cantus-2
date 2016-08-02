@@ -148,7 +148,7 @@ Namespace UI.Dialogs
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "Insert Function"
-            Me.TopMost = True
+            Me.TopMost = False
             Me.PnlSearch.ResumeLayout(False)
             Me.PnlSearch.PerformLayout()
             Me.ResumeLayout(False)
