@@ -10,12 +10,14 @@
         End Sub
 
         Private Sub DiagFeatureList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+            Me.Opacity = 0
             Me.Icon = My.Resources.Calculator
             tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion).Replace(vbLf, vbCrLf)
             tb.SelectionStart = 0
             Dim cCode As String = Globalization.CultureInfo.CurrentCulture.Name
 
             If cCode.StartsWith("en") AndAlso cCode <> "en-US" Then btnLicense.Text = "Licence" ' spelling for non-american english...
+            TmrAnim.Start()
         End Sub
 
         Dim ctrl As Boolean = False
@@ -84,6 +86,11 @@
         Private _allowNavigation As Boolean = False
         Private Sub wb_Navigating(sender As Object, e As WebBrowserNavigatingEventArgs) Handles wb.Navigating
             If Not _allowNavigation Then e.Cancel = True Else _allowNavigation = False
+        End Sub
+
+        Private Sub TmrAnim_Tick(sender As Object, e As EventArgs) Handles TmrAnim.Tick
+            If Me.Opacity >= 1 Then TmrAnim.Stop()
+            Me.Opacity += 0.05
         End Sub
     End Class
 End Namespace

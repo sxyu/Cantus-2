@@ -145,10 +145,13 @@ Namespace UI
                     ControlChars.Quote & Application.ExecutablePath & ControlChars.Quote & " ""%1""")
                 Catch
                 End Try
-
+                Keyboards.KeyboardLeft.Hide()
+                Keyboards.KeyboardRight.Hide()
+                TmrLoad.Stop()
                 Using diag As New Dialogs.DiagFeatureList()
                     diag.ShowDialog()
                 End Using
+                TmrLoad.Start()
             End If
 
             ' update tooltips
@@ -1340,7 +1343,7 @@ Namespace UI
             SplashScreen.Progress.Value += 4
             If SplashScreen.Progress.Value < 100 Then Return
             TmrLoad.Stop()
-                SplashScreen.Hide()
+            SplashScreen.Hide()
 
             ' set location
             If (My.Settings.MainPos <> "") Then

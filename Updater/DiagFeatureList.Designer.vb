@@ -23,6 +23,7 @@
         'Do not modify it using the code editor.
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
+            Me.components = New System.ComponentModel.Container()
             Me.tb = New System.Windows.Forms.TextBox()
             Me.pnlBottom = New System.Windows.Forms.Panel()
             Me.pnlNote = New System.Windows.Forms.Panel()
@@ -32,6 +33,7 @@
             Me.lbNote = New System.Windows.Forms.Label()
             Me.btnClose = New System.Windows.Forms.Button()
             Me.wb = New System.Windows.Forms.WebBrowser()
+            Me.TmrAnim = New System.Windows.Forms.Timer(Me.components)
             Me.pnlBottom.SuspendLayout()
             Me.pnlNote.SuspendLayout()
             Me.SuspendLayout()
@@ -183,6 +185,10 @@
             Me.wb.Visible = False
             Me.wb.WebBrowserShortcutsEnabled = False
             '
+            'TmrAnim
+            '
+            Me.TmrAnim.Interval = 50
+            '
             'DiagFeatureList
             '
             Me.AcceptButton = Me.btnClose
@@ -220,5 +226,6 @@
         Friend WithEvents wb As WebBrowser
         Friend WithEvents btnLicense As Button
         Friend WithEvents btnLog As Button
+        Friend WithEvents TmrAnim As Timer
     End Class
 End Namespace
