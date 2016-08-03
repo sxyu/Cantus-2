@@ -317,6 +317,7 @@ Namespace UI.Graphing
 
                 Dim pts As New List(Of PointF)
                 Dim p As New Pen(ColorFromFuncId(fnid), 1)
+
                 Select Case _functiontype(fnid)
                     Case FunctionType.Cartesian
                         Dim prevx As Object = GetX()
@@ -331,62 +332,23 @@ Namespace UI.Graphing
                             Dim y As Double = cfcy(res, True)
                             Dim x As Double = i
                             If Double.IsNaN(prev) OrElse
-                                Double.IsNaN(res) OrElse y < 0 OrElse y > HIGH Then
+                                Double.IsNaN(res) OrElse y < 0 OrElse y > HIGH OrElse Math.Abs(y - prev) > HIGH / 2 Then
                                 If preview Then
-                                    delta = 20
-                                    i += 21.5F
+                                    delta = 5
                                 Else
-                                    delta = 10
-                                    i += 10.0F
+                                    delta = 2
                                 End If
+                                i += delta
                                 If pts.Count > 1 Then
                                     g.DrawLines(p, pts.ToArray())
                                 End If
                                 pts.Clear()
-
-                                If i > 0 Then
-                                    delta = 0.01
-                                    prev = y
-                                    Dim origI As Double = i
-                                    Dim origPrev As Double = prev
-                                    SetX(ccfx(i + delta, True))
-                                    res = Eval(fn)
-                                    y = cfcy(res, True)
-                                    If preview Then
-                                        delta = Math.Max(15 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 1)
-                                    Else
-                                        delta = Math.Max(6 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 1)
-                                    End If
-                                    y = prev
-                                    For j As Integer = 0 To 60
-                                        If Double.IsNaN(prev) Then
-                                            Exit For
-                                        End If
-                                        prev = y
-                                        SetX(ccfx(i, True))
-                                        res = Eval(fn)
-                                        y = cfcy(res, True)
-
-                                        x = i
-                                        If preview Then
-                                            delta = Math.Max(30 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
-                                        Else
-                                            delta = Math.Max(12 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
-                                        End If
-                                        pts.Insert(0, New PointF(CSng(x), CSng(y)))
-                                        i -= delta
-                                        If y < 0 OrElse y > HIGH Then Exit For
-                                    Next
-                                    i = origI
-                                    prev = origPrev
-                                    y = origPrev
-
-                                End If
                             Else
+                                Dim inner As Double = 100 + Math.Abs((y - prev) / delta)
                                 If preview Then
-                                    delta = Math.Max(35 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
+                                    delta = Math.Log(inner) / Math.Log(8) * 2
                                 Else
-                                    delta = Math.Max(12 / Math.Sqrt(1 + ((y - prev) / delta / _scaleBackup.X * _scaleBackup.Y) ^ 2), 0.01)
+                                    delta = Math.Log(inner) / Math.Log(19) * 0.8
                                 End If
                                 If y < HIGH / 4 OrElse y > HIGH / 4 * 3 Then
                                     delta = Math.Max(delta, 2)
@@ -396,6 +358,9 @@ Namespace UI.Graphing
                             End If
                             prev = y
                         End While
+                        If pts.Count > 0 Then
+                            g.DrawLines(p, pts.ToArray())
+                        End If
                         SetX(prevx)
                     Case FunctionType.Inverse
                         Dim prevy As Object = GetY()
@@ -412,60 +377,22 @@ Namespace UI.Graphing
                             If Double.IsNaN(prev) OrElse
                                 Double.IsNaN(res) OrElse x < 0 OrElse x > WID Then
                                 If preview Then
-                                    delta = 20
-                                    i += 21.5F
+                                    delta = 5
                                 Else
-                                    delta = 10
-                                    i += 10.0F
+                                    delta = 2
                                 End If
+                                i += delta
                                 If pts.Count > 1 Then
                                     g.DrawLines(p, pts.ToArray())
                                 End If
                                 pts.Clear()
 
-                                If i > 0 Then
-                                    delta = 0.01
-                                    prev = x
-                                    Dim origI As Double = i
-                                    Dim origPrev As Double = prev
-                                    SetY(ccfy(i + delta, True))
-                                    res = Eval(fn)
-                                    x = cfcx(res, True)
-                                    If preview Then
-                                        delta = Math.Max(15 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 1)
-                                    Else
-                                        delta = Math.Max(6 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 1)
-                                    End If
-                                    x = prev
-                                    For j As Integer = 0 To 60
-                                        If Double.IsNaN(prev) Then
-                                            Exit For
-                                        End If
-                                        prev = x
-                                        SetY(ccfy(i, True))
-                                        res = Eval(fn)
-                                        x = cfcx(res, True)
-
-                                        y = i
-                                        If preview Then
-                                            delta = Math.Max(30 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
-                                        Else
-                                            delta = Math.Max(12 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
-                                        End If
-                                        pts.Insert(0, New PointF(CSng(x), CSng(y)))
-                                        i -= delta
-                                        If x < 0 OrElse x > WID Then Exit For
-                                    Next
-                                    i = origI
-                                    prev = origPrev
-                                    x = origPrev
-
-                                End If
                             Else
+                                Dim inner As Double = 100 + Math.Abs((x - prev) / delta)
                                 If preview Then
-                                    delta = Math.Max(35 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
+                                    delta = Math.Log(inner) / Math.Log(8) * 2
                                 Else
-                                    delta = Math.Max(12 / Math.Sqrt(1 + ((x - prev) / delta * _scaleBackup.X / _scaleBackup.Y) ^ 2), 0.01)
+                                    delta = Math.Log(inner) / Math.Log(19) * 0.8
                                 End If
                                 If x < WID / 4 OrElse x > WID / 4 * 3 Then
                                     delta = Math.Max(delta, 2)
@@ -510,9 +437,9 @@ Namespace UI.Graphing
                             Dim resx As Double = Eval(fnx)
                             Dim resy As Double = Eval(fny)
                             If preview Then
-                                i += (tend - tstart) / 250
+                                i += (tend - tstart) / 500
                             Else
-                                i += (tend - tstart) / 2000
+                                i += (tend - tstart) / 4000
                             End If
                             Dim x As Double = cfcx(resx, True)
                             Dim y As Double = cfcy(resy, True)
@@ -558,9 +485,9 @@ Namespace UI.Graphing
                             Dim resx As Double = resr * Math.Cos(i)
                             Dim resy As Double = resr * Math.Sin(i)
                             If preview Then
-                                i += (tend - tstart) / 500 / Math.Min(Math.Max(Math.Log10((tend - tstart) / 2 / Math.PI), 0.5), 5)
+                                i += (tend - tstart) / 500 / Math.Max(Math.Log10((tend - tstart) / 6 / Math.PI), 0.5)
                             Else
-                                i += (tend - tstart) / 2500 / Math.Min(Math.Max(Math.Log10((tend - tstart) / 2 / Math.PI), 1), 25)
+                                i += (tend - tstart) / 2500 / Math.Max(Math.Log10((tend - tstart) / Math.PI), 1)
                             End If
                             Dim y As Double = cfcy(resy, True)
                             Dim x As Double = cfcx(resx, True)
@@ -636,7 +563,7 @@ Namespace UI.Graphing
         Private Sub PaintAxes(g As Graphics, center As Coord)
             Using p As New Pen(Color.FromArgb(60, 60, 60), 1)
                 Using b As New SolidBrush(Color.FromArgb(100, 100, 100))
-                    Dim sui As New Font("Segoe UI", 15)
+                    Dim sui As New Font(OpenSans, 15)
 
                     Dim hstep As Double = SelectScale(_scaleBackup.X)
 
@@ -912,7 +839,7 @@ Namespace UI.Graphing
             Using cb As New SolidBrush(ColorFromFuncId(_curfn))
                 Using b As New SolidBrush(Color.FromArgb(100, 100, 100))
                     ' end of screen range displays
-                    Dim sui As New Font("Segoe UI", 14)
+                    Dim sui As New Font(OpenSans, 14)
                     Dim s As String = SigFig(ccfx(cscx(canvas.Width)), PRECISION).ToString
                     Dim sz As SizeF
                     g.DrawString(SigFig(ccfx(cscx(0)), PRECISION).ToString, sui, b, 1, CSng(canvas.Height / 2) - 2)
@@ -1248,10 +1175,11 @@ Namespace UI.Graphing
                     dxdy = Double.NaN
                 End If
 
-                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) & Math.Round(CDbl(GetX(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf &
+                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) &
+                    Math.Round(CDbl(GetX(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf &
                 lbFx.Text.Remove(lbFx.Text.IndexOf("(")) & "'(" & Math.Round(CDbl(GetX(True)), 3) & ") = " & dxdy.ToString().Replace("NaN", "Undefined")
-            Catch 'ex As Exception
-                'MsgBox(ex.ToString()) ' DEBUG
+            Catch ex As Exception
+                MsgBox(ex.ToString()) ' DEBUG
             End Try
             SetX(prevx, True)
         End Sub
@@ -1917,18 +1845,18 @@ Namespace UI.Graphing
             ' lists of 'interesting' functions
             Select Case ft
                 Case FunctionType.Cartesian, FunctionType.Inverse
-                    showcaselst = {"x", "-x", "x^2", "-x^2", "0.2x^3+0.5x^2-2x-2", "abs(x)", "-sqrt(x)",
-                    "2sinr(0.5x)", "tanr(x)", "floor(x)", "cscr(x)", "sqrt(25-x^2)", "x^4", "x mod 4", "x^3",
-                    "10x", "-10x", "-0.6x", "1/x", "2/x", "3/x", "10/x^2", "1/x^2", "secr(x)", "ceil(x)",
-                    "cotr(x)", "round(x)", "-floor(x)", "(x^2-1)/x", "(x^3-2)/x^2", "-x^4", "-5asinr(0.2x)",
-                    "-acosr(0.2x)", "1/x^3", "1/x^4", "1/floor(x)", "-sqrt(25-x^2)", "1/(0.5x^2)", "xsinr(x)",
-                    "sqrt(x)", "-sinr(x)", "-cosr(x)", "-tanr(x)", "atanr(x)", "5asinr(0.2x)", "acosr(0.1x)",
+                    showcaselst = {"x", "-x", "x^2", "-x^2", "0.2*x^3+0.5*x^2-2*x-2", "abs(x)", "-sqrt(x)",
+                    "2*sinr(0.5*x)", "tanr(x)", "floor(x)", "cscr(x)", "sqrt(25-x^2)", "x^4", "x mod 4", "x^3",
+                    "10*x", "-10*x", "-0.6*x", "1/x", "2/x", "3/x", "10/x^2", "1/x^2", "secr(x)", "ceil(x)",
+                    "cotr(x)", "round(x)", "-floor(x)", "(x^2-1)/x", "(x^3-2)/x^2", "-x^4", "-5*asinr(0.2x)",
+                    "-acosr(0.2x)", "1/x^3", "1/x^4", "1/floor(x)", "-sqrt(25-x^2)", "1/(0.5*x^2)", "x*sinr(x)",
+                    "sqrt(x)", "-sinr(x)", "-cosr(x)", "-tanr(x)", "atanr(x)", "5*asinr(0.2*x)", "acosr(0.1*x)",
                     "sinh(x)", "sqrt(-x)", "-sqrt(-x)", "(x^2+x+1)/x", "-2/(x^2-3x-1)", "-xsinr(x)",
-                    "-xcosr(x)", "e^x", "e^(-x)", "0.5e^(0.5x)", "ln(x)", "log(x,3)", "log2(x)", "log10(x)",
-                    "-atanr(x)", "-round(x)", "0.5x^2", "x mod 3", "-x mod 2", "-x^2+2", "x mod 1", "x^2 -2",
-                    "0.1x^3", "-0.1x^3", "-2/x", "-3/x", "-4/x", "sinr(x)", "xcosr(x)", "90x", "-90x",
+                    "-x*cosr(x)", "e^x", "e^(-x)", "0.5e^(0.5x)", "ln(x)", "log(x,3)", "log2(x)", "log10(x)",
+                    "-atanr(x)", "-round(x)", "0.5*x^2", "x mod 3", "-x mod 2", "-x^2+2", "x mod 1", "x^2 -2",
+                    "0.1*x^3", "-0.1*x^3", "-2/x", "-3/x", "-4/x", "sinr(x)", "x*cosr(x)", "90x", "-90x",
                     "(x^3+1)/x", "(x^2+1)/x^2", "(x^3+x^2-x-2)/(x^2+x)", "(x^2+x+2)/(x^2-x+2)", "x!", "-x!",
-                    "(-x)!", "0.5x!", "-0.5x!", "sgn(x)", "shl(x,1)", "shr(x,1)", "xcotr(x)", "xtanr(x)",
+                    "(-x)!", "0.5x!", "-0.5x!", "sgn(x)", "shl(x,1)", "shr(x,1)", "x*cotr(x)", "x*tanr(x)",
                     "-1/x^2", "-xtanr(x)", "x^2sinr(x)"}
                     If _functiontype(_curfn) = FunctionType.Inverse Then
                         For i As Integer = 0 To showcaselst.Length - 1
@@ -1937,10 +1865,10 @@ Namespace UI.Graphing
                     End If
                 Case FunctionType.Parametric
                     showcaselst = {"<6sinr(t)^3, 3cosr(t)^3> [0<t<2pi]", "<3sinr(t)^3, 6cosr(t)^3> [0<t<2pi]",
-                    "<5sinr(t)^3, 5cosr(t)^3> [0<t<2pi]", "<6sinr(7πt), 5cosr(5πt)> [0<t<2]",
-                    "<5sinr(7πt), 5cosr(5πt)> [0<t<2]", "<5cosr(t), 5sinr(t)> [0<t<2π]",
-                    "<6cosr(t), 3sinr(t)> [0<t<2π]", "<3cosr(t), 6sinr(t)> [0<t<2π]",
-                    "<4cosr(t), 4sinr(t)> [0<t<2π]", "<6sinr(20πt), 15cosr(10πt)> [0<t<2π]",
+                    "<5sinr(t)^3, 5cosr(t)^3> [0<t<2pi]", "<6*sinr(7πt), 5cosr(5πt)> [0<t<2]",
+                    "<5sinr(7πt), 5cosr(5πt)> [0<t<2]", "<5*cosr(t), 5sinr(t)> [0<t<2π]",
+                    "<6cosr(t), 3sinr(t)> [0<t<2π]", "<3*cosr(t), 6sinr(t)> [0<t<2π]",
+                    "<4cosr(t), 4sinr(t)> [0<t<2π]", "<6*sinr(20πt), 15cosr(10πt)> [0<t<2π]",
                     "<10cosr(10πt), 10sinr(20πt)> [0<t<2π]",
                     "<8sinr(t)^3, (13cosr(t)-5cosr(2t)-3cosr(3t)-cosr(4t))/2> [0<t<2π]",
                     "<t, -t> [-1000<t<1000]", "<t,t> [-1000<t<1000]", "<15cosr(10πt), 6sinr(20πt)> [0<t<0.1]",
@@ -1948,18 +1876,18 @@ Namespace UI.Graphing
                     "<8sinr(t)^3, (13cosr(t)-5cosr(2t)-3cosr(3t)-cosr(4t))/2> [0<t<2π]"}
                 Case FunctionType.Polar
                     showcaselst = {"5-5sinr(θ) [0<θ<2π]", "5-5sinr(θ) [0<θ<2π]",
-                    "5-8sinr(θ) [0<θ<2π]", "5-9sinr(θ) [0<θ<2π]", "5-9cosr(θ) [0<θ<2π]",
-                    "0.1θ [0<θ<100π]", "0.2θ [0<θ<100π]", "5 [0<θ<2π]", "5sinr(2θ) [0<θ<2π]",
-                    "5sinr(3θ) [0<θ<2π]", "5cosr(4θ) [0<θ<2π]", "5cosr(6θ) [0<θ<2π]",
-                    "sqrt(100cosr(2θ)) [0<θ<2π]", "sqrt(100sinr(2θ)) [0<θ<2π]", "0.6sqrt(θ) [0<θ<100π]",
-                    "10^(cosr(-πθ)) [0<θ<98π]", "8^(cosr(-π*θ)) [0<θ<14π]", "1/(sinr(θ)-cosr(θ)) [0<θ<2π]",
-                    "2/(sinr(θ)-cosr(θ)) [0<θ<2π]"}
+                    "5-8*sinr(θ) [0<θ<2π]", "5-9*sinr(θ) [0<θ<2π]", "5-9*cosr(θ) [0<θ<2π]",
+                    "0.1*θ [0<θ<100π]", "0.2θ [0<θ<100π]", "5 [0<θ<2π]", "5*sinr(2*θ) [0<θ<2π]",
+                    "5*sinr(3*θ) [0<θ<2π]", "5cosr(4θ) [0<θ<2π]", "5*cosr(6*θ) [0<θ<2π]",
+                    "sqrt(100*cosr(2*θ)) [0<θ<2*π]", "sqrt(100*sinr(2*θ)) [0<θ<2*π]", "0.6*sqrt(θ) [0<θ<100*π]",
+                    "10^(cosr(-π*θ)) [0<θ<98*π]", "8^(cosr(-π*θ)) [0<θ<14*π]", "1/(sinr(θ)-cosr(θ)) [0<θ<2*π]",
+                    "2/(sinr(θ)-cosr(θ)) [0<θ<2*π]"}
                 Case FunctionType.Differential
                     showcaselst = {"x/y", "-x/y", "y/x", "xy", "-y/x", "x+y", "x-y", "x-xy", "x", "y", "e^(-y)",
                     "2x/y", "e^(-x)"}
                 Case FunctionType.OriginRay
-                    showcaselst = {"0", "π", "π/2", "3π/2", "π/3", "2π/3", "4π/3", "5π/3", "π/4", "3π/4",
-                    "5π/4", "7π/4", "π/6", "5π/6", "7π/6", "11π/6", "-π/2", "-π/4", "-π/6", "-5π/6", "-3π/4",
+                    showcaselst = {"0", "π", "π/2", "3*π/2", "π/3", "2*π/3", "4*π/3", "5*π/3", "π/4", "3*π/4",
+                    "5*π/4", "7*π/4", "π/6", "5*π/6", "7*π/6", "11*π/6", "-π/2", "-π/4", "-π/6", "-5π/6", "-3*π/4",
                     "1", "-1"}
                 Case Else
                     Return ' invalid function type

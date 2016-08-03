@@ -11,7 +11,7 @@
 
         Private Sub DiagFeatureList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             Me.Opacity = 0
-            Me.Icon = My.Resources.Calculator
+            Me.Icon = My.Resources.Cantus
             tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion).Replace(vbLf, vbCrLf)
             tb.SelectionStart = 0
             Dim cCode As String = Globalization.CultureInfo.CurrentCulture.Name

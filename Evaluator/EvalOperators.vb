@@ -461,6 +461,9 @@ Namespace Evaluator
                                  ControlChars.Quote & ControlChars.Quote & ControlChars.Quote,
                                  AddressOf BracketOperatorRawText))
 
+            Register(New Bracket("'''", AddressOf BracketOperatorQuotedText))
+            Register(New Bracket("r" & "'''", "'''", AddressOf BracketOperatorRawText))
+
             Me.DefaultOperator = OperatorWithSign("*")
         End Sub
 

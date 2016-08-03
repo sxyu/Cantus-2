@@ -133,13 +133,18 @@
     <Import Include="System.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UI\FrmViewer.Designer.vb">
-      <DependentUpon>FrmViewer.vb</DependentUpon>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UI\FrmViewer.vb">
-      <SubType>Form</SubType>
+    <Compile Include="UI\Viewer.Designer.vb">
+      <DependentUpon>Viewer.vb</DependentUpon>
     </Compile>
-    <Compile Include="Scintilla\ScintillaForCantus.vb" />
+    <Compile Include="UI\Viewer.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Scintilla\ScintillaForCantus.vb" />
     <Compile Include="EmbeddedAssembly.vb" />
     <Compile Include="Main.vb" />
     <Compile Include="Evaluator\BigDecimal.vb" />
@@ -194,35 +199,24 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="UI\Keyboard\KeyboardRight.Designer.vb">
-      <DependentUpon>KeyboardRight.vb</DependentUpon>
+    <Compile Include="UI\Keyboard\Keyboard.Designer.vb">
+      <DependentUpon>Keyboard.vb</DependentUpon>
     </Compile>
-    <Compile Include="UI\Keyboard\KeyboardRight.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\Keyboard\KeyboardLeft.Designer.vb">
-      <DependentUpon>KeyboardLeft.vb</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Keyboard\KeyboardLeft.vb">
-      <SubType>Form</SubType>
+    <Compile Include="UI\Keyboard\Keyboard.vb">
+      <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\FrmEditor.resx">
       <DependentUpon>FrmEditor.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\FrmViewer.resx">
-      <DependentUpon>FrmViewer.vb</DependentUpon>
+    <EmbeddedResource Include="UI\Viewer.resx">
+      <DependentUpon>Viewer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\GraphingSystem.resx">
       <DependentUpon>GraphingSystem.vb</DependentUpon>
@@ -241,15 +235,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Keyboard\KeyboardRight.resx">
-      <DependentUpon>KeyboardRight.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Keyboard\KeyboardLeft.resx">
-      <DependentUpon>KeyboardLeft.vb</DependentUpon>
+    <EmbeddedResource Include="UI\Keyboard\Keyboard.resx">
+      <DependentUpon>Keyboard.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -270,7 +261,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Calculator.ico" />
-    <EmbeddedResource Include="Scintilla\ScintillaNET.dll" />
+    <None Include="Resources\cantus-logo-256x256.png" />
+    <None Include="Resources\cantus-logo-large.png" />
+    <None Include="Resources\cantus-logo-64x64.png" />
+    <None Include="Resources\cantus.ico" />
+    <EmbeddedResource Include="UI\Scintilla\ScintillaNET.dll" />
+    <None Include="Resources\OpenSans-Light.ttf" />
+    <None Include="Resources\OpenSans-Regular.ttf" />
     <None Include="Resources\windowsettings.png" />
     <None Include="Resources\settings.png" />
     <None Include="Resources\UpdateMsg.txt" />

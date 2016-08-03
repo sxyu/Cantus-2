@@ -42,14 +42,15 @@ Namespace UI.Dialogs
             Me.lv.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.lv.BorderStyle = System.Windows.Forms.BorderStyle.None
             Me.lv.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColName, Me.ColDescription})
+            Me.lv.Font = New System.Drawing.Font(OpenSans, 11.0!)
             Me.lv.ForeColor = System.Drawing.Color.White
             Me.lv.FullRowSelect = True
             Me.lv.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
             Me.lv.HideSelection = False
-            Me.lv.Location = New System.Drawing.Point(12, 8)
+            Me.lv.Location = New System.Drawing.Point(11, 9)
             Me.lv.MultiSelect = False
             Me.lv.Name = "lv"
-            Me.lv.Size = New System.Drawing.Size(1110, 464)
+            Me.lv.Size = New System.Drawing.Size(1150, 530)
             Me.lv.TabIndex = 0
             Me.lv.UseCompatibleStateImageBehavior = False
             Me.lv.View = System.Windows.Forms.View.Details
@@ -75,9 +76,9 @@ Namespace UI.Dialogs
             Me.btnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
             Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnOK.ForeColor = System.Drawing.Color.White
-            Me.btnOK.Location = New System.Drawing.Point(1033, -1)
+            Me.btnOK.Location = New System.Drawing.Point(1081, -1)
             Me.btnOK.Name = "btnOK"
-            Me.btnOK.Size = New System.Drawing.Size(90, 44)
+            Me.btnOK.Size = New System.Drawing.Size(80, 49)
             Me.btnOK.TabIndex = 3
             Me.btnOK.Text = "&Insert"
             Me.btnOK.UseVisualStyleBackColor = False
@@ -92,11 +93,11 @@ Namespace UI.Dialogs
             Me.btnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
+            Me.btnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.btnCancel.ForeColor = System.Drawing.Color.White
-            Me.btnCancel.Location = New System.Drawing.Point(941, 0)
+            Me.btnCancel.Location = New System.Drawing.Point(999, 0)
             Me.btnCancel.Name = "btnCancel"
-            Me.btnCancel.Size = New System.Drawing.Size(93, 44)
+            Me.btnCancel.Size = New System.Drawing.Size(83, 49)
             Me.btnCancel.TabIndex = 4
             Me.btnCancel.Tag = "b"
             Me.btnCancel.Text = "&Cancel"
@@ -104,13 +105,15 @@ Namespace UI.Dialogs
             '
             'tbSearch
             '
+            Me.tbSearch.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.tbSearch.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
             Me.tbSearch.BorderStyle = System.Windows.Forms.BorderStyle.None
-            Me.tbSearch.Font = New System.Drawing.Font("Segoe UI Semilight", 14.0!)
+            Me.tbSearch.Font = New System.Drawing.Font(OpenSans, 14.0!)
             Me.tbSearch.ForeColor = System.Drawing.Color.Gainsboro
-            Me.tbSearch.Location = New System.Drawing.Point(12, 8)
+            Me.tbSearch.Location = New System.Drawing.Point(11, 9)
             Me.tbSearch.Name = "tbSearch"
-            Me.tbSearch.Size = New System.Drawing.Size(417, 25)
+            Me.tbSearch.Size = New System.Drawing.Size(982, 26)
             Me.tbSearch.TabIndex = 2
             Me.tbSearch.Text = "Type to Filter Functions (Regex Enabled) ..."
             '
@@ -123,24 +126,24 @@ Namespace UI.Dialogs
             Me.PnlSearch.Controls.Add(Me.btnCancel)
             Me.PnlSearch.Controls.Add(Me.btnOK)
             Me.PnlSearch.Cursor = System.Windows.Forms.Cursors.IBeam
-            Me.PnlSearch.Location = New System.Drawing.Point(1, 475)
+            Me.PnlSearch.Location = New System.Drawing.Point(1, 542)
             Me.PnlSearch.Name = "PnlSearch"
-            Me.PnlSearch.Size = New System.Drawing.Size(1121, 47)
+            Me.PnlSearch.Size = New System.Drawing.Size(1159, 52)
             Me.PnlSearch.TabIndex = 5
             '
             'DiagFunctions
             '
             Me.AcceptButton = Me.btnOK
-            Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
-            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.CancelButton = Me.btnCancel
-            Me.ClientSize = New System.Drawing.Size(1121, 517)
+            Me.ClientSize = New System.Drawing.Size(1159, 588)
             Me.Controls.Add(Me.PnlSearch)
             Me.Controls.Add(Me.lv)
-            Me.Font = New System.Drawing.Font("Segoe UI Semilight", 11.0!)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-            Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+            Me.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
             Me.MaximizeBox = False
             Me.MinimizeBox = False
             Me.Name = "DiagFunctions"
@@ -148,7 +151,6 @@ Namespace UI.Dialogs
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "Insert Function"
-            Me.TopMost = False
             Me.PnlSearch.ResumeLayout(False)
             Me.PnlSearch.PerformLayout()
             Me.ResumeLayout(False)

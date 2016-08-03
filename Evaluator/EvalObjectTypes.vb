@@ -1064,6 +1064,8 @@ Namespace Evaluator
                     Return Math.Sqrt(CDbl(DirectCast(norm, BigDecimal)))
                 ElseIf TypeOf norm Is Double
                     Return Math.Sqrt(CDbl(norm))
+                Else
+                    Return Double.NaN
                 End If
             End Function
 

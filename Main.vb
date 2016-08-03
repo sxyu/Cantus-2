@@ -1,10 +1,29 @@
-﻿Imports System.Reflection
+﻿Imports System.Drawing.Text
+Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Text
 Imports Cantus.Evaluator
 
 Namespace UI
     Module MainModule
+        Public ReadOnly Property OpenSans As FontFamily
+            Get
+                If Fonts Is Nothing Then LoadFonts()
+                Return Fonts.Families(0)
+            End Get
+        End Property
+
+        Public ReadOnly Property OpenSansLight As FontFamily
+            Get
+                If Fonts Is Nothing Then LoadFonts()
+                Return Fonts.Families(1)
+            End Get
+        End Property
+
+        Private Fonts As PrivateFontCollection
+
+        Private FontBuffer As IntPtr
+
         ' Win32 API to use console
         <DllImport("kernel32.dll")>
         Private Function AttachConsole(dwProcessId As Integer) As Boolean
@@ -17,6 +36,27 @@ Namespace UI
             Console.WriteLine()
             Console.WriteLine("Welcome to Cantus v." & Application.ProductVersion & " Alpha")
             Console.WriteLine("By Alex Yu 2016")
+        End Sub
+
+        ''' <summary>
+        ''' Load all private fonts
+        ''' </summary>
+        Friend Sub LoadFonts()
+            EmbeddedAssembly.Load("Cantus.ScintillaNET.dll", "ScintillaNET.dll")
+            AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
+
+            If Fonts Is Nothing Then
+                Fonts = New PrivateFontCollection()
+                Dim font As Byte() = My.Resources.OpenSans_Regular
+                FontBuffer = Marshal.AllocCoTaskMem(font.Length)
+                Marshal.Copy(font, 0, FontBuffer, font.Length)
+                Fonts.AddMemoryFont(FontBuffer, font.Length)
+
+                Dim font2 As Byte() = My.Resources.OpenSans_Light
+                FontBuffer = Marshal.AllocCoTaskMem(font2.Length)
+                Marshal.Copy(font2, 0, FontBuffer, font2.Length)
+                Fonts.AddMemoryFont(FontBuffer, font2.Length)
+            End If
         End Sub
 
         Private Sub EvalWrite(script As String, Optional ByVal path As String = "", Optional ByVal clone As Boolean = False)
@@ -126,9 +166,7 @@ Namespace UI
                 SendKeys.SendWait("{ENTER}")
                 Exit Sub
             Else
-                EmbeddedAssembly.Load("Cantus.ScintillaNET.dll", "ScintillaNET.dll")
-                AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
-
+                LoadFonts()
                 '  open form
                 Application.EnableVisualStyles()
                 Application.Run(SplashScreen)

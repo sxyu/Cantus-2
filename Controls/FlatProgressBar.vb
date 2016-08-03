@@ -70,7 +70,7 @@
                         If Vertical Then
                             If DrawBorder Then
                                 e.Graphics.FillRectangle(progressBrush, 2, 2, rec.Width, rec.Height)
-                                e.Graphics.DrawString(ProgressText, New Font("Segoe UI SemiLight", CSng(Me.Width / 5 * 2)), forecolorBrush, 4, 4)
+                                e.Graphics.DrawString(ProgressText, New Font("OpenSans SemiLight", CSng(Me.Width / 5 * 2)), forecolorBrush, 4, 4)
                             Else
                                 Using backBrush As New SolidBrush(Me.BackColor)
                                     e.Graphics.FillRectangle(backBrush, 0, 0, e.ClipRectangle.Width, e.ClipRectangle.Height)
@@ -78,18 +78,18 @@
                                 e.Graphics.FillRectangle(progressBrush, 0, e.ClipRectangle.Height - rec.Height, e.ClipRectangle.Width, rec.Height)
                                 Dim drawFormat As New System.Drawing.StringFormat
                                 drawFormat.FormatFlags = StringFormatFlags.DirectionVertical
-                                e.Graphics.DrawString(ProgressText, New Font("Segoe UI SemiLight", CSng(Me.Width / 5 * 2)), forecolorBrush, 4, 4, drawFormat)
+                                e.Graphics.DrawString(ProgressText, New Font("OpenSans SemiLight", CSng(Me.Width / 5 * 2)), forecolorBrush, 4, 4, drawFormat)
                             End If
                         Else
                             If DrawBorder Then
                                 e.Graphics.FillRectangle(progressBrush, 2, 2, rec.Width, rec.Height)
-                                e.Graphics.DrawString(ProgressText, New Font("Segoe UI SemiLight", CSng(Me.Height / 5 * 2)), forecolorBrush, 4, 4)
+                                e.Graphics.DrawString(ProgressText, New Font("OpenSans SemiLight", CSng(Me.Height / 5 * 2)), forecolorBrush, 4, 4)
                             Else
                                 Using backBrush As New SolidBrush(Me.BackColor)
                                     e.Graphics.FillRectangle(backBrush, 0, 0, e.ClipRectangle.Width, e.ClipRectangle.Height)
                                 End Using
                                 e.Graphics.FillRectangle(progressBrush, 0, 0, rec.Width, e.ClipRectangle.Height)
-                                e.Graphics.DrawString(ProgressText, New Font("Segoe UI SemiLight", CSng(Me.Height / 5 * 2)), forecolorBrush, 4, 4)
+                                e.Graphics.DrawString(ProgressText, New Font("OpenSans SemiLight", CSng(Me.Height / 5 * 2)), forecolorBrush, 4, 4)
                             End If
                         End If
                     End Using

@@ -6,7 +6,7 @@ Imports System.Threading
 Imports Cantus.Evaluator
 Imports Cantus.Evaluator.CommonTypes
 Imports Cantus.Evaluator.Evaluator
-Imports Cantus.Evaluator.Exceptions
+Imports Cantus.Evaluator.Evaluator.CantusIOEventArgs
 Imports Cantus.Evaluator.ObjectTypes
 Imports Cantus.UI.ScintillaForCantus
 Imports ScintillaNET
@@ -47,10 +47,6 @@ Namespace UI
         Private _lastExp As String = ""
         Private _curExpId As Integer = 0
 
-        ' keyboard snapping
-        Public RSnap As Boolean = False
-        Public LSnap As Boolean = False
-
         ' update checking thread
         Private _updTh As Thread
 
@@ -89,11 +85,13 @@ Namespace UI
             End If
 
             ' icon
-            Me.Icon = My.Resources.Calculator
+            Me.Icon = My.Resources.Cantus
 
             ' setup evaluator
             Me._eval = Globals.Evaluator
             AddHandler Globals.Evaluator.EvalComplete, AddressOf EvalComplete
+            AddHandler Globals.Evaluator.WriteOutput, AddressOf WriteOutput
+            AddHandler Globals.Evaluator.ReadInput, AddressOf ReadInput
 
             ' process additional command line args involving UI
             Dim args As String() = Environment.GetCommandLineArgs()
@@ -117,10 +115,6 @@ Namespace UI
             Else
                 tb.Text = def
             End If
-
-            ' setup keyboards
-            Me.RSnap = My.Settings.ROskSnap
-            Me.LSnap = My.Settings.LOskSnap
 
             Try
                 ' delete updater backups if found
@@ -151,17 +145,11 @@ Namespace UI
             UpdateLetterTT()
 
             ' set up UI
-            pnlSettings.BackColor = Color.FromArgb(50, 30, 30, 30)
-            cbAutoUpd.Checked = My.Settings.AutoUpdate
-            lbAbout.Text = lbAbout.Text.Replace("{VER}", Application.ProductVersion & " " & RELEASE_TYPE)
-
-            ' load other forms
-            Keyboards.KeyboardLeft.Show()
-            Keyboards.KeyboardRight.Show()
-            FrmViewer.Show()
+            CbAutoUpd.Checked = My.Settings.AutoUpdate
+            LbAbout.Text = lbAbout.Text.Replace("{VER}", Application.ProductVersion & " " & RELEASE_TYPE)
 
             ' faster drawing
-            Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
+            Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
 
             ' set up modes
             If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math Then
@@ -203,19 +191,15 @@ Namespace UI
             End Try
             SplashScreen.Close()
         End Sub
-        Private Sub FrmEditor_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, tb.MouseUp, lbResult.MouseUp, pnlTb.MouseUp
-            tb.Focus()
-            pnlSettings.Hide()
-        End Sub
 
         Dim deactivated As Boolean = False
         Private Sub FrmEditor_Deactivate(sender As Object, e As EventArgs) Handles MyBase.Deactivate
-            pnlSettings.Hide()
+            ShowSettings(False)
         End Sub
         'Private Sub FrmEditor_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
         '    If deactivated Then
-        '        Keyboards.KeyboardLeft.BringToFront()
-        '        Keyboards.KeyboardRight.BringToFront()
+        '        KeyboardLeft.BringToFront()
+        '        KeyboardRight.BringToFront()
         '        FrmViewer.BringToFront()
         '        deactivated = False
         '        Me.BringToFront()
@@ -224,38 +208,18 @@ Namespace UI
         'End Sub
 
         Private Sub FrmEditor_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
-            If Me.WindowState = FormWindowState.Normal AndAlso My.Settings.ShowKbd Then
-                If LSnap Then Keyboards.KeyboardLeft.Show()
-                If RSnap Then Keyboards.KeyboardRight.Show()
-                If FrmViewer.Snap Then FrmViewer.Show()
-            End If
-
             ' make sure the window doesn't get maximized - that would cause weird behaviour
             If Me.WindowState = FormWindowState.Maximized Then Me.WindowState = FormWindowState.Normal
-            If Keyboards.KeyboardRight.WindowState = FormWindowState.Maximized Then
-                Keyboards.KeyboardRight.WindowState = FormWindowState.Normal
-                If RSnap Then
-                    Keyboards.KeyboardRight.Left = Me.Right - Keyboards.KeyboardRight.Width
-                    Keyboards.KeyboardRight.Top = Me.Bottom
-                End If
-            End If
-            If Keyboards.KeyboardLeft.WindowState = FormWindowState.Maximized Then
-                Keyboards.KeyboardLeft.WindowState = FormWindowState.Normal
-                If LSnap Then
-                    Keyboards.KeyboardLeft.Left = Me.Left
-                    Keyboards.KeyboardLeft.Top = Me.Bottom
-                End If
-            End If
         End Sub
 
         Dim _ignoreNextKey As Boolean = False
-        Private Sub FrmEditor_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, tb.KeyUp
+        Private Sub FrmEditor_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, Tb.KeyUp
             If e.KeyCode = Keys.Enter And e.Alt Then
                 If sender Is Me Then Return
                 EvaluateExpr()
             ElseIf e.Control AndAlso e.Alt Then
                 If e.KeyCode = Keys.P Then
-                    btnAngleRep_Click(btnAngleRepr, New EventArgs)
+                    btnAngleRep_Click(BtnAngleRepr, New EventArgs)
                 ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
                     If e.KeyCode = Keys.D Then
                         _eval.AngleMode = eAngleRepresentation.Degree
@@ -264,10 +228,10 @@ Namespace UI
                     Else
                         _eval.AngleMode = eAngleRepresentation.Gradian
                     End If
-                    btnAngleRepr.Text = _eval.AngleMode.ToString()
+                    BtnAngleRepr.Text = _eval.AngleMode.ToString()
                     EvaluateExpr(True)
                 ElseIf e.KeyCode = Keys.O Then
-                    btnOMode_Click(btnOutputFormat, New EventArgs)
+                    btnOMode_Click(BtnOutputFormat, New EventArgs)
                 ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.L Then
                     If e.KeyCode = Keys.M Then
                         _eval.OutputFormat = eOutputFormat.Math
@@ -277,15 +241,15 @@ Namespace UI
                     Else
                         _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific
                     End If
-                    btnOutputFormat.Text = _eval.OutputFormat.ToString()
+                    BtnOutputFormat.Text = _eval.OutputFormat.ToString()
                     EvaluateExpr(True)
                 ElseIf e.KeyCode = Keys.T Then
-                    btnExplicit_Click(btnExplicit, New EventArgs())
+                    btnExplicit_Click(BtnExplicit, New EventArgs())
                 End If
             End If
         End Sub
 
-        Private Sub FrmEditor_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
+        Private Sub FrmEditor_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Tb.KeyPress
             If _ignoreNextKey Then
                 _ignoreNextKey = False
                 e.Handled = True
@@ -297,49 +261,49 @@ Namespace UI
         ''' Send the event to asynchroneously evalute the expression
         ''' </summary>
         Private Sub EvaluateExpr(Optional noSaveAns As Boolean = False)
-            _eval.EvalAsync(tb.Text, noSaveAns) ' evaluate & wait for event
+            _eval.EvalAsync(Tb.Text, noSaveAns) ' evaluate & wait for event
 
             If Not noSaveAns Then
                 ' save previous expressions 
-                If _prevExp.Count = 0 OrElse _prevExp(_prevExp.Count - 1) <> tb.Text Then
-                    _prevExp.Add(tb.Text)
+                If _prevExp.Count = 0 OrElse _prevExp(_prevExp.Count - 1) <> Tb.Text Then
+                    _prevExp.Add(Tb.Text)
                     _curExpId += 1
                 End If
 
                 ' remove previous expressions past limit
-                _lastExp = tb.Text
+                _lastExp = Tb.Text
                 If _prevExp.Count > PREV_EXPRESSION_LIMIT Then
                     _prevExp.RemoveAt(0) 'max expressions
                     _curExpId -= 1
                 End If
 
                 Dim logText As String = "'"
-                If tb.TextLength > 103 Then
-                    logText = tb.GetTextRange(0, 100) & "..."
+                If Tb.TextLength > 103 Then
+                    logText = Tb.GetTextRange(0, 100) & "..."
                 Else
-                    logText = tb.Text
+                    logText = Tb.Text
                 End If
 
                 ' write expression to log
-                FrmViewer.WriteLogSection(logText)
+                Viewer.WriteLogSection(logText)
             End If
         End Sub
 
         Private _lastAnsCount As Integer = 0
         Private Sub EvalComplete(sender As Object, result As Object)
-            If lbResult.InvokeRequired Then
-                lbResult.BeginInvoke(Sub() EvalComplete(sender, result))
+            If LbResult.InvokeRequired Then
+                LbResult.BeginInvoke(Sub() EvalComplete(sender, result))
             Else
                 Dim ans As String = result.ToString()
 
                 ' display answer
-                lbResult.Text = AutoTrimDisplayText(ans)
+                LbResult.Text = AutoTrimDisplayText(ans)
                 If _eval.PrevAns.Count > _lastAnsCount Then
-                    FrmViewer.WriteLog("= " & ans)
+                    Viewer.WriteLogLine("= " & ans)
                 End If
                 _lastAnsCount = _eval.PrevAns.Count
 
-                tb.Focus()
+                Tb.Focus()
             End If
         End Sub
 
@@ -347,90 +311,109 @@ Namespace UI
             Dim g As Graphics = Graphics.FromHwnd(Me.Handle)
             Dim i As Integer = 0
             Dim res As String = "= "
-            Dim wid As Single = g.MeasureString(res, lbResult.Font).Width
-            While i < txt.Length AndAlso wid < lbResult.Width - 1
+            Dim wid As Single = g.MeasureString(res, LbResult.Font).Width
+            While i < txt.Length AndAlso wid < LbResult.Width - 1
                 res &= txt(i)
                 i += 1
-                wid = g.MeasureString(res, lbResult.Font).Width
+                wid = g.MeasureString(res, LbResult.Font).Width
             End While
 
-            If wid > lbResult.Width - 1 Then
-                While wid > lbResult.Width - 1 AndAlso res.Length > 0
+            If wid > LbResult.Width - 1 Then
+                While wid > LbResult.Width - 1 AndAlso res.Length > 0
                     res = res.Remove(res.Length - 1)
-                    wid = g.MeasureString(res & "...", lbResult.Font).Width
+                    wid = g.MeasureString(res & "...", LbResult.Font).Width
                 End While
                 res &= "..."
                 If txt.Length <= TT_LEN_LIMIT Then
-                    TTLetters.SetToolTip(lbResult, txt)
+                    TTLetters.SetToolTip(LbResult, txt)
                 Else
-                    TTLetters.SetToolTip(lbResult, txt.Remove(TT_LEN_LIMIT - 3) & "...")
+                    TTLetters.SetToolTip(LbResult, txt.Remove(TT_LEN_LIMIT - 3) & "...")
                 End If
             Else
-                TTLetters.SetToolTip(lbResult, "")
+                TTLetters.SetToolTip(LbResult, "")
             End If
 
             Return res
         End Function
 
+        Private Sub WriteOutput(sender As Object, e As CantusIOEventArgs)
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(Sub() Viewer.WriteLog("> " & e.Content))
+            Else
+                Viewer.WriteLog("> " & e.Content)
+            End If
+        End Sub
+
+        Private Sub ReadInput(sender As Object, e As CantusIOEventArgs, ByRef [return] As Object)
+            Select Case e.Message
+                Case eMessage.readChar, eMessage.readWord, eMessage.readLine
+                    [return] = InputBox(e.Content, "Virtual Console Input - Cantus", "")
+                Case eMessage.confirm
+                    Dim result As DialogResult = MessageBox.Show(Me, e.Content, "Confirm - Cantus",
+                                    If(e.Args("yes").ToString() = "yes", MessageBoxButtons.YesNo, MessageBoxButtons.OKCancel),
+                                    MessageBoxIcon.Information)
+                    [return] = result = DialogResult.OK OrElse result = DialogResult.Yes
+            End Select
+        End Sub
 
         Public Sub SetTheme(name As String)
-            tb.StyleResetDefault()
+            Tb.StyleResetDefault()
 
             Select Case name
                 Case "dark"
-                    With tb.Styles(Style.Default)
+                    With Tb.Styles(Style.Default)
                         .BackColor = Color.FromArgb(34, 34, 34)
                         .Font = "Consolas"
                         .Size = 13
                     End With
 
-                    tb.SetSelectionBackColor(True, Color.GhostWhite)
-                    tb.SetSelectionForeColor(True, Color.Black)
+                    Tb.SetSelectionBackColor(True, Color.GhostWhite)
+                    Tb.SetSelectionForeColor(True, Color.Black)
 
-                    tb.StyleClearAll()
-                    tb.WrapMode = WrapMode.Word
+                    Tb.StyleClearAll()
+                    Tb.WrapMode = WrapMode.Word
 
-                    tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
+                    Tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
 
-                    tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
-                    tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
+                    Tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
+                    Tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
 
-                    tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
-                    tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
+                    Tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
+                    Tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
 
-                    tb.Styles(CantusLexer.StyleNumber).ForeColor = Color.FromArgb(255, 205, 34)
-                    tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
+                    Tb.Styles(CantusLexer.StyleNumber).ForeColor = Color.FromArgb(255, 205, 34)
+                    Tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
 
-                    tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
+                    Tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
 
-                    tb.Lexer = Lexer.Container
+                    Tb.Lexer = Lexer.Container
 
-                    tb.IndentWidth = 4
+                    Tb.IndentWidth = 4
 
-                    With tb.Styles(Style.LineNumber)
+                    With Tb.Styles(Style.LineNumber)
                         .BackColor = Color.FromArgb(34, 34, 34)
                         .ForeColor = Color.DarkGray
                         .Size = 13
                     End With
 
-                    tb.IndentationGuides = IndentView.Real
+                    Tb.IndentationGuides = IndentView.Real
 
-                    tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
-                    tb.Styles(Style.BraceLight).BackColor = Color.LightGray
+                    Tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
+                    Tb.Styles(Style.BraceLight).BackColor = Color.LightGray
 
-                    tb.Styles(Style.BraceBad).ForeColor = Color.White
-                    tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
+                    Tb.Styles(Style.BraceBad).ForeColor = Color.White
+                    Tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
 
-                    tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
+                    Tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
 
-                    Dim margin As Margin = tb.Margins(0)
+                    Dim margin As Margin = Tb.Margins(0)
                     margin.Width = 45
 
-                    tb.TabWidth = 4
+                    Tb.TabWidth = 4
 
-                    tb.ScrollWidth = tb.Width - 2 * margin.Width - 5
+                    Tb.ScrollWidth = Tb.Width - 2 * margin.Width - 5
 
-                    tb.AutoCIgnoreCase = True
+                    Tb.AutoCIgnoreCase = True
             End Select
         End Sub
 
@@ -439,9 +422,6 @@ Namespace UI
         ''' Save all settings to the init.can file
         ''' </summary>
         Public Sub SaveSettings()
-            My.Settings.ROskSnap = Me.RSnap
-            My.Settings.LOskSnap = Me.LSnap
-
             Try
                 Dim curText As String = ""
                 If IO.File.Exists("init.can") Then
@@ -478,7 +458,7 @@ Namespace UI
                 diag.RestoreDirectory = True
                 diag.Title = "Save As Script"
                 If diag.ShowDialog = DialogResult.OK Then
-                    IO.File.WriteAllText(diag.FileName, tb.Text, Encoding.UTF8)
+                    IO.File.WriteAllText(diag.FileName, Tb.Text, Encoding.UTF8)
                     _File = diag.FileName ' set new file name
                 End If
             End Using
@@ -494,7 +474,7 @@ Namespace UI
                 diag.Multiselect = False
                 diag.Title = "Open Script"
                 If diag.ShowDialog = DialogResult.OK Then
-                    tb.Text = IO.File.ReadAllText(diag.FileName).Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).
+                    Tb.Text = IO.File.ReadAllText(diag.FileName).Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).
                                 Replace(vbLf, vbNewLine) ' fix line endings
                     _File = diag.FileName
                 End If
@@ -508,7 +488,7 @@ Namespace UI
             If String.IsNullOrEmpty(Me.File) Then
                 OpenSaveAs()
             Else
-                IO.File.WriteAllText(File, tb.Text, Encoding.UTF8)
+                IO.File.WriteAllText(File, Tb.Text, Encoding.UTF8)
             End If
         End Sub
 
@@ -517,119 +497,120 @@ Namespace UI
         ''' </summary>
         Private Sub NewScript()
             If String.IsNullOrEmpty(Me.File) Then
-                If (tb.TextLength < 10 AndAlso String.IsNullOrWhiteSpace(tb.Text)) OrElse
+                If (Tb.TextLength < 10 AndAlso String.IsNullOrWhiteSpace(Tb.Text)) OrElse
                     MsgBox("All unsaved changes will be lost. " & ControlChars.NewLine & "Are you sure you want to create a new script?",
                            MsgBoxStyle.YesNo Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "New Script") =
                            MsgBoxResult.Yes Then
-                    tb.Text = ""
+                    Tb.Text = ""
                 End If
             Else
                 Save()
                 Me._File = ""
-                tb.Text = ""
+                Tb.Text = ""
             End If
         End Sub
 #End Region
 #Region "main buttons"
-        Private Sub btnCalc_Click(sender As Object, e As System.EventArgs) Handles btnEval.Click
-            tb.Focus()
+        Private Sub btnCalc_Click(sender As Object, e As System.EventArgs) Handles BtnEval.Click
+            Tb.Focus()
             EvaluateExpr()
         End Sub
 
         Private Sub btnGraph_Click(sender As Object, e As EventArgs)
             ' open graphing window
-            tb.Focus()
+            Tb.Focus()
             ' GRAPH
-            btnMin.PerformClick()
+            BtnMin.PerformClick()
         End Sub
 
-        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
-            tb.Focus()
+        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles BtnFunctions.Click
+            Tb.Focus()
             Using diag As New Dialogs.DiagFunctions
                 If diag.ShowDialog() = DialogResult.OK Then
-                    Dim start As Integer = tb.SelectionStart
-                    tb.Text = tb.Text.Remove(
-                                tb.SelectionStart, tb.SelectionEnd - tb.SelectionStart).Insert(start, diag.Result)
+                    Dim start As Integer = Tb.SelectionStart
+                    Tb.Text = Tb.Text.Remove(
+                                Tb.SelectionStart, Tb.SelectionEnd - Tb.SelectionStart).Insert(start, diag.Result)
 
                     If diag.Result.Contains("(") Then
-                        tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
+                        Tb.SelectionStart = start + diag.Result.IndexOf("(") + 1
                     Else
-                        tb.SelectionStart = start + diag.Result.Count
+                        Tb.SelectionStart = start + diag.Result.Count
                     End If
                 End If
             End Using
         End Sub
 
-        Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-            tb.Focus()
+        Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
+            Tb.Focus()
             Save()
             SaveSettings()
         End Sub
 
-        Private Sub btnOpen_Click(sender As Object, e As EventArgs) Handles btnOpen.Click
-            tb.Focus()
+        Private Sub btnOpen_Click(sender As Object, e As EventArgs) Handles BtnOpen.Click
+            Tb.Focus()
             Open()
         End Sub
 
         Private Sub BtnTranslucent_Click(sender As Object, e As EventArgs) Handles BtnTranslucent.Click
-            tb.Focus()
+            Tb.Focus()
             If Me.Opacity = 1 Then
-                Me.Opacity = 0.5
-                BtnTranslucent.BackColor = btnEval.BackColor
-                BtnTranslucent.FlatAppearance.MouseOverBackColor = btnEval.BackColor
-                BtnTranslucent.FlatAppearance.MouseDownBackColor = btnEval.FlatAppearance.MouseDownBackColor
+                Me.Opacity = 0.75
+                BtnTranslucent.BackColor = Color.FromArgb(45, 45, 45)
+                BtnTranslucent.FlatAppearance.MouseDownBackColor = Color.FromArgb(55, 55, 55)
+            ElseIf Me.Opacity = 0.75
+                Me.Opacity = 0.25
+                BtnTranslucent.BackColor = Color.FromArgb(30, 30, 30)
+                BtnTranslucent.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40)
             Else
                 Me.Opacity = 1
-                BtnTranslucent.BackColor = btnMin.BackColor
-                BtnTranslucent.FlatAppearance.MouseOverBackColor = btnMin.BackColor
-                BtnTranslucent.FlatAppearance.MouseDownBackColor = btnMin.FlatAppearance.MouseDownBackColor
+                BtnTranslucent.BackColor = BtnMin.BackColor
+                BtnTranslucent.FlatAppearance.MouseDownBackColor = BtnMin.FlatAppearance.MouseDownBackColor
             End If
-            FrmViewer.Opacity = Me.Opacity
-            Keyboards.KeyboardLeft.Opacity = Me.Opacity
-            Keyboards.KeyboardRight.Opacity = Me.Opacity
+            BtnTranslucent.FlatAppearance.MouseOverBackColor = BtnTranslucent.BackColor
+            'Viewer.Opacity = Me.Opacity
         End Sub
 
-        Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
-            tb.Focus()
+        Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
+            Tb.Focus()
             NewScript()
         End Sub
 
 #Region "textbox & labels"
 
-        Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles tb.KeyDown
+        Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb.KeyDown
             If e.Alt Then
                 If e.KeyCode = Keys.Up Then
                     If _curExpId > 1 And _prevExp.Count > 1 Then
-                        If (tb.Text = _lastExp) Then
+                        If (Tb.Text = _lastExp) Then
                             _curExpId -= 1
                         Else
-                            _prevExp.Add(tb.Text)
+                            _prevExp.Add(Tb.Text)
                         End If
                         _lastExp = _prevExp(_curExpId - 1)
-                        tb.Text = _lastExp
-                        tb.SelectionStart = tb.Text.Length
+                        Tb.Text = _lastExp
+                        Tb.SelectionStart = Tb.Text.Length
                     End If
                 ElseIf e.KeyCode = Keys.Down Then
                     If _curExpId < _prevExp.Count And _prevExp.Count > 1 Then
                         _curExpId += 1
                         _lastExp = _prevExp(_curExpId - 1)
-                        tb.Text = _lastExp
-                        tb.SelectionStart = tb.Text.Length
+                        Tb.Text = _lastExp
+                        Tb.SelectionStart = Tb.Text.Length
                     End If
                 ElseIf e.KeyCode = Keys.F Then
-                    btnFunctions.PerformClick()
+                    BtnFunctions.PerformClick()
                 ElseIf e.KeyCode = Keys.S Then
-                    btnSettings.PerformClick()
+                    BtnSettings.PerformClick()
                 ElseIf e.KeyCode = Keys.G Then
-                    FrmViewer.View = FrmViewer.eView.graphing
+                    Viewer.View = Viewer.eView.graphing
                     Try
-                        FrmViewer.pnl.Controls(0).Select()
+                        Viewer.pnl.Controls(0).Select()
                     Catch
                     End Try
-                ElseIf e.KeyCode = Keys.R Then
-                    FrmViewer.View = FrmViewer.eView.log
+                ElseIf e.KeyCode = Keys.C Then
+                    Viewer.View = Viewer.eView.log
                     Try
-                        FrmViewer.pnl.Controls(0).Select()
+                        Viewer.pnl.Controls(0).Select()
                     Catch
                     End Try
                 ElseIf e.KeyCode = Keys.T Then
@@ -669,34 +650,59 @@ Namespace UI
                     End If
                 End Using
             End If
-
-        End Sub
-
-        Private Sub lbResult_TextChanged(sender As Object, e As EventArgs) Handles lbResult.TextChanged
-            Keyboards.KeyboardRight.lbResult.Text = lbResult.Text
         End Sub
 #End Region
 #End Region
 #Region "memory ui"
-        Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
-            If Not pnlSettings.Visible Then
-                If pnlSettings.BackgroundImage Is Nothing Then pnlSettings.BackgroundImage = New Bitmap(pnlSettings.Width, pnlSettings.Height)
+        Friend Sub ShowSettings(Optional show As Boolean = True)
+            If TmrAnim.Enabled Then Return
+            _showSettings = show
+            PnlSettings.BringToFront()
+            _slideRate = 50
+            TmrAnim.Start()
+        End Sub
 
-                Try
-                    pnlTb.DrawToBitmap(CType(pnlSettings.BackgroundImage, Bitmap), New Rectangle(0, 0, pnlSettings.Width, pnlSettings.Height))
-                Catch ex As Exception
-                End Try
-                pnlTb.Focus()
-                btnAngleRepr.Text = _eval.AngleMode.ToString()
-                btnOutputFormat.Text = _eval.OutputFormat.ToString()
-                pnlSettings.Show()
+        Dim _showSettings As Boolean = True
+        Dim _slideRate As Double
+        Private Sub TmrAnim_tick(sender As Object, e As EventArgs) Handles TmrAnim.Tick
+            If _showSettings Then
+                If PnlSettings.Left - _slideRate <= 0 Then
+                    TmrAnim.Stop()
+                    PnlSettings.Left = 0
+
+                    UpdateLetterTT()
+                    BtnSettings.BackColor = Color.FromArgb(60, 60, 60)
+                    BtnSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60)
+                    Exit Sub
+                End If
+                PnlSettings.Left -= CInt(_slideRate)
+                _slideRate *= 1.2
             Else
-                EvaluateExpr(True)
-                pnlSettings.Hide()
+                If PnlSettings.Left + _slideRate > PnlTb.Width Then
+                    TmrAnim.Stop()
+                    PnlSettings.Left = PnlTb.Width + 1
+
+                    BtnSettings.BackColor = Color.FromArgb(55, 55, 55)
+                    BtnSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(55, 55, 55)
+                End If
+                PnlSettings.Left += CInt(_slideRate)
+                _slideRate *= 1.2
             End If
         End Sub
 
-        Private Sub btnLetters_Click(sender As Object, e As EventArgs) Handles btnY.Click, btnX.Click, btnT.Click, btnM.Click
+        Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles BtnSettings.Click
+            If PnlSettings.Left > 0 Then
+                PnlTb.Focus()
+                BtnAngleRepr.Text = _eval.AngleMode.ToString()
+                BtnOutputFormat.Text = _eval.OutputFormat.ToString()
+                ShowSettings()
+            Else
+                EvaluateExpr(True)
+                ShowSettings(False)
+            End If
+        End Sub
+
+        Private Sub btnLetters_Click(sender As Object, e As EventArgs) Handles BtnY.Click, BtnX.Click, BtnT.Click, BtnM.Click
             Dim btn As Button = DirectCast(sender, Button)
             SetVariable(btn.Tag.ToString()(0), _eval.GetLastAns())
             UpdateLetterTT()
@@ -710,7 +716,7 @@ Namespace UI
         ''' Update tooltips for variable buttons
         ''' </summary>
         Private Sub UpdateLetterTT()
-            For Each c As Control In pnlSettings.Controls
+            For Each c As Control In PnlSettings.Controls
                 If c.Tag Is Nothing OrElse c.Tag.ToString() = "-" Then Continue For
 
                 Dim val As String
@@ -789,220 +795,120 @@ Namespace UI
             _updateStarted = False
         End Sub
         Private Sub ShowUpdForm()
-            Keyboards.KeyboardLeft.Visible = False
-            Keyboards.KeyboardRight.Visible = False
+            Keyboard.Visible = False
             Me.Visible = False
             Using fup As New Updater.FrmUpdate
                 Updater.FrmUpdate.ShowDialog()
                 Updater.FrmUpdate.BringToFront()
-                Keyboards.KeyboardLeft.SendToBack()
-                Keyboards.KeyboardRight.SendToBack()
             End Using
         End Sub
 #End Region
 #Region "Command Buttons & Aesthetic"
-        Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+        Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
             Me.Close()
         End Sub
 
-        Private Sub btnMin_Click(sender As Object, e As EventArgs) Handles btnMin.Click
+        Private Sub btnMin_Click(sender As Object, e As EventArgs) Handles BtnMin.Click
             Me.WindowState = FormWindowState.Minimized
-            If FrmViewer.Snap Then FrmViewer.Hide()
-            If LSnap Then Keyboards.KeyboardLeft.Hide()
-            If RSnap Then Keyboards.KeyboardRight.Hide()
         End Sub
 
-        Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles btnSettings.Enter, btnEval.Enter, btnMin.Enter, btnClose.Enter
-            tb.Focus()
-        End Sub
-        Private Sub pnlMemLtrs_VisibleChanged(sender As Object, e As EventArgs) Handles pnlSettings.VisibleChanged
-            If pnlSettings.Visible Then
-                UpdateLetterTT()
-                btnSettings.BackColor = Color.FromArgb(60, 60, 60)
-                btnSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60)
-            Else
-                btnSettings.BackColor = Color.FromArgb(55, 55, 55)
-                btnSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(55, 55, 55)
-            End If
+        Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles BtnSettings.Enter, BtnEval.Enter, BtnMin.Enter, BtnClose.Enter
+            Tb.Focus()
         End Sub
 #End Region
 #Region "Form Moving"
         Private _isMoving As Boolean
         Private _movingPrevPt As Point
 
-        Private Sub me_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown, pnlResults.MouseDown, lbResult.MouseDown
-            If e.Button <> MouseButtons.Right Then
+        Friend Sub FrmEditor_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown,
+            PnlResults.MouseDown, LbResult.MouseDown
+            If e.Button <> MouseButtons.Right And Not _isMoving Then
                 _movingPrevPt = e.Location
                 _isMoving = True
             End If
         End Sub
 
-        Private Sub me_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove, pnlResults.MouseMove, lbResult.MouseMove
+        Dim sw As Integer = 0
+        Friend Sub FrmEditor_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove,
+            PnlResults.MouseMove, LbResult.MouseMove
             If _isMoving Then
-                Dim newLft As Integer = Me.Left + e.X - _movingPrevPt.X
-                Dim newTop As Integer = Me.Top + e.Y - _movingPrevPt.Y
-                Me.Left = newLft
-                Me.Top = newTop
-                If LSnap Then
-                    Keyboards.KeyboardLeft.Left = newLft
-                    Keyboards.KeyboardLeft.Top = newTop + Me.Height - 1
+                If sw = 0 Then
+                    Dim newLft As Integer = Me.Left + e.X - _movingPrevPt.X
+                    Dim newTop As Integer = Me.Top + e.Y - _movingPrevPt.Y
+                    If newTop > Me.Top Then Me.Top = newTop
+                    Me.Left = newLft
+                    If newTop < Me.Top Then Me.Top = newTop
                 End If
-                If RSnap Then
-                    Keyboards.KeyboardRight.Left = newLft + Me.Width - Keyboards.KeyboardRight.Width
-                    Keyboards.KeyboardRight.Top = newTop + Me.Height - 1
-                End If
-                If FrmViewer.Snap Then
-                    FrmViewer.Left = newLft - FrmViewer.Width
-                    FrmViewer.Top = newTop
-                End If
-                Keyboards.KeyboardLeft.BringToFront()
-                Keyboards.KeyboardRight.BringToFront()
+                sw = (sw + 1) Mod 5
             End If
         End Sub
 
-        Private Sub me_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, pnlResults.MouseUp, lbResult.MouseUp
-            If e.Button = MouseButtons.Right Then
-                If FrmViewer.Snap Then
-                    Me.Left += 6
-                    FrmViewer.Snap = False
-                    My.Settings.VSnap = False
-                    FrmViewer.ShowInTaskbar = True
-                    FrmViewer.btnMin.Show()
-                    If Me.LSnap Then
-                        Keyboards.KeyboardLeft.Left += 6
-                    End If
-                    If Me.RSnap Then
-                        Keyboards.KeyboardRight.Left += 6
-                    End If
-                End If
+        Friend Sub FrmEditor_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, PnlResults.MouseUp,
+            LbResult.MouseUp, Tb.MouseUp, PnlTb.MouseUp
+            Tb.Focus()
+            ShowSettings(False)
+            _isMoving = False
 
-                If Me.LSnap Or Me.RSnap Then
-                    Me.RSnap = False
-                    Me.LSnap = False
-                    Me.Top -= 6
-                    My.Settings.ROskSnap = RSnap
-                    My.Settings.LOskSnap = LSnap
-                End If
-                My.Settings.Save()
-            Else
-                ' these parts are quite messy, and will need cleanup eventually
-                _isMoving = False
-
-                If Me.Right > FrmViewer.Left - 40 AndAlso Me.Left < FrmViewer.Right + 40 AndAlso
-                    (Me.Bottom > FrmViewer.Top AndAlso Me.Top < FrmViewer.Bottom) Then
-                    FrmViewer.Snap = True
-                    My.Settings.VSnap = True
-                    FrmViewer.Left = Me.Left - FrmViewer.Width
-                    FrmViewer.Top = Me.Top
-                    FrmViewer.ShowInTaskbar = False
-                    FrmViewer.btnMin.Hide()
-                End If
-
-                If Me.Bottom > Keyboards.KeyboardRight.Top AndAlso
-                    Me.Bottom < Keyboards.KeyboardRight.Top + Keyboards.KeyboardRight.Height / 2 AndAlso
-                    Me.Left > Keyboards.KeyboardRight.Left - 400 AndAlso
-                    Me.Right < Keyboards.KeyboardRight.Right + 400 AndAlso Not RSnap Then
-                    Me.Left = Keyboards.KeyboardRight.Right - Me.Width
-                    Me.Top = Keyboards.KeyboardRight.Top - Me.Height
-                    Me.RSnap = True
-                    If LSnap Then
-                        Keyboards.KeyboardLeft.Left = Me.Left
-                        Keyboards.KeyboardLeft.Top = Me.Bottom
-                    End If
-                End If
-                If Me.Bottom >= Keyboards.KeyboardLeft.Top AndAlso
-                    Me.Bottom < Keyboards.KeyboardLeft.Top + Keyboards.KeyboardLeft.Height / 2 AndAlso
-                    (Me.Left > Keyboards.KeyboardLeft.Left - 400 AndAlso Me.Left < Keyboards.KeyboardLeft.Right + 400) AndAlso
-                    Not LSnap Then
-                    Me.Left = Keyboards.KeyboardLeft.Left
-                    Me.Top = Keyboards.KeyboardLeft.Top - Me.Height
-                    Me.LSnap = True
-                    If RSnap Then
-                        Keyboards.KeyboardRight.Left = Me.Right - Keyboards.KeyboardRight.Width
-                        Keyboards.KeyboardRight.Top = Me.Bottom
-                    End If
-                End If
-                If LSnap AndAlso RSnap Then
-                    Keyboards.KeyboardRight.Snap = True
-                    Keyboards.KeyboardLeft.Snap = True
-                    My.Settings.OskLock = True
-                End If
-                If FrmViewer.Snap Then
-                    FrmViewer.Left = Me.Left - FrmViewer.Width
-                    FrmViewer.Top = Me.Top
-                End If
-                My.Settings.MainPos = Me.Left & "," & Me.Top
-                My.Settings.LeftKbdPos = Keyboards.KeyboardLeft.Left & "," & Keyboards.KeyboardLeft.Top
-                My.Settings.RightKbdPos = Keyboards.KeyboardRight.Left & "," & Keyboards.KeyboardRight.Top
-                My.Settings.ROskSnap = RSnap
-                My.Settings.LOskSnap = LSnap
-            End If
+            My.Settings.MainPos = Me.Left & "," & Me.Top
             My.Settings.Save()
         End Sub
 
-        Private Sub btnOMode_Click(sender As Object, e As EventArgs) Handles btnOutputFormat.Click
+        Private Sub btnOMode_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
             If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
                 _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Raw
             Else
                 _eval.OutputFormat = CType(CInt(_eval.OutputFormat) + 1, Evaluator.Evaluator.eOutputFormat)
             End If
             If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math Then
-                btnOutputFormat.Text = "Math"
+                BtnOutputFormat.Text = "Math"
             ElseIf _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
-                btnOutputFormat.Text = "Scientific"
+                BtnOutputFormat.Text = "Scientific"
             Else
-                btnOutputFormat.Text = "Raw"
+                BtnOutputFormat.Text = "Raw"
             End If
             EvaluateExpr(True)
         End Sub
 
-        Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles btnAngleRepr.Click
+        Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles BtnAngleRepr.Click
             If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Gradian Then
                 _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree
             Else
                 _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Evaluator.Evaluator.eAngleRepresentation)
             End If
             If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Radian Then
-                btnAngleRepr.Text = "Radian"
+                BtnAngleRepr.Text = "Radian"
             ElseIf _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree Then
-                btnAngleRepr.Text = "Degree"
+                BtnAngleRepr.Text = "Degree"
             Else
-                btnAngleRepr.Text = "Gradian"
+                BtnAngleRepr.Text = "Gradian"
             End If
             EvaluateExpr(True)
         End Sub
 
-        Private Sub pnlSettings_Paint(sender As Object, e As PaintEventArgs) Handles pnlSettings.Paint
-            e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit
-            Using backbr As New SolidBrush(Color.FromArgb(150, 20, 20, 20))
-                e.Graphics.FillRectangle(backbr, 0, 0, pnlSettings.Width, pnlSettings.Height)
-            End Using
+        Private Sub pnlSettings_Click(sender As Object, e As EventArgs) Handles PnlSettings.Click, LbSettings.Click
+            BtnSettings.PerformClick()
         End Sub
 
-        Private Sub pnlSettings_Click(sender As Object, e As EventArgs) Handles pnlSettings.Click, lbSettings.Click
-            btnSettings.PerformClick()
-        End Sub
-
-        Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles lbAbout.Click, btnLog.Click
+        Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles LbAbout.Click, BtnLog.Click
+            Tb.Focus()
             Using diag As New Dialogs.DiagFeatureList()
                 diag.ShowDialog()
             End Using
-            tb.Focus()
         End Sub
 
-        Private Sub cbAutoUpd_CheckedChanged(sender As Object, e As EventArgs) Handles cbAutoUpd.CheckedChanged
-            My.Settings.AutoUpdate = cbAutoUpd.Checked
+        Private Sub cbAutoUpd_CheckedChanged(sender As Object, e As EventArgs) Handles CbAutoUpd.CheckedChanged
+            My.Settings.AutoUpdate = CbAutoUpd.Checked
             My.Settings.Save()
         End Sub
 
-        Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles BtnUpdate.Click
             _updTh = New Thread(CType(Sub()
                                           CheckUpdate(True)
                                       End Sub, ThreadStart))
             _updTh.Start()
         End Sub
 
-        Private Sub tb_TextChanged(sender As Object, e As EventArgs) Handles tb.TextChanged
+        Private Sub tb_TextChanged(sender As Object, e As EventArgs) Handles Tb.TextChanged
             _editCt = 2
             TmrReCalc.Start()
         End Sub
@@ -1016,27 +922,27 @@ Namespace UI
             _editCt -= 1
         End Sub
 
-        Private Sub btnExplicit_Click(sender As Object, e As EventArgs) Handles btnExplicit.Click
+        Private Sub btnExplicit_Click(sender As Object, e As EventArgs) Handles BtnExplicit.Click
             _eval.ExplicitMode = Not _eval.ExplicitMode
             If _eval.ExplicitMode Then
-                btnExplicit.BackColor = btnEval.BackColor
-                btnExplicit.ForeColor = btnEval.ForeColor
-                btnExplicit.FlatAppearance.MouseOverBackColor = btnEval.FlatAppearance.MouseOverBackColor
-                btnExplicit.FlatAppearance.MouseDownBackColor = btnEval.FlatAppearance.MouseDownBackColor
+                BtnExplicit.BackColor = BtnEval.BackColor
+                BtnExplicit.ForeColor = BtnEval.ForeColor
+                BtnExplicit.FlatAppearance.MouseOverBackColor = BtnEval.FlatAppearance.MouseOverBackColor
+                BtnExplicit.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
             Else
-                btnExplicit.BackColor = btnX.BackColor
-                btnExplicit.ForeColor = btnX.ForeColor
-                btnExplicit.FlatAppearance.MouseOverBackColor = btnX.FlatAppearance.MouseOverBackColor
-                btnExplicit.FlatAppearance.MouseDownBackColor = btnX.FlatAppearance.MouseDownBackColor
+                BtnExplicit.BackColor = BtnX.BackColor
+                BtnExplicit.ForeColor = BtnX.ForeColor
+                BtnExplicit.FlatAppearance.MouseOverBackColor = BtnX.FlatAppearance.MouseOverBackColor
+                BtnExplicit.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
             End If
         End Sub
 
-        Private Sub btnLog_MouseEnter(sender As Object, e As EventArgs) Handles btnLog.MouseEnter
-            btnLog.ForeColor = Color.LightSalmon
+        Private Sub btnLog_MouseEnter(sender As Object, e As EventArgs) Handles BtnLog.MouseEnter
+            BtnLog.ForeColor = Color.Lavender
         End Sub
 
-        Private Sub btnLog_MouseLeave(sender As Object, e As EventArgs) Handles btnLog.MouseLeave
-            btnLog.ForeColor = Color.DarkSalmon
+        Private Sub btnLog_MouseLeave(sender As Object, e As EventArgs) Handles BtnLog.MouseLeave
+            BtnLog.ForeColor = Color.LightSteelBlue
         End Sub
 
 #End Region
@@ -1053,48 +959,48 @@ Namespace UI
         Private lastCaretPos As Integer = 0
 
         ' brace pairing
-        Private Sub scintilla_UpdateUI(sender As Object, e As UpdateUIEventArgs) Handles tb.UpdateUI
+        Private Sub scintilla_UpdateUI(sender As Object, e As UpdateUIEventArgs) Handles Tb.UpdateUI
             ' Has the caret changed position?
-            Dim caretPos As Integer = tb.CurrentPosition
+            Dim caretPos As Integer = Tb.CurrentPosition
             If lastCaretPos <> caretPos Then
                 lastCaretPos = caretPos
                 Dim bracePos1 As Integer = -1
                 Dim bracePos2 As Integer = -1
 
                 ' Is there a brace to the left or right?
-                If caretPos > 0 AndAlso IsBrace(tb.GetCharAt(caretPos - 1)) Then
+                If caretPos > 0 AndAlso IsBrace(Tb.GetCharAt(caretPos - 1)) Then
                     bracePos1 = (caretPos - 1)
-                ElseIf IsBrace(tb.GetCharAt(caretPos)) Then
+                ElseIf IsBrace(Tb.GetCharAt(caretPos)) Then
                     bracePos1 = caretPos
                 End If
 
                 If bracePos1 >= 0 Then
                     ' Find the matching brace
-                    bracePos2 = tb.BraceMatch(bracePos1)
+                    bracePos2 = Tb.BraceMatch(bracePos1)
                     If bracePos2 = Scintilla.InvalidPosition Then
-                        tb.BraceBadLight(bracePos1)
+                        Tb.BraceBadLight(bracePos1)
                     Else
-                        tb.BraceHighlight(bracePos1, bracePos2)
+                        Tb.BraceHighlight(bracePos1, bracePos2)
                     End If
                 Else
                     ' Turn off brace matching
-                    tb.BraceHighlight(Scintilla.InvalidPosition, Scintilla.InvalidPosition)
+                    Tb.BraceHighlight(Scintilla.InvalidPosition, Scintilla.InvalidPosition)
                 End If
             End If
         End Sub
 
         ' syntax highlighting
-        Private Sub tb_StyleNeeded(sender As Object, e As StyleNeededEventArgs) Handles tb.StyleNeeded
-            Dim startPos As Integer = tb.GetEndStyled()
+        Private Sub tb_StyleNeeded(sender As Object, e As StyleNeededEventArgs) Handles Tb.StyleNeeded
+            Dim startPos As Integer = Tb.GetEndStyled()
             Dim endPos As Integer = e.Position
-            _cantusLexer.Style(tb, startPos, endPos)
+            _cantusLexer.Style(Tb, startPos, endPos)
         End Sub
 
         ' autoindent
-        Private Sub tb_InsertCheck(sender As Object, e As InsertCheckEventArgs) Handles tb.InsertCheck
+        Private Sub tb_InsertCheck(sender As Object, e As InsertCheckEventArgs) Handles Tb.InsertCheck
             If e.Text.EndsWith(ControlChars.Cr) OrElse e.Text.EndsWith(ControlChars.Lf) Then
-                Dim curLine As Integer = tb.LineFromPosition(e.Position)
-                Dim curLineText As String = tb.Lines(curLine).Text
+                Dim curLine As Integer = Tb.LineFromPosition(e.Position)
+                Dim curLineText As String = Tb.Lines(curLine).Text
 
                 Dim indent As Match = Regex.Match(curLineText, "^\s*")
                 e.Text += indent.Value
@@ -1110,29 +1016,29 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub tb_CharAdded(sender As Object, e As CharAddedEventArgs) Handles tb.CharAdded
+        Private Sub tb_CharAdded(sender As Object, e As CharAddedEventArgs) Handles Tb.CharAdded
 
             ' autocomplete
-            Dim currentPos As Integer = tb.CurrentPosition
-            Dim wordStartPos As Integer = tb.CurrentPosition
+            Dim currentPos As Integer = Tb.CurrentPosition
+            Dim wordStartPos As Integer = Tb.CurrentPosition
 
             While wordStartPos - 1 >= 0 AndAlso (
-                  tb.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso tb.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse
-                  tb.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso tb.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse
-                  tb.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso tb.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse
-                  tb.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse tb.GetCharAt(wordStartPos - 1) = AscW("."c))
+                  Tb.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse
+                  Tb.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse
+                  Tb.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse
+                  Tb.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW("."c))
                 wordStartPos -= 1
             End While
 
-            If tb.GetCharAt(wordStartPos) = AscW("."c) Then wordStartPos += 1
+            If Tb.GetCharAt(wordStartPos) = AscW("."c) Then wordStartPos += 1
 
-            Dim enteredWord As String = tb.GetTextRange(wordStartPos, currentPos)
+            Dim enteredWord As String = Tb.GetTextRange(wordStartPos, currentPos)
 
             Dim lenEntered As Integer = currentPos - wordStartPos
 
             If lenEntered > 0 Then
 
-                Dim curLineText As String = tb.GetTextRange(tb.Lines(tb.CurrentLine).Position, tb.CurrentPosition)
+                Dim curLineText As String = Tb.GetTextRange(Tb.Lines(Tb.CurrentLine).Position, Tb.CurrentPosition)
 
                 Dim singleQuote As Boolean = False
                 Dim doubleQuote As Boolean = False
@@ -1142,7 +1048,7 @@ Namespace UI
                 Next
                 If singleQuote OrElse doubleQuote Then Return ' do not autocomplete string
 
-                curLineText = tb.Lines(tb.CurrentLine).Text
+                curLineText = Tb.Lines(Tb.CurrentLine).Text
                 Dim keyword As String = curLineText
 
                 Dim blockKwd As String() = ("class function namespace").Split(" "c)
@@ -1309,7 +1215,7 @@ Namespace UI
                 End If
 
                 If autoCList.Count = 0 Then Return
-                tb.AutoCShow(lenEntered, String.Join(" ", autoCList))
+                Tb.AutoCShow(lenEntered, String.Join(" ", autoCList))
             End If
 
             ' brace completion
@@ -1317,14 +1223,14 @@ Namespace UI
                e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
 
                 Dim startPos As Integer
-                Dim curLine As Integer = tb.CurrentLine
-                Dim curText As String = tb.Lines(curLine).Text
+                Dim curLine As Integer = Tb.CurrentLine
+                Dim curText As String = Tb.Lines(curLine).Text
 
-                While curLine > 0 AndAlso tb.Lines(curLine - 1).Text.EndsWith(" _") ' connect _
+                While curLine > 0 AndAlso Tb.Lines(curLine - 1).Text.EndsWith(" _") ' connect _
                     curLine -= 1
-                    curText = tb.Lines(curLine).Text.Remove(tb.Lines(curLine).Text.Length - 2) & curText
+                    curText = Tb.Lines(curLine).Text.Remove(Tb.Lines(curLine).Text.Length - 2) & curText
                 End While
-                startPos = tb.Lines(curLine).Position
+                startPos = Tb.Lines(curLine).Position
 
                 Dim startBr As Char = ChrW(e.Char)
                 Dim endBr As Char
@@ -1356,7 +1262,7 @@ Namespace UI
 
                 If ct > 0 Then
                     If reverse Then
-                        Dim len As Integer = tb.CurrentPosition - startPos
+                        Dim len As Integer = Tb.CurrentPosition - startPos
                         If curText.Length > len Then curText = curText.Remove(len)
 
                         Dim braceList As Char() = {"["c, "("c, "{"c}
@@ -1379,36 +1285,53 @@ Namespace UI
                             pos = Math.Max(lvl(j)(lvl(j).Count - 1), pos)
                         Next
 
-                        tb.InsertText(tb.Lines(tb.CurrentLine).Position + pos, endBr)
+                        Tb.InsertText(Tb.Lines(Tb.CurrentLine).Position + pos, endBr)
                     Else
-                        tb.InsertText(tb.CurrentPosition, endBr)
+                        Tb.InsertText(Tb.CurrentPosition, endBr)
                     End If
                 End If
 
-            ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) Then
+            ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) OrElse e.Char = AscW("`"c) Then
+                If e.Char = AscW(""""c) AndAlso Tb.CurrentPosition > 1 AndAlso
+                    Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = """""" OrElse
+                    e.Char = AscW("'"c) AndAlso Tb.CurrentPosition > 1 AndAlso
+                    Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = "'" & "'" Then
 
-                Dim curText As String = tb.Lines(tb.CurrentLine).Text
+                    ' if there were already two quotes before, do not add another: user probably wanted to type triple quotes
+                    Tb.SelectionStart += 1
+                    Return
+                End If
+
+                Dim curText As String = Tb.Lines(Tb.CurrentLine).Text
                 Dim ct As Boolean = False
 
                 For i As Integer = 0 To curText.Length - 1
                     If curText(i) = ChrW(e.Char) Then ct = Not ct
                 Next
 
-                If ct Then tb.InsertText(tb.CurrentPosition, ChrW(e.Char))
+                If ct Then Tb.InsertText(Tb.CurrentPosition, ChrW(e.Char))
+
             End If
         End Sub
 
-        Private Sub tb_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs) Handles tb.AutoCCompleted
+        Private Sub tb_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs) Handles Tb.AutoCCompleted
             If e.Text.EndsWith("(_)") Then
-                tb.DeleteRange(tb.SelectionStart - 2, 1)
-                tb.SelectionStart -= 1
-                tb.SelectionEnd -= 1
+                Tb.DeleteRange(Tb.SelectionStart - 2, 1)
+                Tb.SelectionStart -= 1
+                Tb.SelectionEnd -= 1
             End If
         End Sub
 
         Private Sub TmrLoad_Tick(sender As Object, e As EventArgs) Handles TmrLoad.Tick
-            SplashScreen.Progress.Value += 4
-            If SplashScreen.Progress.Value < 100 Then Return
+            Dim newProgress As Integer = SplashScreen.Progress.Value + 4
+            If SplashScreen.Progress.Value < 100 Then
+                SplashScreen.Progress.Value = newProgress
+                Return
+            End If
+
+            ' Minimize/show Keyboard 
+            Keyboard.Minimized = Not My.Settings.ShowKbd
+
             TmrLoad.Stop()
 
             SplashScreen.Hide()
@@ -1420,13 +1343,10 @@ Namespace UI
                     ControlChars.Quote & Application.ExecutablePath & ControlChars.Quote & " ""%1""")
                 Catch
                 End Try
-                Keyboards.KeyboardLeft.Hide()
-                Keyboards.KeyboardRight.Hide()
                 TmrLoad.Stop()
                 Using diag As New Dialogs.DiagFeatureList()
                     diag.ShowDialog()
                 End Using
-                TmrLoad.Start()
             End If
 
             ' set location
@@ -1436,25 +1356,17 @@ Namespace UI
                 If Me.Location.X <= -Me.Width OrElse Me.Location.Y <= -Me.Height OrElse
                     Me.Right >= Screen.PrimaryScreen.WorkingArea.Width + Me.Width OrElse
                     Me.Bottom >= Screen.PrimaryScreen.WorkingArea.Height + Me.Height Then
-                    Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 + FrmViewer.Width / 2 - Me.Width / 2)
-                    Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - FrmViewer.Height / 2)
+                    Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
+                    Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - Me.Height / 2)
                 End If
             Else
-                Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 + FrmViewer.Width / 2 - Me.Width / 2)
-                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - FrmViewer.Height / 2)
+                Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
+                Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - Me.Height / 2)
             End If
 
             ' save location
             My.Settings.MainPos = Me.Left & "," & Me.Top
-
-            'set location for other forms
-            Keyboards.KeyboardLeft.Show()
-            Keyboards.KeyboardRight.Show()
-            FrmViewer.InitPosition()
-            Keyboards.KeyboardLeft.InitPosition()
-            Keyboards.KeyboardRight.InitPosition()
         End Sub
-
 #End Region
     End Class
 End Namespace

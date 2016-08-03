@@ -51,7 +51,7 @@
             Me.tb.Multiline = True
             Me.tb.Name = "tb"
             Me.tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-            Me.tb.Size = New System.Drawing.Size(1186, 656)
+            Me.tb.Size = New System.Drawing.Size(1186, 624)
             Me.tb.TabIndex = 0
             '
             'pnlBottom
@@ -60,7 +60,7 @@
             Me.pnlBottom.Controls.Add(Me.pnlNote)
             Me.pnlBottom.Controls.Add(Me.btnClose)
             Me.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom
-            Me.pnlBottom.Location = New System.Drawing.Point(0, 680)
+            Me.pnlBottom.Location = New System.Drawing.Point(0, 648)
             Me.pnlBottom.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.pnlBottom.Name = "pnlBottom"
             Me.pnlBottom.Size = New System.Drawing.Size(1199, 41)
@@ -144,7 +144,7 @@
             Me.lbNote.ForeColor = System.Drawing.Color.Gainsboro
             Me.lbNote.Location = New System.Drawing.Point(12, 14)
             Me.lbNote.Name = "lbNote"
-            Me.lbNote.Size = New System.Drawing.Size(577, 20)
+            Me.lbNote.Size = New System.Drawing.Size(600, 20)
             Me.lbNote.TabIndex = 0
             Me.lbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" &
     "is dialog"
@@ -179,7 +179,7 @@
             Me.wb.MinimumSize = New System.Drawing.Size(20, 20)
             Me.wb.Name = "wb"
             Me.wb.ScriptErrorsSuppressed = True
-            Me.wb.Size = New System.Drawing.Size(1199, 678)
+            Me.wb.Size = New System.Drawing.Size(1199, 646)
             Me.wb.TabIndex = 0
             Me.wb.Url = New System.Uri("", System.UriKind.Relative)
             Me.wb.Visible = False
@@ -192,15 +192,15 @@
             'DiagFeatureList
             '
             Me.AcceptButton = Me.btnClose
-            Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.CancelButton = Me.btnClose
-            Me.ClientSize = New System.Drawing.Size(1199, 721)
+            Me.ClientSize = New System.Drawing.Size(1199, 689)
             Me.Controls.Add(Me.wb)
             Me.Controls.Add(Me.pnlBottom)
             Me.Controls.Add(Me.tb)
-            Me.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+            Me.Font = New System.Drawing.Font(OpenSans, 11.0!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximizeBox = False
             Me.MinimizeBox = False
@@ -208,7 +208,6 @@
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "Welcome to Cantus"
-            Me.TopMost = False
             Me.pnlBottom.ResumeLayout(False)
             Me.pnlNote.ResumeLayout(False)
             Me.pnlNote.PerformLayout()

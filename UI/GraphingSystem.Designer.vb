@@ -33,16 +33,16 @@
             Me.split = New System.Windows.Forms.SplitContainer()
             Me.btnScale = New System.Windows.Forms.Button()
             Me.pnlWindow = New System.Windows.Forms.Panel()
+            Me.tbWBot = New System.Windows.Forms.TextBox()
+            Me.tbWLft = New System.Windows.Forms.TextBox()
+            Me.tbWTop = New System.Windows.Forms.TextBox()
+            Me.tbWRht = New System.Windows.Forms.TextBox()
             Me.btnWOK = New System.Windows.Forms.Button()
             Me.btnWCancel = New System.Windows.Forms.Button()
             Me.lbWLft = New System.Windows.Forms.Label()
-            Me.tbWLft = New System.Windows.Forms.TextBox()
             Me.lbWRht = New System.Windows.Forms.Label()
-            Me.tbWRht = New System.Windows.Forms.TextBox()
             Me.lbWBot = New System.Windows.Forms.Label()
-            Me.tbWBot = New System.Windows.Forms.TextBox()
             Me.lbWTop = New System.Windows.Forms.Label()
-            Me.tbWTop = New System.Windows.Forms.TextBox()
             Me.pnlWHeader = New System.Windows.Forms.Panel()
             Me.lbWLogo = New System.Windows.Forms.Label()
             Me.btnWClose = New System.Windows.Forms.Button()
@@ -137,7 +137,7 @@
             Me.split.Panel2.Controls.Add(Me.pnlInput)
             Me.split.Panel2.Controls.Add(Me.lbFx)
             Me.split.Size = New System.Drawing.Size(984, 661)
-            Me.split.SplitterDistance = 626
+            Me.split.SplitterDistance = 600
             Me.split.SplitterWidth = 3
             Me.split.TabIndex = 0
             '
@@ -151,7 +151,7 @@
             Me.btnScale.FlatAppearance.MouseDownBackColor = System.Drawing.Color.SlateBlue
             Me.btnScale.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateBlue
             Me.btnScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnScale.Font = New System.Drawing.Font("Segoe UI Semilight", 14.0!)
+            Me.btnScale.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
             Me.btnScale.ForeColor = System.Drawing.Color.White
             Me.btnScale.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.btnScale.Location = New System.Drawing.Point(11, 11)
@@ -186,6 +186,46 @@
             Me.pnlWindow.TabIndex = 9
             Me.pnlWindow.Visible = False
             '
+            'tbWBot
+            '
+            Me.tbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+            Me.tbWBot.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.tbWBot.Location = New System.Drawing.Point(156, 212)
+            Me.tbWBot.Name = "tbWBot"
+            Me.tbWBot.Size = New System.Drawing.Size(156, 35)
+            Me.tbWBot.TabIndex = 12
+            Me.tt.SetToolTip(Me.tbWBot, "Minimum Y (Expression)")
+            '
+            'tbWLft
+            '
+            Me.tbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.tbWLft.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.tbWLft.Location = New System.Drawing.Point(25, 147)
+            Me.tbWLft.Name = "tbWLft"
+            Me.tbWLft.Size = New System.Drawing.Size(156, 35)
+            Me.tbWLft.TabIndex = 14
+            Me.tt.SetToolTip(Me.tbWLft, "Minimum X (Expression)")
+            '
+            'tbWTop
+            '
+            Me.tbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
+            Me.tbWTop.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.tbWTop.Location = New System.Drawing.Point(156, 85)
+            Me.tbWTop.Name = "tbWTop"
+            Me.tbWTop.Size = New System.Drawing.Size(156, 35)
+            Me.tbWTop.TabIndex = 10
+            Me.tt.SetToolTip(Me.tbWTop, "Maximum Y (Expression)")
+            '
+            'tbWRht
+            '
+            Me.tbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.tbWRht.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.tbWRht.Location = New System.Drawing.Point(289, 147)
+            Me.tbWRht.Name = "tbWRht"
+            Me.tbWRht.Size = New System.Drawing.Size(156, 35)
+            Me.tbWRht.TabIndex = 16
+            Me.tt.SetToolTip(Me.tbWRht, "Maximum X (Expression)")
+            '
             'btnWOK
             '
             Me.btnWOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -195,7 +235,7 @@
             Me.btnWOK.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.btnWOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
             Me.btnWOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWOK.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+            Me.btnWOK.Font = New System.Drawing.Font(OpenSans, 11.0!)
             Me.btnWOK.ForeColor = System.Drawing.Color.White
             Me.btnWOK.Location = New System.Drawing.Point(368, 256)
             Me.btnWOK.Margin = New System.Windows.Forms.Padding(2)
@@ -216,7 +256,7 @@
             Me.btnWCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.btnWCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.btnWCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWCancel.Font = New System.Drawing.Font("Segoe UI Semilight", 11.0!)
+            Me.btnWCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.btnWCancel.ForeColor = System.Drawing.Color.White
             Me.btnWCancel.Location = New System.Drawing.Point(272, 253)
             Me.btnWCancel.Margin = New System.Windows.Forms.Padding(2)
@@ -232,85 +272,45 @@
             '
             Me.lbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
             Me.lbWLft.AutoSize = True
-            Me.lbWLft.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
+            Me.lbWLft.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbWLft.Location = New System.Drawing.Point(80, 117)
             Me.lbWLft.Name = "lbWLft"
-            Me.lbWLft.Size = New System.Drawing.Size(48, 21)
+            Me.lbWLft.Size = New System.Drawing.Size(49, 22)
             Me.lbWLft.TabIndex = 17
             Me.lbWLft.Text = "Min x"
-            '
-            'tbWLft
-            '
-            Me.tbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
-            Me.tbWLft.Font = New System.Drawing.Font("Segoe UI Semilight", 15.0!)
-            Me.tbWLft.Location = New System.Drawing.Point(25, 147)
-            Me.tbWLft.Name = "tbWLft"
-            Me.tbWLft.Size = New System.Drawing.Size(156, 34)
-            Me.tbWLft.TabIndex = 14
-            Me.tt.SetToolTip(Me.tbWLft, "Minimum X (Expression)")
             '
             'lbWRht
             '
             Me.lbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
             Me.lbWRht.AutoSize = True
-            Me.lbWRht.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
+            Me.lbWRht.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbWRht.Location = New System.Drawing.Point(341, 119)
             Me.lbWRht.Name = "lbWRht"
-            Me.lbWRht.Size = New System.Drawing.Size(50, 21)
+            Me.lbWRht.Size = New System.Drawing.Size(52, 22)
             Me.lbWRht.TabIndex = 15
             Me.lbWRht.Text = "Max x"
-            '
-            'tbWRht
-            '
-            Me.tbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
-            Me.tbWRht.Font = New System.Drawing.Font("Segoe UI Semilight", 15.0!)
-            Me.tbWRht.Location = New System.Drawing.Point(289, 147)
-            Me.tbWRht.Name = "tbWRht"
-            Me.tbWRht.Size = New System.Drawing.Size(156, 34)
-            Me.tbWRht.TabIndex = 16
-            Me.tt.SetToolTip(Me.tbWRht, "Maximum X (Expression)")
             '
             'lbWBot
             '
             Me.lbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
             Me.lbWBot.AutoSize = True
-            Me.lbWBot.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
+            Me.lbWBot.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbWBot.Location = New System.Drawing.Point(211, 182)
             Me.lbWBot.Name = "lbWBot"
-            Me.lbWBot.Size = New System.Drawing.Size(48, 21)
+            Me.lbWBot.Size = New System.Drawing.Size(48, 22)
             Me.lbWBot.TabIndex = 13
             Me.lbWBot.Text = "Min y"
-            '
-            'tbWBot
-            '
-            Me.tbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-            Me.tbWBot.Font = New System.Drawing.Font("Segoe UI Semilight", 15.0!)
-            Me.tbWBot.Location = New System.Drawing.Point(156, 212)
-            Me.tbWBot.Name = "tbWBot"
-            Me.tbWBot.Size = New System.Drawing.Size(156, 34)
-            Me.tbWBot.TabIndex = 12
-            Me.tt.SetToolTip(Me.tbWBot, "Minimum Y (Expression)")
             '
             'lbWTop
             '
             Me.lbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
             Me.lbWTop.AutoSize = True
-            Me.lbWTop.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
+            Me.lbWTop.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbWTop.Location = New System.Drawing.Point(211, 56)
             Me.lbWTop.Name = "lbWTop"
-            Me.lbWTop.Size = New System.Drawing.Size(50, 21)
+            Me.lbWTop.Size = New System.Drawing.Size(51, 22)
             Me.lbWTop.TabIndex = 11
             Me.lbWTop.Text = "Max y"
-            '
-            'tbWTop
-            '
-            Me.tbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
-            Me.tbWTop.Font = New System.Drawing.Font("Segoe UI Semilight", 15.0!)
-            Me.tbWTop.Location = New System.Drawing.Point(156, 85)
-            Me.tbWTop.Name = "tbWTop"
-            Me.tbWTop.Size = New System.Drawing.Size(156, 34)
-            Me.tbWTop.TabIndex = 10
-            Me.tt.SetToolTip(Me.tbWTop, "Maximum Y (Expression)")
             '
             'pnlWHeader
             '
@@ -327,7 +327,7 @@
             '
             'lbWLogo
             '
-            Me.lbWLogo.Font = New System.Drawing.Font("Segoe UI Semilight", 16.0!)
+            Me.lbWLogo.Font = New System.Drawing.Font(OpenSansLight, 16.0!)
             Me.lbWLogo.Image = CType(resources.GetObject("lbWLogo.Image"), System.Drawing.Image)
             Me.lbWLogo.Location = New System.Drawing.Point(16, 7)
             Me.lbWLogo.Name = "lbWLogo"
@@ -344,7 +344,7 @@
             Me.btnWClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.btnWClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.btnWClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWClose.Font = New System.Drawing.Font("Segoe UI Semilight", 9.0!)
+            Me.btnWClose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnWClose.ForeColor = System.Drawing.Color.White
             Me.btnWClose.Location = New System.Drawing.Point(423, 2)
             Me.btnWClose.Margin = New System.Windows.Forms.Padding(2)
@@ -359,12 +359,12 @@
             'lbWindow
             '
             Me.lbWindow.AutoSize = True
-            Me.lbWindow.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
+            Me.lbWindow.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbWindow.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.lbWindow.Location = New System.Drawing.Point(48, 12)
             Me.lbWindow.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
             Me.lbWindow.Name = "lbWindow"
-            Me.lbWindow.Size = New System.Drawing.Size(191, 21)
+            Me.lbWindow.Size = New System.Drawing.Size(193, 22)
             Me.lbWindow.TabIndex = 9
             Me.lbWindow.Text = "Window Bounds + Scaling"
             '
@@ -385,12 +385,12 @@
             'lbTrace
             '
             Me.lbTrace.AutoSize = True
-            Me.lbTrace.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
+            Me.lbTrace.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbTrace.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.lbTrace.Location = New System.Drawing.Point(10, 9)
             Me.lbTrace.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
             Me.lbTrace.Name = "lbTrace"
-            Me.lbTrace.Size = New System.Drawing.Size(109, 21)
+            Me.lbTrace.Size = New System.Drawing.Size(114, 22)
             Me.lbTrace.TabIndex = 10
             Me.lbTrace.Text = "Trace Function"
             '
@@ -412,7 +412,7 @@
             Me.npdTVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.npdTVal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-            Me.npdTVal.Font = New System.Drawing.Font("Segoe UI Semilight", 15.0!)
+            Me.npdTVal.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
             Me.npdTVal.Location = New System.Drawing.Point(0, 41)
             Me.npdTVal.Multiline = True
             Me.npdTVal.Name = "npdTVal"
@@ -429,7 +429,7 @@
             Me.btnTNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DimGray
             Me.btnTNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray
             Me.btnTNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTNext.Font = New System.Drawing.Font("Segoe UI Semilight", 7.0!)
+            Me.btnTNext.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
             Me.btnTNext.ForeColor = System.Drawing.Color.White
             Me.btnTNext.Location = New System.Drawing.Point(156, 41)
             Me.btnTNext.Margin = New System.Windows.Forms.Padding(2)
@@ -467,7 +467,7 @@
             Me.canvas.Dock = System.Windows.Forms.DockStyle.Fill
             Me.canvas.Location = New System.Drawing.Point(0, 0)
             Me.canvas.Name = "canvas"
-            Me.canvas.Size = New System.Drawing.Size(984, 626)
+            Me.canvas.Size = New System.Drawing.Size(984, 600)
             Me.canvas.TabIndex = 0
             Me.canvas.TabStop = False
             '
@@ -482,10 +482,10 @@
             Me.btnGraph.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
             Me.btnGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnGraph.ForeColor = System.Drawing.Color.White
-            Me.btnGraph.Location = New System.Drawing.Point(840, -3)
+            Me.btnGraph.Location = New System.Drawing.Point(837, -1)
             Me.btnGraph.Margin = New System.Windows.Forms.Padding(2)
             Me.btnGraph.Name = "btnGraph"
-            Me.btnGraph.Size = New System.Drawing.Size(105, 55)
+            Me.btnGraph.Size = New System.Drawing.Size(105, 61)
             Me.btnGraph.TabIndex = 0
             Me.btnGraph.TabStop = False
             Me.btnGraph.Text = "Graph"
@@ -501,12 +501,12 @@
             Me.btnNextFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.btnNextFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.btnNextFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnNextFn.Font = New System.Drawing.Font("Segoe UI Semilight", 11.0!)
+            Me.btnNextFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.btnNextFn.ForeColor = System.Drawing.Color.Silver
-            Me.btnNextFn.Location = New System.Drawing.Point(0, 38)
+            Me.btnNextFn.Location = New System.Drawing.Point(0, 30)
             Me.btnNextFn.Margin = New System.Windows.Forms.Padding(2)
             Me.btnNextFn.Name = "btnNextFn"
-            Me.btnNextFn.Size = New System.Drawing.Size(30, 37)
+            Me.btnNextFn.Size = New System.Drawing.Size(30, 30)
             Me.btnNextFn.TabIndex = 9
             Me.btnNextFn.TabStop = False
             Me.btnNextFn.Text = "▼"
@@ -522,12 +522,12 @@
             Me.btnPrevFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.btnPrevFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.btnPrevFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPrevFn.Font = New System.Drawing.Font("Segoe UI Semilight", 11.0!)
+            Me.btnPrevFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.btnPrevFn.ForeColor = System.Drawing.Color.Silver
-            Me.btnPrevFn.Location = New System.Drawing.Point(0, 1)
+            Me.btnPrevFn.Location = New System.Drawing.Point(0, 0)
             Me.btnPrevFn.Margin = New System.Windows.Forms.Padding(2)
             Me.btnPrevFn.Name = "btnPrevFn"
-            Me.btnPrevFn.Size = New System.Drawing.Size(30, 37)
+            Me.btnPrevFn.Size = New System.Drawing.Size(30, 30)
             Me.btnPrevFn.TabIndex = 8
             Me.btnPrevFn.TabStop = False
             Me.btnPrevFn.Text = "▲"
@@ -545,10 +545,10 @@
             Me.btnAdd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
             Me.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.btnAdd.ForeColor = System.Drawing.Color.White
-            Me.btnAdd.Location = New System.Drawing.Point(944, -3)
+            Me.btnAdd.Location = New System.Drawing.Point(941, 1)
             Me.btnAdd.Margin = New System.Windows.Forms.Padding(2)
             Me.btnAdd.Name = "btnAdd"
-            Me.btnAdd.Size = New System.Drawing.Size(43, 55)
+            Me.btnAdd.Size = New System.Drawing.Size(43, 57)
             Me.btnAdd.TabIndex = 2
             Me.btnAdd.TabStop = False
             Me.btnAdd.Text = "+"
@@ -562,9 +562,9 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.pnlInput.BackColor = System.Drawing.Color.Gainsboro
             Me.pnlInput.Controls.Add(Me.tb)
-            Me.pnlInput.Location = New System.Drawing.Point(174, -3)
+            Me.pnlInput.Location = New System.Drawing.Point(159, -3)
             Me.pnlInput.Name = "pnlInput"
-            Me.pnlInput.Size = New System.Drawing.Size(667, 55)
+            Me.pnlInput.Size = New System.Drawing.Size(682, 84)
             Me.pnlInput.TabIndex = 1
             '
             'tb
@@ -576,14 +576,14 @@
             Me.tb.BackColor = System.Drawing.Color.Gainsboro
             Me.tb.BorderStyle = System.Windows.Forms.BorderStyle.None
             Me.tb.Cursor = System.Windows.Forms.Cursors.Arrow
-            Me.tb.Font = New System.Drawing.Font("Segoe UI Semilight", 14.0!)
+            Me.tb.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
             Me.tb.ForeColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.tb.HideSelection = False
-            Me.tb.Location = New System.Drawing.Point(14, 8)
+            Me.tb.Location = New System.Drawing.Point(7, 8)
             Me.tb.Multiline = True
             Me.tb.Name = "tb"
             Me.tb.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal
-            Me.tb.Size = New System.Drawing.Size(678, 44)
+            Me.tb.Size = New System.Drawing.Size(673, 53)
             Me.tb.TabIndex = 0
             '
             'lbFx
@@ -593,10 +593,10 @@
             Me.lbFx.AutoEllipsis = True
             Me.lbFx.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
             Me.lbFx.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.lbFx.Font = New System.Drawing.Font("Segoe UI Semilight", 14.0!)
-            Me.lbFx.Location = New System.Drawing.Point(25, -3)
+            Me.lbFx.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.lbFx.Location = New System.Drawing.Point(32, 0)
             Me.lbFx.Name = "lbFx"
-            Me.lbFx.Size = New System.Drawing.Size(145, 55)
+            Me.lbFx.Size = New System.Drawing.Size(123, 60)
             Me.lbFx.TabIndex = 3
             Me.lbFx.Text = "f(x) = "
             Me.lbFx.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -619,7 +619,7 @@
             Me.btnFnDel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.btnFnDel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.btnFnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFnDel.Font = New System.Drawing.Font("Segoe UI Semilight", 11.0!)
+            Me.btnFnDel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.btnFnDel.ForeColor = System.Drawing.Color.Salmon
             Me.btnFnDel.Location = New System.Drawing.Point(171, 270)
             Me.btnFnDel.Margin = New System.Windows.Forms.Padding(2)
@@ -675,10 +675,10 @@
             '
             Me.lbOptInverseR.AutoSize = True
             Me.lbOptInverseR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptInverseR.Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!)
-            Me.lbOptInverseR.Location = New System.Drawing.Point(98, 7)
+            Me.lbOptInverseR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.lbOptInverseR.Location = New System.Drawing.Point(98, 9)
             Me.lbOptInverseR.Name = "lbOptInverseR"
-            Me.lbOptInverseR.Size = New System.Drawing.Size(128, 30)
+            Me.lbOptInverseR.Size = New System.Drawing.Size(118, 26)
             Me.lbOptInverseR.TabIndex = 11
             Me.lbOptInverseR.Tag = "2"
             Me.lbOptInverseR.Text = "Inverse Cart."
@@ -687,10 +687,10 @@
             '
             Me.lbOptInverseL.AutoSize = True
             Me.lbOptInverseL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptInverseL.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.lbOptInverseL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.lbOptInverseL.Location = New System.Drawing.Point(7, 7)
             Me.lbOptInverseL.Name = "lbOptInverseL"
-            Me.lbOptInverseL.Size = New System.Drawing.Size(78, 30)
+            Me.lbOptInverseL.Size = New System.Drawing.Size(75, 28)
             Me.lbOptInverseL.TabIndex = 10
             Me.lbOptInverseL.Tag = "2"
             Me.lbOptInverseL.Text = "x = f(y)"
@@ -712,10 +712,10 @@
             '
             Me.lbOptOriginRayR.AutoSize = True
             Me.lbOptOriginRayR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptOriginRayR.Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!)
-            Me.lbOptOriginRayR.Location = New System.Drawing.Point(107, 7)
+            Me.lbOptOriginRayR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.lbOptOriginRayR.Location = New System.Drawing.Point(107, 9)
             Me.lbOptOriginRayR.Name = "lbOptOriginRayR"
-            Me.lbOptOriginRayR.Size = New System.Drawing.Size(119, 30)
+            Me.lbOptOriginRayR.Size = New System.Drawing.Size(104, 26)
             Me.lbOptOriginRayR.TabIndex = 14
             Me.lbOptOriginRayR.Tag = "6"
             Me.lbOptOriginRayR.Text = "Ray / Angle"
@@ -724,10 +724,10 @@
             '
             Me.lbOptOriginRayL.AutoSize = True
             Me.lbOptOriginRayL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptOriginRayL.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.lbOptOriginRayL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.lbOptOriginRayL.Location = New System.Drawing.Point(6, 7)
             Me.lbOptOriginRayL.Name = "lbOptOriginRayL"
-            Me.lbOptOriginRayL.Size = New System.Drawing.Size(29, 30)
+            Me.lbOptOriginRayL.Size = New System.Drawing.Size(28, 28)
             Me.lbOptOriginRayL.TabIndex = 11
             Me.lbOptOriginRayL.Tag = "6"
             Me.lbOptOriginRayL.Text = "ϴ"
@@ -749,10 +749,10 @@
             '
             Me.lbOptPolarR.AutoSize = True
             Me.lbOptPolarR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptPolarR.Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!)
-            Me.lbOptPolarR.Location = New System.Drawing.Point(164, 7)
+            Me.lbOptPolarR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.lbOptPolarR.Location = New System.Drawing.Point(164, 9)
             Me.lbOptPolarR.Name = "lbOptPolarR"
-            Me.lbOptPolarR.Size = New System.Drawing.Size(59, 30)
+            Me.lbOptPolarR.Size = New System.Drawing.Size(55, 26)
             Me.lbOptPolarR.TabIndex = 11
             Me.lbOptPolarR.Tag = "4"
             Me.lbOptPolarR.Text = "Polar"
@@ -761,10 +761,10 @@
             '
             Me.lbOptPolarL.AutoSize = True
             Me.lbOptPolarL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptPolarL.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.lbOptPolarL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.lbOptPolarL.Location = New System.Drawing.Point(7, 7)
             Me.lbOptPolarL.Name = "lbOptPolarL"
-            Me.lbOptPolarL.Size = New System.Drawing.Size(39, 30)
+            Me.lbOptPolarL.Size = New System.Drawing.Size(40, 28)
             Me.lbOptPolarL.TabIndex = 10
             Me.lbOptPolarL.Tag = "4"
             Me.lbOptPolarL.Text = "r(t)"
@@ -786,10 +786,10 @@
             '
             Me.lbOptParametricR.AutoSize = True
             Me.lbOptParametricR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptParametricR.Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!)
-            Me.lbOptParametricR.Location = New System.Drawing.Point(113, 7)
+            Me.lbOptParametricR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.lbOptParametricR.Location = New System.Drawing.Point(113, 9)
             Me.lbOptParametricR.Name = "lbOptParametricR"
-            Me.lbOptParametricR.Size = New System.Drawing.Size(111, 30)
+            Me.lbOptParametricR.Size = New System.Drawing.Size(103, 26)
             Me.lbOptParametricR.TabIndex = 10
             Me.lbOptParametricR.Tag = "3"
             Me.lbOptParametricR.Text = "Parametric"
@@ -798,10 +798,10 @@
             '
             Me.lbOptParametricL.AutoSize = True
             Me.lbOptParametricL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptParametricL.Font = New System.Drawing.Font("Segoe UI", 13.75!)
+            Me.lbOptParametricL.Font = New System.Drawing.Font(OpenSans, 13.75!)
             Me.lbOptParametricL.Location = New System.Drawing.Point(5, 10)
             Me.lbOptParametricL.Name = "lbOptParametricL"
-            Me.lbOptParametricL.Size = New System.Drawing.Size(101, 25)
+            Me.lbOptParametricL.Size = New System.Drawing.Size(102, 26)
             Me.lbOptParametricL.TabIndex = 9
             Me.lbOptParametricL.Tag = "3"
             Me.lbOptParametricL.Text = "<x(t), y(t)>"
@@ -824,10 +824,10 @@
             '
             Me.lbOptCartesianR.AutoSize = True
             Me.lbOptCartesianR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptCartesianR.Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!)
-            Me.lbOptCartesianR.Location = New System.Drawing.Point(124, 7)
+            Me.lbOptCartesianR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.lbOptCartesianR.Location = New System.Drawing.Point(124, 9)
             Me.lbOptCartesianR.Name = "lbOptCartesianR"
-            Me.lbOptCartesianR.Size = New System.Drawing.Size(100, 30)
+            Me.lbOptCartesianR.Size = New System.Drawing.Size(91, 26)
             Me.lbOptCartesianR.TabIndex = 9
             Me.lbOptCartesianR.Tag = "1"
             Me.lbOptCartesianR.Text = "Cartesian"
@@ -836,10 +836,10 @@
             '
             Me.lbOptCartesianL.AutoSize = True
             Me.lbOptCartesianL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptCartesianL.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.lbOptCartesianL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.lbOptCartesianL.Location = New System.Drawing.Point(7, 7)
             Me.lbOptCartesianL.Name = "lbOptCartesianL"
-            Me.lbOptCartesianL.Size = New System.Drawing.Size(78, 30)
+            Me.lbOptCartesianL.Size = New System.Drawing.Size(75, 28)
             Me.lbOptCartesianL.TabIndex = 8
             Me.lbOptCartesianL.Tag = "1"
             Me.lbOptCartesianL.Text = "y = f(x)"
@@ -861,10 +861,10 @@
             '
             Me.lbOptDifferentialR.AutoSize = True
             Me.lbOptDifferentialR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptDifferentialR.Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!)
-            Me.lbOptDifferentialR.Location = New System.Drawing.Point(113, 8)
+            Me.lbOptDifferentialR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.lbOptDifferentialR.Location = New System.Drawing.Point(113, 10)
             Me.lbOptDifferentialR.Name = "lbOptDifferentialR"
-            Me.lbOptDifferentialR.Size = New System.Drawing.Size(113, 30)
+            Me.lbOptDifferentialR.Size = New System.Drawing.Size(102, 26)
             Me.lbOptDifferentialR.TabIndex = 12
             Me.lbOptDifferentialR.Tag = "5"
             Me.lbOptDifferentialR.Text = "Differential"
@@ -873,10 +873,10 @@
             '
             Me.lbOptDifferentialL.AutoSize = True
             Me.lbOptDifferentialL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptDifferentialL.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.lbOptDifferentialL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.lbOptDifferentialL.Location = New System.Drawing.Point(6, 8)
             Me.lbOptDifferentialL.Name = "lbOptDifferentialL"
-            Me.lbOptDifferentialL.Size = New System.Drawing.Size(71, 30)
+            Me.lbOptDifferentialL.Size = New System.Drawing.Size(73, 28)
             Me.lbOptDifferentialL.TabIndex = 11
             Me.lbOptDifferentialL.Tag = "5"
             Me.lbOptDifferentialL.Text = "dy/dx "
@@ -887,7 +887,7 @@
             Me.lbFnType.AutoSize = True
             Me.lbFnType.Location = New System.Drawing.Point(8, 284)
             Me.lbFnType.Name = "lbFnType"
-            Me.lbFnType.Size = New System.Drawing.Size(113, 19)
+            Me.lbFnType.Size = New System.Drawing.Size(117, 19)
             Me.lbFnType.TabIndex = 8
             Me.lbFnType.Text = "Function Options"
             '
@@ -914,7 +914,7 @@
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.Controls.Add(Me.pnlFnType)
             Me.Controls.Add(Me.split)
-            Me.Font = New System.Drawing.Font("Segoe UI Semilight", 10.0!)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.ForeColor = System.Drawing.Color.White
             Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
             Me.Name = "GraphingSystem"

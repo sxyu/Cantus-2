@@ -3,7 +3,7 @@ Imports Cantus.UI.ScintillaForCantus
 Imports ScintillaNET
 
 Namespace UI
-    Public Class FrmViewer
+    Public Class Viewer
         ''' <summary>
         ''' Max number of lines to display in log
         ''' </summary>
@@ -18,8 +18,8 @@ Namespace UI
             graphing = 1
         End Enum
 
-        Private graphingControl As Graphing.GraphingSystem
-        Private logControl As ScintillaNET.Scintilla
+        Friend GraphingControl As Graphing.GraphingSystem
+        Friend LogControl As ScintillaNET.Scintilla
 
         Private _view As eView = eView.none
         Private _cantusLexer As New CantusLexer()
@@ -56,97 +56,79 @@ Namespace UI
                 pnl.Controls.Clear()
                 Select Case view
                     Case eView.log
-                        pnl.Controls.Add(logControl)
-                        logControl.Select()
+                        pnl.Controls.Add(LogControl)
+                        LogControl.Select()
                     Case eView.graphing
-                        pnl.Controls.Add(graphingControl)
-                        graphingControl.tb.Select()
+                        pnl.Controls.Add(GraphingControl)
+                        GraphingControl.tb.Select()
                 End Select
             End Set
         End Property
 
-        ''' <summary>
-        ''' If true, snaps to the editor on move
-        ''' </summary>
-        Public Property Snap As Boolean
+        Public Sub New()
+            ' This call is required by the designer.
+            InitializeComponent()
+
+            ' Add any initialization after the InitializeComponent() call.
+        End Sub
 
         ''' <summary>
         ''' Write the specified text to the log, appending a separator before if appropriate
         ''' </summary>
         Public Sub WriteLogSection(text As String)
-            If logControl.TextLength > 0 Then logControl.AppendText("".PadRight(63, "-"c) & vbLf)
-            logControl.AppendText(text & vbLf)
-            If logControl.Lines.Count >= MAX_LINES Then logControl.DeleteRange(0, logControl.Lines(MAX_LINES).EndPosition)
-            logControl.SelectionStart = logControl.TextLength
-            logControl.ScrollCaret()
+            If LogControl.TextLength > 0 Then
+                If LogControl.GetCharAt(LogControl.TextLength - 1) <> AscW(ControlChars.Lf) Then
+                    LogControl.AppendText(vbLf)
+                End If
+                LogControl.AppendText("".PadRight(63, "-"c) & vbLf)
+            End If
+            LogControl.AppendText(text & vbLf)
+            If LogControl.Lines.Count >= MAX_LINES Then LogControl.DeleteRange(0, LogControl.Lines(MAX_LINES).EndPosition)
+            LogControl.SelectionStart = LogControl.TextLength
+            LogControl.ScrollCaret()
+        End Sub
+
+        ''' <summary>
+        ''' Write the specified text followed by a line break to the log
+        ''' </summary>
+        Public Sub WriteLogLine(text As String)
+            If LogControl.GetCharAt(LogControl.TextLength - 1) <> AscW(ControlChars.Lf) Then
+                LogControl.AppendText(vbLf)
+            End If
+            LogControl.AppendText(text & vbLf)
+            If LogControl.Lines.Count > MAX_LINES Then LogControl.DeleteRange(0, LogControl.Lines(MAX_LINES).Position)
+            LogControl.SelectionStart = LogControl.TextLength
+            LogControl.ScrollCaret()
         End Sub
 
         ''' <summary>
         ''' Write the specified text to the log
         ''' </summary>
+        ''' <param name="text"></param>
         Public Sub WriteLog(text As String)
-            logControl.AppendText(text & vbLf)
-            If logControl.Lines.Count > MAX_LINES Then logControl.DeleteRange(0, logControl.Lines(MAX_LINES).Position)
-            logControl.SelectionStart = logControl.TextLength
-            logControl.ScrollCaret()
+            LogControl.AppendText(text)
+            If LogControl.Lines.Count > MAX_LINES Then LogControl.DeleteRange(0, LogControl.Lines(MAX_LINES).Position)
+            LogControl.SelectionStart = LogControl.TextLength
+            LogControl.ScrollCaret()
         End Sub
 
         Private Sub btnMin_Click(sender As Object, e As EventArgs) Handles btnMin.Click
             pnl.Focus()
-            Me.WindowState = FormWindowState.Minimized
+            'Me.WindowState = FormWindowState.Minimized
         End Sub
 
-        ' form movement
-        Dim _dragging As Boolean
-        Dim _ppt As Point
-        Private Sub FrmViewer_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown, lbTitle.MouseDown
-            _dragging = True
-            _ppt = e.Location
+        Private Sub FrmViewer_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown, lbTitle.MouseDown,
+                PbLogo.MouseDown
+            FrmEditor.FrmEditor_MouseDown(FrmEditor, e)
         End Sub
 
-        Private Sub lbTitle_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove, lbTitle.MouseMove
-            If _dragging Then
-                Me.Left += e.X - _ppt.X
-                Me.Top += e.Y - _ppt.Y
-                If Snap Then
-                    FrmEditor.Left = Me.Right
-                    FrmEditor.Top = Me.Top
-                    If FrmEditor.LSnap Then
-                        Keyboards.KeyboardLeft.Top = FrmEditor.Bottom
-                        Keyboards.KeyboardLeft.Left = FrmEditor.Left
-                    End If
-                    If FrmEditor.RSnap Then
-                        Keyboards.KeyboardRight.Top = FrmEditor.Bottom
-                        Keyboards.KeyboardRight.Left = FrmEditor.Right - Keyboards.KeyboardRight.Width
-                    End If
-                End If
-            End If
+        Private Sub lbTitle_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove, lbTitle.MouseMove,
+                PbLogo.MouseMove
+            FrmEditor.FrmEditor_MouseMove(FrmEditor, e)
         End Sub
 
-        Private Sub lbTitle_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, lbTitle.MouseUp
-            _dragging = False
-            My.Settings.ViewerPos = Me.Left & "," & Me.Top
-            If e.Button = MouseButtons.Right Then
-                If Snap Then
-                    Me.Left -= 6
-                    Snap = False
-                    My.Settings.VSnap = False
-                    Me.ShowInTaskbar = True
-                    btnMin.Show()
-                End If
-            Else
-                If Me.Right > FrmEditor.Left - 40 AndAlso Me.Left < FrmEditor.Right + 40 AndAlso
-                    (Me.Bottom > FrmEditor.Top AndAlso Me.Top < FrmEditor.Bottom) Then
-                    Snap = True
-                    My.Settings.VSnap = True
-                    Me.Left = FrmEditor.Left - Me.Width
-                    Me.Top = FrmEditor.Top
-
-                    Me.ShowInTaskbar = False
-                    btnMin.Hide()
-                End If
-            End If
-            My.Settings.Save()
+        Private Sub lbTitle_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, lbTitle.MouseUp, PbLogo.MouseUp
+            FrmEditor.FrmEditor_MouseUp(FrmEditor, e)
         End Sub
 
         Private Sub btnTabs_Click(sender As Object, e As EventArgs)
@@ -212,9 +194,6 @@ Namespace UI
         End Sub
 
         Private Sub FrmViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-            Me.Icon = My.Resources.Calculator
-            Me.Snap = My.Settings.VSnap
-
             For Each c As Control In Me.Controls
                 If TypeOf c Is Button AndAlso Not c.Tag Is Nothing Then
                     AddHandler DirectCast(c, Button).Click, AddressOf btnTabs_Click
@@ -223,40 +202,30 @@ Namespace UI
             AddHandler Me.KeyDown, AddressOf Control_KeyDown
             lbTitle.Text = lbTitle.Text.Replace("{VER}", Application.ProductVersion.ToString())
 
-            graphingControl = New Graphing.GraphingSystem
-            graphingControl.Dock = DockStyle.Fill
-            AddHandler graphingControl.KeyDown, AddressOf Control_KeyDown
-            AddHandler graphingControl.tb.KeyDown, AddressOf Control_KeyDown
+            GraphingControl = New Graphing.GraphingSystem
+            GraphingControl.Dock = DockStyle.Fill
+            AddHandler GraphingControl.KeyDown, AddressOf Control_KeyDown
+            AddHandler GraphingControl.tb.KeyDown, AddressOf Control_KeyDown
 
-            logControl = New Scintilla
-            logControl.Dock = DockStyle.Fill
-            logControl.BorderStyle = BorderStyle.None
+            LogControl = New Scintilla
+            LogControl.Dock = DockStyle.Fill
+            LogControl.BorderStyle = BorderStyle.None
 
-            SetupScintilla(logControl)
-            AddHandler logControl.KeyDown, AddressOf Control_KeyDown
-            AddHandler logControl.KeyUp, AddressOf LogControl_KeyUp
-            AddHandler logControl.KeyPress, AddressOf LogControl_KeyPress
-            AddHandler logControl.StyleNeeded, AddressOf LogControl_StyleNeeded
+            SetupScintilla(LogControl)
+            AddHandler LogControl.KeyDown, AddressOf Control_KeyDown
+            AddHandler LogControl.KeyUp, AddressOf LogControl_KeyUp
+            AddHandler LogControl.KeyPress, AddressOf LogControl_KeyPress
+            AddHandler LogControl.StyleNeeded, AddressOf LogControl_StyleNeeded
 
             Me.View = eView.log
             WriteLogSection(
                 String.Format(vbLf & "# Welcome to Cantus version {0}!" & vbLf &
+                "# Everything you print with print() will appear in this console." & vbLf &
                 "# Press Alt + Enter or click the ''Run & Record'' button on the" & vbLf & "# bottom right " &
-                "of the editor to record an answer in My Results.",
+                "of the editor to print out the current result.",
                                    Application.ProductVersion.ToString))
 
             pnl.Select()
-        End Sub
-        Public Sub InitPosition()
-            If My.Settings.ViewerPos <> "" AndAlso Not Me.Snap Then
-                Dim spl() As String = My.Settings.ViewerPos.Split(","c)
-                Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
-            Else
-                Me.Left = FrmEditor.Left - Me.Width
-                Me.Top = FrmEditor.Top
-                My.Settings.ViewerPos = Me.Left & "," & Me.Top
-                My.Settings.Save()
-            End If
         End Sub
 
         Dim allowKey As Boolean = False
@@ -264,23 +233,24 @@ Namespace UI
             If e.Alt Then
                 If e.KeyCode = Keys.G Then
                     btnGraph.PerformClick()
-                ElseIf e.KeyCode = Keys.R Then
+                ElseIf e.KeyCode = Keys.C Then
                     btnLog.PerformClick()
                 ElseIf e.KeyCode = Keys.E Then
                     FrmEditor.BringToFront()
-                    FrmEditor.tb.Select()
+                    FrmEditor.Tb.Select()
                 ElseIf e.KeyCode = Keys.S Then
                     FrmEditor.BringToFront()
-                    FrmEditor.btnSettings.PerformClick()
+                    FrmEditor.BtnSettings.PerformClick()
                 ElseIf e.KeyCode = Keys.F Then
                     FrmEditor.BringToFront()
-                    FrmEditor.btnFunctions.PerformClick()
+                    FrmEditor.BtnFunctions.PerformClick()
                 ElseIf e.KeyCode = Keys.T Then
                     FrmEditor.BtnTranslucent.PerformClick()
                     DirectCast(sender, Control).Focus()
                 End If
             End If
         End Sub
+
         Private Sub LogControl_KeyDown(sender As Object, e As KeyEventArgs)
             If e.Control AndAlso (e.KeyCode = Keys.A OrElse e.KeyCode = Keys.C) Then
                 allowKey = True
@@ -302,15 +272,9 @@ Namespace UI
 
         ' syntax highlighting
         Private Sub LogControl_StyleNeeded(sender As Object, e As StyleNeededEventArgs)
-            Dim startPos As Integer = logControl.GetEndStyled()
+            Dim startPos As Integer = LogControl.GetEndStyled()
             Dim endPos As Integer = e.Position
-            _cantusLexer.Style(logControl, startPos, endPos)
-        End Sub
-
-        Private Sub FrmViewer_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-            If FrmEditor.Visible Then
-                FrmEditor.Close()
-            End If
+            _cantusLexer.Style(LogControl, startPos, endPos)
         End Sub
     End Class
 End Namespace

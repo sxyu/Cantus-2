@@ -25,371 +25,396 @@
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmEditor))
-            Me.tb = New ScintillaNET.Scintilla()
-            Me.pnlSettings = New System.Windows.Forms.Panel()
-            Me.lbSettings = New System.Windows.Forms.Label()
-            Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-            Me.btnLog = New System.Windows.Forms.Button()
-            Me.btnExplicit = New System.Windows.Forms.Button()
-            Me.cbAutoUpd = New System.Windows.Forms.CheckBox()
-            Me.btnUpdate = New System.Windows.Forms.Button()
-            Me.lbAbout = New System.Windows.Forms.Label()
-            Me.btnAngleRepr = New System.Windows.Forms.Button()
-            Me.btnT = New System.Windows.Forms.Button()
-            Me.btnM = New System.Windows.Forms.Button()
-            Me.btnOutputFormat = New System.Windows.Forms.Button()
-            Me.btnY = New System.Windows.Forms.Button()
-            Me.btnX = New System.Windows.Forms.Button()
-            Me.btnEval = New System.Windows.Forms.Button()
-            Me.lbResult = New System.Windows.Forms.Label()
-            Me.pnlResults = New System.Windows.Forms.Panel()
+            Me.Tb = New ScintillaNET.Scintilla()
+            Me.PnlSettings = New System.Windows.Forms.Panel()
+            Me.LbSettings = New System.Windows.Forms.Label()
+            Me.PbSettingsLogo = New System.Windows.Forms.PictureBox()
+            Me.BtnLog = New System.Windows.Forms.Button()
+            Me.BtnExplicit = New System.Windows.Forms.Button()
+            Me.CbAutoUpd = New System.Windows.Forms.CheckBox()
+            Me.BtnUpdate = New System.Windows.Forms.Button()
+            Me.LbAbout = New System.Windows.Forms.Label()
+            Me.BtnAngleRepr = New System.Windows.Forms.Button()
+            Me.BtnT = New System.Windows.Forms.Button()
+            Me.BtnM = New System.Windows.Forms.Button()
+            Me.BtnOutputFormat = New System.Windows.Forms.Button()
+            Me.BtnY = New System.Windows.Forms.Button()
+            Me.BtnX = New System.Windows.Forms.Button()
+            Me.BtnEval = New System.Windows.Forms.Button()
+            Me.LbResult = New System.Windows.Forms.Label()
+            Me.PnlResults = New System.Windows.Forms.Panel()
+            Me.BtnMin = New System.Windows.Forms.Button()
             Me.BtnTranslucent = New System.Windows.Forms.Button()
-            Me.btnClose = New System.Windows.Forms.Button()
-            Me.btnMin = New System.Windows.Forms.Button()
-            Me.btnSettings = New System.Windows.Forms.Button()
+            Me.BtnClose = New System.Windows.Forms.Button()
+            Me.BtnSettings = New System.Windows.Forms.Button()
             Me.TTLetters = New System.Windows.Forms.ToolTip(Me.components)
-            Me.btnFunctions = New System.Windows.Forms.Button()
-            Me.btnSave = New System.Windows.Forms.Button()
-            Me.btnOpen = New System.Windows.Forms.Button()
-            Me.pnlTb = New System.Windows.Forms.Panel()
+            Me.BtnFunctions = New System.Windows.Forms.Button()
+            Me.BtnSave = New System.Windows.Forms.Button()
+            Me.BtnOpen = New System.Windows.Forms.Button()
+            Me.BtnNew = New System.Windows.Forms.Button()
+            Me.PnlTb = New System.Windows.Forms.Panel()
             Me.TmrReCalc = New System.Windows.Forms.Timer(Me.components)
             Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
-            Me.btnNew = New System.Windows.Forms.Button()
-            Me.pnlSettings.SuspendLayout()
-            CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.pnlResults.SuspendLayout()
-            Me.pnlTb.SuspendLayout()
+            Me.Editor = New System.Windows.Forms.Panel()
+            Me.Keyboard = New Cantus.UI.Keyboards.MainKeyboard()
+            Me.Viewer = New Cantus.UI.Viewer()
+            Me.TmrAnim = New System.Windows.Forms.Timer(Me.components)
+            Me.PnlSettings.SuspendLayout()
+            CType(Me.PbSettingsLogo, System.ComponentModel.ISupportInitialize).BeginInit()
+            Me.PnlResults.SuspendLayout()
+            Me.PnlTb.SuspendLayout()
+            Me.Editor.SuspendLayout()
             Me.SuspendLayout()
             '
-            'tb
+            'Tb
             '
-            Me.tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.Tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
-            Me.tb.BorderStyle = System.Windows.Forms.BorderStyle.None
-            Me.tb.CaretForeColor = System.Drawing.Color.GhostWhite
-            Me.tb.Cursor = System.Windows.Forms.Cursors.Arrow
-            Me.tb.EdgeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.tb.Font = New System.Drawing.Font("Lucida Console", 13.5!)
-            Me.tb.ForeColor = System.Drawing.Color.White
-            Me.tb.Location = New System.Drawing.Point(3, 18)
-            Me.tb.Name = "tb"
-            Me.tb.Size = New System.Drawing.Size(675, 334)
-            Me.tb.TabIndex = 0
+            Me.Tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
+            Me.Tb.BorderStyle = System.Windows.Forms.BorderStyle.None
+            Me.Tb.CaretForeColor = System.Drawing.Color.GhostWhite
+            Me.Tb.Cursor = System.Windows.Forms.Cursors.Arrow
+            Me.Tb.EdgeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Tb.Font = New System.Drawing.Font("Lucida Console", 13.5!)
+            Me.Tb.ForeColor = System.Drawing.Color.White
+            Me.Tb.Location = New System.Drawing.Point(3, 18)
+            Me.Tb.Name = "Tb"
+            Me.Tb.Size = New System.Drawing.Size(675, 334)
+            Me.Tb.TabIndex = 0
             '
-            'pnlSettings
+            'PnlSettings
             '
-            Me.pnlSettings.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.PnlSettings.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlSettings.BackColor = System.Drawing.Color.Black
-            Me.pnlSettings.Controls.Add(Me.lbSettings)
-            Me.pnlSettings.Controls.Add(Me.PictureBox1)
-            Me.pnlSettings.Controls.Add(Me.btnLog)
-            Me.pnlSettings.Controls.Add(Me.btnExplicit)
-            Me.pnlSettings.Controls.Add(Me.cbAutoUpd)
-            Me.pnlSettings.Controls.Add(Me.btnUpdate)
-            Me.pnlSettings.Controls.Add(Me.lbAbout)
-            Me.pnlSettings.Controls.Add(Me.btnAngleRepr)
-            Me.pnlSettings.Controls.Add(Me.btnT)
-            Me.pnlSettings.Controls.Add(Me.btnM)
-            Me.pnlSettings.Controls.Add(Me.btnOutputFormat)
-            Me.pnlSettings.Controls.Add(Me.btnY)
-            Me.pnlSettings.Controls.Add(Me.btnX)
-            Me.pnlSettings.Location = New System.Drawing.Point(0, 1)
-            Me.pnlSettings.Name = "pnlSettings"
-            Me.pnlSettings.Size = New System.Drawing.Size(678, 355)
-            Me.pnlSettings.TabIndex = 6
-            Me.pnlSettings.Visible = False
+            Me.PnlSettings.BackColor = System.Drawing.Color.Black
+            Me.PnlSettings.BackgroundImage = CType(resources.GetObject("PnlSettings.BackgroundImage"), System.Drawing.Image)
+            Me.PnlSettings.Controls.Add(Me.LbSettings)
+            Me.PnlSettings.Controls.Add(Me.PbSettingsLogo)
+            Me.PnlSettings.Controls.Add(Me.BtnLog)
+            Me.PnlSettings.Controls.Add(Me.BtnExplicit)
+            Me.PnlSettings.Controls.Add(Me.CbAutoUpd)
+            Me.PnlSettings.Controls.Add(Me.BtnUpdate)
+            Me.PnlSettings.Controls.Add(Me.LbAbout)
+            Me.PnlSettings.Controls.Add(Me.BtnAngleRepr)
+            Me.PnlSettings.Controls.Add(Me.BtnT)
+            Me.PnlSettings.Controls.Add(Me.BtnM)
+            Me.PnlSettings.Controls.Add(Me.BtnOutputFormat)
+            Me.PnlSettings.Controls.Add(Me.BtnY)
+            Me.PnlSettings.Controls.Add(Me.BtnX)
+            Me.PnlSettings.Location = New System.Drawing.Point(680, 1)
+            Me.PnlSettings.Name = "PnlSettings"
+            Me.PnlSettings.Size = New System.Drawing.Size(678, 355)
+            Me.PnlSettings.TabIndex = 6
             '
-            'lbSettings
+            'LbSettings
             '
-            Me.lbSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-            Me.lbSettings.AutoSize = True
-            Me.lbSettings.BackColor = System.Drawing.Color.Transparent
-            Me.lbSettings.Cursor = System.Windows.Forms.Cursors.Arrow
-            Me.lbSettings.Font = New System.Drawing.Font("Segoe UI Light", 16.0!)
-            Me.lbSettings.ForeColor = System.Drawing.Color.White
-            Me.lbSettings.Location = New System.Drawing.Point(326, 99)
-            Me.lbSettings.Name = "lbSettings"
-            Me.lbSettings.Size = New System.Drawing.Size(87, 30)
-            Me.lbSettings.TabIndex = 13
-            Me.lbSettings.Tag = "-"
-            Me.lbSettings.Text = "Settings"
+            Me.LbSettings.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.LbSettings.AutoSize = True
+            Me.LbSettings.BackColor = System.Drawing.Color.Transparent
+            Me.LbSettings.Cursor = System.Windows.Forms.Cursors.Arrow
+            Me.LbSettings.Font = New System.Drawing.Font(OpenSansLight, 16.0!)
+            Me.LbSettings.ForeColor = System.Drawing.Color.White
+            Me.LbSettings.Location = New System.Drawing.Point(326, 99)
+            Me.LbSettings.Name = "LbSettings"
+            Me.LbSettings.Size = New System.Drawing.Size(91, 30)
+            Me.LbSettings.TabIndex = 13
+            Me.LbSettings.Tag = "-"
+            Me.LbSettings.Text = "Settings"
             '
-            'PictureBox1
+            'PbSettingsLogo
             '
-            Me.PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-            Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-            Me.PictureBox1.Location = New System.Drawing.Point(300, 98)
-            Me.PictureBox1.Name = "PictureBox1"
-            Me.PictureBox1.Size = New System.Drawing.Size(32, 34)
-            Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-            Me.PictureBox1.TabIndex = 14
-            Me.PictureBox1.TabStop = False
+            Me.PbSettingsLogo.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.PbSettingsLogo.BackColor = System.Drawing.Color.Transparent
+            Me.PbSettingsLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+            Me.PbSettingsLogo.Image = CType(resources.GetObject("PbSettingsLogo.Image"), System.Drawing.Image)
+            Me.PbSettingsLogo.Location = New System.Drawing.Point(300, 98)
+            Me.PbSettingsLogo.Name = "PbSettingsLogo"
+            Me.PbSettingsLogo.Size = New System.Drawing.Size(32, 34)
+            Me.PbSettingsLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+            Me.PbSettingsLogo.TabIndex = 14
+            Me.PbSettingsLogo.TabStop = False
             '
-            'btnLog
+            'BtnLog
             '
-            Me.btnLog.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnLog.BackColor = System.Drawing.Color.Transparent
-            Me.btnLog.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnLog.FlatAppearance.BorderSize = 0
-            Me.btnLog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent
-            Me.btnLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
-            Me.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnLog.Font = New System.Drawing.Font("Segoe UI Semilight", 9.0!)
-            Me.btnLog.ForeColor = System.Drawing.Color.DarkSalmon
-            Me.btnLog.Location = New System.Drawing.Point(408, 316)
-            Me.btnLog.Name = "btnLog"
-            Me.btnLog.Size = New System.Drawing.Size(114, 29)
-            Me.btnLog.TabIndex = 12
-            Me.btnLog.Tag = "-"
-            Me.btnLog.Text = "What's New | Docs"
-            Me.btnLog.UseVisualStyleBackColor = False
+            Me.BtnLog.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnLog.BackColor = System.Drawing.Color.Transparent
+            Me.BtnLog.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnLog.FlatAppearance.BorderSize = 0
+            Me.BtnLog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent
+            Me.BtnLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
+            Me.BtnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnLog.Font = New System.Drawing.Font(OpenSans, 9.0!)
+            Me.BtnLog.ForeColor = System.Drawing.Color.LightSteelBlue
+            Me.BtnLog.Location = New System.Drawing.Point(393, 316)
+            Me.BtnLog.Name = "BtnLog"
+            Me.BtnLog.Size = New System.Drawing.Size(129, 29)
+            Me.BtnLog.TabIndex = 12
+            Me.BtnLog.Tag = "-"
+            Me.BtnLog.Text = "What's New | Docs"
+            Me.BtnLog.UseVisualStyleBackColor = False
             '
-            'btnExplicit
+            'BtnExplicit
             '
-            Me.btnExplicit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnExplicit.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnExplicit.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnExplicit.FlatAppearance.BorderSize = 0
-            Me.btnExplicit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnExplicit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnExplicit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnExplicit.Font = New System.Drawing.Font("Segoe UI Semilight", 12.75!)
-            Me.btnExplicit.ForeColor = System.Drawing.Color.White
-            Me.btnExplicit.Location = New System.Drawing.Point(223, 139)
-            Me.btnExplicit.Name = "btnExplicit"
-            Me.btnExplicit.Size = New System.Drawing.Size(86, 40)
-            Me.btnExplicit.TabIndex = 0
-            Me.btnExplicit.Tag = "-"
-            Me.btnExplicit.Text = "Explicit"
-            Me.TTLetters.SetToolTip(Me.btnExplicit, resources.GetString("btnExplicit.ToolTip"))
-            Me.btnExplicit.UseVisualStyleBackColor = False
+            Me.BtnExplicit.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnExplicit.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnExplicit.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnExplicit.FlatAppearance.BorderSize = 0
+            Me.BtnExplicit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnExplicit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnExplicit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnExplicit.Font = New System.Drawing.Font(OpenSansLight, 12.75!)
+            Me.BtnExplicit.ForeColor = System.Drawing.Color.White
+            Me.BtnExplicit.Location = New System.Drawing.Point(223, 139)
+            Me.BtnExplicit.Name = "BtnExplicit"
+            Me.BtnExplicit.Size = New System.Drawing.Size(86, 40)
+            Me.BtnExplicit.TabIndex = 0
+            Me.BtnExplicit.Tag = "-"
+            Me.BtnExplicit.Text = "Explicit"
+            Me.TTLetters.SetToolTip(Me.BtnExplicit, resources.GetString("BtnExplicit.ToolTip"))
+            Me.BtnExplicit.UseVisualStyleBackColor = False
             '
-            'cbAutoUpd
+            'CbAutoUpd
             '
-            Me.cbAutoUpd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.cbAutoUpd.AutoSize = True
-            Me.cbAutoUpd.BackColor = System.Drawing.Color.Transparent
-            Me.cbAutoUpd.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.cbAutoUpd.Font = New System.Drawing.Font("Segoe UI Semilight", 9.0!)
-            Me.cbAutoUpd.ForeColor = System.Drawing.Color.White
-            Me.cbAutoUpd.Location = New System.Drawing.Point(534, 323)
-            Me.cbAutoUpd.Name = "cbAutoUpd"
-            Me.cbAutoUpd.Size = New System.Drawing.Size(119, 19)
-            Me.cbAutoUpd.TabIndex = 11
-            Me.cbAutoUpd.Tag = "-"
-            Me.cbAutoUpd.Text = "Update on launch"
-            Me.TTLetters.SetToolTip(Me.cbAutoUpd, "If this box is checked, Cantus will check for updates automatically" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "each time it" &
+            Me.CbAutoUpd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.CbAutoUpd.AutoSize = True
+            Me.CbAutoUpd.BackColor = System.Drawing.Color.Transparent
+            Me.CbAutoUpd.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.CbAutoUpd.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.CbAutoUpd.ForeColor = System.Drawing.Color.White
+            Me.CbAutoUpd.Location = New System.Drawing.Point(530, 321)
+            Me.CbAutoUpd.Name = "CbAutoUpd"
+            Me.CbAutoUpd.Size = New System.Drawing.Size(123, 21)
+            Me.CbAutoUpd.TabIndex = 11
+            Me.CbAutoUpd.Tag = "-"
+            Me.CbAutoUpd.Text = "Update on launch"
+            Me.TTLetters.SetToolTip(Me.CbAutoUpd, "If this box is checked, Cantus will check for updates automatically" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "each time it" &
         " is launched")
-            Me.cbAutoUpd.UseVisualStyleBackColor = False
+            Me.CbAutoUpd.UseVisualStyleBackColor = False
             '
-            'btnUpdate
+            'BtnUpdate
             '
-            Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnUpdate.BackColor = System.Drawing.Color.DarkSlateBlue
-            Me.btnUpdate.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnUpdate.FlatAppearance.BorderSize = 0
-            Me.btnUpdate.FlatAppearance.MouseDownBackColor = System.Drawing.Color.SlateBlue
-            Me.btnUpdate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateBlue
-            Me.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnUpdate.Font = New System.Drawing.Font("Segoe UI Semilight", 10.0!)
-            Me.btnUpdate.ForeColor = System.Drawing.Color.White
-            Me.btnUpdate.Location = New System.Drawing.Point(406, 185)
-            Me.btnUpdate.Name = "btnUpdate"
-            Me.btnUpdate.Size = New System.Drawing.Size(86, 50)
-            Me.btnUpdate.TabIndex = 9
-            Me.btnUpdate.Tag = "-"
-            Me.btnUpdate.Text = "Check For &Updates"
-            Me.TTLetters.SetToolTip(Me.btnUpdate, "Check for new versions of Cantus on the internet." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "If one is found, the program w" &
+            Me.BtnUpdate.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnUpdate.BackColor = System.Drawing.Color.DarkSlateBlue
+            Me.BtnUpdate.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnUpdate.FlatAppearance.BorderSize = 0
+            Me.BtnUpdate.FlatAppearance.MouseDownBackColor = System.Drawing.Color.SlateBlue
+            Me.BtnUpdate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateBlue
+            Me.BtnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnUpdate.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.BtnUpdate.ForeColor = System.Drawing.Color.White
+            Me.BtnUpdate.Location = New System.Drawing.Point(406, 185)
+            Me.BtnUpdate.Name = "BtnUpdate"
+            Me.BtnUpdate.Size = New System.Drawing.Size(86, 50)
+            Me.BtnUpdate.TabIndex = 9
+            Me.BtnUpdate.Tag = "-"
+            Me.BtnUpdate.Text = "Check For &Updates"
+            Me.TTLetters.SetToolTip(Me.BtnUpdate, "Check for new versions of Cantus on the internet." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "If one is found, the program w" &
         "ill close and update automatically." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The check is done in the background and you" &
         " may work while we perform it.")
-            Me.btnUpdate.UseVisualStyleBackColor = False
+            Me.BtnUpdate.UseVisualStyleBackColor = False
             '
-            'lbAbout
+            'LbAbout
             '
-            Me.lbAbout.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-            Me.lbAbout.AutoSize = True
-            Me.lbAbout.BackColor = System.Drawing.Color.Transparent
-            Me.lbAbout.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.lbAbout.Font = New System.Drawing.Font("Segoe UI Semilight", 9.0!)
-            Me.lbAbout.ForeColor = System.Drawing.Color.White
-            Me.lbAbout.Location = New System.Drawing.Point(28, 322)
-            Me.lbAbout.Name = "lbAbout"
-            Me.lbAbout.Size = New System.Drawing.Size(179, 15)
-            Me.lbAbout.TabIndex = 10
-            Me.lbAbout.Tag = "-"
-            Me.lbAbout.Text = "Cantus v{VER} By Alex Yu 2015-16"
+            Me.LbAbout.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+            Me.LbAbout.AutoSize = True
+            Me.LbAbout.BackColor = System.Drawing.Color.Transparent
+            Me.LbAbout.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.LbAbout.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.LbAbout.ForeColor = System.Drawing.Color.White
+            Me.LbAbout.Location = New System.Drawing.Point(28, 322)
+            Me.LbAbout.Name = "LbAbout"
+            Me.LbAbout.Size = New System.Drawing.Size(191, 17)
+            Me.LbAbout.TabIndex = 10
+            Me.LbAbout.Tag = "-"
+            Me.LbAbout.Text = "Cantus v{VER} By Alex Yu 2015-16"
             '
-            'btnAngleRepr
+            'BtnAngleRepr
             '
-            Me.btnAngleRepr.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAngleRepr.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-            Me.btnAngleRepr.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAngleRepr.FlatAppearance.BorderSize = 0
-            Me.btnAngleRepr.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
-            Me.btnAngleRepr.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-            Me.btnAngleRepr.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAngleRepr.Font = New System.Drawing.Font("Segoe UI Semilight", 12.75!)
-            Me.btnAngleRepr.ForeColor = System.Drawing.Color.White
-            Me.btnAngleRepr.Location = New System.Drawing.Point(223, 184)
-            Me.btnAngleRepr.Name = "btnAngleRepr"
-            Me.btnAngleRepr.Size = New System.Drawing.Size(86, 50)
-            Me.btnAngleRepr.TabIndex = 7
-            Me.btnAngleRepr.Tag = "-"
-            Me.btnAngleRepr.Text = "Radian"
-            Me.TTLetters.SetToolTip(Me.btnAngleRepr, "Change the angle representation:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Degree / Radian / Gradian" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Hotkey: Ctrl+Alt+P " &
+            Me.BtnAngleRepr.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnAngleRepr.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+            Me.BtnAngleRepr.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAngleRepr.FlatAppearance.BorderSize = 0
+            Me.BtnAngleRepr.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
+            Me.BtnAngleRepr.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+            Me.BtnAngleRepr.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAngleRepr.Font = New System.Drawing.Font(OpenSansLight, 12.75!)
+            Me.BtnAngleRepr.ForeColor = System.Drawing.Color.White
+            Me.BtnAngleRepr.Location = New System.Drawing.Point(223, 184)
+            Me.BtnAngleRepr.Name = "BtnAngleRepr"
+            Me.BtnAngleRepr.Size = New System.Drawing.Size(86, 50)
+            Me.BtnAngleRepr.TabIndex = 7
+            Me.BtnAngleRepr.Tag = "-"
+            Me.BtnAngleRepr.Text = "Radian"
+            Me.TTLetters.SetToolTip(Me.BtnAngleRepr, "Change the angle representation:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Degree / Radian / Gradian" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Hotkey: Ctrl+Alt+P " &
         "or Ctrl+Alt+<first letter of mode name>)")
-            Me.btnAngleRepr.UseVisualStyleBackColor = False
+            Me.BtnAngleRepr.UseVisualStyleBackColor = False
             '
-            'btnT
+            'BtnT
             '
-            Me.btnT.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnT.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnT.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnT.FlatAppearance.BorderSize = 0
-            Me.btnT.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnT.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnT.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnT.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.btnT.ForeColor = System.Drawing.Color.White
-            Me.btnT.Location = New System.Drawing.Point(406, 139)
-            Me.btnT.Name = "btnT"
-            Me.btnT.Size = New System.Drawing.Size(40, 40)
-            Me.btnT.TabIndex = 4
-            Me.btnT.Tag = "t"
-            Me.btnT.Text = "&t"
-            Me.btnT.UseVisualStyleBackColor = False
+            Me.BtnT.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnT.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnT.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnT.FlatAppearance.BorderSize = 0
+            Me.BtnT.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnT.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnT.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnT.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.BtnT.ForeColor = System.Drawing.Color.White
+            Me.BtnT.Location = New System.Drawing.Point(406, 139)
+            Me.BtnT.Name = "BtnT"
+            Me.BtnT.Size = New System.Drawing.Size(40, 40)
+            Me.BtnT.TabIndex = 4
+            Me.BtnT.Tag = "t"
+            Me.BtnT.Text = "&t"
+            Me.BtnT.UseVisualStyleBackColor = False
             '
-            'btnM
+            'BtnM
             '
-            Me.btnM.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnM.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnM.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnM.FlatAppearance.BorderSize = 0
-            Me.btnM.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnM.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnM.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.btnM.ForeColor = System.Drawing.Color.White
-            Me.btnM.Location = New System.Drawing.Point(452, 139)
-            Me.btnM.Name = "btnM"
-            Me.btnM.Size = New System.Drawing.Size(40, 40)
-            Me.btnM.TabIndex = 5
-            Me.btnM.Tag = "m"
-            Me.btnM.Text = "&m"
-            Me.btnM.UseVisualStyleBackColor = False
+            Me.BtnM.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnM.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnM.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnM.FlatAppearance.BorderSize = 0
+            Me.BtnM.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnM.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnM.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.BtnM.ForeColor = System.Drawing.Color.White
+            Me.BtnM.Location = New System.Drawing.Point(452, 139)
+            Me.BtnM.Name = "BtnM"
+            Me.BtnM.Size = New System.Drawing.Size(40, 40)
+            Me.BtnM.TabIndex = 5
+            Me.BtnM.Tag = "m"
+            Me.BtnM.Text = "&m"
+            Me.BtnM.UseVisualStyleBackColor = False
             '
-            'btnOutputFormat
+            'BtnOutputFormat
             '
-            Me.btnOutputFormat.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnOutputFormat.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-            Me.btnOutputFormat.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnOutputFormat.FlatAppearance.BorderSize = 0
-            Me.btnOutputFormat.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
-            Me.btnOutputFormat.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-            Me.btnOutputFormat.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnOutputFormat.Font = New System.Drawing.Font("Segoe UI Semilight", 12.75!)
-            Me.btnOutputFormat.ForeColor = System.Drawing.Color.White
-            Me.btnOutputFormat.Location = New System.Drawing.Point(315, 185)
-            Me.btnOutputFormat.Name = "btnOutputFormat"
-            Me.btnOutputFormat.Size = New System.Drawing.Size(86, 50)
-            Me.btnOutputFormat.TabIndex = 8
-            Me.btnOutputFormat.Tag = "-"
-            Me.btnOutputFormat.Text = "Math"
-            Me.TTLetters.SetToolTip(Me.btnOutputFormat, "Change the output format:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Math: Output fractions, roots, etc." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Scientific: Outpu" &
+            Me.BtnOutputFormat.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnOutputFormat.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+            Me.BtnOutputFormat.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnOutputFormat.FlatAppearance.BorderSize = 0
+            Me.BtnOutputFormat.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
+            Me.BtnOutputFormat.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+            Me.BtnOutputFormat.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnOutputFormat.Font = New System.Drawing.Font(OpenSansLight, 12.75!)
+            Me.BtnOutputFormat.ForeColor = System.Drawing.Color.White
+            Me.BtnOutputFormat.Location = New System.Drawing.Point(315, 185)
+            Me.BtnOutputFormat.Name = "BtnOutputFormat"
+            Me.BtnOutputFormat.Size = New System.Drawing.Size(86, 50)
+            Me.BtnOutputFormat.TabIndex = 8
+            Me.BtnOutputFormat.Tag = "-"
+            Me.BtnOutputFormat.Text = "Math"
+            Me.TTLetters.SetToolTip(Me.BtnOutputFormat, "Change the output format:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Math: Output fractions, roots, etc." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Scientific: Outpu" &
         "t scientific notation " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Raw: Output full decimal number" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Hotkey: Ctrl+Alt+O or " &
         "Ctrl+Alt+<first letter of mode name>)")
-            Me.btnOutputFormat.UseVisualStyleBackColor = False
+            Me.BtnOutputFormat.UseVisualStyleBackColor = False
             '
-            'btnY
+            'BtnY
             '
-            Me.btnY.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnY.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnY.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnY.FlatAppearance.BorderSize = 0
-            Me.btnY.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnY.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnY.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnY.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.btnY.ForeColor = System.Drawing.Color.White
-            Me.btnY.Location = New System.Drawing.Point(361, 139)
-            Me.btnY.Name = "btnY"
-            Me.btnY.Size = New System.Drawing.Size(40, 40)
-            Me.btnY.TabIndex = 3
-            Me.btnY.Tag = "y"
-            Me.btnY.Text = "&y"
-            Me.btnY.UseVisualStyleBackColor = False
+            Me.BtnY.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnY.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnY.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnY.FlatAppearance.BorderSize = 0
+            Me.BtnY.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnY.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnY.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnY.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.BtnY.ForeColor = System.Drawing.Color.White
+            Me.BtnY.Location = New System.Drawing.Point(361, 139)
+            Me.BtnY.Name = "BtnY"
+            Me.BtnY.Size = New System.Drawing.Size(40, 40)
+            Me.BtnY.TabIndex = 3
+            Me.BtnY.Tag = "y"
+            Me.BtnY.Text = "&y"
+            Me.BtnY.UseVisualStyleBackColor = False
             '
-            'btnX
+            'BtnX
             '
-            Me.btnX.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnX.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnX.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnX.FlatAppearance.BorderSize = 0
-            Me.btnX.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnX.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnX.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnX.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!)
-            Me.btnX.ForeColor = System.Drawing.Color.White
-            Me.btnX.Location = New System.Drawing.Point(315, 139)
-            Me.btnX.Name = "btnX"
-            Me.btnX.Size = New System.Drawing.Size(40, 40)
-            Me.btnX.TabIndex = 2
-            Me.btnX.Tag = "x"
-            Me.btnX.Text = "&x"
-            Me.btnX.UseVisualStyleBackColor = False
+            Me.BtnX.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnX.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnX.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnX.FlatAppearance.BorderSize = 0
+            Me.BtnX.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnX.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnX.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnX.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.BtnX.ForeColor = System.Drawing.Color.White
+            Me.BtnX.Location = New System.Drawing.Point(315, 139)
+            Me.BtnX.Name = "BtnX"
+            Me.BtnX.Size = New System.Drawing.Size(40, 40)
+            Me.BtnX.TabIndex = 2
+            Me.BtnX.Tag = "x"
+            Me.BtnX.Text = "&x"
+            Me.BtnX.UseVisualStyleBackColor = False
             '
-            'btnEval
+            'BtnEval
             '
-            Me.btnEval.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnEval.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnEval.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnEval.FlatAppearance.BorderSize = 0
-            Me.btnEval.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.btnEval.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnEval.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnEval.Font = New System.Drawing.Font("Segoe UI Semilight", 13.0!)
-            Me.btnEval.ForeColor = System.Drawing.Color.White
-            Me.btnEval.Image = CType(resources.GetObject("btnEval.Image"), System.Drawing.Image)
-            Me.btnEval.Location = New System.Drawing.Point(673, 348)
-            Me.btnEval.Name = "btnEval"
-            Me.btnEval.Size = New System.Drawing.Size(56, 52)
-            Me.btnEval.TabIndex = 1
-            Me.TTLetters.SetToolTip(Me.btnEval, "Run & Record (Alt+Enter)")
-            Me.btnEval.UseVisualStyleBackColor = False
+            Me.BtnEval.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnEval.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnEval.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnEval.FlatAppearance.BorderSize = 0
+            Me.BtnEval.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BtnEval.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnEval.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnEval.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
+            Me.BtnEval.ForeColor = System.Drawing.Color.White
+            Me.BtnEval.Image = CType(resources.GetObject("BtnEval.Image"), System.Drawing.Image)
+            Me.BtnEval.Location = New System.Drawing.Point(673, 348)
+            Me.BtnEval.Name = "BtnEval"
+            Me.BtnEval.Size = New System.Drawing.Size(56, 52)
+            Me.BtnEval.TabIndex = 1
+            Me.TTLetters.SetToolTip(Me.BtnEval, "Run & Record (Alt+Enter)")
+            Me.BtnEval.UseVisualStyleBackColor = False
             '
-            'lbResult
+            'LbResult
             '
-            Me.lbResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.LbResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.lbResult.BackColor = System.Drawing.Color.Transparent
-            Me.lbResult.Font = New System.Drawing.Font("Segoe UI Semilight", 14.0!)
-            Me.lbResult.ForeColor = System.Drawing.Color.White
-            Me.lbResult.Location = New System.Drawing.Point(11, 2)
-            Me.lbResult.Name = "lbResult"
-            Me.lbResult.Size = New System.Drawing.Size(619, 46)
-            Me.lbResult.TabIndex = 1
-            Me.lbResult.Text = "= "
-            Me.lbResult.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-            Me.TTLetters.SetToolTip(Me.lbResult, "=")
-            Me.lbResult.UseMnemonic = False
+            Me.LbResult.BackColor = System.Drawing.Color.Transparent
+            Me.LbResult.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbResult.ForeColor = System.Drawing.Color.White
+            Me.LbResult.Location = New System.Drawing.Point(11, 2)
+            Me.LbResult.Name = "LbResult"
+            Me.LbResult.Size = New System.Drawing.Size(619, 46)
+            Me.LbResult.TabIndex = 1
+            Me.LbResult.Text = "= "
+            Me.LbResult.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            Me.TTLetters.SetToolTip(Me.LbResult, "=")
+            Me.LbResult.UseMnemonic = False
             '
-            'pnlResults
+            'PnlResults
             '
-            Me.pnlResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlResults.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.pnlResults.Controls.Add(Me.BtnTranslucent)
-            Me.pnlResults.Controls.Add(Me.btnClose)
-            Me.pnlResults.Controls.Add(Me.btnMin)
-            Me.pnlResults.Controls.Add(Me.lbResult)
-            Me.pnlResults.Location = New System.Drawing.Point(-1, -1)
-            Me.pnlResults.Name = "pnlResults"
-            Me.pnlResults.Size = New System.Drawing.Size(730, 49)
-            Me.pnlResults.TabIndex = 4
+            Me.PnlResults.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.PnlResults.Controls.Add(Me.BtnMin)
+            Me.PnlResults.Controls.Add(Me.BtnTranslucent)
+            Me.PnlResults.Controls.Add(Me.BtnClose)
+            Me.PnlResults.Controls.Add(Me.LbResult)
+            Me.PnlResults.Location = New System.Drawing.Point(-1, -1)
+            Me.PnlResults.Name = "PnlResults"
+            Me.PnlResults.Size = New System.Drawing.Size(730, 49)
+            Me.PnlResults.TabIndex = 4
+            '
+            'BtnMin
+            '
+            Me.BtnMin.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnMin.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMin.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnMin.FlatAppearance.BorderSize = 0
+            Me.BtnMin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnMin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnMin.ForeColor = System.Drawing.Color.White
+            Me.BtnMin.Location = New System.Drawing.Point(623, 1)
+            Me.BtnMin.Name = "BtnMin"
+            Me.BtnMin.Size = New System.Drawing.Size(53, 48)
+            Me.BtnMin.TabIndex = 0
+            Me.BtnMin.Text = "-"
+            Me.TTLetters.SetToolTip(Me.BtnMin, "Minimize (Win+Down)")
+            Me.BtnMin.UseVisualStyleBackColor = False
             '
             'BtnTranslucent
             '
@@ -406,144 +431,147 @@
             Me.BtnTranslucent.Name = "BtnTranslucent"
             Me.BtnTranslucent.Size = New System.Drawing.Size(53, 48)
             Me.BtnTranslucent.TabIndex = 6
-            Me.TTLetters.SetToolTip(Me.BtnTranslucent, "Make Translucent (Alt+T)")
+            Me.TTLetters.SetToolTip(Me.BtnTranslucent, "Cycle Translucency (Alt+T)")
             Me.BtnTranslucent.UseVisualStyleBackColor = False
             '
-            'btnClose
+            'BtnClose
             '
-            Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnClose.BackColor = System.Drawing.Color.Brown
-            Me.btnClose.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnClose.FlatAppearance.BorderSize = 0
-            Me.btnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Brown
-            Me.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnClose.ForeColor = System.Drawing.Color.White
-            Me.btnClose.Image = CType(resources.GetObject("btnClose.Image"), System.Drawing.Image)
-            Me.btnClose.Location = New System.Drawing.Point(677, 2)
-            Me.btnClose.Name = "btnClose"
-            Me.btnClose.Size = New System.Drawing.Size(53, 49)
-            Me.btnClose.TabIndex = 5
-            Me.btnClose.UseVisualStyleBackColor = False
+            Me.BtnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnClose.BackColor = System.Drawing.Color.Brown
+            Me.BtnClose.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnClose.FlatAppearance.BorderSize = 0
+            Me.BtnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.BtnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Brown
+            Me.BtnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnClose.ForeColor = System.Drawing.Color.White
+            Me.BtnClose.Image = CType(resources.GetObject("BtnClose.Image"), System.Drawing.Image)
+            Me.BtnClose.Location = New System.Drawing.Point(675, 1)
+            Me.BtnClose.Name = "BtnClose"
+            Me.BtnClose.Size = New System.Drawing.Size(53, 49)
+            Me.BtnClose.TabIndex = 5
+            Me.BtnClose.UseVisualStyleBackColor = False
             '
-            'btnMin
+            'BtnSettings
             '
-            Me.btnMin.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnMin.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnMin.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnMin.FlatAppearance.BorderSize = 0
-            Me.btnMin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnMin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnMin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMin.ForeColor = System.Drawing.Color.White
-            Me.btnMin.Location = New System.Drawing.Point(623, 1)
-            Me.btnMin.Name = "btnMin"
-            Me.btnMin.Size = New System.Drawing.Size(53, 48)
-            Me.btnMin.TabIndex = 0
-            Me.btnMin.Text = "-"
-            Me.TTLetters.SetToolTip(Me.btnMin, "Minimize (Win+Down)")
-            Me.btnMin.UseVisualStyleBackColor = False
-            '
-            'btnSettings
-            '
-            Me.btnSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnSettings.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnSettings.FlatAppearance.BorderSize = 0
-            Me.btnSettings.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnSettings.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSettings.Font = New System.Drawing.Font("Segoe UI Semilight", 1.0!)
-            Me.btnSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSettings.Image = CType(resources.GetObject("btnSettings.Image"), System.Drawing.Image)
-            Me.btnSettings.Location = New System.Drawing.Point(674, 101)
-            Me.btnSettings.Name = "btnSettings"
-            Me.btnSettings.Size = New System.Drawing.Size(53, 47)
-            Me.btnSettings.TabIndex = 3
-            Me.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopRight
-            Me.TTLetters.SetToolTip(Me.btnSettings, "Open the settings panel (Alt+S)")
-            Me.btnSettings.UseVisualStyleBackColor = False
+            Me.BtnSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnSettings.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSettings.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnSettings.FlatAppearance.BorderSize = 0
+            Me.BtnSettings.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnSettings.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnSettings.Font = New System.Drawing.Font(OpenSansLight, 1.0!)
+            Me.BtnSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSettings.Image = CType(resources.GetObject("BtnSettings.Image"), System.Drawing.Image)
+            Me.BtnSettings.Location = New System.Drawing.Point(674, 101)
+            Me.BtnSettings.Name = "BtnSettings"
+            Me.BtnSettings.Size = New System.Drawing.Size(53, 47)
+            Me.BtnSettings.TabIndex = 3
+            Me.BtnSettings.TextAlign = System.Drawing.ContentAlignment.TopRight
+            Me.TTLetters.SetToolTip(Me.BtnSettings, "Open the settings panel (Alt+S)")
+            Me.BtnSettings.UseVisualStyleBackColor = False
             '
             'TTLetters
             '
             Me.TTLetters.ShowAlways = True
             '
-            'btnFunctions
+            'BtnFunctions
             '
-            Me.btnFunctions.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnFunctions.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnFunctions.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnFunctions.FlatAppearance.BorderSize = 0
-            Me.btnFunctions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnFunctions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnFunctions.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFunctions.Font = New System.Drawing.Font("Segoe UI Semilight", 13.0!)
-            Me.btnFunctions.ForeColor = System.Drawing.Color.White
-            Me.btnFunctions.Location = New System.Drawing.Point(675, 49)
-            Me.btnFunctions.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnFunctions.Name = "btnFunctions"
-            Me.btnFunctions.Size = New System.Drawing.Size(53, 47)
-            Me.btnFunctions.TabIndex = 27
-            Me.btnFunctions.TabStop = False
-            Me.btnFunctions.Text = "f(x)"
-            Me.TTLetters.SetToolTip(Me.btnFunctions, "Insert function from library (Alt+F)")
-            Me.btnFunctions.UseVisualStyleBackColor = False
+            Me.BtnFunctions.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnFunctions.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnFunctions.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnFunctions.FlatAppearance.BorderSize = 0
+            Me.BtnFunctions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnFunctions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnFunctions.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnFunctions.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
+            Me.BtnFunctions.ForeColor = System.Drawing.Color.White
+            Me.BtnFunctions.Location = New System.Drawing.Point(675, 49)
+            Me.BtnFunctions.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnFunctions.Name = "BtnFunctions"
+            Me.BtnFunctions.Size = New System.Drawing.Size(53, 47)
+            Me.BtnFunctions.TabIndex = 27
+            Me.BtnFunctions.TabStop = False
+            Me.BtnFunctions.Text = "f(x)"
+            Me.TTLetters.SetToolTip(Me.BtnFunctions, "Insert function from library (Alt+F)")
+            Me.BtnFunctions.UseVisualStyleBackColor = False
             '
-            'btnSave
+            'BtnSave
             '
-            Me.btnSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnSave.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSave.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnSave.FlatAppearance.BorderSize = 0
-            Me.btnSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSave.Font = New System.Drawing.Font("Segoe UI Semilight", 13.0!)
-            Me.btnSave.ForeColor = System.Drawing.Color.White
-            Me.btnSave.Image = CType(resources.GetObject("btnSave.Image"), System.Drawing.Image)
-            Me.btnSave.Location = New System.Drawing.Point(675, 299)
-            Me.btnSave.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnSave.Name = "btnSave"
-            Me.btnSave.Size = New System.Drawing.Size(53, 47)
-            Me.btnSave.TabIndex = 28
-            Me.btnSave.TabStop = False
-            Me.TTLetters.SetToolTip(Me.btnSave, "Save (Ctrl+S or F12 (Save As))" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Note that when a file is open, the editor saves" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) &
+            Me.BtnSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnSave.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSave.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnSave.FlatAppearance.BorderSize = 0
+            Me.BtnSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnSave.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
+            Me.BtnSave.ForeColor = System.Drawing.Color.White
+            Me.BtnSave.Image = CType(resources.GetObject("BtnSave.Image"), System.Drawing.Image)
+            Me.BtnSave.Location = New System.Drawing.Point(675, 299)
+            Me.BtnSave.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnSave.Name = "BtnSave"
+            Me.BtnSave.Size = New System.Drawing.Size(53, 47)
+            Me.BtnSave.TabIndex = 28
+            Me.BtnSave.TabStop = False
+            Me.TTLetters.SetToolTip(Me.BtnSave, "Save (Ctrl+S or F12 (Save As))" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Note that when a file is open, the editor saves" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) &
         "automatically when you make any changes." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This button also saves all settings.")
-            Me.btnSave.UseVisualStyleBackColor = False
+            Me.BtnSave.UseVisualStyleBackColor = False
             '
-            'btnOpen
+            'BtnOpen
             '
-            Me.btnOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnOpen.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnOpen.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnOpen.FlatAppearance.BorderSize = 0
-            Me.btnOpen.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnOpen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnOpen.Font = New System.Drawing.Font("Segoe UI Semilight", 13.0!)
-            Me.btnOpen.ForeColor = System.Drawing.Color.White
-            Me.btnOpen.Image = CType(resources.GetObject("btnOpen.Image"), System.Drawing.Image)
-            Me.btnOpen.Location = New System.Drawing.Point(675, 248)
-            Me.btnOpen.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnOpen.Name = "btnOpen"
-            Me.btnOpen.Size = New System.Drawing.Size(53, 47)
-            Me.btnOpen.TabIndex = 29
-            Me.btnOpen.TabStop = False
-            Me.TTLetters.SetToolTip(Me.btnOpen, "Open (Ctrl+O or F11)")
-            Me.btnOpen.UseVisualStyleBackColor = False
+            Me.BtnOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnOpen.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnOpen.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnOpen.FlatAppearance.BorderSize = 0
+            Me.BtnOpen.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnOpen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnOpen.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
+            Me.BtnOpen.ForeColor = System.Drawing.Color.White
+            Me.BtnOpen.Image = CType(resources.GetObject("BtnOpen.Image"), System.Drawing.Image)
+            Me.BtnOpen.Location = New System.Drawing.Point(675, 248)
+            Me.BtnOpen.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnOpen.Name = "BtnOpen"
+            Me.BtnOpen.Size = New System.Drawing.Size(53, 47)
+            Me.BtnOpen.TabIndex = 29
+            Me.BtnOpen.TabStop = False
+            Me.TTLetters.SetToolTip(Me.BtnOpen, "Open (Ctrl+O or F11)")
+            Me.BtnOpen.UseVisualStyleBackColor = False
             '
-            'pnlTb
+            'BtnNew
             '
-            Me.pnlTb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.BtnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnNew.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnNew.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnNew.FlatAppearance.BorderSize = 0
+            Me.BtnNew.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnNew.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnNew.Font = New System.Drawing.Font(OpenSansLight, 19.0!)
+            Me.BtnNew.ForeColor = System.Drawing.Color.White
+            Me.BtnNew.Location = New System.Drawing.Point(675, 198)
+            Me.BtnNew.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnNew.Name = "BtnNew"
+            Me.BtnNew.Size = New System.Drawing.Size(53, 47)
+            Me.BtnNew.TabIndex = 30
+            Me.BtnNew.TabStop = False
+            Me.BtnNew.Text = "+"
+            Me.TTLetters.SetToolTip(Me.BtnNew, "New (Ctrl+N)")
+            Me.BtnNew.UseVisualStyleBackColor = False
+            '
+            'PnlTb
+            '
+            Me.PnlTb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlTb.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
-            Me.pnlTb.Controls.Add(Me.pnlSettings)
-            Me.pnlTb.Controls.Add(Me.tb)
-            Me.pnlTb.Location = New System.Drawing.Point(-3, 46)
-            Me.pnlTb.Name = "pnlTb"
-            Me.pnlTb.Size = New System.Drawing.Size(678, 361)
-            Me.pnlTb.TabIndex = 0
+            Me.PnlTb.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
+            Me.PnlTb.Controls.Add(Me.PnlSettings)
+            Me.PnlTb.Controls.Add(Me.Tb)
+            Me.PnlTb.Location = New System.Drawing.Point(-3, 46)
+            Me.PnlTb.Name = "PnlTb"
+            Me.PnlTb.Size = New System.Drawing.Size(678, 361)
+            Me.PnlTb.TabIndex = 0
             '
             'TmrReCalc
             '
@@ -553,26 +581,55 @@
             '
             Me.TmrLoad.Interval = 50
             '
-            'btnNew
+            'Editor
             '
-            Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnNew.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnNew.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnNew.FlatAppearance.BorderSize = 0
-            Me.btnNew.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnNew.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnNew.Font = New System.Drawing.Font("Segoe UI Semilight", 13.0!)
-            Me.btnNew.ForeColor = System.Drawing.Color.White
-            Me.btnNew.Location = New System.Drawing.Point(675, 198)
-            Me.btnNew.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnNew.Name = "btnNew"
-            Me.btnNew.Size = New System.Drawing.Size(53, 47)
-            Me.btnNew.TabIndex = 30
-            Me.btnNew.TabStop = False
-            Me.btnNew.Text = "+"
-            Me.TTLetters.SetToolTip(Me.btnNew, "New (Ctrl+N)")
-            Me.btnNew.UseVisualStyleBackColor = False
+            Me.Editor.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Editor.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Editor.Controls.Add(Me.BtnNew)
+            Me.Editor.Controls.Add(Me.BtnOpen)
+            Me.Editor.Controls.Add(Me.BtnSave)
+            Me.Editor.Controls.Add(Me.PnlResults)
+            Me.Editor.Controls.Add(Me.PnlTb)
+            Me.Editor.Controls.Add(Me.BtnSettings)
+            Me.Editor.Controls.Add(Me.BtnEval)
+            Me.Editor.Controls.Add(Me.BtnFunctions)
+            Me.Editor.Location = New System.Drawing.Point(621, 0)
+            Me.Editor.MaximumSize = New System.Drawing.Size(728, 700)
+            Me.Editor.MinimumSize = New System.Drawing.Size(728, 400)
+            Me.Editor.Name = "Editor"
+            Me.Editor.Size = New System.Drawing.Size(728, 400)
+            Me.Editor.TabIndex = 15
+            '
+            'Keyboard
+            '
+            Me.Keyboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Keyboard.AutoSize = True
+            Me.Keyboard.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+            Me.Keyboard.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+            Me.Keyboard.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Keyboard.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
+            Me.Keyboard.Location = New System.Drawing.Point(621, 400)
+            Me.Keyboard.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+            Me.Keyboard.MaximumSize = New System.Drawing.Size(728, 300)
+            Me.Keyboard.Minimized = False
+            Me.Keyboard.MinimumSize = New System.Drawing.Size(728, 300)
+            Me.Keyboard.Name = "Keyboard"
+            Me.Keyboard.Size = New System.Drawing.Size(728, 300)
+            Me.Keyboard.TabIndex = 16
+            '
+            'Viewer
+            '
+            Me.Viewer.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
+            Me.Viewer.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.Viewer.Location = New System.Drawing.Point(0, 0)
+            Me.Viewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+            Me.Viewer.Name = "Viewer"
+            Me.Viewer.Size = New System.Drawing.Size(621, 700)
+            Me.Viewer.TabIndex = 17
+            Me.Viewer.View = Cantus.UI.Viewer.eView.none
+            '
+            'TmrAnim
+            '
             '
             'FrmEditor
             '
@@ -580,65 +637,65 @@
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.AutoSize = True
             Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-            Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-            Me.ClientSize = New System.Drawing.Size(728, 400)
+            Me.ClientSize = New System.Drawing.Size(1349, 700)
             Me.ControlBox = False
-            Me.Controls.Add(Me.btnNew)
-            Me.Controls.Add(Me.btnOpen)
-            Me.Controls.Add(Me.btnSave)
-            Me.Controls.Add(Me.pnlResults)
-            Me.Controls.Add(Me.pnlTb)
-            Me.Controls.Add(Me.btnSettings)
-            Me.Controls.Add(Me.btnEval)
-            Me.Controls.Add(Me.btnFunctions)
-            Me.Font = New System.Drawing.Font("Segoe UI Semilight", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.Controls.Add(Me.Viewer)
+            Me.Controls.Add(Me.Editor)
+            Me.Controls.Add(Me.Keyboard)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.KeyPreview = True
             Me.MaximizeBox = False
-            Me.MaximumSize = New System.Drawing.Size(728, 400)
-            Me.MinimumSize = New System.Drawing.Size(728, 400)
+            Me.MaximumSize = New System.Drawing.Size(1349, 700)
+            Me.MinimumSize = New System.Drawing.Size(1349, 700)
             Me.Name = "FrmEditor"
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
-            Me.Text = "Editor - Cantus"
-            Me.TopMost = True
-            Me.pnlSettings.ResumeLayout(False)
-            Me.pnlSettings.PerformLayout()
-            CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlResults.ResumeLayout(False)
-            Me.pnlTb.ResumeLayout(False)
+            Me.Text = "Cantus"
+            Me.PnlSettings.ResumeLayout(False)
+            Me.PnlSettings.PerformLayout()
+            CType(Me.PbSettingsLogo, System.ComponentModel.ISupportInitialize).EndInit()
+            Me.PnlResults.ResumeLayout(False)
+            Me.PnlTb.ResumeLayout(False)
+            Me.Editor.ResumeLayout(False)
             Me.ResumeLayout(False)
+            Me.PerformLayout()
 
         End Sub
-        Friend WithEvents tb As ScintillaNET.Scintilla
-        Friend WithEvents btnEval As System.Windows.Forms.Button
-        Friend WithEvents lbResult As System.Windows.Forms.Label
-        Friend WithEvents pnlResults As System.Windows.Forms.Panel
-        Friend WithEvents btnSettings As System.Windows.Forms.Button
-        Friend WithEvents pnlSettings As System.Windows.Forms.Panel
-        Friend WithEvents btnX As System.Windows.Forms.Button
-        Friend WithEvents btnY As System.Windows.Forms.Button
-        Friend WithEvents btnOutputFormat As System.Windows.Forms.Button
-        Friend WithEvents btnM As System.Windows.Forms.Button
-        Friend WithEvents btnT As System.Windows.Forms.Button
+        Friend WithEvents Tb As ScintillaNET.Scintilla
+        Friend WithEvents BtnEval As System.Windows.Forms.Button
+        Friend WithEvents LbResult As System.Windows.Forms.Label
+        Friend WithEvents PnlResults As System.Windows.Forms.Panel
+        Friend WithEvents BtnSettings As System.Windows.Forms.Button
+        Friend WithEvents PnlSettings As System.Windows.Forms.Panel
+        Friend WithEvents BtnX As System.Windows.Forms.Button
+        Friend WithEvents BtnY As System.Windows.Forms.Button
+        Friend WithEvents BtnOutputFormat As System.Windows.Forms.Button
+        Friend WithEvents BtnM As System.Windows.Forms.Button
+        Friend WithEvents BtnT As System.Windows.Forms.Button
         Friend WithEvents TTLetters As System.Windows.Forms.ToolTip
-        Friend WithEvents btnClose As Button
-        Friend WithEvents pnlTb As Panel
-        Friend WithEvents btnMin As Button
-        Friend WithEvents btnAngleRepr As Button
-        Friend WithEvents lbAbout As Label
-        Friend WithEvents cbAutoUpd As CheckBox
-        Friend WithEvents btnUpdate As Button
+        Friend WithEvents BtnClose As Button
+        Friend WithEvents PnlTb As Panel
+        Friend WithEvents BtnMin As Button
+        Friend WithEvents BtnAngleRepr As Button
+        Friend WithEvents LbAbout As Label
+        Friend WithEvents CbAutoUpd As CheckBox
+        Friend WithEvents BtnUpdate As Button
         Friend WithEvents TmrReCalc As Timer
-        Friend WithEvents btnExplicit As Button
-        Friend WithEvents btnFunctions As Button
-        Friend WithEvents btnLog As Button
-        Friend WithEvents lbSettings As Label
-        Friend WithEvents btnSave As Button
-        Friend WithEvents btnOpen As Button
-        Friend WithEvents PictureBox1 As PictureBox
+        Friend WithEvents BtnExplicit As Button
+        Friend WithEvents BtnFunctions As Button
+        Friend WithEvents BtnLog As Button
+        Friend WithEvents LbSettings As Label
+        Friend WithEvents BtnSave As Button
+        Friend WithEvents BtnOpen As Button
+        Friend WithEvents PbSettingsLogo As PictureBox
         Friend WithEvents TmrLoad As Timer
         Friend WithEvents BtnTranslucent As Button
-        Friend WithEvents btnNew As Button
+        Friend WithEvents BtnNew As Button
+        Friend WithEvents Editor As Panel
+        Friend WithEvents Keyboard As Keyboards.MainKeyboard
+        Friend WithEvents Viewer As Viewer
+        Friend WithEvents TmrAnim As Timer
     End Class
 End Namespace

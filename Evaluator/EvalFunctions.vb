@@ -9,13 +9,32 @@ Imports System.Threading
 Imports System.Text.RegularExpressions
 Imports Cantus.Evaluator.Evaluator
 Imports Cantus.Evaluator.ObjectTypes
+Imports Cantus.Evaluator.Evaluator.CantusIOEventArgs
 
 Namespace Evaluator
     ' Define functions here (name is case insensitive)
     ' All public functions are directly accessible when evaluating an expressionession (though may be overrided by user functions)
     ' All private and friend functions are hidden
-    Public Class InternalFunctions
+    Public NotInheritable Class InternalFunctions
         Private _eval As Evaluator
+
+        ''' <summary>
+        ''' Raised when Cantus needs to read input input from the console. Handle to use I/O in GUI applications
+        ''' </summary>
+        Public Delegate Sub ReadInputDelegate(sender As Object, e As CantusIOEventArgs, ByRef [return] As Object)
+        ''' <summary>
+        ''' Raised when Cantus needs to read input input from the console. Handle to use I/O in GUI applications
+        ''' </summary>
+        Public Event ReadInput As ReadInputDelegate
+
+        ''' <summary>
+        ''' Raised when Cantus needs to write output to the console. Handle to use I/O in GUI applications
+        ''' </summary>
+        Public Delegate Sub WriteOutputDelegate(sender As Object, e As CantusIOEventArgs)
+        ''' <summary>
+        ''' Raised when Cantus needs to read input input from the console. Handle to use I/O in GUI applications
+        ''' </summary>
+        Public Event WriteOutput As WriteOutputDelegate
 
         Public Sub New(parent As Evaluator)
             Me._eval = parent
@@ -4119,7 +4138,7 @@ Namespace Evaluator
         ''' <summary>
         ''' Create a new set from any object
         ''' </summary>
-        Public Function [Set](Optional lst As Object = Nothing) As IDictionary(Of Reference, Reference)
+        Public Function [Set](Optional lst As Object = Nothing) As SortedDictionary(Of Reference, Reference)
             If lst Is Nothing Then Return New SortedDictionary(Of Reference, Reference)
             Return ToSet(lst)
         End Function
@@ -4142,7 +4161,7 @@ Namespace Evaluator
         ''' <summary>
         ''' Create a new hashset from any object
         ''' </summary>
-        Public Function [HashSet](Optional lst As Object = Nothing) As IDictionary(Of Reference, Reference)
+        Public Function [HashSet](Optional lst As Object = Nothing) As Dictionary(Of Reference, Reference)
             If lst Is Nothing Then Return New Dictionary(Of Reference, Reference)
             Return ToHashSet(lst)
         End Function
@@ -4305,7 +4324,7 @@ Namespace Evaluator
         ''' Initialize an array with the specified number of dimensions, with only one item at 0.
         ''' </summary>
         ''' <returns></returns>
-        Public Function Array(dimensions As Double) As IEnumerable(Of Reference)
+        Public Function Array(dimensions As Double) As List(Of Reference)
             Dim d As Integer = Int(dimensions)
             If d < 0 Then Throw New EvaluatorException("Array dimensions cannot be negative")
             If d > 25 Then Throw New EvaluatorException("Array dimensions too large: please keep under 15 dimensions")
@@ -4404,7 +4423,7 @@ Namespace Evaluator
         Public Function Magnitude(val As Object) As Object
             If TypeOf val Is Numerics.Complex Then
                 Return DirectCast(val, Numerics.Complex).Magnitude
-            ElseIf TypeOf val Is ilist(Of Reference)
+            ElseIf TypeOf val Is IList(Of Reference)
                 Return New Matrix(DirectCast(val, IList(Of Reference))).Magnitude()
             Else
                 Return Double.NaN
@@ -4485,39 +4504,137 @@ Namespace Evaluator
         ' input / output
         ' command line
         ''' <summary>
-        ''' Prints to the console, if available
+        ''' Prints to the console
         ''' </summary>
         Public Function Print(ByVal text As Object) As String
+            If Not WriteOutputEvent Is Nothing Then
+                RaiseEvent WriteOutput(_eval, New CantusIOEventArgs(eMessage.writeText, text.ToString()))
+            End If
             Console.Write(text.ToString())
             Return text.ToString()
         End Function
 
         ''' <summary>
-        ''' Prints the text to the console, if available, followed immediately by a line break
+        ''' Prints the text to the console, followed immediately by a line break
         ''' </summary>
-        Public Function WriteLine(ByVal text As Object) As Boolean
+        Public Function PrintLine(ByVal text As Object) As Boolean
+            If Not WriteOutputEvent Is Nothing Then
+                RaiseEvent WriteOutput(_eval, New CantusIOEventArgs(eMessage.writeText, text.ToString() & vbNewLine))
+            End If
             Console.WriteLine(text.ToString())
             Return True
         End Function
 
         ''' <summary>
-        ''' Read a line from the console, if available
+        ''' Read a line from the console
         ''' </summary>
-        Public Function ReadLine() As String
+        Public Function ReadLine(Optional message As String = "") As String
+            If Not String.IsNullOrWhiteSpace(message) Then PrintLine(message)
+            If Not ReadInputEvent Is Nothing Then
+                Dim userInput As Object = ""
+                RaiseEvent ReadInput(_eval, New CantusIOEventArgs(eMessage.readLine, message), userInput)
+                If Not userInput Is Nothing Then
+                    Return userInput.ToString()
+                End If
+            End If
             Return Console.ReadLine()
+        End Function
+
+        ''' <summary>
+        ''' Read a word from the console
+        ''' </summary>
+        Public Function Read(Optional message As String = "") As String
+            If Not String.IsNullOrWhiteSpace(message) Then PrintLine(message)
+            If Not ReadInputEvent Is Nothing Then
+                Dim userInput As Object = ""
+                RaiseEvent ReadInput(_eval, New CantusIOEventArgs(eMessage.readWord, message), userInput)
+                If Not userInput Is Nothing Then
+                    For i As Integer = 0 To userInput.ToString().Count - 1
+                        Dim cI As Char = userInput.ToString()(i)
+                        If AscW(cI) <= AscW(" "c) Then Return userInput.ToString().Remove(i)
+                    Next
+                    Return userInput.ToString()
+                End If
+            End If
+
+            Dim ret As New StringBuilder()
+            While True
+                Dim c As Integer = Console.Read()
+                If c <= AscW(" "c) Then Exit While
+                ret.Append(ChrW(c))
+            End While
+
+            Return ret.ToString()
         End Function
 
         ''' <summary>
         ''' Read a character from the console, if available
         ''' </summary>
-        Public Function Read() As String
+        Public Function ReadChar(Optional message As String = "") As String
+            If Not String.IsNullOrWhiteSpace(message) Then PrintLine(message)
+            If Not ReadInputEvent Is Nothing Then
+                Dim userInput As Object = ""
+                RaiseEvent ReadInput(_eval, New CantusIOEventArgs(eMessage.readChar, message), userInput)
+                If Not userInput Is Nothing AndAlso userInput.ToString().Length > 0 Then
+                    Return userInput.ToString()(0)
+                End If
+            End If
             Return ChrW(Console.Read()).ToString()
         End Function
 
         ''' <summary>
-        ''' Clear the console, if available
+        ''' Generic method for prompting for confirmation
         ''' </summary>
-        Public Function Cls() As Boolean
+        Private Function InternalConfirm(Optional ByVal message As Object = "",
+                                    Optional ByVal yesMessage As String = "ok", Optional ByVal noMessage As String = "cancel") As Boolean
+            If Not String.IsNullOrWhiteSpace(message.ToString()) Then PrintLine(message)
+            If Not ReadInputEvent Is Nothing Then
+                Dim userInput As Object = False
+                RaiseEvent ReadInput(_eval, New CantusIOEventArgs(eMessage.confirm, message.ToString(),
+                           New Dictionary(Of String, Object) From {{"yes", yesMessage}, {"no", noMessage}}),
+                                     userInput)
+                If Not TypeOf userInput Is Boolean Then
+                    Throw New EvaluatorException("Invalid type returned to confirmation request: boolean expected.")
+                End If
+                If Not userInput Is Nothing Then Return CBool(userInput)
+            End If
+
+            If Not String.IsNullOrWhiteSpace(message.ToString()) Then PrintLine(message)
+            Dim result As String = ""
+            yesMessage = yesMessage.ToLowerInvariant()
+            noMessage = noMessage.ToLowerInvariant()
+            While True
+                PrintLine(String.Format("Please enter ''{0}'' or ''{1}'':", yesMessage, noMessage))
+                result = Console.ReadLine().ToLowerInvariant()
+                If result = yesMessage Then
+                    Return True
+                ElseIf result = noMessage
+                    Return False
+                Else
+                    PrintLine("Invalid response.")
+                End If
+            End While
+            Return False
+        End Function
+
+        ''' <summary>
+        ''' Ask the user for confirmation in the form of yes and no
+        ''' </summary>
+        Public Function Confirm(ByVal text As Object) As Boolean
+            Return InternalConfirm(text, "ok", "cancel")
+        End Function
+
+        ''' <summary>
+        ''' Ask the user for confirmation in the form of yes and no
+        ''' </summary>
+        Public Function YesNo(ByVal text As Object) As Boolean
+            Return InternalConfirm(text, "yes", "no")
+        End Function
+
+        ''' <summary>
+        ''' Clear the console
+        ''' </summary>
+        Public Function ClearConsole() As Boolean
             Console.Clear()
             Return True
         End Function
@@ -4528,9 +4645,9 @@ Namespace Evaluator
         ''' </summary>
         ''' <param name="path"></param>
         ''' <returns></returns>
-        Public Function ReadFile(ByVal path As String) As String
+        Public Function ReadFileText(ByVal path As String) As String
             Try
-                Return FileIO.FileSystem.ReadAllText(path)
+                Return IO.File.ReadAllText(path)
             Catch 'ex As Exception
                 Return ""
             End Try
@@ -4542,9 +4659,9 @@ Namespace Evaluator
         ''' <param name="path"></param>
         ''' <param name="line"></param>
         ''' <returns></returns>
-        Public Function ReadLine(ByVal path As String, ByVal line As Double) As Object
+        Public Function ReadFileLine(ByVal path As String, ByVal line As Double) As Object
             Try
-                Return IO.File.ReadAllLines(path)(Int(line - 1))
+                Return IO.File.ReadLines(path).Skip(Int(line) - 1).Take(1).First()
             Catch 'ex As Exception
                 Return Double.NaN
             End Try
@@ -4553,75 +4670,88 @@ Namespace Evaluator
         ''' <summary>
         ''' Overwrite a file; or, if append is true, appends to the file
         ''' </summary>
-        Public Function WriteFile(ByVal path As String, ByVal content As Object, Optional ByVal append As Boolean = False) As String
+        Public Sub WriteFileText(ByVal path As String, ByVal content As Object, Optional ByVal append As Boolean = False)
             Try
                 FileIO.FileSystem.WriteAllText(path, content.ToString(), append)
-                Return "Write Success"
             Catch 'ex As Exception
-                Return "Write Failed"
+                Throw New EvaluatorException("Failed to write to file: " & path)
             End Try
-        End Function
+        End Sub
 
         ''' <summary>
         ''' Write to the specified line in the file
         ''' </summary>
-        Public Function WriteFileLine(ByVal path As String, ByVal line As Integer, ByVal content As Object) As String
+        Public Sub WriteFileLine(ByVal path As String, ByVal line As Integer, ByVal content As Object)
             Try
                 Dim lines As String() = IO.File.ReadAllLines(path)
                 lines(Int(line - 1)) = content.ToString()
                 FileIO.FileSystem.WriteAllText(path, String.Join(vbNewLine, lines), False)
-                Return "Write Success"
             Catch 'ex As Exception
-                Return "Write Failed"
+                Throw New EvaluatorException("Failed to write to file: " & path)
             End Try
-        End Function
+        End Sub
 
         ''' <summary>
         ''' Append to file, equal to Write(path, content, true)
         ''' </summary>
-        Public Function AppendFile(ByVal path As String, ByVal content As Object) As String
-            Return WriteFile(path, content, True)
-        End Function
+        Public Sub AppendFile(ByVal path As String, ByVal content As Object)
+            WriteFileText(path, content, True)
+        End Sub
 
         ''' <summary>
         ''' Move a file
         ''' </summary>
-        Public Function MoveFile(ByVal path As String, ByVal path2 As String) As Boolean
-            File.Move(path, path2)
-            Return True
-        End Function
+        Public Sub MoveFile(ByVal path As String, ByVal path2 As String)
+            Try
+                File.Move(path, path2)
+            Catch
+                Throw New EvaluatorException("Failed move file: " & path)
+            End Try
+        End Sub
 
         ''' <summary>
         ''' Rename a file
         ''' </summary>
-        Public Function RenameFile(ByVal path As String, ByVal newname As String) As Boolean
-            FileSystem.Rename(path, newname)
-            Return True
-        End Function
+        Public Sub RenameFile(ByVal path As String, ByVal newname As String)
+            Try
+                FileSystem.Rename(path, newname)
+            Catch
+                Throw New EvaluatorException("Failed rename file: " & path)
+            End Try
+        End Sub
 
         ''' <summary>
         ''' Delete a file
         ''' </summary>
-        Public Function DeleteFile(ByVal path As String) As Boolean
-            File.Delete(path)
-            Return True
-        End Function
+        Public Sub DeleteFile(ByVal path As String)
+            Try
+                File.Delete(path)
+            Catch
+                Throw New EvaluatorException("Failed delete file: " & path)
+            End Try
+        End Sub
 
         ''' <summary>
         ''' Move a directory
         ''' </summary>
-        Public Function MoveDirectory(ByVal path As String, ByVal path2 As String) As Boolean
-            Directory.Move(path, path2)
-            Return True
-        End Function
+        Public Sub MoveDirectory(ByVal path As String, ByVal newPath As String)
+            Try
+                Directory.Move(path, newPath)
+            Catch
+                Throw New EvaluatorException("Failed move directory: " & path)
+            End Try
+        End Sub
 
         ''' <summary>
         ''' Rename a directory
         ''' </summary>
-        Public Function RenameDirectory(ByVal path As String, ByVal newname As String) As Boolean
-            FileIO.FileSystem.RenameDirectory(path, newname)
-            Return True
-        End Function
+        Public Sub RenameDirectory(ByVal path As String, ByVal newName As String)
+            Try
+                FileIO.FileSystem.RenameDirectory(path, newName)
+            Catch
+                Throw New EvaluatorException("Failed rename directory: " & path)
+            End Try
+        End Sub
 
         ''' <summary>
         ''' Delete a directory
@@ -4758,39 +4888,6 @@ Namespace Evaluator
         ''' </summary>
         Public Function GetPathSeparator() As String
             Return Path.DirectorySeparatorChar
-        End Function
-
-        ' GUI Only
-        ''' <summary>
-        ''' Show a message on the screen (if gui available)
-        ''' </summary>
-        Public Sub Alert(ByVal text As Object, Optional ByVal title As Object = "Alert")
-            MsgBox(text.ToString(), MsgBoxStyle.SystemModal, title.ToString())
-        End Sub
-
-        ''' <summary>
-        ''' Show a confirmation box (Ok/Cancel) on the screen (if gui available)
-        ''' </summary>
-        Public Function Confirm(ByVal text As Object, Optional ByVal title As Object = "Confirm") As Boolean
-            Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.OkCancel Or
-                         MsgBoxStyle.SystemModal Or MsgBoxStyle.MsgBoxSetForeground, title.ToString()) =
-                MsgBoxResult.Ok
-        End Function
-
-        ''' <summary>
-        ''' Show a confirmation box (Yes/No) on the screen (if gui available)
-        ''' </summary>
-        Public Function YesNo(ByVal text As Object, Optional ByVal title As Object = "Confirm") As Boolean
-            Return MsgBox(text.ToString(), MsgBoxStyle.Information Or MsgBoxStyle.YesNo Or
-                          MsgBoxStyle.SystemModal Or MsgBoxStyle.MsgBoxSetForeground, title.ToString()) =
-                MsgBoxResult.Yes
-        End Function
-
-        ''' <summary>
-        ''' Show a input box on the screen (if gui available)
-        ''' </summary>
-        Public Function Input(ByVal text As Object, Optional ByVal title As Object = "Enter a Value", Optional ByVal deftext As Object = "") As String
-            Return InputBox(text.ToString(), title.ToString(), deftext.ToString(), 50, 50)
         End Function
 
         ' threading 

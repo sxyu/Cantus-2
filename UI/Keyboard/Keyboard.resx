@@ -118,9 +118,20 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="tt.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>122, 17</value>
+    <value>114, 19</value>
   </metadata>
-  <metadata name="tt.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>122, 17</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADUAAAAwCAYAAACxKzLDAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAAd0SU1FB98KCwEMKsTBdxcAAAC+SURBVGhD7dWhCkJREITh601iEptgEJOIyWAx
+        qGDzGYyiwSfw5Y+zMFeO4WJ15f9gZXfSGRBtAAAAAAAAKqWUgdcPfflP06Nnmrv3dwHtY83DZy56+EoT
+        9o4iG2qeETrKR2+fRwFZ+L7G4T3f16+jxy+jiBziw1neQh2V2HWF/oK6bKOQ3OLDcV7qsI4i0vo+x+E9
+        5U/6JgrI1FFkreYSoaNc9O6J5ui9/p8aaU4+c6oL1fpyAAAAAADwXdO8AKrwpQDm5RZUAAAAAElFTkSu
+        QmCC
+</value>
+  </data>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>25</value>
   </metadata>
 </root>

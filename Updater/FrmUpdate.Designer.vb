@@ -73,7 +73,7 @@
             'lbTitle
             '
             Me.lbTitle.AutoSize = True
-            Me.lbTitle.Font = New System.Drawing.Font("Segoe UI Semilight", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.lbTitle.Font = New System.Drawing.Font("OpenSans Semilight", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.lbTitle.ForeColor = System.Drawing.Color.White
             Me.lbTitle.Location = New System.Drawing.Point(99, 30)
             Me.lbTitle.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
@@ -175,7 +175,7 @@
             Me.Controls.Add(Me.lbDlSize)
             Me.Controls.Add(Me.lbSpeed)
             Me.Controls.Add(Me.lbTSize)
-            Me.Font = New System.Drawing.Font("Segoe UI Semilight", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.Font = New System.Drawing.Font("OpenSans Semilight", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.Margin = New System.Windows.Forms.Padding(43, 23, 43, 23)
             Me.Name = "FrmUpdate"

@@ -143,7 +143,7 @@ Namespace UI.Updater
                 Using clrBr As New SolidBrush(Color.FromArgb(30, 120, 63))
                     e.Graphics.FillRectangle(clrBr, 0, 0, e.ClipRectangle.Width, e.ClipRectangle.Height)
                     e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAlias
-                    e.Graphics.DrawImage(My.Resources.Calculator.ToBitmap, 0, 0, logo.Width, logo.Height)
+                    e.Graphics.DrawImage(My.Resources.Cantus.ToBitmap, 0, 0, logo.Width, logo.Height)
                 End Using
             End Using
         End Sub

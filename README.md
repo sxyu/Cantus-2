@@ -334,15 +334,17 @@ class cat : pet
 		return "Cat name: " + name
 
 myCat = cat("Alex")
-alert(myCat) # alerts Cat name: Alex
-alert(myCat.speak()) # alerts Meow!
+print(myCat) # prints Cat name: Alex
+print(myCat.speak()) # prints Meow!
 ```
-
 
 ### License
 
-**GNU GPL Version 2.0**  
-See LICENCE in the repository for more details  
+**MIT License**  
+Cantus is now licensed under the [MIT License](https://tldrlegal.com/license/mit-license).
+
+See LICENCE in the repository for the full license.
+
 
 ### Want to Help Out?  
 Your help will be greatly appreciated! There are quite a few things I am working on for this project:

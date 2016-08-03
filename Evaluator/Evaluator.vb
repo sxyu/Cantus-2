@@ -909,6 +909,63 @@ Namespace Evaluator
             '    Return str.ToString()
             'End Function
         End Class
+
+        ''' <summary>
+        ''' Event data for Cantus threading events
+        ''' </summary>
+        Public Class CantusThreadEventArgs
+            Inherits EventArgs
+            Public ReadOnly Property ThreadId As Integer
+            ''' <summary>
+            ''' Create a new CantusThreadEventArgs class, containing the id of the thread that was started or terminated
+            ''' </summary>
+            Public Sub New(threadId As Integer)
+                Me.ThreadId = threadId
+            End Sub
+        End Class
+
+        ''' <summary>
+        ''' Event data for Cantus IO events
+        ''' </summary>
+        Public NotInheritable Class CantusIOEventArgs
+            Inherits EventArgs
+            Public Enum eMessage
+                writeText = 0
+                uiMessage
+                readChar
+                readWord
+                readLine
+                confirm
+            End Enum
+
+            ''' <summary>
+            ''' The type of I/O operation
+            ''' </summary>
+            Public ReadOnly Property Message As eMessage
+
+            ''' <summary>
+            ''' The text to read or write
+            ''' </summary>
+            Public ReadOnly Property Content As String
+
+            ''' <summary>
+            ''' Additional arguments, if available
+            ''' </summary>
+            Public ReadOnly Property Args As IDictionary(Of String, Object)
+
+            ''' <summary>
+            ''' Create a new I/O message
+            ''' </summary>
+            Public Sub New(message As eMessage, content As String, Optional ByVal args As IDictionary(Of String, Object) = Nothing)
+                Me.Message = message
+                Me.Content = content
+                If args Is Nothing Then
+                    Me.Args = New Dictionary(Of String, Object)
+                Else
+                    Me.Args = args
+                End If
+            End Sub
+        End Class
 #End Region
 
 #Region "Declarations"
@@ -1045,11 +1102,63 @@ Namespace Evaluator
 
 #Region "Events"
         ''' <summary>
+        ''' Delegate for event raised when any async evauation is complete.
+        ''' </summary>
+        Public Delegate Sub EvalCompleteDelegate(sender As Object, result As Object)
+
+        ''' <summary>
         ''' Event raised when any async evauation is complete.
         ''' </summary>
         ''' <param name="sender">The evaluator that sent this result.</param>
         ''' <param name="result">The value of the result</param>
-        Public Event EvalComplete(sender As Object, result As Object)
+        Public Event EvalComplete As EvalCompleteDelegate
+
+        ''' <summary>
+        ''' Delegate for thread events
+        ''' </summary>
+        Public Delegate Sub ThreadDelegate(sender As Object, e As CantusThreadEventArgs)
+
+        ''' <summary>
+        ''' Event raised when a new thread is started
+        ''' </summary>
+        Public Event ThreadStarted As ThreadDelegate
+
+        ''' <summary>
+        ''' Event raised when a thread is killed
+        ''' </summary>
+        Public Event ThreadKilled As ThreadDelegate
+
+        ''' <summary>
+        ''' Raised when Cantus needs to read input input from the console. Handle to use I/O in GUI applications
+        ''' </summary>
+        Public Custom Event ReadInput As InternalFunctions.ReadInputDelegate
+            AddHandler(value As InternalFunctions.ReadInputDelegate)
+                AddHandler InternalFunctions.ReadInput, value
+            End AddHandler
+            RemoveHandler(value As InternalFunctions.ReadInputDelegate)
+                RemoveHandler InternalFunctions.ReadInput, value
+            End RemoveHandler
+            RaiseEvent(sender As Object, e As CantusIOEventArgs, ByRef [return] As Object)
+                Throw New EvaluatorException("This event is a wrapper for an inner event in InternalFunctions" &
+                                             " and may not be raised here.")
+            End RaiseEvent
+        End Event
+
+        ''' <summary>
+        ''' Raised when Cantus needs to read input input from the console. Handle to use I/O in GUI applications
+        ''' </summary>
+        Public Custom Event WriteOutput As InternalFunctions.WriteOutputDelegate
+            AddHandler(value As InternalFunctions.WriteOutputDelegate)
+                AddHandler InternalFunctions.WriteOutput, value
+            End AddHandler
+            RemoveHandler(value As InternalFunctions.WriteOutputDelegate)
+                RemoveHandler InternalFunctions.WriteOutput, value
+            End RemoveHandler
+            RaiseEvent(sender As Object, e As CantusIOEventArgs)
+                Throw New EvaluatorException("This event is a wrapper for an inner event in InternalFunctions" &
+                                             " and may not be raised here.")
+            End RaiseEvent
+        End Event
 #End Region
 
 #Region "Evaluator Constants"
@@ -1368,6 +1477,7 @@ Namespace Evaluator
             ManageThreads()
             Me._threads.Add(th)
             th.Start()
+            RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
         End Sub
 
         ''' <summary>
@@ -1437,12 +1547,25 @@ Namespace Evaluator
 
                         ' multiline/triple quoted string
                         Dim tripleQuote As String = ControlChars.Quote & ControlChars.Quote & ControlChars.Quote
-                        If fullLine.TrimEnd.Contains(tripleQuote) AndAlso
+                        If fullLine.Contains(tripleQuote) AndAlso
                             InternalFunctions.Count(fullLine, tripleQuote) Mod 2 = 1 Then
                             lineNum += 1
 
                             While lineNum < lines.Count
                                 fullLine = fullLine & vbNewLine & lines(lineNum)
+                                If lines(lineNum).Contains(tripleQuote) Then Exit While
+                                lineNum += 1
+                            End While
+                        End If
+
+                        tripleQuote = "'''"
+                        If fullLine.Contains(tripleQuote) AndAlso
+                            InternalFunctions.Count(fullLine, tripleQuote) Mod 2 = 1 Then
+                            lineNum += 1
+
+                            While lineNum < lines.Count
+                                fullLine = fullLine & vbNewLine & lines(lineNum)
+                                If lines(lineNum).Contains(tripleQuote) Then Exit While
                                 lineNum += 1
                             End While
                         End If
@@ -1643,6 +1766,7 @@ Namespace Evaluator
                 End If
 
             Catch ex As ThreadAbortException ' do nothing
+                Throw ex
             Catch ex As Exception
                 Throw New EvaluatorException(ex.Message, _curLine + 1)
             End Try
@@ -1670,6 +1794,7 @@ Namespace Evaluator
             ManageThreads()
             Me._threads.Add(th)
             th.Start()
+            RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
         End Sub
 
         ''' <summary>
@@ -1721,6 +1846,7 @@ Namespace Evaluator
             ManageThreads()
             Me._threads.Add(th)
             th.Start()
+            RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
         End Sub
 
         ''' <summary>
@@ -1789,6 +1915,7 @@ Namespace Evaluator
             ManageThreads()
             Me._threads.Add(th)
             th.Start()
+            RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
         End Sub
 
         ''' <summary>
@@ -2229,7 +2356,7 @@ Namespace Evaluator
                         baseObj = GetVariableRef(baseTxt)
                     Catch
                     End Try
-                    Dim br As ObjectTypes.Reference = DirectCast(baseObj, ObjectTypes.Reference)
+                    Dim br As Reference = DirectCast(baseObj, ObjectTypes.Reference)
                     Try
                         If baseObj Is Nothing OrElse (TypeOf br.Resolve() Is Double AndAlso Double.IsNaN(CDbl(br.Resolve())) OrElse
                             TypeOf br.Resolve() Is BigDecimal AndAlso CType(br.Resolve(), BigDecimal).IsUndefined) Then
@@ -2419,7 +2546,7 @@ Namespace Evaluator
                     End If
                     Return lst
 
-                Else ' internal functions defined in EvalFunctions
+                ElseIf HasFunction(fn) ' internal functions defined in EvalFunctions
                     lst.Add(DetectType(ExecInternalFunction(fn, argLst), True))
                     Return lst
                 End If
@@ -2622,9 +2749,9 @@ Namespace Evaluator
                             Variables(s & SCOPE_SEP & temp).Modifiers.Contains("private") Then Continue For
                     If scope <> s AndAlso IsParentScopeOf(s, scope) Then
                         SetVariable(temp, Variables(s & SCOPE_SEP & temp).Reference)
-                        Return Variables(scope & SCOPE_SEP & temp).Reference
+                        Return Variables(scope & SCOPE_SEP & temp).Reference.Resolve()
                     Else
-                        Return Variables(s & SCOPE_SEP & temp).Reference
+                        Return Variables(s & SCOPE_SEP & temp).Reference.Resolve()
                     End If
                 End If
             Next
@@ -3210,7 +3337,7 @@ Namespace Evaluator
         ''' <returns></returns>
         Public Function ToScript() As String
             Dim serialized As New StringBuilder()
-            serialized.AppendLine("# Cantus " & Application.ProductVersion &
+            serialized.AppendLine("# Cantus " & InternalFunctions.Ver() &
                                   " auto-generated initialization script")
             serialized.AppendLine("# Use caution when modifying manually").Append(vbNewLine)
             serialized.AppendLine("# Modes")
@@ -3454,9 +3581,11 @@ Namespace Evaluator
             If Me._threadCt > MAX_THREADS Then
                 Try
                     If Thread.CurrentThread.ManagedThreadId <> Me._threads(0).ManagedThreadId Then
+                        Dim thid As Integer = Me._threads(0).ManagedThreadId
                         Me._threads(0).Abort()
                         Me._threads.RemoveAt(0)
                         _threadCt -= 1
+                        RaiseEvent ThreadKilled(Me, New CantusThreadEventArgs(thid))
                     End If
                 Catch
                 End Try
@@ -3472,9 +3601,11 @@ Namespace Evaluator
             For i As Integer = 0 To Me._threads.Count - 1
                 If Me._threads(i).ManagedThreadId = haveMercy Then Continue For
                 Try
+                    Dim thid As Integer = Me._threads(i).ManagedThreadId
                     Me._threads(i).Abort()
                     Me._threads.RemoveAt(i)
                     i -= 1
+                    RaiseEvent ThreadKilled(Me, New CantusThreadEventArgs(thid))
                 Catch
                 End Try
             Next

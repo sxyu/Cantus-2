@@ -1,7 +1,7 @@
 ﻿Namespace UI
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-    Partial Class FrmViewer
-        Inherits System.Windows.Forms.Form
+    Partial Class Viewer
+        Inherits System.Windows.Forms.UserControl
 
         'Form overrides dispose to clean up the component list.
         <System.Diagnostics.DebuggerNonUserCode()>
@@ -24,13 +24,15 @@
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
-            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmViewer))
+            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Viewer))
             Me.lbTitle = New System.Windows.Forms.Label()
             Me.btnMin = New System.Windows.Forms.Button()
             Me.btnLog = New System.Windows.Forms.Button()
             Me.btnGraph = New System.Windows.Forms.Button()
             Me.pnl = New System.Windows.Forms.Panel()
             Me.tt = New System.Windows.Forms.ToolTip(Me.components)
+            Me.PbLogo = New System.Windows.Forms.PictureBox()
+            CType(Me.PbLogo, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SuspendLayout()
             '
             'lbTitle
@@ -38,10 +40,10 @@
             Me.lbTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lbTitle.AutoSize = True
             Me.lbTitle.ForeColor = System.Drawing.Color.LightGray
-            Me.lbTitle.Location = New System.Drawing.Point(460, 14)
+            Me.lbTitle.Location = New System.Drawing.Point(460, 15)
             Me.lbTitle.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
             Me.lbTitle.Name = "lbTitle"
-            Me.lbTitle.Size = New System.Drawing.Size(91, 20)
+            Me.lbTitle.Size = New System.Drawing.Size(96, 20)
             Me.lbTitle.TabIndex = 0
             Me.lbTitle.Text = "Cantus {VER}"
             '
@@ -78,10 +80,10 @@
             Me.btnLog.Location = New System.Drawing.Point(1, 0)
             Me.btnLog.Name = "btnLog"
             Me.btnLog.Padding = New System.Windows.Forms.Padding(0, 0, 10, 0)
-            Me.btnLog.Size = New System.Drawing.Size(151, 48)
+            Me.btnLog.Size = New System.Drawing.Size(135, 48)
             Me.btnLog.TabIndex = 1
             Me.btnLog.Tag = "log"
-            Me.btnLog.Text = "My Results"
+            Me.btnLog.Text = "Console"
             Me.btnLog.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             Me.tt.SetToolTip(Me.btnLog, "See saved results (Alt+R)")
             Me.btnLog.UseVisualStyleBackColor = False
@@ -97,7 +99,7 @@
             Me.btnGraph.ForeColor = System.Drawing.Color.White
             Me.btnGraph.Image = CType(resources.GetObject("btnGraph.Image"), System.Drawing.Image)
             Me.btnGraph.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-            Me.btnGraph.Location = New System.Drawing.Point(153, 1)
+            Me.btnGraph.Location = New System.Drawing.Point(137, 1)
             Me.btnGraph.Name = "btnGraph"
             Me.btnGraph.Padding = New System.Windows.Forms.Padding(0, 0, 10, 0)
             Me.btnGraph.Size = New System.Drawing.Size(124, 48)
@@ -119,25 +121,33 @@
             Me.pnl.Size = New System.Drawing.Size(620, 650)
             Me.pnl.TabIndex = 0
             '
-            'FrmViewer
+            'PbLogo
+            '
+            Me.PbLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+            Me.PbLogo.Image = Global.Cantus.My.Resources.Resources.Cantus_Logo
+            Me.PbLogo.Location = New System.Drawing.Point(424, 10)
+            Me.PbLogo.Name = "PbLogo"
+            Me.PbLogo.Size = New System.Drawing.Size(29, 29)
+            Me.PbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+            Me.PbLogo.TabIndex = 15
+            Me.PbLogo.TabStop = False
+            '
+            'Viewer
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
-            Me.ClientSize = New System.Drawing.Size(621, 700)
             Me.Controls.Add(Me.pnl)
             Me.Controls.Add(Me.btnGraph)
             Me.Controls.Add(Me.btnLog)
             Me.Controls.Add(Me.btnMin)
             Me.Controls.Add(Me.lbTitle)
-            Me.Font = New System.Drawing.Font("Segoe UI Semilight", 11.0!)
-            Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+            Me.Controls.Add(Me.PbLogo)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-            Me.Name = "FrmViewer"
-            Me.ShowInTaskbar = False
-            Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
-            Me.Text = "My Results - Cantus"
-            Me.TopMost = True
+            Me.Name = "Viewer"
+            Me.Size = New System.Drawing.Size(621, 700)
+            CType(Me.PbLogo, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
             Me.PerformLayout()
 
@@ -149,5 +159,6 @@
         Friend WithEvents btnGraph As Button
         Friend WithEvents pnl As Panel
         Friend WithEvents tt As ToolTip
+        Friend WithEvents PbLogo As PictureBox
     End Class
 End Namespace

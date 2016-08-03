@@ -27,6 +27,31 @@ Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resourc
 *********************************************************************************************
 What's new
 *********************************************************************************************
+-New logo (designed by myself)!
+-The window is no longer always on top, so you can move things above Cantus while working
+-All of the application now uses Open Sans (embedded)
+-Added a number of animations to the UI
+
+-The translucency button (top right, left of minimize) now cycles 
+  3 different translucencies -- Opaque, slightly translucent, almost transparent
+
+-Note you can no longer snap the keyboard or the console -- but you can collapse the keyboard
+  by pressing "x" on the top right
+
+-PREVIOUSLY STANDARD FUNCTIONS ALERT() INPUT() HAVE BEEN REMOVED. 
+  Input can now only be done with 
+    read() readline() readchar() confirm() yesno()
+  And output only print() and printline() 
+  When no console is available the Cantus evaluator will ask the GUI for input,
+    prompting the user if needed.
+
+-Improved graphing mode so that it is almost as good as it was initially
+  (before I made the evaluator so much more complicated/slower)
+-Slight speed improvement
+-More minor fixes
+*********************************************************************************************
+New from 2.2.0.91
+*********************************************************************************************
 -New window (snappable to the editor) on the left side
   -My Results: Store important answers here. 
    Press Alt+Enter to evaluate the current expression and write it to this window

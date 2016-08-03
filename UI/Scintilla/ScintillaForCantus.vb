@@ -1,4 +1,5 @@
-﻿Imports System.Text.RegularExpressions
+﻿Imports System.Text
+Imports System.Text.RegularExpressions
 Imports Cantus.Evaluator.CommonTypes
 Imports ScintillaNET
 
@@ -80,21 +81,26 @@ Namespace UI.ScintillaForCantus
         Public Sub Style(scintilla As Scintilla, startPos As Integer, endPos As Integer)
             ' Back up to the line start
             Dim line As Integer = scintilla.LineFromPosition(startPos)
-            Dim lineText As String = scintilla.Lines(line).Text
+            Dim lineTextSb As New StringBuilder(scintilla.Lines(line).Text)
             Dim initPos As Integer = startPos
             Dim styleText As String = scintilla.GetTextRange(startPos, endPos)
 
             Dim uline As Integer = line
             While uline > 0 AndAlso scintilla.Lines(uline - 1).Text.EndsWith(" _")
                 uline -= 1
-                lineText = scintilla.Lines(uline).Text.Remove(scintilla.Lines(uline).Text.Length - 2) & lineText
+                lineTextSb.Insert(0, scintilla.Lines(uline).Text.Remove(scintilla.Lines(uline).Text.Length - 2))
             End While
+
+            Dim lineText As String = lineTextSb.ToString()
 
             Dim state As Integer = eState.unknown
 
             Dim tripleQuote As String = ControlChars.Quote & ControlChars.Quote & ControlChars.Quote
+            Dim upperText As String = scintilla.GetTextRange(0, scintilla.Lines(line).Position)
             If Evaluator.Globals.Evaluator.InternalFunctions.Count(
-                scintilla.GetTextRange(0, scintilla.Lines(line).Position), tripleQuote) Mod 2 = 1 Then
+                upperText, tripleQuote) Mod 2 = 1 OrElse
+                Evaluator.Globals.Evaluator.InternalFunctions.Count(
+                   upperText, "'''") Mod 2 = 1 Then
                 state = eState.string
             End If
 
@@ -183,7 +189,7 @@ Namespace UI.ScintillaForCantus
                                 Dim restOfLine As String = lineText
                                 If lineText.Length > startPos + 1 Then restOfLine = lineText.Remove(startPos + 1).Trim()
 
-                                If not restOfLine.Contains("=") Then
+                                If Not restOfLine.Contains("=") Then
                                     Try
                                         Dim res As Object = Evaluator.Globals.Evaluator.EvalExprRaw(identifier, True)
                                         If (Not TypeOf res Is Double OrElse Not Double.IsNaN(CDbl(res))) AndAlso
