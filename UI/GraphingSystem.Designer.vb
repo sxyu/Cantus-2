@@ -9,7 +9,7 @@
             Try
                 _ended = True
                 _buffer.Dispose()
-                My.Settings.GrpSplitDistance = Me.Height - split.SplitterDistance
+                My.Settings.GraphSplitter = Me.Height - split.SplitterDistance
                 My.Settings.Save()
 
                 If disposing AndAlso components IsNot Nothing Then

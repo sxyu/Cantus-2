@@ -57,108 +57,48 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property LeftKbdPos() As String
+        Public Property Position() As String
             Get
-                Return CType(Me("LeftKbdPos"),String)
+                Return CType(Me("Position"),String)
             End Get
             Set
-                Me("LeftKbdPos") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property RightKbdPos() As String
-            Get
-                Return CType(Me("RightKbdPos"),String)
-            End Get
-            Set
-                Me("RightKbdPos") = value
+                Me("Position") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property OskLock() As Boolean
+        Public Property ShowKeyboard() As Boolean
             Get
-                Return CType(Me("OskLock"),Boolean)
+                Return CType(Me("ShowKeyboard"),Boolean)
             End Get
             Set
-                Me("OskLock") = value
+                Me("ShowKeyboard") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property ROskSnap() As Boolean
+        Public Property NewInstall() As Boolean
             Get
-                Return CType(Me("ROskSnap"),Boolean)
+                Return CType(Me("NewInstall"),Boolean)
             End Get
             Set
-                Me("ROskSnap") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property LOskSnap() As Boolean
-            Get
-                Return CType(Me("LOskSnap"),Boolean)
-            End Get
-            Set
-                Me("LOskSnap") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property MainPos() As String
-            Get
-                Return CType(Me("MainPos"),String)
-            End Get
-            Set
-                Me("MainPos") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property ShowKbd() As Boolean
-            Get
-                Return CType(Me("ShowKbd"),Boolean)
-            End Get
-            Set
-                Me("ShowKbd") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property ReqUpgrade() As Boolean
-            Get
-                Return CType(Me("ReqUpgrade"),Boolean)
-            End Get
-            Set
-                Me("ReqUpgrade") = value
+                Me("NewInstall") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("98")>  _
-        Public Property GrpSplitDistance() As Integer
+        Public Property GraphSplitter() As Integer
             Get
-                Return CType(Me("GrpSplitDistance"),Integer)
+                Return CType(Me("GraphSplitter"),Integer)
             End Get
             Set
-                Me("GrpSplitDistance") = value
+                Me("GraphSplitter") = value
             End Set
         End Property
         
@@ -177,36 +117,12 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property State() As String
+        Public Property ErrorSaveState() As String
             Get
-                Return CType(Me("State"),String)
+                Return CType(Me("ErrorSaveState"),String)
             End Get
             Set
-                Me("State") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property ViewerPos() As String
-            Get
-                Return CType(Me("ViewerPos"),String)
-            End Get
-            Set
-                Me("ViewerPos") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property VSnap() As Boolean
-            Get
-                Return CType(Me("VSnap"),Boolean)
-            End Get
-            Set
-                Me("VSnap") = value
+                Me("ErrorSaveState") = value
             End Set
         End Property
     End Class

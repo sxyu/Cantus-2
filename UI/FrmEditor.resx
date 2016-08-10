@@ -1140,6 +1140,25 @@
         aZt8kpG0qcDgD+7xnGc570UVlIDvrOWGaLdDtK99v9am70UVFtCHuAGTUirg80UVA4khFFFFQSf/2Q==
 </value>
   </data>
+  <metadata name="TTLetters.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>117, 17</value>
+  </metadata>
+  <data name="BtnSigFigs.ToolTip" xml:space="preserve">
+    <value>Toggle sig fig mode (Ctrl+Alt+F)
+
+On (orange): Automatically detects and rounds 
+                        numbers to sig figs when applicable
+Off (gray): Uses full precision during calculations
+
+Tips: 
+-Use sf(number,figures) to set the number of sig figs
+   of a number manually
+-Use nosf(number) to make a number infinitely precise
+-Use getsf(number) to see the number of sif figs
+   assigned to the number
+-This uses even/odd rounding 
+    (when last digit is 5, rounds up if odd, down if even)</value>
+  </data>
   <data name="PbSettingsLogo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADUAAAAvCAYAAABDq4KNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -1150,9 +1169,6 @@
         yAuv0p7otEHU2Kokzh+2d0nrfthfDwAAAAAAgBBedOuS0y+VZIgAAAAASUVORK5CYII=
 </value>
   </data>
-  <metadata name="TTLetters.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>117, 17</value>
-  </metadata>
   <data name="BtnExplicit.ToolTip" xml:space="preserve">
     <value>Toggle explicit mode (Ctrl+Alt+T)
 On (orange): Variables must be declared 

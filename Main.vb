@@ -62,13 +62,13 @@ Namespace UI
         Private Sub EvalWrite(script As String, Optional ByVal path As String = "", Optional ByVal clone As Boolean = False)
             Try
                 Dim res As StatementRegistar.StatementResult =
-                            DirectCast(If(clone, Globals.Evaluator.DeepCopy(), Globals.Evaluator).
+                            DirectCast(If(clone, Globals.RootEvaluator.DeepCopy(), Globals.RootEvaluator).
                                          EvalRaw(script, noSaveAns:=True, internal:=True), StatementRegistar.StatementResult)
 
                 Console.WriteLine()
                 If res.Code = StatementRegistar.StatementResult.ExecCode.return Then
                     ' prints to the user the result only if a value is returned
-                    Console.WriteLine(Globals.Evaluator.InternalFunctions.O(res.Value))
+                    Console.WriteLine(Globals.RootEvaluator.InternalFunctions.O(res.Value))
                 ElseIf res.Code = StatementRegistar.StatementResult.ExecCode.resume
                     ' else if no result is returned we tell the user this executed successfully
                     Console.WriteLine("Finished executing " & IO.Path.GetFileName(path) & ", 0 errors.")
@@ -104,15 +104,16 @@ Namespace UI
             If IO.Directory.Exists("plugin") Then initScripts.AddRange(
                 IO.Directory.GetFiles("plugin", "*.can", IO.SearchOption.AllDirectories))
 
+            ' initialization files: init.can and init/* ran in root scope on startup
             If IO.File.Exists("init.can") Then initScripts.Add("init.can")
-
             If IO.Directory.Exists("init") Then initScripts.AddRange(
                 IO.Directory.GetFiles("init", "*.can", IO.SearchOption.AllDirectories))
 
             For Each file As String In initScripts
                 Try
                     ' Evaluate each file. On error, ignore.
-                    Globals.Evaluator.Load(file, file = "init.can")
+                    Globals.RootEvaluator.Load(file, file = "init.can" OrElse file.ToLower().
+                                           StartsWith("init" & IO.Path.DirectorySeparatorChar))
                 Catch ex As Exception
                     If file = "init.can" Then
                         MsgBox("Error occurred while processing init.can." & vbNewLine & "Variables and functions may not load." &
@@ -121,7 +122,7 @@ Namespace UI
                         MsgBox(ex.ToString)
                     Else
                         MsgBox("Error occurred while loading ''" & file.Replace(IO.Path.DirectorySeparatorChar,
-                                                                                Evaluator.Evaluator.SCOPE_SEP).
+                                                                                Evaluator.CantusEvaluator.SCOPE_SEP).
                                Remove(file.LastIndexOf(".")) & "''" & vbNewLine & ex.Message,
                                MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "Initialization Error")
                     End If
@@ -129,12 +130,12 @@ Namespace UI
             Next
 
             ' if init.can not found, restore constants and try restoring from Settings.State
-            If Not String.IsNullOrWhiteSpace(My.Settings.State) Then
+            If Not String.IsNullOrWhiteSpace(My.Settings.ErrorSaveState) Then
                 Try
-                    Globals.Evaluator.Eval(My.Settings.State)
+                    Globals.RootEvaluator.Eval(My.Settings.ErrorSaveState)
                 Catch
                     ' clear the state if it is invalid
-                    My.Settings.State = ""
+                    My.Settings.ErrorSaveState = ""
                     My.Settings.Save()
                 End Try
             End If
@@ -148,13 +149,50 @@ Namespace UI
             For i As Integer = 1 To args.Length - 1
 
                 Dim s As String = args(i)
-                If IO.File.Exists(s) Then ' run files
-                    ' for first file, open console and write welcome message
-                    If Not runFiles Then
-                        AttachConsole(-1)
-                        runFiles = True
-                        PrintWelcomeMessage()
-                    End If
+                If s = "-i" OrElse s = "--input" Then
+                    AttachConsole(-1)
+                    runFiles = True
+                    PrintWelcomeMessage()
+                ElseIf s = "-h" OrElse s = "--help" Then
+                    PrintWelcomeMessage()
+                    Console.WriteLine("Available commands:")
+                    Console.WriteLine("-i --input [file1] [file2]..." & vbTab & "Run scripts at the specified paths")
+                    Console.WriteLine()
+                    Console.WriteLine("--sigfigs/--nosigfigx        " & vbTab & "SigFig mode on/off")
+                    Console.WriteLine("--explicit/--implicit        " & vbTab & "Explicit mode on/off")
+                    Console.WriteLine("--anglerepr=[deg/rad/grad]   " & vbTab & "Set angle representation")
+                    Console.WriteLine("--output=[raw/math/sci]      " & vbTab & "Set output format")
+                    Console.WriteLine("--output=[raw/math/sci]      " & vbTab & "Set output format")
+                    Console.WriteLine()
+                    Console.WriteLine("-g --graphing                " & vbTab & "Default graphing view")
+                    Console.WriteLine("-d [text] --default [text]   " & vbTab &
+                                      "Set initial editor/graphing view editor text (depending on -g)")
+                    Console.WriteLine(" [file]                      " & vbTab & "Open the file in the editor")
+                    Console.WriteLine()
+                    Console.WriteLine("-h --help                    " & vbTab & "Show this help")
+                    FreeConsole()
+                    SendKeys.SendWait("{ENTER}")
+                    Exit Sub
+                ElseIf s = "--sigfigs" Then
+                    Globals.RootEvaluator.SignificantMode = True
+                ElseIf s = "--nosigfigs" Then
+                    Globals.RootEvaluator.SignificantMode = False
+                ElseIf s = "--explicit" Then
+                    Globals.RootEvaluator.ExplicitMode = True
+                ElseIf s = "--implicit" Then
+                    Globals.RootEvaluator.ExplicitMode = False
+                ElseIf s = "--anglerepr=rad" Then
+                    Globals.RootEvaluator.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Radian
+                ElseIf s = "--anglerepr=deg" Then
+                    Globals.RootEvaluator.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree
+                ElseIf s = "--anglerepr=grad" Then
+                    Globals.RootEvaluator.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Gradian
+                ElseIf s = "--output=raw" Then
+                    Globals.RootEvaluator.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Raw
+                ElseIf s = "--output=math" Then
+                    Globals.RootEvaluator.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Math
+                ElseIf s = "--output=sci" Then
+                    Globals.RootEvaluator.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific
                 End If
 
                 EvalWrite(IO.File.ReadAllText(s), s, True)

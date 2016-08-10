@@ -1,6 +1,6 @@
 ﻿Imports System.Text
 Imports Cantus.Evaluator
-Imports Cantus.Evaluator.Evaluator
+Imports Cantus.Evaluator.CantusEvaluator
 
 Namespace UI.Dialogs
     ''' <summary>
@@ -27,7 +27,7 @@ Namespace UI.Dialogs
             For Each i As Reflection.MethodInfo In info
                 Try
                     ' regex filter
-                    If Not Globals.Evaluator.InternalFunctions.Contains(ROOT_NAMESPACE & SCOPE_SEP & i.Name.ToLowerInvariant(),
+                    If Not Globals.RootEvaluator.InternalFunctions.Contains(ROOT_NAMESPACE & SCOPE_SEP & i.Name.ToLowerInvariant(),
                                                                     filter.ToLowerInvariant()) Then Continue For
                 Catch
                 End Try
@@ -103,18 +103,18 @@ Namespace UI.Dialogs
             Next
 
             ' add user functions
-            For Each uf As UserFunction In Globals.Evaluator.UserFunctions.Values
+            For Each uf As UserFunction In Globals.RootEvaluator.UserFunctions.Values
                 Try
                     If uf.Modifiers.Contains("private") Then Continue For ' ignore private methods
 
                     ' regex filter
-                    If Not Globals.Evaluator.InternalFunctions.Contains(uf.FullName.ToLowerInvariant(),
+                    If Not Globals.RootEvaluator.InternalFunctions.Contains(uf.FullName.ToLowerInvariant(),
                                                                 filter.ToLowerInvariant()) Then Continue For
                 Catch
                 End Try
 
                 Dim name As New StringBuilder(uf.FullName)
-                Dim tag As New StringBuilder(RemoveRedundantScope(uf.FullName, Globals.Evaluator.Scope))
+                Dim tag As New StringBuilder(RemoveRedundantScope(uf.FullName, Globals.RootEvaluator.Scope))
                 Dim types As New StringBuilder()
 
                 Dim init As Boolean = True
@@ -147,7 +147,7 @@ Namespace UI.Dialogs
 
                 lvI.SubItems.Add("0") ' order at beginning
 
-                If Globals.Evaluator.IsExternalScope(uf.DeclaringScope) Then
+                If Globals.RootEvaluator.IsExternalScope(uf.DeclaringScope) Then
                     lvI.BackColor = Color.FromArgb(35, 35, 35) ' color for user functions
                 Else
                     lvI.BackColor = Color.FromArgb(50, 50, 35) ' color for plugins

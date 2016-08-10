@@ -7,16 +7,16 @@ Imports System.Security.Cryptography
 Imports System.IO
 Imports System.Threading
 Imports System.Text.RegularExpressions
-Imports Cantus.Evaluator.Evaluator
+Imports Cantus.Evaluator.CantusEvaluator
 Imports Cantus.Evaluator.ObjectTypes
-Imports Cantus.Evaluator.Evaluator.CantusIOEventArgs
+Imports Cantus.Evaluator.CantusEvaluator.CantusIOEventArgs
 
 Namespace Evaluator
     ' Define functions here (name is case insensitive)
     ' All public functions are directly accessible when evaluating an expressionession (though may be overrided by user functions)
     ' All private and friend functions are hidden
     Public NotInheritable Class InternalFunctions
-        Private _eval As Evaluator
+        Private _eval As CantusEvaluator
 
         ''' <summary>
         ''' Raised when Cantus needs to read input input from the console. Handle to use I/O in GUI applications
@@ -36,7 +36,7 @@ Namespace Evaluator
         ''' </summary>
         Public Event WriteOutput As WriteOutputDelegate
 
-        Public Sub New(parent As Evaluator)
+        Public Sub New(parent As CantusEvaluator)
             Me._eval = parent
         End Sub
 
@@ -60,7 +60,7 @@ Namespace Evaluator
         ''' Reload all constants, clears all variables and userfunctions, and clears imports
         ''' </summary>
         Public Sub _AllClear()
-            _eval.Clear()
+            _eval.ClearEverything()
             _eval.ReloadDefault()
         End Sub
 
@@ -148,6 +148,16 @@ Namespace Evaluator
         End Function
 
         ''' <summary>
+        ''' Get or set the significant mode of the evaluator
+        ''' </summary>
+        Public Function _SigFigs(Optional ByVal val As Boolean? = Nothing) As Boolean
+            If Not val Is Nothing Then
+                _eval.SignificantMode = CBool(val)
+            End If
+            Return _eval.SignificantMode
+        End Function
+
+        ''' <summary>
         ''' Get the scope
         ''' </summary>
         Public Function _Scope() As String
@@ -189,7 +199,7 @@ Namespace Evaluator
                 Dim th As New Thread(Sub()
                                          Try
                                              result = ObjectTypes.StrDetectType(My.Computer.Clipboard.GetText(),
-                                                                           _eval, True, False).GetValue()
+                                                                           _eval, True, False, _eval.SignificantMode).GetValue()
                                          Catch
                                          End Try
                                      End Sub)
@@ -239,11 +249,11 @@ Namespace Evaluator
         Public Function Sin(ByVal x As Object) As Object
             If TypeOf x Is Double Then
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return SinD(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return SinR(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return SinG(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -257,11 +267,11 @@ Namespace Evaluator
         Public Function Cos(ByVal x As Object) As Object
             If TypeOf x Is Double Then
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return CosD(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return CosR(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return CosG(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -275,11 +285,11 @@ Namespace Evaluator
         Public Function Tan(ByVal x As Object) As Object
             If TypeOf x Is Double Then
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return TanD(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return TanR(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return TanG(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -385,11 +395,11 @@ Namespace Evaluator
                 Return Numerics.Complex.Asin(CType(x, Numerics.Complex))
             ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return Asind(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return Asinr(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return Asing(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -404,11 +414,11 @@ Namespace Evaluator
                 Return Numerics.Complex.Acos(CType(x, Numerics.Complex))
             ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return Acosd(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return Acosr(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return Acosg(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -443,11 +453,11 @@ Namespace Evaluator
                 Return Numerics.Complex.Atan(CType(x, Numerics.Complex))
             ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return Atand(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return Atanr(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return Atang(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -471,11 +481,11 @@ Namespace Evaluator
                 Return Numerics.Complex.Sinh(CType(x, Numerics.Complex))
             ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return SinhD(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return SinhR(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return SinhG(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -490,11 +500,11 @@ Namespace Evaluator
                 Return Numerics.Complex.Tanh(CType(x, Numerics.Complex))
             ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return TanhD(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return TanhR(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return TanhG(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -509,11 +519,11 @@ Namespace Evaluator
                 Return Numerics.Complex.Cosh(CType(x, Numerics.Complex))
             ElseIf TypeOf x Is Double
                 Select Case _eval.AngleMode
-                    Case Evaluator.eAngleRepresentation.Degree
+                    Case CantusEvaluator.eAngleRepresentation.Degree
                         Return CoshD(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Radian
+                    Case CantusEvaluator.eAngleRepresentation.Radian
                         Return CoshR(CDbl(x))
-                    Case Evaluator.eAngleRepresentation.Gradian
+                    Case CantusEvaluator.eAngleRepresentation.Gradian
                         Return CoshG(CDbl(x))
                     Case Else
                         Return Double.NaN
@@ -569,6 +579,8 @@ Namespace Evaluator
         Public Function Pow(ByVal base As Object, ByVal power As Object) As Object
             If TypeOf base Is Double AndAlso TypeOf power Is Double Then
                 Return BigDecimal.Pow(CDbl(base), CDbl(power))
+            ElseIf TypeOf base Is BigDecimal AndAlso TypeOf power Is BigDecimal Then
+                Return BigDecimal.Pow(DirectCast(base, BigDecimal), DirectCast(power, BigDecimal))
 
             ElseIf TypeOf base Is Numerics.Complex
                 If TypeOf power Is BigDecimal OrElse TypeOf power Is Double Then power = New Numerics.Complex(CDbl(power), 0)
@@ -839,12 +851,73 @@ Namespace Evaluator
         End Function
 
         ''' <summary>
+        ''' Set the significance of the specified number to the speciied number of significant figures, without rounding it
+        ''' It will be rounded automatically on output in sigfig mode.
+        ''' </summary>
+        Public Function SF(ByVal value As BigDecimal, Optional ByVal sigfigs As Double = 1) As BigDecimal
+            value.SigFigs = Int(sigfigs)
+            Return value
+        End Function
+
+        ''' <summary>
+        ''' Make the specified number "infinitely precise" when calculating with sig figs
+        ''' </summary>
+        Public Function NoSF(ByVal value As BigDecimal) As BigDecimal
+            value.SigFigs = Integer.MaxValue
+            Return value
+        End Function
+
+        ''' <summary>
         ''' Round the number to the specified number of significant figures
         ''' </summary>
-        Public Function SigFig(ByVal value As Double, Optional ByVal digits As Double = 1) As Double
-            Return Math.Sign(value) *
-                Math.Round(Math.Abs(value) / 10 ^ Math.Ceiling(Math.Log10(Math.Abs(value))),
-                           Int(digits)) * 10 ^ Math.Ceiling(Math.Log10(Math.Abs(value)))
+        Public Function RoundSF(ByVal value As Double, Optional ByVal sigfigs As Double = 1) As BigDecimal
+            Return New BigDecimal(value, sigFigs:=Int(sigfigs)).Truncate(Int(sigfigs))
+        End Function
+
+        ''' <summary>
+        ''' Get the precomputed number of sig figs in a number
+        ''' </summary>
+        Public Function GetSF(ByVal value As BigDecimal) As Double
+            Dim sf As Integer = value.SigFigs
+            If sf = Integer.MaxValue Then Return Double.PositiveInfinity
+            Return sf
+        End Function
+
+        ''' <summary>
+        ''' Get the lowest sig figs in a number, using the precomputed sig fig number
+        ''' </summary>
+        Public Function GetLeastSF(ByVal value As BigDecimal) As Double
+            Return value.LeastSigFig
+        End Function
+
+        ''' <summary>
+        ''' Count the number of sig figs in a number
+        ''' Important note: 0.0 is seen as 2 sig figs
+        ''' </summary>
+        Public Function CountSigFigs(ByVal textRepr As String) As Double
+            Dim sep As String = Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
+            If Not textRepr.Contains(sep) AndAlso Not textRepr.EndsWith("0") Then textRepr &= sep
+
+            Dim sigCt As Integer = 0
+            Dim metDP As Boolean = False
+            Dim start As Integer = 0
+            While start < textRepr.Length AndAlso (textRepr(start) = "-" OrElse textRepr(start) = "0")
+                start += 1
+            End While
+            For i As Integer = start To textRepr.Count - 1
+                Dim c As Char = textRepr(i)
+                If Char.IsDigit(c) Then
+                    If metDP OrElse c <> "0"c Then sigCt += 1
+                ElseIf c = sep ' decimal point
+                    If metDP Then Throw New MathException("More than one decimal point found")
+                    sigCt = i - start + If(start = i, 1, 0)
+                    metDP = True
+                Else
+                    Throw New SyntaxException("Invalid number: numbers may contain only digits and at most one decimal point")
+                End If
+            Next
+
+            Return sigCt
         End Function
 
         ''' <summary>
@@ -906,8 +979,19 @@ Namespace Evaluator
         ''' Get the base [base] logarithm of a number. If base is not specified, defaults to 10.
         ''' </summary>
         Public Function Log(ByVal value As Object, Optional ByVal base As Object = 10) As Object
+            If TypeOf base Is BigDecimal Then base = CDbl(CType(base, BigDecimal))
             If TypeOf value Is Double Then
                 Return Math.Log(CDbl(value), CDbl(base))
+            ElseIf TypeOf value Is BigDecimal Then
+                Dim orig As BigDecimal = DirectCast(value, BigDecimal)
+                If orig < 0 Then Throw New MathException("Logarithms for non-positive numbers are undefined.")
+                If CDbl(base) = 10 Then
+                    Dim bn As New BigDecimal(Math.Round(Math.Log(CDbl(CType(value, BigDecimal)), CDbl(base)), orig.SigFigs))
+                    bn.SigFigs = bn.HighestDigit + orig.SigFigs + 1
+                    Return bn
+                Else
+                    Return Math.Log(CDbl(orig), CDbl(base))
+                End If
             ElseIf TypeOf value Is Numerics.Complex
                 Return Numerics.Complex.Log(CType(value, Numerics.Complex), CDbl(base))
             Else
@@ -927,13 +1011,6 @@ Namespace Evaluator
         ''' </summary>
         Public Function Lg(ByVal value As Object) As Object
             Return Me.Log2(value)
-        End Function
-
-        ''' <summary>
-        ''' Get the base 10 logarithm of a number
-        ''' </summary>
-        Public Function Log10(ByVal value As Object) As Object
-            Return Me.Log(value)
         End Function
 
         ''' <summary>
@@ -2253,8 +2330,8 @@ Namespace Evaluator
         Private Function Sci(ByVal value As Double) As String
             If value = 0 Then Return "0"
             If Double.IsNaN(value) OrElse Double.IsInfinity(value) Then Return value.ToString()
-            Dim log As Integer = Int(CDbl(Log10(Math.Abs(value))))
-            Return value / Math.Pow(10, log) & " x 10^" & log
+            Dim expo As Integer = Int(CDbl(Log(Math.Abs(value))))
+            Return value / Math.Pow(10, expo) & " x 10^" & expo
         End Function
 
         ''' <summary>
@@ -2457,9 +2534,9 @@ Namespace Evaluator
 
             ElseIf TypeOf value Is Double OrElse TypeOf value Is BigDecimal Then ' numbers: process (detect fractions, etc.)
                 Dim ret As String
-                If _eval.OutputFormat = Evaluator.eOutputFormat.Math Then
+                If _eval.OutputFormat = CantusEvaluator.eOutputFormat.Math Then
                     ret = MathO(value)
-                ElseIf _eval.OutputFormat = Evaluator.eOutputFormat.Scientific Then
+                ElseIf _eval.OutputFormat = CantusEvaluator.eOutputFormat.Scientific Then
                     ret = SciO(value)
                 Else
                     ret = LineO(value)
@@ -4506,30 +4583,29 @@ Namespace Evaluator
         ''' <summary>
         ''' Prints to the console
         ''' </summary>
-        Public Function Print(ByVal text As Object) As String
+        Public Sub Print(Optional ByVal text As Object = "")
             If Not WriteOutputEvent Is Nothing Then
                 RaiseEvent WriteOutput(_eval, New CantusIOEventArgs(eMessage.writeText, text.ToString()))
+            Else
+                Console.Write(text.ToString())
             End If
-            Console.Write(text.ToString())
-            Return text.ToString()
-        End Function
+        End Sub
 
         ''' <summary>
         ''' Prints the text to the console, followed immediately by a line break
         ''' </summary>
-        Public Function PrintLine(ByVal text As Object) As Boolean
+        Public Sub PrintLine(Optional text As Object = "")
             If Not WriteOutputEvent Is Nothing Then
                 RaiseEvent WriteOutput(_eval, New CantusIOEventArgs(eMessage.writeText, text.ToString() & vbNewLine))
             End If
             Console.WriteLine(text.ToString())
-            Return True
-        End Function
+        End Sub
 
         ''' <summary>
         ''' Read a line from the console
         ''' </summary>
         Public Function ReadLine(Optional message As String = "") As String
-            If Not String.IsNullOrWhiteSpace(message) Then PrintLine(message)
+            If Not String.IsNullOrWhiteSpace(message) Then PrintLine(vbLf & message)
             If Not ReadInputEvent Is Nothing Then
                 Dim userInput As Object = ""
                 RaiseEvent ReadInput(_eval, New CantusIOEventArgs(eMessage.readLine, message), userInput)
@@ -4544,7 +4620,7 @@ Namespace Evaluator
         ''' Read a word from the console
         ''' </summary>
         Public Function Read(Optional message As String = "") As String
-            If Not String.IsNullOrWhiteSpace(message) Then PrintLine(message)
+            If Not String.IsNullOrWhiteSpace(message) Then PrintLine(vbLf & message)
             If Not ReadInputEvent Is Nothing Then
                 Dim userInput As Object = ""
                 RaiseEvent ReadInput(_eval, New CantusIOEventArgs(eMessage.readWord, message), userInput)
@@ -4893,38 +4969,23 @@ Namespace Evaluator
         ' threading 
 
         ''' <summary>
+        ''' Dictionary of threads created by async operations.
+        ''' </summary>
+        Private asyncThreads As New Dictionary(Of Integer, Thread)
+
+        ''' <summary>
         ''' Start an asynchroneous task.
         ''' </summary>
-        ''' <param name="text"></param>
-        ''' <param name="after"></param>
-        ''' <returns></returns>
-        Public Function Async(ByVal text As String, Optional ByVal after As String = "",
-                              Optional runAfter As String = "", Optional var As String = "result") As String
+        ''' <returns>The id of the thread started</returns>
+        Public Function Async(ByVal func As Lambda, Optional args As List(Of Reference) = Nothing, Optional ByVal callback As Lambda = Nothing,
+                              Optional runAfter As String = "") As Integer
             Try
-                Dim tmp As Evaluator = _eval.DeepCopy()
-                AddHandler tmp.EvalComplete, Sub(sender As Object, result As Object)
-                                                 AsyncCallBack(tmp, result, var, runAfter)
-                                             End Sub
-                tmp.EvalRawAsync(text)
+                If args Is Nothing Then args = New List(Of Reference)
+                Return func.ExecuteAsync(_eval, args, callback)
             Catch
+                Return -1
             End Try
-            Return ""
         End Function
-
-        Private Sub AsyncCallBack(tmp As Evaluator, result As Object, var As String, runAfter As String)
-            Try
-                _eval.SetVariable(var, result)
-                If runAfter = "" Then
-                    ' if no callback is defined then return the variable
-                    _eval.EvalAsync(var)
-                Else
-                    _eval.EvalAsync(runAfter)
-                End If
-
-                tmp.Dispose()
-            Catch
-            End Try
-        End Sub
 
         ''' <summary>
         ''' Cause the current thread to wait the specified number of seconds
@@ -4935,6 +4996,49 @@ Namespace Evaluator
             Thread.Sleep(Int(seconds * 1000))
             Return True
         End Function
+
+        ''' <summary>
+        ''' Get a thread with the given id
+        ''' </summary>
+        Private Function GetThread(id As Integer) As Thread
+            Return _eval.ThreadController.GetThreadById(id)
+        End Function
+
+        ''' <summary>
+        ''' Killed the thread with the specified id
+        ''' </summary>
+        Public Sub KillThread(id As Double)
+            Try
+                _eval.ThreadController.KillThreadWithId(Int(id))
+            Catch ex As ThreadAbortException
+            Catch ex As NullReferenceException
+                Throw New EvaluatorException(String.Format("No thread with id {0} found.", id))
+            Catch ex As Exception
+                Throw ex
+            End Try
+        End Sub
+
+        ''' <summary>
+        ''' Wait until the thread with the specified id is done
+        ''' </summary>
+        Public Sub JoinThread(id As Double)
+            Try
+                GetThread(Int(id)).Join()
+            Catch ex As ThreadAbortException
+            Catch ex As NullReferenceException
+                Throw New EvaluatorException(String.Format("No thread with id {0} found.", id))
+            Catch ex As Exception
+                MsgBox(ex.ToString)
+                Throw New EvaluatorException("Failed to join thread")
+            End Try
+        End Sub
+
+        ''' <summary>
+        ''' Alias for jointhread
+        ''' </summary>
+        Public Sub WaitUntilDone(id As Double)
+            JoinThread(id)
+        End Sub
 
         ''' <summary>
         ''' Start a process from the specified filesystem path, wait for completion, and get the return value
@@ -4966,7 +5070,7 @@ Namespace Evaluator
         ''' Execute a script at the specified path, saves the result into var and executes runAfter
         ''' </summary>
         Public Function Run(ByVal path As String, Optional runAfter As String = "", Optional var As String = "result") As String
-            Dim tmp As Evaluator = _eval.DeepCopy()
+            Dim tmp As CantusEvaluator = _eval.DeepCopy()
             AddHandler tmp.EvalComplete, Sub(sender As Object, result As Object)
                                              RunCallBack(tmp, result, var, runAfter)
                                          End Sub
@@ -4974,7 +5078,7 @@ Namespace Evaluator
             Return ""
         End Function
 
-        Private Sub RunCallBack(tmp As Evaluator, result As Object, var As String, runAfter As String)
+        Private Sub RunCallBack(tmp As CantusEvaluator, result As Object, var As String, runAfter As String)
             Try
                 _eval.SetVariable(var, result)
                 If runAfter = "" Then

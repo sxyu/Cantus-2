@@ -39,7 +39,7 @@ Namespace Evaluator.CommonTypes
         ''' A BigDecimal representing the undefined (NaN) value
         ''' </summary>
         ''' <returns></returns>
-        Public Shared ReadOnly Property Undefined As BigDecimal = New BigDecimal(0, 0, True)
+        Public Shared ReadOnly Property Undefined As BigDecimal = New BigDecimal(0, 0, undefined:=True)
 
         ''' <summary>
         ''' If true, this bigdecimal represents an undefined value
@@ -47,8 +47,33 @@ Namespace Evaluator.CommonTypes
         ''' <returns></returns>
         Public ReadOnly Property IsUndefined As Boolean
 
+        ''' <summary>
+        ''' The number of sig figs to preserve after operations. Integer.MaxValue if not to be used
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property SigFigs As Integer
+
+        ''' <summary>
+        ''' Decimal separator
+        ''' </summary>
+        Private Shared ReadOnly Property DecimalSep As String =
+            Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
+
+        ''' <summary>
+        ''' Get the index of the lowest sig fig in the number. 
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property LeastSigFig As Integer
+            Get
+                If IsUndefined Then Return 0
+                If SigFigs = Integer.MaxValue Then Return Integer.MinValue
+                Return HighestDigit() - SigFigs + 1
+            End Get
+        End Property
+
         Public Property Mantissa() As BigInteger
             Get
+                If IsUndefined Then Return 0
                 Return m_Mantissa
             End Get
             Set
@@ -68,18 +93,21 @@ Namespace Evaluator.CommonTypes
 
         Private m_Exponent As Integer
 
-        Public Sub New(mantissa__1 As BigInteger, exponent__2 As Integer, Optional undefined__3 As Boolean = False)
+        Public Sub New(mantissa As BigInteger, exponent As Integer,
+                       Optional undefined As Boolean = False, Optional sigFigs As Integer = Integer.MaxValue)
             Me.New()
-            Mantissa = mantissa__1
-            Exponent = exponent__2
-            IsUndefined = undefined__3
+            Me.Mantissa = mantissa
+            Me.Exponent = exponent
+            Me.IsUndefined = undefined
+            Me.SigFigs = sigFigs
             Normalize()
             If AlwaysTruncate Then
                 Truncate()
             End If
         End Sub
 
-        Public Sub New(value As Double)
+        Public Sub New(value As Double,
+                       Optional sigFigs As Integer = Integer.MaxValue)
             Me.New()
             If Double.IsNaN(value) OrElse Double.IsInfinity(value) Then
                 Me.IsUndefined = True
@@ -95,6 +123,7 @@ Namespace Evaluator.CommonTypes
             End While
             Me.Mantissa = mantissa
             Me.Exponent = exponent
+            Me.SigFigs = sigFigs
         End Sub
 
         ''' <summary>
@@ -125,11 +154,29 @@ Namespace Evaluator.CommonTypes
             Dim shortened As BigDecimal = Me
             ' save some time because the number of digits is not needed to remove trailing zeros
             shortened.Normalize()
+
             ' remove the least significant digits, as long as the number of digits is higher than the given Precision
-            While NumberOfDigits(shortened.Mantissa) > precision
+            Dim noD As Integer = NumberOfDigits(shortened.Mantissa)
+            Dim expo As Integer = 0
+            While noD > precision
+                If noD - 1 = precision Then
+                    Dim mod1 As Integer = CInt(BigInteger.Abs(shortened.Mantissa) Mod 10)
+                    If mod1 > 5 Then
+                        shortened.Mantissa += shortened.Mantissa.Sign * 10
+                    ElseIf mod1 = 5 Then ' decide if to round up or down
+                        If BigInteger.Abs(Me.Mantissa) Mod BigInteger.Pow(10, expo) > 0 OrElse
+                            CInt(shortened.Mantissa / 10 Mod 2) = 1 Then
+                            shortened.Mantissa += shortened.Mantissa.Sign * 10
+                        End If
+                    End If
+                End If
                 shortened.Mantissa /= 10
-                shortened.Exponent += 1
+                expo += 1
+                noD = NumberOfDigits(shortened.Mantissa)
+
             End While
+            shortened.Exponent += expo
+
             ' normalize again to make sure there are no trailing zeros left
             shortened.Normalize()
             Return shortened
@@ -141,16 +188,26 @@ Namespace Evaluator.CommonTypes
         End Function
 
         Private Shared Function NumberOfDigits(value As BigInteger) As Integer
+            If value = 0 Then Return 0 ' deal with zero (prevent Log(0))
             ' do not count the sign
-            If value = 0 Then Return 1 ' deal with zero (prevent Log(0))
             ' faster version
             Return CInt(Math.Ceiling(BigInteger.Log10(value * value.Sign)))
         End Function
 
+        ''' <summary>
+        ''' Get the number of digits in this BigDecimal
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property Digits As Integer
+            Get
+                Return NumberOfDigits(Me.Mantissa)
+            End Get
+        End Property
+
 #Region "Conversions"
 
         Public Shared Widening Operator CType(value As Integer) As BigDecimal
-            Return New BigDecimal(value, 0)
+            Return New BigDecimal(value, exponent:=0)
         End Operator
 
         Public Shared Widening Operator CType(value As Double) As BigDecimal
@@ -222,13 +279,31 @@ Namespace Evaluator.CommonTypes
         Private Shared Function Add(left As BigDecimal, right As BigDecimal) As BigDecimal
             If left.IsUndefined Then Return left
             If right.IsUndefined Then Return right
-            Return If(left.Exponent > right.Exponent, New BigDecimal(AlignExponent(left, right) + right.Mantissa, right.Exponent), New BigDecimal(AlignExponent(right, left) + left.Mantissa, left.Exponent))
+            left = left.Truncate(left.SigFigs)
+            right = right.Truncate(left.SigFigs)
+
+            Dim digit As Integer = Math.Max(left.LeastSigFig, right.LeastSigFig)
+
+            Dim bn As BigDecimal = If(left.Exponent > right.Exponent,
+                New BigDecimal(AlignExponent(left, right) + right.Mantissa, right.Exponent),
+                New BigDecimal(AlignExponent(right, left) + left.Mantissa, left.Exponent))
+
+
+            If digit = Integer.MinValue Then
+                bn.SigFigs = Integer.MaxValue
+                Return bn
+            Else
+                bn.SigFigs = bn.HighestDigit() - digit + 1
+                Return bn.Truncate(bn.HighestDigit() - digit + 1)
+            End If
         End Function
 
         Public Shared Operator *(left As BigDecimal, right As BigDecimal) As BigDecimal
             If left.IsUndefined Then Return left
             If right.IsUndefined Then Return right
-            Return New BigDecimal(left.Mantissa * right.Mantissa, left.Exponent + right.Exponent)
+            Dim prod As New BigDecimal(left.Mantissa * right.Mantissa, left.Exponent + right.Exponent, False,
+                                       Math.Min(left.SigFigs, right.SigFigs))
+            Return prod
         End Operator
 
         Public Shared Operator /(dividend As BigDecimal, divisor As BigDecimal) As BigDecimal
@@ -240,7 +315,10 @@ Namespace Evaluator.CommonTypes
                     exponentChange = 0
                 End If
                 dividend.Mantissa *= BigInteger.Pow(10, exponentChange)
-                Return New BigDecimal(dividend.Mantissa / divisor.Mantissa, dividend.Exponent - divisor.Exponent - exponentChange)
+                Dim quotient As New BigDecimal(dividend.Mantissa / divisor.Mantissa,
+                                                   dividend.Exponent - divisor.Exponent - exponentChange,
+                        False, Math.Min(dividend.SigFigs, divisor.SigFigs))
+                Return quotient
             Catch ex As ArithmeticException
                 Throw New MathException("Division by Zero")
             End Try
@@ -278,6 +356,13 @@ Namespace Evaluator.CommonTypes
             Return value.Mantissa * BigInteger.Pow(10, value.Exponent - reference.Exponent)
         End Function
 
+        ''' <summary>
+        ''' Get the base 10 logarithm of one on the highest digit of a bigdecimal
+        ''' </summary>
+        Public Function HighestDigit() As Integer
+            If Mantissa = 0 Then Return 0
+            Return Exponent + CInt(Math.Floor(BigInteger.Log10(BigInteger.Abs(Mantissa))))
+        End Function
 #End Region
 
 #Region "Additional mathematical functions"
@@ -292,14 +377,31 @@ Namespace Evaluator.CommonTypes
             Return tmp * Math.Exp(exponent)
         End Function
 
-        Public Shared Function Pow(basis As Double, exponent As Double) As BigDecimal
+        ''' <summary>
+        ''' Calculate the basis raised to the exponent. Note that this does not
+        ''' actually allow bases/exponents above the double precision range.
+        ''' Significant figures are supported.
+        ''' </summary>
+        Public Shared Function Pow(basis As BigDecimal, exponent As BigDecimal) As BigDecimal
             Dim tmp As BigDecimal = CType(1, BigDecimal)
-            While Math.Abs(exponent) > 100
+
+            Dim expo As Double = CDbl(exponent)
+            Dim base As Double = CDbl(basis)
+
+            While Math.Abs(expo) > 100
                 Dim diff As Integer = If(exponent > 0, 100, -100)
-                tmp *= Math.Pow(basis, diff)
+                tmp *= Math.Pow(base, diff)
                 exponent -= diff
             End While
-            Return tmp * Math.Pow(basis, exponent)
+
+            tmp *= Math.Pow(base, expo)
+            If basis.SigFigs = Integer.MaxValue AndAlso exponent.SigFigs < Integer.MaxValue Then
+                tmp.SigFigs = exponent.SigFigs - exponent.HighestDigit - 1
+            Else
+                tmp.SigFigs = basis.SigFigs
+            End If
+
+            Return tmp
         End Function
 
 #End Region
@@ -308,30 +410,54 @@ Namespace Evaluator.CommonTypes
         ''' Returns string containing the full decimal representation of this number
         ''' </summary>
         ''' <returns></returns>
-        Public Function ToFullNumber() As String
+        Public Function FullDecimalRepr() As String
             Me.Normalize()
-            If Me.Mantissa = 0 Then Return "0" ' special case: for 0 nothing needs to be inserted
+            ' special case: for 0 nothing needs to be inserted
+            If Me.Mantissa = 0 Then
+                Dim zeroStr As String = "0"
+                If Me.SigFigs > 1 AndAlso Me.SigFigs < Integer.MaxValue Then
+                    zeroStr &= DecimalSep
+                    zeroStr &= "".PadRight(Me.SigFigs - 1, "0"c)
+                End If
+                Return zeroStr
+            End If
 
             Dim neg As Boolean = False
             Dim str As StringBuilder
-            If Me.Mantissa < 0 Then
-                str = New StringBuilder((-Me.Mantissa).ToString())
+            Dim trunc As BigDecimal = Me.Truncate(SigFigs)
+
+            If trunc.Mantissa < 0 Then
+                str = New StringBuilder((-trunc.Mantissa).ToString())
                 neg = True
             Else
-                str = New StringBuilder(Me.Mantissa.ToString())
+                str = New StringBuilder(trunc.Mantissa.ToString())
             End If
 
-            If Me.Exponent < 0 AndAlso str.Length + Me.Exponent <= 0 Then ' we need to add 0's to left
-                Dim left As String = "".PadLeft(-Me.Exponent - str.Length, "0"c) ' generate string of zeros
+            Dim curlen As Integer = 0
+            If trunc.Exponent < 0 AndAlso str.Length + trunc.Exponent <= 0 Then ' we need to add 0's to left
+                Dim left As String = "".PadLeft(-trunc.Exponent - str.Length, "0"c) ' generate string of zeros
                 str.Insert(0, left)
                 str.Insert(0, "0" & CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
-            ElseIf Me.Exponent < 0 Then ' just insert point
-                str.Insert(str.Length + Me.Exponent, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+                curlen = str.Length - 2
+            ElseIf trunc.Exponent < 0 Then ' just insert point
+                str.Insert(str.Length + trunc.Exponent, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+                curlen = str.Length - 1
             Else ' we need to append 0's to right
-                str.Append("".PadLeft(Me.Exponent, "0"c)) ' generate string of zeros
+                str.Append("".PadLeft(trunc.Exponent, "0"c)) ' generate string of zeros
+                curlen = str.Length
+                If curlen < SigFigs AndAlso SigFigs < Integer.MaxValue Then str.Append(DecimalSep)
+            End If
+
+            If SigFigs < Integer.MaxValue Then
+                str.Append("".PadLeft(Math.Max(SigFigs - curlen, 0), "0"c))
+                If New InternalFunctions(Nothing).CountSigFigs(str.ToString()) <> SigFigs Then
+                    ' we tried, this is unrepresentable. use scientific notation.
+                    Return ToScientific()
+                End If
             End If
 
             If neg Then str.Insert(0, "-")
+
             Return str.ToString()
         End Function
 
@@ -343,9 +469,21 @@ Namespace Evaluator.CommonTypes
             If Me.IsUndefined Then Return "Undefined"
 
             Me.Normalize()
-            If Me.Mantissa = 0 Then Return "0"
+            If Me.Mantissa = 0 Then
+                Dim zeroStr As String = "0"
+                If Me.SigFigs > 1 AndAlso Me.SigFigs < Integer.MaxValue Then
+                    zeroStr &= DecimalSep
+                    zeroStr &= "".PadRight(Me.SigFigs - 1, "0"c)
+                End If
+                Return zeroStr
+            End If
 
-            Dim tmp As BigDecimal = Me.Truncate(10)
+            Dim tmp As BigDecimal
+            If Me.SigFigs = Integer.MaxValue Then
+                tmp = Me.Truncate()
+            Else
+                tmp = Me.Truncate(SigFigs)
+            End If
 
             Dim neg As Boolean = False
             Dim val As StringBuilder
@@ -360,6 +498,14 @@ Namespace Evaluator.CommonTypes
             If val.Length > 1 Then val.Insert(1, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
 
             Dim expo As Integer = tmp.Exponent + CInt(Math.Floor(BigInteger.Log10(tmp.Mantissa)))
+
+            Dim valRepr As String = val.ToString()
+            If SigFigs < Integer.MaxValue Then
+                Dim zeros As String = "".PadLeft(Math.Max(CInt(SigFigs - New InternalFunctions(Nothing).CountSigFigs(valRepr)), 0), "0"c)
+                If zeros.Length > 0 AndAlso Not valRepr.Contains(DecimalSep) Then val.Append(DecimalSep)
+                val.Append(zeros)
+            End If
+
             Return String.Concat(If(neg, "-", ""), val.ToString(), " E ", expo)
         End Function
 
@@ -370,11 +516,10 @@ Namespace Evaluator.CommonTypes
 
         Public Overrides Function ToString() As String
             If Me.IsUndefined Then Return "Undefined"
-            If Me.Mantissa = 0 Then Return "0"
             If Me.IsOutsideDispRange() Then
                 Return Me.ToScientific()
             Else
-                Return Me.Truncate(10).ToFullNumber()
+                Return Me.FullDecimalRepr()
             End If
         End Function
 

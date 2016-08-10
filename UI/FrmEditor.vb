@@ -5,8 +5,8 @@ Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports Cantus.Evaluator
 Imports Cantus.Evaluator.CommonTypes
-Imports Cantus.Evaluator.Evaluator
-Imports Cantus.Evaluator.Evaluator.CantusIOEventArgs
+Imports Cantus.Evaluator.CantusEvaluator
+Imports Cantus.Evaluator.CantusEvaluator.CantusIOEventArgs
 Imports Cantus.Evaluator.ObjectTypes
 Imports Cantus.UI.ScintillaForCantus
 Imports ScintillaNET
@@ -34,7 +34,7 @@ Namespace UI
         ''' <summary>
         ''' The main evaluator
         ''' </summary>
-        Private _eval As Evaluator.Evaluator
+        Private _eval As Evaluator.CantusEvaluator
 
         ''' <summary>
         ''' The path to the file currently open in the editor. 
@@ -78,9 +78,9 @@ Namespace UI
             TmrLoad.Start()
 
             ' new version? upgrade settings from previous version + show message
-            If My.Settings.ReqUpgrade Then
+            If My.Settings.NewInstall Then
                 My.Settings.Upgrade()
-                My.Settings.ReqUpgrade = False
+                My.Settings.NewInstall = False
                 _displayUpdateMessage = True
             End If
 
@@ -88,10 +88,10 @@ Namespace UI
             Me.Icon = My.Resources.Cantus
 
             ' setup evaluator
-            Me._eval = Globals.Evaluator
-            AddHandler Globals.Evaluator.EvalComplete, AddressOf EvalComplete
-            AddHandler Globals.Evaluator.WriteOutput, AddressOf WriteOutput
-            AddHandler Globals.Evaluator.ReadInput, AddressOf ReadInput
+            Me._eval = Globals.RootEvaluator
+            AddHandler Globals.RootEvaluator.EvalComplete, AddressOf EvalComplete
+            AddHandler Globals.RootEvaluator.WriteOutput, AddressOf WriteOutput
+            AddHandler Globals.RootEvaluator.ReadInput, AddressOf ReadInput
 
             ' process additional command line args involving UI
             Dim args As String() = Environment.GetCommandLineArgs()
@@ -105,15 +105,17 @@ Namespace UI
                 ElseIf (s = "-d" OrElse s = "--default") AndAlso i < args.Length - 1 Then
                     i += 1
                     def = args(i)
+                ElseIf IO.File.Exists(s) Then
+                    Tb.Text = IO.File.ReadAllText(s)
                 End If
             Next
 
             def = def.Trim().Trim({ControlChars.Quote, "'"c})
             If opengraph Then
-                btnMin.PerformClick()
-                ' GRAPH
+                Viewer.View = Viewer.eView.graphing
+                Viewer.GraphingControl.tb.Text = def
             Else
-                tb.Text = def
+                Tb.Text = def
             End If
 
             Try
@@ -129,7 +131,7 @@ Namespace UI
                 If IO.Path.GetFileName(Application.ExecutablePath).ToLower() = "calculator.exe" Then
                     Try
                         ' update from legacy CalculatorX: Clear state
-                        My.Settings.State = ""
+                        My.Settings.ErrorSaveState = ""
                         My.Settings.Save()
                         FileSystem.Rename(Application.ExecutablePath, "cantus.exe")
                         Process.Start(IO.Path.Combine("cantus.exe"))
@@ -146,25 +148,25 @@ Namespace UI
 
             ' set up UI
             CbAutoUpd.Checked = My.Settings.AutoUpdate
-            LbAbout.Text = lbAbout.Text.Replace("{VER}", Application.ProductVersion & " " & RELEASE_TYPE)
+            LbAbout.Text = LbAbout.Text.Replace("{VER}", Application.ProductVersion & " " & RELEASE_TYPE)
 
             ' faster drawing
             Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
 
             ' set up modes
-            If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math Then
-                btnOutputFormat.Text = "MathO"
-            ElseIf _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
-                btnOutputFormat.Text = "SciO"
+            If _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Math Then
+                BtnOutputFormat.Text = "MathO"
+            ElseIf _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific Then
+                BtnOutputFormat.Text = "SciO"
             Else
-                btnOutputFormat.Text = "LineO"
+                BtnOutputFormat.Text = "LineO"
             End If
-            If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Radian Then
-                btnAngleRepr.Text = "Radian"
-            ElseIf _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree Then
-                btnAngleRepr.Text = "Degree"
+            If _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Radian Then
+                BtnAngleRepr.Text = "Radian"
+            ElseIf _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree Then
+                BtnAngleRepr.Text = "Degree"
             Else
-                btnAngleRepr.Text = "Gradian"
+                BtnAngleRepr.Text = "Gradian"
             End If
 
             ' set up scintilla
@@ -231,20 +233,22 @@ Namespace UI
                     BtnAngleRepr.Text = _eval.AngleMode.ToString()
                     EvaluateExpr(True)
                 ElseIf e.KeyCode = Keys.O Then
-                    btnOMode_Click(BtnOutputFormat, New EventArgs)
-                ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.L Then
+                    btnOutputFormat_Click(BtnOutputFormat, New EventArgs)
+                ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
                     If e.KeyCode = Keys.M Then
                         _eval.OutputFormat = eOutputFormat.Math
                         e.SuppressKeyPress = True
-                    ElseIf e.KeyCode = Keys.L
-                        _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Raw
+                    ElseIf e.KeyCode = Keys.W
+                        _eval.OutputFormat = eOutputFormat.Raw
                     Else
-                        _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific
+                        _eval.OutputFormat = eOutputFormat.Scientific
                     End If
                     BtnOutputFormat.Text = _eval.OutputFormat.ToString()
                     EvaluateExpr(True)
                 ElseIf e.KeyCode = Keys.T Then
-                    btnExplicit_Click(BtnExplicit, New EventArgs())
+                    btnOptions_Click(BtnExplicit, New EventArgs())
+                ElseIf e.KeyCode = Keys.F Then
+                    btnOptions_Click(BtnSigFigs, New EventArgs())
                 End If
             End If
         End Sub
@@ -284,9 +288,14 @@ Namespace UI
                     logText = Tb.Text
                 End If
 
-                ' write expression to log
-                Viewer.WriteLogSection(logText)
-            End If
+                If _eval.InternalFunctions.Count(logText, """") Mod 2 = 1 Then logText &= """"
+                If _eval.InternalFunctions.Count(logText, "'") Mod 2 = 1 Then logText &= "'"
+
+                _firstOutput = True
+
+                    ' write expression to log
+                    Viewer.WriteConsoleSection(String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName) & logText)
+                End If
         End Sub
 
         Private _lastAnsCount As Integer = 0
@@ -299,7 +308,8 @@ Namespace UI
                 ' display answer
                 LbResult.Text = AutoTrimDisplayText(ans)
                 If _eval.PrevAns.Count > _lastAnsCount Then
-                    Viewer.WriteLogLine("= " & ans)
+                    Viewer.WriteConsoleLine("Result: " & ans)
+                    Viewer.WriteLogSeparator()
                 End If
                 _lastAnsCount = _eval.PrevAns.Count
 
@@ -336,11 +346,17 @@ Namespace UI
             Return res
         End Function
 
+        Private _firstOutput As Boolean = True
         Private Sub WriteOutput(sender As Object, e As CantusIOEventArgs)
             If Me.InvokeRequired Then
-                Me.BeginInvoke(Sub() Viewer.WriteLog("> " & e.Content))
+                Me.BeginInvoke(Sub() WriteOutput(sender, e))
             Else
-                Viewer.WriteLog("> " & e.Content)
+                If _firstOutput Then
+                    Viewer.autoAddLine()
+                    _firstOutput = False
+                End If
+
+                Viewer.WriteConsole(e.Content)
             End If
         End Sub
 
@@ -381,7 +397,7 @@ Namespace UI
                     Tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
                     Tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
 
-                    Tb.Styles(CantusLexer.StyleNumber).ForeColor = Color.FromArgb(255, 205, 34)
+                    Tb.Styles(CantusLexer.StyleNumberBoolean).ForeColor = Color.FromArgb(255, 205, 34)
                     Tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
 
                     Tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
@@ -417,7 +433,6 @@ Namespace UI
             End Select
         End Sub
 
-
         ''' <summary>
         ''' Save all settings to the init.can file
         ''' </summary>
@@ -440,10 +455,10 @@ Namespace UI
 
                 ' try writing to init.can
                 IO.File.WriteAllText("init.can", _eval.ToScript() & curText)
-                My.Settings.State = ""
-            Catch ex As Exception
+                My.Settings.ErrorSaveState = ""
+            Catch 'ex As Exception
                 ' we weren't able to write to init.can, so write to Settings.State
-                My.Settings.State = _eval.ToScript()
+                My.Settings.ErrorSaveState = _eval.ToScript()
             End Try
 
             My.Settings.Save()
@@ -460,6 +475,7 @@ Namespace UI
                 If diag.ShowDialog = DialogResult.OK Then
                     IO.File.WriteAllText(diag.FileName, Tb.Text, Encoding.UTF8)
                     _File = diag.FileName ' set new file name
+                    _eval.Scope = GetFileScopeName(_File)
                 End If
             End Using
         End Sub
@@ -502,6 +518,7 @@ Namespace UI
                            MsgBoxStyle.YesNo Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "New Script") =
                            MsgBoxResult.Yes Then
                     Tb.Text = ""
+                    _eval.Scope = ROOT_NAMESPACE
                 End If
             Else
                 Save()
@@ -578,7 +595,7 @@ Namespace UI
 #Region "textbox & labels"
 
         Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb.KeyDown
-            If e.Alt Then
+            If e.Alt AndAlso Not e.Control Then
                 If e.KeyCode = Keys.Up Then
                     If _curExpId > 1 And _prevExp.Count > 1 Then
                         If (Tb.Text = _lastExp) Then
@@ -608,7 +625,7 @@ Namespace UI
                     Catch
                     End Try
                 ElseIf e.KeyCode = Keys.C Then
-                    Viewer.View = Viewer.eView.log
+                    Viewer.View = Viewer.eView.console
                     Try
                         Viewer.pnl.Controls(0).Select()
                     Catch
@@ -618,10 +635,10 @@ Namespace UI
                 End If
             ElseIf e.KeyCode = Keys.F12
                 OpenSaveAs()
-            ElseIf e.KeyCode = Keys.S AndAlso e.Control
+            ElseIf e.KeyCode = Keys.S AndAlso e.Control AndAlso Not e.Alt
                 _ignoreNextKey = True
                 Save()
-            ElseIf e.KeyCode = Keys.N AndAlso e.Control
+            ElseIf e.KeyCode = Keys.N AndAlso e.Control AndAlso Not e.Alt
                 _ignoreNextKey = True
                 NewScript()
             ElseIf e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.O AndAlso e.Control
@@ -695,6 +712,22 @@ Namespace UI
                 PnlTb.Focus()
                 BtnAngleRepr.Text = _eval.AngleMode.ToString()
                 BtnOutputFormat.Text = _eval.OutputFormat.ToString()
+                If _eval.ExplicitMode Then
+                    BtnExplicit.BackColor = BtnEval.BackColor
+                    BtnExplicit.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
+                Else
+                    BtnExplicit.BackColor = BtnX.BackColor
+                    BtnExplicit.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
+                End If
+                BtnExplicit.FlatAppearance.MouseOverBackColor = BtnExplicit.BackColor
+                If _eval.SignificantMode Then
+                    BtnSigFigs.BackColor = BtnEval.BackColor
+                    BtnSigFigs.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
+                Else
+                    BtnSigFigs.BackColor = BtnX.BackColor
+                    BtnSigFigs.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
+                End If
+                BtnSigFigs.FlatAppearance.MouseOverBackColor = BtnSigFigs.BackColor
                 ShowSettings()
             Else
                 EvaluateExpr(True)
@@ -702,7 +735,7 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub btnLetters_Click(sender As Object, e As EventArgs) Handles BtnY.Click, BtnX.Click, BtnT.Click, BtnM.Click
+        Private Sub btnLetters_Click(sender As Object, e As EventArgs) Handles BtnY.Click, BtnX.Click
             Dim btn As Button = DirectCast(sender, Button)
             SetVariable(btn.Tag.ToString()(0), _eval.GetLastAns())
             UpdateLetterTT()
@@ -849,19 +882,19 @@ Namespace UI
             ShowSettings(False)
             _isMoving = False
 
-            My.Settings.MainPos = Me.Left & "," & Me.Top
+            My.Settings.Position = Me.Left & "," & Me.Top
             My.Settings.Save()
         End Sub
 
-        Private Sub btnOMode_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
-            If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
-                _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Raw
+        Private Sub btnOutputFormat_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
+            If _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific Then
+                _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Raw
             Else
-                _eval.OutputFormat = CType(CInt(_eval.OutputFormat) + 1, Evaluator.Evaluator.eOutputFormat)
+                _eval.OutputFormat = CType(CInt(_eval.OutputFormat) + 1, Evaluator.CantusEvaluator.eOutputFormat)
             End If
-            If _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Math Then
+            If _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Math Then
                 BtnOutputFormat.Text = "Math"
-            ElseIf _eval.OutputFormat = Evaluator.Evaluator.eOutputFormat.Scientific Then
+            ElseIf _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific Then
                 BtnOutputFormat.Text = "Scientific"
             Else
                 BtnOutputFormat.Text = "Raw"
@@ -870,14 +903,14 @@ Namespace UI
         End Sub
 
         Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles BtnAngleRepr.Click
-            If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Gradian Then
-                _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree
+            If _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Gradian Then
+                _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree
             Else
-                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Evaluator.Evaluator.eAngleRepresentation)
+                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Evaluator.CantusEvaluator.eAngleRepresentation)
             End If
-            If _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Radian Then
+            If _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Radian Then
                 BtnAngleRepr.Text = "Radian"
-            ElseIf _eval.AngleMode = Evaluator.Evaluator.eAngleRepresentation.Degree Then
+            ElseIf _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree Then
                 BtnAngleRepr.Text = "Degree"
             Else
                 BtnAngleRepr.Text = "Gradian"
@@ -922,19 +955,34 @@ Namespace UI
             _editCt -= 1
         End Sub
 
-        Private Sub btnExplicit_Click(sender As Object, e As EventArgs) Handles BtnExplicit.Click
-            _eval.ExplicitMode = Not _eval.ExplicitMode
-            If _eval.ExplicitMode Then
-                BtnExplicit.BackColor = BtnEval.BackColor
-                BtnExplicit.ForeColor = BtnEval.ForeColor
-                BtnExplicit.FlatAppearance.MouseOverBackColor = BtnEval.FlatAppearance.MouseOverBackColor
-                BtnExplicit.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
+        Private Sub btnOptions_Click(sender As Object, e As EventArgs) Handles BtnExplicit.Click, BtnSigFigs.Click
+            Dim mode As Boolean
+            If sender Is BtnExplicit Then
+                _eval.ExplicitMode = Not _eval.ExplicitMode
+                mode = _eval.ExplicitMode
             Else
-                BtnExplicit.BackColor = BtnX.BackColor
-                BtnExplicit.ForeColor = BtnX.ForeColor
-                BtnExplicit.FlatAppearance.MouseOverBackColor = BtnX.FlatAppearance.MouseOverBackColor
-                BtnExplicit.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
+                _eval.SignificantMode = Not _eval.SignificantMode
+                mode = _eval.SignificantMode
+                If mode AndAlso _eval.OutputFormat = eOutputFormat.Math Then
+                    _eval.OutputFormat = eOutputFormat.Raw
+                    BtnOutputFormat.Text = "Raw"
+                End If
             End If
+
+            Dim btn As Button = DirectCast(sender, Button)
+            If mode Then
+                btn.BackColor = BtnEval.BackColor
+                btn.ForeColor = BtnEval.ForeColor
+                btn.FlatAppearance.MouseOverBackColor = BtnEval.FlatAppearance.MouseOverBackColor
+                btn.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
+            Else
+                btn.BackColor = BtnX.BackColor
+                btn.ForeColor = BtnX.ForeColor
+                btn.FlatAppearance.MouseOverBackColor = BtnX.FlatAppearance.MouseOverBackColor
+                btn.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
+            End If
+
+            SaveSettings()
         End Sub
 
         Private Sub btnLog_MouseEnter(sender As Object, e As EventArgs) Handles BtnLog.MouseEnter
@@ -1329,14 +1377,10 @@ Namespace UI
                 Return
             End If
 
-            ' Minimize/show Keyboard 
-            Keyboard.Minimized = Not My.Settings.ShowKbd
-
             TmrLoad.Stop()
 
-            SplashScreen.Hide()
-
             If _displayUpdateMessage Then
+                SplashScreen.SendToBack()
                 Try
                     Process.Start(
                     "cmd", "/c Assoc .can=Cantus.CBool  && Ftype Cantus.CantusScript=" &
@@ -1349,9 +1393,14 @@ Namespace UI
                 End Using
             End If
 
+            ' Minimize/show Keyboard 
+            Keyboard.Minimized = Not My.Settings.ShowKeyboard
+
+            SplashScreen.Hide()
+
             ' set location
-            If (My.Settings.MainPos <> "") Then
-                Dim spl() As String = My.Settings.MainPos.Split(","c)
+            If (My.Settings.Position <> "") Then
+                Dim spl() As String = My.Settings.Position.Split(","c)
                 Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
                 If Me.Location.X <= -Me.Width OrElse Me.Location.Y <= -Me.Height OrElse
                     Me.Right >= Screen.PrimaryScreen.WorkingArea.Width + Me.Width OrElse
@@ -1365,7 +1414,7 @@ Namespace UI
             End If
 
             ' save location
-            My.Settings.MainPos = Me.Left & "," & Me.Top
+            My.Settings.Position = Me.Left & "," & Me.Top
         End Sub
 #End Region
     End Class

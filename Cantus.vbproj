@@ -138,6 +138,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.vb" />
     <Compile Include="UI\Viewer.Designer.vb">
       <DependentUpon>Viewer.vb</DependentUpon>
     </Compile>

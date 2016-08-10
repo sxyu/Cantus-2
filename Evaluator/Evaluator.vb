@@ -10,10 +10,183 @@ Imports Cantus.Evaluator.StatementRegistar
 
 Namespace Evaluator
     Public Module Globals
-        Friend ReadOnly Property Evaluator As New Evaluator()
+        Friend ReadOnly Property RootEvaluator As New CantusEvaluator()
     End Module
 
-    Public NotInheritable Class Evaluator
+    ''' <summary>
+    ''' Class used for evaluating cantus scripts on-demand, line-by-line, as in consoles.
+    ''' </summary>
+    Public NotInheritable Class ScriptFeeder
+
+        Public Delegate Sub ResultReceivedDelegate(sender As Object, result As String)
+        ''' <summary>
+        ''' Occurs when a result is received from the execution.
+        ''' </summary>
+        Public Event ResultReceived As ResultReceivedDelegate
+
+        Private _eval As CantusEvaluator
+        Private _q As New Queue(Of String)
+        Private _scr As New List(Of String)
+        Private _thd As Thread
+        Private _endAfterQueue As Boolean = False
+
+        ''' <summary>
+        ''' Returns true if parts of the script are currently being executed
+        ''' </summary>
+        Public ReadOnly Property IsBusy As Boolean
+            Get
+                Return _q.Count > 0
+            End Get
+        End Property
+
+        Public ReadOnly Property IsStarted As Boolean
+
+        ''' <summary>
+        ''' Get the first line of the script that has not yet been enqueued for execution
+        ''' </summary>
+        Public ReadOnly Property CurrentLine As Integer
+
+        ''' <summary>
+        ''' Get the entire script managed by the scripthost
+        ''' </summary>
+        Public ReadOnly Property Script As String
+            Get
+                Return String.Join(ControlChars.NewLine, _scr)
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Begin executing the script. All lines already fed will be executed immediately.
+        ''' </summary>
+        Public Sub BeginExecution()
+            _IsStarted = True
+            _thd = New Thread(Sub()
+                                  Try
+                                      Dim res As String = _eval.Eval("", feederScript:=Me)
+                                      RaiseEvent ResultReceived(Me, res)
+                                  Catch ex As Exception
+                                      RaiseEvent ResultReceived(Me, ex.Message)
+                                  End Try
+                              End Sub)
+            _thd.IsBackground = True
+            _thd.Start()
+        End Sub
+
+        ''' <summary>
+        ''' Dequeue an item from the queue and return the content
+        ''' </summary>
+        Friend Function Dequeue() As String
+            Dim nxt As String = _q.Dequeue()
+            If _endAfterQueue AndAlso _q.Count = 0 Then
+                _IsStarted = False
+            End If
+            Return nxt
+        End Function
+
+        ''' <summary>
+        ''' Feed all of the currently available script to the evaluator to be executed as soon as possible
+        ''' </summary>
+        Public Sub FeedAllLines(numLines As Integer)
+            While CurrentLine < _scr.Count
+                _q.Enqueue(_scr(CurrentLine))
+                _CurrentLine += 1
+            End While
+        End Sub
+
+        ''' <summary>
+        ''' Feed the next specified number of lines to the evaluator for execution
+        ''' </summary>
+        Public Sub FeedLines(numLines As Integer)
+            For i As Integer = 0 To numLines - 1
+                _q.Enqueue(_scr(CurrentLine))
+                _CurrentLine += 1
+            Next
+        End Sub
+
+        ''' <summary>
+        ''' Feed the next line to the evaluator for execution
+        ''' </summary>
+        Public Sub FeedNextLine()
+            _q.Enqueue(_scr(CurrentLine))
+            _CurrentLine += 1
+        End Sub
+
+        ''' <summary>
+        ''' Append to the script. If enqueue is set to true, the lines are enqueued directly.
+        ''' </summary>
+        Public Sub Append(script As String, Optional enqueue As Boolean = False)
+            Dim spl As String() = script.TrimEnd().Split(ControlChars.Lf)
+            If enqueue Then
+                For Each line As String In spl
+                    _q.Enqueue(line)
+                Next
+            Else
+                For Each line As String In spl
+                    _scr.Add(line)
+                Next
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Kill the executing threads
+        ''' </summary>
+        Public Sub Terminate()
+            _q.Clear()
+            Try
+                _thd.Abort()
+            Catch
+            End Try
+            _IsStarted = False
+        End Sub
+
+        ''' <summary>
+        ''' Pause the execution of the script after finishing the current line
+        ''' </summary>
+        Public Sub PauseExecution()
+            _IsStarted = False
+        End Sub
+
+        ''' <summary>
+        ''' End the execution of the script after finishing the current line
+        ''' </summary>
+        Public Sub EndExecution()
+            _q.Clear()
+            _IsStarted = False
+        End Sub
+
+        ''' <summary>
+        ''' End the execution of the script after the script becomes empty
+        ''' </summary>
+        Public Sub EndAfterQueueDone()
+            _endAfterQueue = True
+        End Sub
+
+        ''' <summary>
+        ''' Create a new Cantus script host.
+        ''' </summary>
+        ''' <param name="initialScript">The initial script to add to the script</param>
+        ''' <param name="beginExecuting">If true, feeds the script and begins executing immediately</param>
+        ''' <param name="evaluator">The evaluator to run scripts on. If none is specified, a new evaluator will be created.</param>
+        Public Sub New(initialScript As String, Optional beginExecuting As Boolean = False,
+                       Optional evaluator As CantusEvaluator = Nothing)
+
+            Append(initialScript, beginExecuting)
+            If evaluator Is Nothing Then
+                evaluator = New CantusEvaluator()
+            Else
+                Me._eval = evaluator
+            End If
+
+            If beginExecuting Then
+                BeginExecution()
+            End If
+        End Sub
+    End Class
+
+    ''' <summary>
+    ''' Class for evaluating Cantus scripts and expressions within a scope, as well as storing user data
+    ''' </summary>
+    Public NotInheritable Class CantusEvaluator
         Implements IDisposable
 #Region "Enums"
 
@@ -45,7 +218,7 @@ Namespace Evaluator
         End Enum
 #End Region
 
-#Region "Structs"
+#Region "Types"
         ''' <summary>
         ''' Represents an user-defined function
         ''' </summary>
@@ -151,7 +324,7 @@ Namespace Evaluator
                 Next
                 result.Append("function ")
 
-                Dim scope As String = Evaluator.RemoveRedundantScope(DeclaringScope, ignoreScope)
+                Dim scope As String = CantusEvaluator.RemoveRedundantScope(DeclaringScope, ignoreScope)
                 result.Append(scope.Trim())
                 If Not String.IsNullOrWhiteSpace(scope) Then result.Append(SCOPE_SEP)
 
@@ -383,20 +556,20 @@ Namespace Evaluator
             Public ReadOnly Property ShortestAccessibleName As String
                 Get
                     If Me._disposed Then Return Nothing
-                    Return Evaluator.RemoveRedundantScope(Me.FullName, Evaluator.Scope)
+                    Return CantusEvaluator.RemoveRedundantScope(Me.FullName, Evaluator.Scope)
                 End Get
             End Property
 
             ''' <summary>
             ''' The evaluator used with this user class
             ''' </summary>
-            Public ReadOnly Property Evaluator As Evaluator
+            Public ReadOnly Property Evaluator As CantusEvaluator
 
             ''' <summary>
             ''' Create a empty class with the specified name, definition, evaluator, scope, and modifiers
             ''' </summary>
             ''' <param name="declaringScope">Optional. If not specified, uses the scope of the specified evaluator.</param>
-            Public Sub New(name As String, def As String, eval As Evaluator,
+            Public Sub New(name As String, def As String, eval As CantusEvaluator,
                            Optional modifiers As IEnumerable(Of String) = Nothing,
                            Optional inheritedClasses As IEnumerable(Of String) = Nothing,
                            Optional declaringScope As String = "")
@@ -430,7 +603,7 @@ Namespace Evaluator
                 Dim tmpScope As String = "__class_" & name & "_" &
                                      Guid.NewGuid().ToString().Replace("-", "") & Now.Millisecond
 
-                Dim tmpEval As Evaluator = eval.SubEvaluator(0, tmpScope)
+                Dim tmpEval As CantusEvaluator = eval.SubEvaluator(0, tmpScope)
                 tmpEval.Variables.Clear()
                 tmpEval.UserFunctions.Clear()
 
@@ -520,7 +693,7 @@ Namespace Evaluator
                 Next
                 result.Append("class ")
 
-                Dim scope As String = Evaluator.RemoveRedundantScope(DeclaringScope, ignoreScope)
+                Dim scope As String = CantusEvaluator.RemoveRedundantScope(DeclaringScope, ignoreScope)
                 result.Append(scope.Trim())
                 If Not String.IsNullOrWhiteSpace(scope) Then result.Append(SCOPE_SEP)
                 result.Append(Name)
@@ -529,7 +702,7 @@ Namespace Evaluator
                     Dim first As Boolean = True
                     For Each b As String In BaseClasses
                         If Not first Then result.Append(",") Else first = False
-                        result.Append(Evaluator.RemoveRedundantScope(Evaluator.UserClasses(b).FullName, ignoreScope))
+                        result.Append(CantusEvaluator.RemoveRedundantScope(Evaluator.UserClasses(b).FullName, ignoreScope))
                     Next
                 End If
                 result.AppendLine()
@@ -555,6 +728,7 @@ Namespace Evaluator
             End Sub
         End Class
 
+#Region "TokenList"
         ''' <summary>
         ''' Represents a segment in the expression obtained after it is tokenized, consisting of 
         ''' an object and an operator
@@ -866,50 +1040,9 @@ Namespace Evaluator
                     _validCount += 1
                 End While
             End Sub
-
-            '''' <summary>
-            '''' For debugging purposes
-            '''' Converts the list to a human-readable string.
-            '''' Each list represents a token, with
-            '''' the first row indicating if the token is NOT removed (pointing at another token), 
-            '''' the second indicating the operator, and the third the object.
-            '''' The final row contains a count of remaining valid (not removed) objects.
-            '''' </summary>
-            '''' <returns></returns>
-            'Public Overrides Function ToString() As String
-            '    Dim str As New StringBuilder("OPER" & vbTab)
-            '    For i As Integer = 0 To Me.OperatorCount - 1
-
-            '        If Me.IsRemoved(i) Then Continue For
-
-            '        If i > 0 Then str.Append(vbTab)
-
-            '        If Me.OperatorAt(i) Is Nothing Then
-            '            str.Append("Null")
-            '        Else
-            '            str.Append(Me.OperatorAt(i).Signs(0))
-            '        End If
-
-            '    Next
-
-            '    str.Append(vbCrLf & "VALUE" & vbTab)
-            '    For i As Integer = 0 To Me.ObjectCount - 1
-
-            '        If Me.IsRemoved(i) Then Continue For
-            '        If i > 0 Then str.Append(vbTab)
-
-            '        If Me.ObjectAt(i) Is Nothing Then
-            '            str.Append("Null")
-            '        Else
-            '            str.Append(Me.ObjectAt(i).ToString())
-            '        End If
-
-            '    Next
-            '    str.Append(vbCrLf & "TOTAL ITEMS " & vbTab & Me.ValidCount)
-            '    Return str.ToString()
-            'End Function
         End Class
-
+#End Region
+#Region "Event Data"
         ''' <summary>
         ''' Event data for Cantus threading events
         ''' </summary>
@@ -931,7 +1064,6 @@ Namespace Evaluator
             Inherits EventArgs
             Public Enum eMessage
                 writeText = 0
-                uiMessage
                 readChar
                 readWord
                 readLine
@@ -967,6 +1099,121 @@ Namespace Evaluator
             End Sub
         End Class
 #End Region
+#Region "Thread management"
+        Public NotInheritable Class ThreadManager
+
+            ''' <summary>
+            ''' Get the number of threads managed by this ThreadManager
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property ThreadCount As Integer
+                Get
+                    Return _threadDict.Count
+                End Get
+            End Property
+
+            ''' <summary>
+            ''' The max number of threads to spawn before killing old threads
+            ''' </summary>
+            Private Const MAX_THREADS As Integer = 5
+
+            ''' <summary>
+            ''' A dictionary containing threads managed by this ThreadManager
+            ''' </summary>
+            Private Property _threadDict As New Dictionary(Of Integer, Thread)
+
+            ''' <summary>
+            ''' Counter for determining how many threads have been started since the last kill operation
+            ''' </summary>
+            Private _threadCt As Integer = 0
+
+            ''' <summary>
+            ''' Add a new thread to be managed
+            ''' </summary>
+            ''' <returns>The id of the new thread</returns>
+            Public Function AddThread(thread As Thread) As Integer
+                ManageThreads()
+                _threadDict(thread.ManagedThreadId) = thread
+                Return thread.ManagedThreadId
+            End Function
+
+            ''' <summary>
+            ''' Remove a thread with the specified id from the manager, without terminating it
+            ''' </summary>
+            Public Sub RemoveThreadById(id As Integer)
+                _threadDict.Remove(id)
+            End Sub
+
+            ''' <summary>
+            ''' Get a thread with the specified id from the manager
+            ''' </summary>
+            Public Function GetThreadById(id As Integer) As Thread
+                If Not _threadDict.ContainsKey(id) Then Return Nothing
+                Return _threadDict(id)
+            End Function
+
+            ''' <summary>
+            ''' Kill a thread with the specified id
+            ''' </summary>
+            Public Sub KillThreadWithId(id As Integer)
+                Try
+                    _threadDict(id).Abort()
+                    _threadDict.Remove(id)
+                Catch
+                    Throw New EvaluatorException("Failed to kill thread")
+                End Try
+            End Sub
+
+            ''' <summary>
+            ''' Kill all threads
+            ''' </summary>
+            Public Sub KillAll(spareId As Integer)
+                Dim spared As Thread = Nothing
+                For Each th As Thread In _threadDict.Values
+                    Try
+                        If th.ManagedThreadId = spareId Then
+                            spared = th
+                            Continue For
+                        End If
+                        th.Abort()
+                    Catch
+                    End Try
+                Next
+                _threadDict.Clear()
+                If Not spared Is Nothing Then
+                    _threadDict(spareId) = spared
+                End If
+            End Sub
+
+            ''' <summary>
+            ''' Internal function for managing threads before each async operation
+            ''' </summary>
+            Private Sub ManageThreads()
+                If Me._threadDict.Count > 0 Then
+                    Me._threadCt += 1
+                Else
+                    Me._threadCt = 0
+                End If
+
+                If Me._threadCt > MAX_THREADS Then
+                    Try
+                        For Each th As Thread In Me._threadDict.Values
+                            If Thread.CurrentThread.ManagedThreadId <> th.ManagedThreadId Then
+                                Try
+                                    th.Abort()
+                                    _threadCt -= 1
+                                Catch
+                                End Try
+                            End If
+                        Next
+                    Catch
+                    End Try
+                End If
+
+            End Sub
+        End Class
+#End Region
+#End Region
 
 #Region "Declarations"
 #Region "Constants"
@@ -990,6 +1237,10 @@ Namespace Evaluator
         ''' </summary>
         Public Const SCOPE_SEP As Char = "."c
 
+        ''' <summary>
+        ''' Our thread manager
+        ''' </summary>
+        Public ThreadController As New ThreadManager()
 #End Region
 #Region "Variables"
         ' modes
@@ -1015,6 +1266,11 @@ Namespace Evaluator
         ''' If true, force explicit declaration of variables
         ''' </summary>
         Public Property ExplicitMode As Boolean
+
+        ''' <summary>
+        ''' If true, try to preserve sig figs whenever possible.
+        ''' </summary>
+        Public Property SignificantMode As Boolean
 
         ''' <summary>
         ''' A list of previous answers (last item is the last answer)
@@ -1080,21 +1336,6 @@ Namespace Evaluator
         Private _curLine As Integer
 
         ''' <summary>
-        ''' A list of threads managed by this evaluator
-        ''' </summary>
-        Private _threads As New List(Of Thread)
-
-        ''' <summary>
-        ''' The max number of threads to spawn before killing old threads
-        ''' </summary>
-        Private Const MAX_THREADS As Integer = 5
-
-        ''' <summary>
-        ''' Counter for determining how many threads have been started since the last kill operation
-        ''' </summary>
-        Private _threadCt As Integer = 1
-
-        ''' <summary>
         ''' The id used for the next unnamed scope created from this evaluator
         ''' </summary>
         Private _anonymousScopeID As Integer = 0
@@ -1122,11 +1363,6 @@ Namespace Evaluator
         ''' Event raised when a new thread is started
         ''' </summary>
         Public Event ThreadStarted As ThreadDelegate
-
-        ''' <summary>
-        ''' Event raised when a thread is killed
-        ''' </summary>
-        Public Event ThreadKilled As ThreadDelegate
 
         ''' <summary>
         ''' Raised when Cantus needs to read input input from the console. Handle to use I/O in GUI applications
@@ -1242,7 +1478,7 @@ Namespace Evaluator
 #End Region
 
 #Region "Evaluator Logic"
-
+#Region "Constructors"
         ''' <summary>
         ''' Not publicly accessible, for internal initialization only
         ''' </summary>
@@ -1300,6 +1536,7 @@ Namespace Evaluator
                 Me.ReloadDefault()
             End If
         End Sub
+#End Region
 
         ''' <summary>
         ''' Load all files within a directory, for internal uses only (handled by Load())
@@ -1369,18 +1606,10 @@ Namespace Evaluator
             Dim newScope As String = _Scope
             If Not asInternal Then
                 ' get the scope name for the file
-                If IO.Path.GetFullPath(path) <> path Then
-                    newScope = path.Replace("/", SCOPE_SEP).Replace("\", SCOPE_SEP)
-                    If newScope.StartsWith("include.") Then newScope = newScope.Substring("include.".Count) ' do not include 'include'
-                Else
-                    newScope = IO.Path.GetDirectoryName(path) & SCOPE_SEP & IO.Path.GetFileName(path)
-                    newScope = IO.Path.GetFileName(IO.Path.GetDirectoryName(newScope)) & SCOPE_SEP & IO.Path.GetFileName(newScope)
-                End If
-                If newScope.EndsWith(".can") Then newScope = newScope.Remove(newScope.Length - 4)
-                newScope = newScope.Trim({SCOPE_SEP})
+                newScope = GetFileScopeName(path)
             End If
 
-            Dim tmpEval As Evaluator = DeepCopy(newScope)
+            Dim tmpEval As CantusEvaluator = DeepCopy(newScope)
 
             Dim except As Exception = Nothing
             Try
@@ -1412,6 +1641,7 @@ Namespace Evaluator
                 AngleMode = tmpEval.AngleMode
                 SpacesPerTab = tmpEval.SpacesPerTab
                 ExplicitMode = tmpEval.ExplicitMode
+                SignificantMode = tmpEval.SignificantMode
             End If
 
             tmpEval.Dispose()
@@ -1429,6 +1659,23 @@ Namespace Evaluator
             ' if there was an error, throw it now
             If Not except Is Nothing Then Throw except
         End Sub
+
+        ''' <summary>
+        ''' Get the internal scope name of a file
+        ''' </summary>
+        Friend Shared Function GetFileScopeName(path As String) As String
+            Dim newScope As String = ""
+            If IO.Path.GetFullPath(path) <> path Then
+                newScope = path.Replace("/", SCOPE_SEP).Replace("\", SCOPE_SEP)
+                If newScope.StartsWith("include.") Then newScope = newScope.Substring("include.".Count) ' do not include 'include'
+            Else
+                newScope = IO.Path.GetDirectoryName(path) & SCOPE_SEP & IO.Path.GetFileName(path)
+                newScope = IO.Path.GetFileName(IO.Path.GetDirectoryName(newScope)) & SCOPE_SEP & IO.Path.GetFileName(newScope)
+            End If
+            If newScope.EndsWith(".can") Then newScope = newScope.Remove(newScope.Length - 4)
+            newScope = newScope.Trim({SCOPE_SEP})
+            Return newScope
+        End Function
 
         ''' <summary>
         ''' Import a scope so items declared in it may be accessed directly
@@ -1451,9 +1698,10 @@ Namespace Evaluator
         ''' <param name="noSaveAns">If true, evaluates without saving answers</param>
         ''' <param name="declarative">If true, disallows all expressions other than declarations</param>
         ''' <param name="internal">If true, returns a internal statementresult object with information on return code</param>
+        ''' <param name="feederScript">A ScriptFeeder object to get lines when no more lines are available</param>
         Public Function Eval(script As String, Optional noSaveAns As Boolean = False, Optional declarative As Boolean = False,
-            Optional internal As Boolean = False) As String
-            Return InternalFunctions.O(EvalRaw(script, noSaveAns, declarative, internal))
+            Optional internal As Boolean = False, Optional feederScript As ScriptFeeder = Nothing) As String
+            Return InternalFunctions.O(EvalRaw(script, noSaveAns, declarative, internal, feederScript))
         End Function
 
         ''' <summary>
@@ -1463,8 +1711,8 @@ Namespace Evaluator
         ''' <param name="noSaveAns">If true, evaluates without saving answers</param>
         ''' <param name="declarative">If true, disallows all expressions other than declarations</param>
         ''' <param name="internal">If true, returns a internal statementresult object with information on return code</param>
-        Public Sub EvalAsync(script As String, Optional noSaveAns As Boolean = False, Optional declarative As Boolean = False,
-            Optional internal As Boolean = False)
+        Public Function EvalAsync(script As String, Optional noSaveAns As Boolean = False, Optional declarative As Boolean = False,
+            Optional internal As Boolean = False) As Integer
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, Eval(script, noSaveAns, declarative, internal))
@@ -1472,13 +1720,13 @@ Namespace Evaluator
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
-                                     Me._threads.Remove(Threading.Thread.CurrentThread)
+                                     Me.ThreadController.RemoveThreadById(Thread.CurrentThread.ManagedThreadId)
                                  End Sub)
-            ManageThreads()
-            Me._threads.Add(th)
+            Dim id As Integer = Me.ThreadController.AddThread(th)
             th.Start()
             RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
-        End Sub
+            Return id
+        End Function
 
         ''' <summary>
         ''' Evauate a multi-line script and return the result as a system object
@@ -1487,15 +1735,17 @@ Namespace Evaluator
         ''' <param name="noSaveAns">If true, evaluates without saving answers</param>
         ''' <param name="declarative">If true, disallows all expressions other than declarations</param>
         ''' <param name="internal">If true, returns a internal statementresult object with information on return code</param>
+        ''' <param name="feederScript">A ScriptFeeder object to get lines when no more lines are available</param>
         Public Function EvalRaw(script As String, Optional noSaveAns As Boolean = False,
-            Optional declarative As Boolean = False, Optional internal As Boolean = False) As Object
+            Optional declarative As Boolean = False, Optional internal As Boolean = False,
+                                Optional feederScript As ScriptFeeder = Nothing) As Object
 
             Dim lineNum As Integer = 0
             Dim fullLine As String = ""
 
             Try
-                Dim lines As String() = script.Replace(vbCrLf, vbLf).Split({ControlChars.Cr, ControlChars.Lf})
-                If lines.Length = 0 Then Return Double.NaN
+                Dim lines As List(Of String) = script.Replace(vbCrLf, vbLf).Split({ControlChars.Cr, ControlChars.Lf}).ToList()
+                If lines.Count = 0 Then Return Double.NaN
 
                 ' initial indentation level
                 Dim rootIndentLevel As Integer = -1
@@ -1509,10 +1759,22 @@ Namespace Evaluator
                 Dim curBlockIndent As Integer = rootIndentLevel ' the indentation level of this block
                 Dim lastVal As Object = Double.NaN ' the last value we got in an evaluation, returned if no return statement is found
 
-                For lineNum = 0 To lines.Length ' last line is an extra blank line to end blocks
+                For lineNum = 0 To lines.Count ' last line is an extra blank line to end blocks
                     fullLine = ""
 
-                    If lineNum < lines.Length Then
+                    ' feeder
+                    If lineNum = lines.Count AndAlso Not feederScript Is Nothing Then
+                        ' wait for feed
+                        While Not feederScript.IsBusy AndAlso feederScript.IsStarted
+                            Thread.Sleep(250)
+                        End While
+                        If Not feederScript.IsStarted Then
+                            Exit For
+                        End If
+                        lines.Add(feederScript.Dequeue())
+                    End If
+
+                    If lineNum < lines.Count Then
                         fullLine = lines(lineNum)
 
                         ' remove comments
@@ -1582,7 +1844,7 @@ Namespace Evaluator
 
                     For i As Integer = 0 To spl.Count - 1
                         Dim l As String = spl(i)
-                        If String.IsNullOrWhiteSpace(l) AndAlso lineNum < lines.Length AndAlso i > 0 Then Continue For ' skip empty
+                        If String.IsNullOrWhiteSpace(l) AndAlso lineNum < lines.Count AndAlso i > 0 Then Continue For ' skip empty
 
                         If Not curSM Is Nothing AndAlso Not curBlock Is Nothing Then
                             ' if we are appending to a statement block
@@ -1736,6 +1998,16 @@ Namespace Evaluator
                             End If
                         End If
                     Next
+                    If lineNum = lines.Count AndAlso Not feederScript Is Nothing Then
+                        ' wait for feed
+                        While Not feederScript.IsBusy AndAlso feederScript.IsStarted
+                            Thread.Sleep(250)
+                        End While
+                        If Not feederScript.IsStarted Then
+                            Exit For
+                        End If
+                        lines.Add(feederScript.Dequeue())
+                    End If
                 Next
 
                 If internal Then
@@ -1780,8 +2052,8 @@ Namespace Evaluator
         ''' <param name="noSaveAns">If true, evaluates without saving answers</param>
         ''' <param name="declarative">If true, disallows all expressions other than declarations</param>
         ''' <param name="internal">If true, returns a internal statementresult object with information on return code</param>
-        Public Sub EvalRawAsync(script As String, Optional noSaveAns As Boolean = False, Optional declarative As Boolean = False,
-            Optional internal As Boolean = False)
+        Public Function EvalRawAsync(script As String, Optional noSaveAns As Boolean = False, Optional declarative As Boolean = False,
+            Optional internal As Boolean = False) As Integer
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, EvalRaw(script, noSaveAns, declarative, internal))
@@ -1789,13 +2061,13 @@ Namespace Evaluator
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
-                                     Me._threads.Remove(Threading.Thread.CurrentThread)
+                                     Me.ThreadController.RemoveThreadById(Thread.CurrentThread.ManagedThreadId)
                                  End Sub)
-            ManageThreads()
-            Me._threads.Add(th)
+            Me.ThreadController.AddThread(th)
             th.Start()
             RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
-        End Sub
+            Return th.ManagedThreadId
+        End Function
 
         ''' <summary>
         ''' Given a line of text, finds the level of indentation. 
@@ -1833,7 +2105,7 @@ Namespace Evaluator
         ''' <param name="noSaveAns">If true, evaluates without saving answers</param>
         ''' <param name="conditionMode">If true, the = operator is always used for comparison 
         ''' (otherwise both assignment and comparison)</param>
-        Public Sub EvalExprAsync(expr As String, noSaveAns As Boolean, conditionMode As Boolean)
+        Public Function EvalExprAsync(expr As String, noSaveAns As Boolean, conditionMode As Boolean) As Integer
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, EvalExpr(expr, noSaveAns, conditionMode))
@@ -1841,13 +2113,13 @@ Namespace Evaluator
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
-                                     Me._threads.Remove(Threading.Thread.CurrentThread)
+                                     Me.ThreadController.RemoveThreadById(Thread.CurrentThread.ManagedThreadId)
                                  End Sub)
-            ManageThreads()
-            Me._threads.Add(th)
+            Dim id As Integer = Me.ThreadController.AddThread(th)
             th.Start()
             RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
-        End Sub
+            Return id
+        End Function
 
         ''' <summary>
         ''' Evauate a mathematical expression and return the resulting object
@@ -1902,7 +2174,7 @@ Namespace Evaluator
         ''' <param name="noSaveAns">If true, evaluates without saving answers</param>
         ''' <param name="conditionMode">If true, the = operator is always used for comparison 
         ''' (otherwise both assignment and comparison)</param>
-        Public Sub EvalExprRawAsync(expr As String, noSaveAns As Boolean, conditionMode As Boolean)
+        Public Function EvalExprRawAsync(expr As String, noSaveAns As Boolean, conditionMode As Boolean) As Integer
             Dim th As New Thread(Sub()
                                      Try
                                          RaiseEvent EvalComplete(Me, EvalExprRaw(expr, noSaveAns, conditionMode))
@@ -1910,13 +2182,13 @@ Namespace Evaluator
                                      Catch ex As Exception
                                          RaiseEvent EvalComplete(Me, ex.Message.Trim())
                                      End Try
-                                     Me._threads.Remove(Threading.Thread.CurrentThread)
+                                     Me.ThreadController.RemoveThreadById(Thread.CurrentThread.ManagedThreadId)
                                  End Sub)
-            ManageThreads()
-            Me._threads.Add(th)
+            Dim id As Integer = Me.ThreadController.AddThread(th)
             th.Start()
             RaiseEvent ThreadStarted(Me, New CantusThreadEventArgs(th.ManagedThreadId))
-        End Sub
+            Return id
+        End Function
 
         ''' <summary>
         ''' Goes through a list of tokens and evaluates all operators by precedence
@@ -2084,7 +2356,7 @@ Namespace Evaluator
                         Dim eo As ObjectTypes.EvalObjectBase = Nothing
 
                         ' if the object is not empty we try to detect its type
-                        If Not objstr = "" Then eo = ObjectTypes.StrDetectType(objstr, Me)
+                        If Not objstr = "" Then eo = ObjectTypes.StrDetectType(objstr, Me, numberPreserveSigFigs:=SignificantMode)
 
                         If Not objstr = "" Then ' if the object is not empty
 
@@ -2264,7 +2536,8 @@ Namespace Evaluator
 
             ' add remaining bit at the end
             If idx < expr.Length AndAlso Not expr.Substring(idx, expr.Length - idx).Trim() = "" Then
-                Dim eo As ObjectTypes.EvalObjectBase = ObjectTypes.StrDetectType(expr.Substring(idx, expr.Length - idx).Trim())
+                Dim eo As ObjectTypes.EvalObjectBase = ObjectTypes.StrDetectType(expr.Substring(idx, expr.Length - idx).Trim(),
+                                                                                 numberPreserveSigFigs:=SignificantMode)
 
                 ' if the object we get is an identifier, we try to break it into variables which are resolved using ResolveVariables
                 If ObjectTypes.Identifier.IsType(eo) Then
@@ -2360,7 +2633,7 @@ Namespace Evaluator
                     Try
                         If baseObj Is Nothing OrElse (TypeOf br.Resolve() Is Double AndAlso Double.IsNaN(CDbl(br.Resolve())) OrElse
                             TypeOf br.Resolve() Is BigDecimal AndAlso CType(br.Resolve(), BigDecimal).IsUndefined) Then
-                            baseObj = StrDetectType(baseTxt, Me, True)
+                            baseObj = StrDetectType(baseTxt, Me, True, numberPreserveSigFigs:=SignificantMode)
                             br = New Reference(baseObj)
                         End If
                     Catch
@@ -2400,6 +2673,8 @@ Namespace Evaluator
                         Reference())
                         If TypeOf DirectCast(r, Reference).GetRefObject() Is Reference Then
                             argLst.Add(r)
+                        ElseIf TypeOf r.GetRefObject() Is Number Then
+                            argLst.Add(DirectCast(r.GetRefObject(), Number).BigDecValue())
                         Else
                             argLst.Add(r.GetValue())
                         End If
@@ -2407,9 +2682,13 @@ Namespace Evaluator
                 ElseIf TypeOf baseObj Is Reference
                     If TypeOf DirectCast(baseObj, Reference).GetRefObject() Is Reference Then
                         argLst.Add(baseObj)
+                    ElseIf TypeOf DirectCast(baseObj, Reference).GetRefObject() Is Number Then
+                        argLst.Add(DirectCast(DirectCast(baseObj, Reference).GetRefObject(), Number).BigDecValue())
                     Else
                         argLst.Add(DirectCast(baseObj, Reference).GetValue())
                     End If
+                ElseIf TypeOf baseObj Is Number Then
+                    argLst.Add(DirectCast(baseObj, Number).BigDecValue())
                 Else
                     argLst.Add(baseObj.GetValue())
                 End If
@@ -2467,6 +2746,8 @@ Namespace Evaluator
                     Else
                         If TypeOf ref.GetRefObject() Is Reference Then
                             argLst.Add(ref)
+                        ElseIf TypeOf ref.GetRefObject() Is Number Then
+                            argLst.Add(DirectCast(ref.GetRefObject(), Number).BigDecValue())
                         Else
                             argLst.Add(ref.GetValue())
                         End If
@@ -2503,7 +2784,7 @@ Namespace Evaluator
                                                           ": " & lambda.Args.Count & " parameter(s) expected")
                         Else
                             ' execute
-                            Dim tmpEvaluator As Evaluator = ci.UserClass.Evaluator.SubEvaluator()
+                            Dim tmpEvaluator As CantusEvaluator = ci.UserClass.Evaluator.SubEvaluator()
                             tmpEvaluator.Scope = ci.InnerScope
                             tmpEvaluator.SubScope()
                             tmpEvaluator.SetDefaultVariable(New Reference(ci))
@@ -2600,9 +2881,342 @@ Namespace Evaluator
             End While
             Return ret
         End Function
+
+        Private _visClass As HashSet(Of UserClass)
+        ''' <summary>
+        ''' Serialize a user class in a way that preserves inheritance
+        ''' </summary>
+        ''' <returns></returns>
+        Private Function SerializeRelatedClasses(uc As UserClass) As StringBuilder
+            Dim result As New StringBuilder
+
+            _visClass.Add(uc)
+
+            For Each b As String In uc.BaseClasses
+                If Not UserClasses.ContainsKey(b) Then Continue For
+                Dim baseUC As UserClass = UserClasses(b)
+                If _visClass.Contains(baseUC) Then Continue For
+                result.Append(SerializeRelatedClasses(baseUC))
+            Next
+
+            result.AppendLine(uc.ToString(Scope))
+            Return result
+        End Function
+
+        ''' <summary>
+        ''' Convert the evaluator's user functions, variables, and configuration into a
+        '''  script that can be ran again for storage
+        ''' </summary>
+        Public Function ToScript() As String
+            Dim serialized As New StringBuilder()
+            serialized.AppendLine("# Cantus " & InternalFunctions.Ver() &
+                              " auto-generated initialization script")
+            serialized.AppendLine("# Use caution when modifying manually").Append(vbNewLine)
+            serialized.AppendLine("# Modes")
+
+            serialized.Append("_output(").Append(ControlChars.Quote).Append(OutputFormat.ToString()).Append(ControlChars.Quote).Append(")").
+            Append(vbNewLine)
+            serialized.Append("_anglerepr(").Append(ControlChars.Quote).Append(AngleMode.ToString()).Append(ControlChars.Quote).
+            Append(")").Append(vbNewLine)
+            serialized.Append("_spacespertab(").Append(SpacesPerTab.ToString()).Append(")").Append(vbNewLine)
+            serialized.Append("_sigfigs(").Append(SignificantMode.ToString()).Append(")").Append(vbNewLine)
+
+            serialized.AppendLine().AppendLine("# Class Definitions")
+            _visClass = New HashSet(Of UserClass)()
+
+            For Each uc As KeyValuePair(Of String, UserClass) In UserClasses
+                ' Do not output if it is from an external scope -- it is already saved there somewhere
+                If Not _visClass.Contains(uc.Value) AndAlso
+                                      Not IsExternalScope(uc.Value.DeclaringScope) AndAlso Not uc.Value.Modifiers.Contains("internal") Then
+                    serialized.Append(SerializeRelatedClasses(uc.Value))
+                End If
+            Next
+
+            serialized.AppendLine().AppendLine("# Function Definitions")
+            For Each func As KeyValuePair(Of String, UserFunction) In UserFunctions
+                ' Do not output if it is from an external scope -- it is already saved there somewhere.
+                ' Also do not save 'internal' variables and functions - they are already saved with classes
+                If Not IsExternalScope(func.Value.DeclaringScope) AndAlso Not func.Value.Modifiers.Contains("internal") Then
+                    serialized.AppendLine(func.Value.ToString(_Scope))
+                End If
+            Next
+
+            serialized.AppendLine().AppendLine("# Variable Definitions")
+            '
+            For Each var As KeyValuePair(Of String, Variable) In Variables.ToArray()
+                Dim def As ObjectTypes.EvalObjectBase = var.Value.Reference.ResolveObj()
+
+                If Not def Is Nothing AndAlso (
+                Not TypeOf def Is ObjectTypes.Number OrElse Not Double.IsNaN(CDbl(def.GetValue()))) AndAlso
+                 Not TypeOf def Is ObjectTypes.Reference AndAlso Not var.Value.Modifiers.Contains("internal") AndAlso
+                Not var.Key = DEFAULT_VAR_NAME AndAlso
+                Not (IsExternalScope(var.Value.DeclaringScope)) Then
+
+                    Dim defs As String
+
+                    Dim fullName As String = RemoveRedundantScope(var.Key, _Scope)
+
+                    If TypeOf def Is ClassInstance Then ' special treatment for class instances
+                        Dim ci As ClassInstance = DirectCast(def, ClassInstance)
+                        Dim sb As New StringBuilder()
+                        sb.Append(ci.UserClass.Name)
+                        sb.AppendLine("()")
+                        For Each f As String In ci.Fields.Keys
+                            sb.Append(fullName).Append(SCOPE_SEP).Append(f).Append(" = ").AppendLine(ci.Fields(f).ToString())
+                        Next
+                        defs = sb.ToString()
+                    Else
+                        defs = def.ToString()
+                    End If
+
+                    serialized.Append(fullName).Append("=").AppendLine(defs)
+                End If
+            Next
+
+
+            If ExplicitMode Then
+                serialized.AppendLine().AppendLine("# Explicit mode switch")
+                serialized.Append("_explicit(").Append(ExplicitMode.ToString()).Append(")").Append(vbNewLine)
+            End If
+
+            serialized.AppendLine().AppendLine("# End of Cantus auto-generated initialization script. DO NOT modify this comment.")
+            serialized.AppendLine("# You may write additional initialization code below this line.")
+
+            Return serialized.ToString()
+        End Function
+
+        ''' <summary>
+        ''' Given a system type, returns the name of the equivalent type used inside Cantus
+        ''' </summary>
+        Public Shared Function GetEvaluatorTypeName(type As Type) As String
+            Select Case type
+                Case GetType(String)
+                    Return "Text"
+                Case GetType(Double), GetType(BigDecimal)
+                    Return "Number"
+                Case GetType(SortedDictionary(Of ObjectTypes.Reference, ObjectTypes.Reference))
+                    Return "Set"
+                Case GetType(Dictionary(Of ObjectTypes.Reference, ObjectTypes.Reference))
+                    Return "HashSet"
+                Case GetType(List(Of ObjectTypes.Reference))
+                    Return "Matrix"
+                Case GetType(LinkedList(Of ObjectTypes.Reference))
+                    Return "LinkedList"
+                Case GetType(ObjectTypes.Reference())
+                    Return "Tuple"
+                Case GetType(ObjectTypes.Reference)
+                    Return "Reference"
+                Case GetType(ObjectTypes.Lambda)
+                    Return "Function"
+
+                Case GetType(ICollection(Of ObjectTypes.Reference))
+                    Return "(Matrix, Set, HashSet, Tuple, LinkedList)"
+                Case GetType(IEnumerable(Of ObjectTypes.Reference)), GetType(IList(Of ObjectTypes.Reference))
+                    Return "(Matrix, LinkedList)"
+                Case GetType(IDictionary(Of ObjectTypes.Reference, ObjectTypes.Reference))
+                    Return "(Set, HashSet)"
+
+                Case GetType(Object)
+                    Return "(Variable)"
+                Case Else
+                    Return type.Name
+            End Select
+        End Function
+
+        ''' <summary>
+        ''' Create a copy of the evaluator containing the same user functions, variables,
+        ''' and functions starting at the current line
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function SubEvaluator(Optional ByVal lineNumber As Integer = -1, Optional ByVal subScopeName As String = "") As CantusEvaluator
+            If lineNumber < 0 Then lineNumber = _curLine
+
+            Dim varsCopy As New Dictionary(Of String, Variable)
+
+            Dim tmp As KeyValuePair(Of String, Variable)() = Me.Variables.ToArray()
+            For i As Integer = 0 To tmp.Count - 1
+                If TypeOf tmp(i).Value.Reference.Resolve() Is Double AndAlso
+                Double.IsNaN(CDbl(tmp(i).Value.Reference.Resolve())) Then Continue For ' skip undefined vars
+                varsCopy(tmp(i).Key) = tmp(i).Value
+            Next
+
+            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
+            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
+
+            ' if no scope name is given then give it the next anonymous scope
+            If subScopeName = "" Then subScopeName = GetAnonymousSubscope()
+
+            Dim res As New CantusEvaluator(Me.OutputFormat, Me.AngleMode,
+                             Me.SpacesPerTab, Me.ExplicitMode, Me.PrevAns, varsCopy, funcCopy, classesCopy,
+                                      lineNumber, _Scope & SCOPE_SEP & subScopeName, False)
+            For Each import As String In GetAllAccessibleScopes()
+                res.Import(import)
+            Next
+
+            Return res
+        End Function
+
+        ''' <summary>
+        ''' Create an identical copy of the evaluator containing deep copies of the same user functions, variables, and functions
+        ''' </summary>
+        ''' <returns></returns>
+        Friend Function DeepCopy(Optional scopeName As String = "") As CantusEvaluator
+            Dim varsCopy As New Dictionary(Of String, Variable)
+            Try
+                For Each k As KeyValuePair(Of String, Variable) In
+                Variables.ToArray()
+                    If TypeOf k.Value.Reference.Resolve() Is Double AndAlso
+                Double.IsNaN(CDbl(k.Value.Reference.Resolve())) Then Continue For ' skip undefined vars
+                    varsCopy.Add(k.Key, New Variable(k.Value.Name, DirectCast(k.Value.
+                                                 Reference.GetDeepCopy(),
+                             ObjectTypes.Reference), k.Value.DeclaringScope))
+                Next
+            Catch
+            End Try
+
+            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
+            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
+
+            Dim res As New CantusEvaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
+                             Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine,
+                                 If(scopeName = "", Me._Scope, scopeName), False)
+            For Each import As String In GetAllAccessibleScopes()
+                res.Import(import)
+            Next
+            Return res
+        End Function
+
+        ''' <summary>
+        ''' Create an identical copy of the evaluator containing references to the same user functions, variables, and functions
+        ''' </summary>
+        ''' <returns></returns>
+        Friend Function ShallowCopy(Optional scopeName As String = "") As CantusEvaluator
+            Dim varsCopy As New Dictionary(Of String, Variable)
+            Try
+                For Each k As KeyValuePair(Of String, Variable) In
+                Variables.ToArray()
+                    If TypeOf k.Value.Reference.Resolve() Is Double AndAlso
+                Double.IsNaN(CDbl(k.Value.Reference.Resolve())) Then Continue For ' skip undefined vars
+                    varsCopy.Add(k.Key, New Variable(k.Value.Name, k.Value.
+                                                 Reference, k.Value.DeclaringScope))
+                Next
+            Catch
+            End Try
+
+            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
+            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
+
+            Dim res As New CantusEvaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
+                             Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine,
+                                 If(scopeName = "", Me._Scope, scopeName), False)
+            For Each import As String In GetAllAccessibleScopes()
+                res.Import(import)
+            Next
+            Return res
+        End Function
+
+        ''' <summary>
+        ''' Stop all threads, optionally sparing the thread marked as haveMercy
+        ''' </summary>
+        Public Sub StopAll(Optional haveMercy As Integer = -1)
+            Me.StatementRegistar.StopAll()
+            Me.ThreadController.KillAll(haveMercy)
+        End Sub
+
+        ''' <summary>
+        ''' Cleans up threads spawned by this evaluator. Unneeded if no threads spawned.
+        ''' </summary>
+        Friend Sub Dispose() Implements IDisposable.Dispose
+            StopAll()
+            Me.StatementRegistar.Dispose()
+        End Sub
 #End Region
 
-#Region "Variables, User Functions, Past Answers"
+#Region "Scoping"
+        ''' <summary>
+        ''' Gets the base scope of the current scope: for cantus.foo.bar
+        ''' that would be cantus
+        ''' </summary>
+        Friend Shared Function GetScopeBase(scope As String) As String
+            If scope.Contains(SCOPE_SEP) Then
+                Return scope.Remove(scope.IndexOf(SCOPE_SEP)).Trim()
+            Else
+                Return scope.Trim()
+            End If
+        End Function
+
+        ''' <summary>
+        ''' If scope1 is a parent scope of scope2, returns true
+        ''' that would be cantus
+        ''' </summary>
+        Friend Shared Function IsParentScopeOf(scope1 As String, scope2 As String, Optional baseScope As String = "") As Boolean
+            scope1 = RemoveRedundantScope(scope1, baseScope)
+            scope2 = RemoveRedundantScope(scope2, baseScope)
+            Return scope2.StartsWith(scope1 & SCOPE_SEP) OrElse scope1 = scope2
+        End Function
+
+        ''' <summary>
+        ''' Get a list of parent scopes of the scope specified, from closest to furthest
+        ''' that would be cantus
+        ''' </summary>
+        Friend Shared Function GetParentScopes(scope As String) As List(Of String)
+            Dim scopes As New List(Of String)()
+
+            While scope.Contains(SCOPE_SEP)
+                scope = scope.Remove(scope.LastIndexOf(SCOPE_SEP))
+                scopes.Add(scope)
+            End While
+
+            Return scopes
+        End Function
+
+        ''' <summary>
+        ''' Get a list of scopes accessible from the current scope
+        ''' </summary>
+        ''' <returns></returns>
+        Private Function GetAllAccessibleScopes() As List(Of String)
+            Dim checkScopeLst As New List(Of String)
+            checkScopeLst.Add(Scope)
+            checkScopeLst.AddRange(GetParentScopes(Scope).ToArray())
+            checkScopeLst.AddRange(Imported.ToArray())
+            Return checkScopeLst
+        End Function
+
+        ''' <summary>
+        ''' Checks if the first scope is 'external' (that is, 
+        ''' does not have the same base scope) in relation to the second scope.
+        ''' If the second scope is not specified, tests with the scope of this evaluator.
+        ''' </summary>
+        Friend Function IsExternalScope(scope1 As String, Optional scope2 As String = "") As Boolean
+            If scope2 = "" Then scope2 = _Scope
+            Return GetScopeBase(scope1) <> GetScopeBase(scope2)
+        End Function
+
+        ''' <summary>
+        ''' Move this evaluator down to a subscope of the current scope. 
+        ''' If no subscope is specified, gets an anonymous subscope name.
+        ''' </summary>
+        Friend Sub SubScope(Optional subScopeName As String = "")
+            If subScopeName = "" Then subScopeName = GetAnonymousSubscope()
+            _Scope &= SCOPE_SEP & subScopeName
+        End Sub
+
+        ''' <summary>
+        ''' Move this evaluator up to the parent scope
+        ''' </summary>
+        Friend Sub ParentScope()
+            If _Scope.Contains(SCOPE_SEP) Then _Scope = _Scope.Remove(_Scope.LastIndexOf(SCOPE_SEP))
+        End Sub
+
+        ''' <summary>
+        ''' Get an anonymous subscope name
+        ''' </summary>
+        Private Function GetAnonymousSubscope() As String
+            _anonymousScopeID += 1
+
+            If _anonymousScopeID = Int32.MaxValue Then _anonymousScopeID = 0
+            Return "__anonymous_" & _anonymousScopeID - 1
+        End Function
 
         ''' <summary>
         ''' Moves all namespaces to the scope and leaves only the name of the variable or function as name
@@ -2635,6 +3249,9 @@ Namespace Evaluator
             Return scope & SCOPE_SEP & RemoveRedundantScope(name, scope)
         End Function
 
+#End Region
+
+#Region "User Data: Evaluator Variables, Functions, Classes, Past Answers"
         ''' <summary>
         ''' Get the value of the variable with the name specified as an IEvalObject
         ''' </summary>
@@ -2790,7 +3407,7 @@ Namespace Evaluator
         ''' </summary>
         ''' <param name="name">Name of the variable</param>
         ''' <param name="ref">Value of the variable as a Reference</param>
-        Public Sub SetVariable(ByVal name As String, ByVal ref As ObjectTypes.Reference,
+        Friend Sub SetVariable(ByVal name As String, ByVal ref As ObjectTypes.Reference,
                                Optional ByVal scope As String = "", Optional ByVal modifiers As IEnumerable(Of String) = Nothing)
             ' set declaring scope
             If String.IsNullOrWhiteSpace(name) Then Throw New EvaluatorException("Variable name cannot be empty")
@@ -2897,7 +3514,7 @@ Namespace Evaluator
         ''' <summary>
         ''' Clears all variables, user functions, and previous answers on this evaluator
         ''' </summary>
-        Public Sub Clear()
+        Public Sub ClearEverything()
             Me._Scope = ROOT_NAMESPACE
             ClearVariables()
             UserFunctions.Clear()
@@ -3074,7 +3691,7 @@ Namespace Evaluator
                     Next
                 End If
 
-                Dim tmpEval As Evaluator
+                Dim tmpEval As CantusEvaluator
 
                 ' use a scoped evaluator for function call
                 tmpEval = SubEvaluator(0)
@@ -3138,6 +3755,8 @@ Namespace Evaluator
                 Dim maxParamCt As Integer = 0
                 Dim parameterMismatch As Boolean = False
 
+                Dim outputSigFigs As Integer = Integer.MaxValue
+
                 For Each paraminfo As Reflection.ParameterInfo In info.GetParameters()
                     If Not paraminfo.IsOptional Then minParamCt += 1
                     If maxParamCt >= args.Count Then
@@ -3146,14 +3765,27 @@ Namespace Evaluator
                         Else
                             parameterMismatch = True
                         End If
+                    Else
+                        ' maintain support for legacy functions where bigdecimals are not supported
+                        Dim exceptions As String() = {"Log"} ' list of exceptions
+                        If Not paraminfo.ParameterType() = GetType(BigDecimal) AndAlso
+                                args(maxParamCt).GetType() = GetType(BigDecimal) AndAlso
+                                Not exceptions.Contains(info.Name) Then
+                            outputSigFigs = DirectCast(args(maxParamCt), BigDecimal).SigFigs
+                            args(maxParamCt) = CDbl(DirectCast(args(maxParamCt), BigDecimal))
+                        ElseIf args(maxParamCt).GetType() = GetType(BigDecimal) Then
+                            maxParamCt += 1
+                            Continue For
+                        End If
 
-                    ElseIf Not paraminfo.ParameterType().IsAssignableFrom(args(maxParamCt).GetType()) Then
-                        Dim paramTypeName As String = GetEvaluatorTypeName(paraminfo.ParameterType())
+                        If Not paraminfo.ParameterType().IsAssignableFrom(args(maxParamCt).GetType()) Then
+                            Dim paramTypeName As String = GetEvaluatorTypeName(paraminfo.ParameterType())
 
-                        If paramTypeName.Contains("`") Then paramTypeName = paramTypeName.Remove(paramTypeName.IndexOf("`"))
+                            If paramTypeName.Contains("`") Then paramTypeName = paramTypeName.Remove(paramTypeName.IndexOf("`"))
 
-                        Throw New EvaluatorException(name.ToLowerInvariant() & " Parameter " & maxParamCt + 1 &
-                                                    " '" & paramTypeName & "' Type Expected")
+                            Throw New EvaluatorException(name.ToLowerInvariant() & " Parameter " & maxParamCt + 1 &
+                                                        " '" & paramTypeName & "' Type Expected")
+                        End If
                     End If
                     maxParamCt += 1
                 Next
@@ -3169,6 +3801,8 @@ Namespace Evaluator
                     Dim execResult As Object = info.Invoke(InternalFunctions, args.ToArray())
                     If execResult Is Nothing Then ' if is null then we should return NaN
                         Return Double.NaN
+                    ElseIf TypeOf execResult Is Double Then
+                        Return New BigDecimal(CDbl(execResult), outputSigFigs) ' legacy function support
                     Else
                         Return execResult
                     End If
@@ -3218,8 +3852,8 @@ Namespace Evaluator
         ''' inheriting from the classes specified
         ''' </summary>
         Public Sub DefineUserClass(name As String, def As String,
-                                   Optional inherit As IEnumerable(Of String) = Nothing,
-                                   Optional modifiers As IEnumerable(Of String) = Nothing)
+                               Optional inherit As IEnumerable(Of String) = Nothing,
+                               Optional modifiers As IEnumerable(Of String) = Nothing)
             name = name.Trim()
             If Not IsValidIdentifier(name) Then Throw New SyntaxException("''" & name & "'' is not a valid class name.")
 
@@ -3237,7 +3871,7 @@ Namespace Evaluator
                         If Not HasUserClass(inh) Then Throw New EvaluatorException(inh & " is not a valid base class name")
                         Dim baseClass As UserClass = GetUserClass(inh)
                         If baseClass.AllParentClasses.Contains(key) Then Throw New EvaluatorException(inh &
-                                                              ": circular inheritance detected")
+                                                          ": circular inheritance detected")
                         baseClasses.Add(baseClass.FullName)
                     Next
                 End If
@@ -3249,377 +3883,7 @@ Namespace Evaluator
                 Throw ex
             End Try
         End Sub
-
-        ''' <summary>
-        ''' Gets the base scope of the current scope: for cantus.foo.bar
-        ''' that would be cantus
-        ''' </summary>
-        Friend Shared Function GetScopeBase(scope As String) As String
-            If scope.Contains(SCOPE_SEP) Then
-                Return scope.Remove(scope.IndexOf(SCOPE_SEP)).Trim()
-            Else
-                Return scope.Trim()
-            End If
-        End Function
-
-        ''' <summary>
-        ''' If scope1 is a parent scope of scope2, returns true
-        ''' that would be cantus
-        ''' </summary>
-        Friend Shared Function IsParentScopeOf(scope1 As String, scope2 As String, Optional baseScope As String = "") As Boolean
-            scope1 = RemoveRedundantScope(scope1, baseScope)
-            scope2 = RemoveRedundantScope(scope2, baseScope)
-            Return scope2.StartsWith(scope1 & SCOPE_SEP) OrElse scope1 = scope2
-        End Function
-
-        ''' <summary>
-        ''' Get a list of parent scopes of the scope specified, from closest to furthest
-        ''' that would be cantus
-        ''' </summary>
-        Friend Shared Function GetParentScopes(scope As String) As List(Of String)
-            Dim scopes As New List(Of String)()
-
-            While scope.Contains(SCOPE_SEP)
-                scope = scope.Remove(scope.LastIndexOf(SCOPE_SEP))
-                scopes.Add(scope)
-            End While
-
-            Return scopes
-        End Function
-
-        ''' <summary>
-        ''' Get a list of scopes accessible from the current scope
-        ''' </summary>
-        ''' <returns></returns>
-        Private Function GetAllAccessibleScopes() As List(Of String)
-            Dim checkScopeLst As New List(Of String)
-            checkScopeLst.Add(Scope)
-            checkScopeLst.AddRange(GetParentScopes(Scope).ToArray())
-            checkScopeLst.AddRange(Imported.ToArray())
-            Return checkScopeLst
-        End Function
-
-        ''' <summary>
-        ''' Checks if the first scope is 'external' (that is, 
-        ''' does not have the same base scope) in relation to the second scope.
-        ''' If the second scope is not specified, tests with the scope of this evaluator.
-        ''' </summary>
-        Friend Function IsExternalScope(scope1 As String, Optional scope2 As String = "") As Boolean
-            If scope2 = "" Then scope2 = _Scope
-            Return GetScopeBase(scope1) <> GetScopeBase(scope2)
-        End Function
-
-        Private _visClass As HashSet(Of UserClass)
-        ''' <summary>
-        ''' Serialize a user class in a way that preserves inheritance
-        ''' </summary>
-        ''' <returns></returns>
-        Private Function SerializeRelatedClasses(uc As UserClass) As StringBuilder
-            Dim result As New StringBuilder
-
-            _visClass.Add(uc)
-
-            For Each b As String In uc.BaseClasses
-                If Not UserClasses.ContainsKey(b) Then Continue For
-                Dim baseUC As UserClass = UserClasses(b)
-                If _visClass.Contains(baseUC) Then Continue For
-                result.Append(SerializeRelatedClasses(baseUC))
-            Next
-
-            result.AppendLine(uc.ToString(Scope))
-            Return result
-        End Function
-
-        ''' <summary>
-        ''' Convert the evaluator's user functions, variables, and configuration into a
-        '''  script that can be ran again for storage
-        ''' </summary>
-        ''' <returns></returns>
-        Public Function ToScript() As String
-            Dim serialized As New StringBuilder()
-            serialized.AppendLine("# Cantus " & InternalFunctions.Ver() &
-                                  " auto-generated initialization script")
-            serialized.AppendLine("# Use caution when modifying manually").Append(vbNewLine)
-            serialized.AppendLine("# Modes")
-
-            serialized.Append("_Output(").Append(ControlChars.Quote).Append(OutputFormat.ToString()).Append(ControlChars.Quote).Append(")").
-                Append(vbNewLine)
-            serialized.Append("_AngleRepr(").Append(ControlChars.Quote).Append(AngleMode.ToString()).Append(ControlChars.Quote).
-                Append(")").Append(vbNewLine)
-            serialized.Append("_SpacesPerTab(").Append(SpacesPerTab.ToString()).Append(")").Append(vbNewLine)
-
-            serialized.AppendLine().AppendLine("# Class Definitions")
-            _visClass = New HashSet(Of UserClass)()
-
-            For Each uc As KeyValuePair(Of String, UserClass) In UserClasses
-                ' Do not output if it is from an external scope -- it is already saved there somewhere
-                If Not _visClass.Contains(uc.Value) AndAlso
-                                          Not IsExternalScope(uc.Value.DeclaringScope) AndAlso Not uc.Value.Modifiers.Contains("internal") Then
-                    serialized.Append(SerializeRelatedClasses(uc.Value))
-                End If
-            Next
-
-            serialized.AppendLine().AppendLine("# Function Definitions")
-            For Each func As KeyValuePair(Of String, UserFunction) In UserFunctions
-                ' Do not output if it is from an external scope -- it is already saved there somewhere.
-                ' Also do not save 'internal' variables and functions - they are already saved with classes
-                If Not IsExternalScope(func.Value.DeclaringScope) AndAlso Not func.Value.Modifiers.Contains("internal") Then
-                    serialized.AppendLine(func.Value.ToString(_Scope))
-                End If
-            Next
-
-            serialized.AppendLine().AppendLine("# Variable Definitions")
-            '
-            For Each var As KeyValuePair(Of String, Variable) In Variables.ToArray()
-                Dim def As ObjectTypes.EvalObjectBase = var.Value.Reference.ResolveObj()
-
-                If Not def Is Nothing AndAlso (
-                    Not TypeOf def Is ObjectTypes.Number OrElse Not Double.IsNaN(CDbl(def.GetValue()))) AndAlso
-                     Not TypeOf def Is ObjectTypes.Reference AndAlso Not var.Value.Modifiers.Contains("internal") AndAlso
-                    Not var.Key = DEFAULT_VAR_NAME AndAlso
-                    Not (IsExternalScope(var.Value.DeclaringScope)) Then
-
-                    Dim defs As String
-
-                    Dim fullName As String = RemoveRedundantScope(var.Key, _Scope)
-
-                    If TypeOf def Is ClassInstance Then ' special treatment for class instances
-                        Dim ci As ClassInstance = DirectCast(def, ClassInstance)
-                        Dim sb As New StringBuilder()
-                        sb.Append(ci.UserClass.Name)
-                        sb.AppendLine("()")
-                        For Each f As String In ci.Fields.Keys
-                            sb.Append(fullName).Append(SCOPE_SEP).Append(f).Append(" = ").AppendLine(ci.Fields(f).ToString())
-                        Next
-                        defs = sb.ToString()
-                    Else
-                        defs = def.ToString()
-                    End If
-
-                    serialized.Append(fullName).Append("=").AppendLine(defs)
-                End If
-            Next
-
-
-            If ExplicitMode Then
-                serialized.AppendLine().AppendLine("# Explicit mode switch")
-                serialized.Append("_explicit(").Append(ExplicitMode.ToString()).Append(")").Append(vbNewLine)
-            End If
-
-            serialized.AppendLine().AppendLine("# End of Cantus auto-generated initialization script. DO NOT modify this comment.")
-            serialized.AppendLine("# You may write additional initialization code below this line.")
-
-            Return serialized.ToString()
-        End Function
-
-        ''' <summary>
-        ''' Given a system type, returns the name of the equivalent type used inside Cantus
-        ''' </summary>
-        Public Shared Function GetEvaluatorTypeName(type As Type) As String
-            Select Case type
-                Case GetType(String)
-                    Return "Text"
-                Case GetType(Double), GetType(BigDecimal)
-                    Return "Number"
-                Case GetType(SortedDictionary(Of ObjectTypes.Reference, ObjectTypes.Reference))
-                    Return "Set"
-                Case GetType(Dictionary(Of ObjectTypes.Reference, ObjectTypes.Reference))
-                    Return "HashSet"
-                Case GetType(List(Of ObjectTypes.Reference))
-                    Return "Matrix"
-                Case GetType(LinkedList(Of ObjectTypes.Reference))
-                    Return "LinkedList"
-                Case GetType(ObjectTypes.Reference())
-                    Return "Tuple"
-                Case GetType(ObjectTypes.Reference)
-                    Return "Reference"
-                Case GetType(ObjectTypes.Lambda)
-                    Return "Function"
-
-                Case GetType(ICollection(Of ObjectTypes.Reference))
-                    Return "(Matrix, Set, HashSet, Tuple, LinkedList)"
-                Case GetType(IEnumerable(Of ObjectTypes.Reference)), GetType(IList(Of ObjectTypes.Reference))
-                    Return "(Matrix, LinkedList)"
-                Case GetType(IDictionary(Of ObjectTypes.Reference, ObjectTypes.Reference))
-                    Return "(Set, HashSet)"
-
-                Case GetType(Object)
-                    Return "(Variable)"
-                Case Else
-                    Return type.Name
-            End Select
-        End Function
-
-        ''' <summary>
-        ''' Move this evaluator down to a subscope of the current scope. 
-        ''' If no subscope is specified, gets an anonymous subscope name.
-        ''' </summary>
-        Public Sub SubScope(Optional subScopeName As String = "")
-            If subScopeName = "" Then subScopeName = GetAnonymousSubscope()
-            _Scope &= SCOPE_SEP & subScopeName
-        End Sub
-
-        ''' <summary>
-        ''' Move this evaluator up to the parent scope
-        ''' </summary>
-        Public Sub ParentScope()
-            If _Scope.Contains(SCOPE_SEP) Then _Scope = _Scope.Remove(_Scope.LastIndexOf(SCOPE_SEP))
-        End Sub
-
-        ''' <summary>
-        ''' Get an anonymous subscope name
-        ''' </summary>
-        Private Function GetAnonymousSubscope() As String
-            _anonymousScopeID += 1
-
-            If _anonymousScopeID = Int32.MaxValue Then _anonymousScopeID = 0
-            Return "__anonymous_" & _anonymousScopeID - 1
-        End Function
-
-        ''' <summary>
-        ''' Create a copy of the evaluator containing the same user functions, variables,
-        ''' and functions starting at the current line
-        ''' </summary>
-        ''' <returns></returns>
-        Public Function SubEvaluator(Optional ByVal lineNumber As Integer = -1, Optional ByVal subScopeName As String = "") As Evaluator
-            If lineNumber < 0 Then lineNumber = _curLine
-
-            Dim varsCopy As New Dictionary(Of String, Variable)
-
-            Dim tmp As KeyValuePair(Of String, Variable)() = Me.Variables.ToArray()
-            For i As Integer = 0 To tmp.Count - 1
-                If TypeOf tmp(i).Value.Reference.Resolve() Is Double AndAlso
-                    Double.IsNaN(CDbl(tmp(i).Value.Reference.Resolve())) Then Continue For ' skip undefined vars
-                varsCopy(tmp(i).Key) = tmp(i).Value
-            Next
-
-            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
-            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
-
-            ' if no scope name is given then give it the next anonymous scope
-            If subScopeName = "" Then subScopeName = GetAnonymousSubscope()
-
-            Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode,
-                                 Me.SpacesPerTab, Me.ExplicitMode, Me.PrevAns, varsCopy, funcCopy, classesCopy,
-                                          lineNumber, _Scope & SCOPE_SEP & subScopeName, False)
-            For Each import As String In GetAllAccessibleScopes()
-                res.Import(import)
-            Next
-
-            Return res
-        End Function
-
-        ''' <summary>
-        ''' Create an identical copy of the evaluator containing deep copies of the same user functions, variables, and functions
-        ''' </summary>
-        ''' <returns></returns>
-        Public Function DeepCopy(Optional scopeName As String = "") As Evaluator
-            Dim varsCopy As New Dictionary(Of String, Variable)
-            Try
-                For Each k As KeyValuePair(Of String, Variable) In
-                    Variables.ToArray()
-                    If TypeOf k.Value.Reference.Resolve() Is Double AndAlso
-                    Double.IsNaN(CDbl(k.Value.Reference.Resolve())) Then Continue For ' skip undefined vars
-                    varsCopy.Add(k.Key, New Variable(k.Value.Name, DirectCast(k.Value.
-                                                     Reference.GetDeepCopy(),
-                                 ObjectTypes.Reference), k.Value.DeclaringScope))
-                Next
-            Catch
-            End Try
-
-            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
-            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
-
-            Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
-                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine,
-                                     If(scopeName = "", Me._Scope, scopeName), False)
-            For Each import As String In GetAllAccessibleScopes()
-                res.Import(import)
-            Next
-            Return res
-        End Function
-
-        ''' <summary>
-        ''' Create an identical copy of the evaluator containing references to the same user functions, variables, and functions
-        ''' </summary>
-        ''' <returns></returns>
-        Public Function ShallowCopy(Optional scopeName As String = "") As Evaluator
-            Dim varsCopy As New Dictionary(Of String, Variable)
-            Try
-                For Each k As KeyValuePair(Of String, Variable) In
-                    Variables.ToArray()
-                    If TypeOf k.Value.Reference.Resolve() Is Double AndAlso
-                    Double.IsNaN(CDbl(k.Value.Reference.Resolve())) Then Continue For ' skip undefined vars
-                    varsCopy.Add(k.Key, New Variable(k.Value.Name, k.Value.
-                                                     Reference, k.Value.DeclaringScope))
-                Next
-            Catch
-            End Try
-
-            Dim funcCopy As New Dictionary(Of String, UserFunction)(Me.UserFunctions)
-            Dim classesCopy As New Dictionary(Of String, UserClass)(Me.UserClasses)
-
-            Dim res As New Evaluator(Me.OutputFormat, Me.AngleMode, Me.SpacesPerTab, Me.ExplicitMode,
-                                 Me.PrevAns, varsCopy, funcCopy, classesCopy, Me._baseLine,
-                                     If(scopeName = "", Me._Scope, scopeName), False)
-            For Each import As String In GetAllAccessibleScopes()
-                res.Import(import)
-            Next
-            Return res
-        End Function
-
-        ''' <summary>
-        ''' Internal function for managing threads before each async operation
-        ''' </summary>
-        Private Sub ManageThreads()
-            If Me._threads.Count > 0 Then
-                Me._threadCt += 1
-            Else
-                Me._threadCt = 0
-            End If
-
-            If Me._threadCt > MAX_THREADS Then
-                Try
-                    If Thread.CurrentThread.ManagedThreadId <> Me._threads(0).ManagedThreadId Then
-                        Dim thid As Integer = Me._threads(0).ManagedThreadId
-                        Me._threads(0).Abort()
-                        Me._threads.RemoveAt(0)
-                        _threadCt -= 1
-                        RaiseEvent ThreadKilled(Me, New CantusThreadEventArgs(thid))
-                    End If
-                Catch
-                End Try
-            End If
-
-        End Sub
-
-        ''' <summary>
-        ''' Stop all threads, optionally sparing the thread marked as haveMercy
-        ''' </summary>
-        Public Sub StopAll(Optional haveMercy As Integer = -1)
-            Me.StatementRegistar.StopAll()
-            For i As Integer = 0 To Me._threads.Count - 1
-                If Me._threads(i).ManagedThreadId = haveMercy Then Continue For
-                Try
-                    Dim thid As Integer = Me._threads(i).ManagedThreadId
-                    Me._threads(i).Abort()
-                    Me._threads.RemoveAt(i)
-                    i -= 1
-                    RaiseEvent ThreadKilled(Me, New CantusThreadEventArgs(thid))
-                Catch
-                End Try
-            Next
-            Me._threadCt = 0
-        End Sub
-
-        ''' <summary>
-        ''' Cleans up threads spawned by this evaluator. Unneeded if no threads spawned.
-        ''' </summary>
-        Friend Sub Dispose() Implements IDisposable.Dispose
-            StopAll()
-            Me.StatementRegistar.Dispose()
-        End Sub
-    End Class
 #End Region
+    End Class
 
 End Namespace

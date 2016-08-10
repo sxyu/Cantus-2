@@ -3,7 +3,7 @@ Imports Cantus.Evaluator
 Imports Cantus.Evaluator.StatementRegistar.StatementResult
 Imports Cantus.Evaluator.ObjectTypes
 Imports Cantus.Evaluator.CommonTypes
-Imports Cantus.Evaluator.Evaluator
+Imports Cantus.Evaluator.CantusEvaluator
 
 Namespace Evaluator
 
@@ -201,7 +201,7 @@ Namespace Evaluator
         ''' </summary>
         Public Property LimitLoops As Boolean = False
 
-        Private _eval As Evaluator
+        Private _eval As CantusEvaluator
         Private _keywords As Dictionary(Of String, Statement)
         Private _mainKeywords As Dictionary(Of String, Statement)
 
@@ -213,7 +213,7 @@ Namespace Evaluator
         ''' <summary>
         ''' Create a new Statement Registar for registering and accessing statements like if/else
         ''' </summary>
-        Public Sub New(parent As Evaluator)
+        Public Sub New(parent As CantusEvaluator)
             _eval = parent
             _keywords = New Dictionary(Of String, Statement)
             _mainKeywords = New Dictionary(Of String, Statement)
@@ -353,7 +353,7 @@ Namespace Evaluator
         ''' </summary>
         Private Function Run(expr As String, Optional vars As Dictionary(Of String, Object) = Nothing,
                              Optional [default] As Reference = Nothing, Optional declarative As Boolean = False) As StatementResult
-            Dim newEval As Evaluator = _eval.SubEvaluator()
+            Dim newEval As CantusEvaluator = _eval.SubEvaluator()
             If Not vars Is Nothing Then
                 For Each k As String In vars.Keys
                     newEval.SetVariable(k, vars(k))
@@ -519,7 +519,7 @@ Namespace Evaluator
                     If LimitLoops AndAlso ct > LoopLimit Then Throw New EvaluatorException("Loop limit reached")
                     If _die Then Throw New EvaluatorException("")
 
-                    Dim tmpEval As Evaluator = _eval.SubEvaluator()
+                    Dim tmpEval As CantusEvaluator = _eval.SubEvaluator()
                     For i As Integer = 0 To vars.Count - 1
                         If i >= lst.Count Then
                             tmpEval.SetVariable(vars(i), Double.NaN)
@@ -570,7 +570,7 @@ Namespace Evaluator
                     If LimitLoops AndAlso ct > LoopLimit Then Throw New EvaluatorException("Loop limit reached")
                     If _die Then Throw New EvaluatorException("")
 
-                    Dim tmpEval As Evaluator = _eval.SubEvaluator()
+                    Dim tmpEval As CantusEvaluator = _eval.SubEvaluator()
                     tmpEval.SetVariable(varname, i)
 
                     result = DirectCast(tmpEval.EvalRaw(blocks(0).Content, noSaveAns:=True, internal:=True), StatementResult)
@@ -697,11 +697,11 @@ Namespace Evaluator
             End If
             var = var.Trim()
 
-            Dim ref As Reference = DirectCast(Globals.Evaluator.GetVariableRef(var), Reference).ResolveRef()
+            Dim ref As Reference = DirectCast(Globals.RootEvaluator.GetVariableRef(var), Reference).ResolveRef()
             ref.SetValue(def)
             _eval.SetVariable(var, ref)
 
-            Return New StatementResult(Globals.Evaluator.GetVariableRef(var), ExecCode.resume)
+            Return New StatementResult(Globals.RootEvaluator.GetVariableRef(var), ExecCode.resume)
         End Function
 
         Private Function StatementDeclareModifier(blocks As List(Of Block)) As StatementResult
@@ -741,13 +741,13 @@ Namespace Evaluator
 
                 If var.Contains(":") Then
                     Dim inhIdx As Integer = var.IndexOf(":")
-                    If Not Evaluator.IsValidIdentifier(var.Remove(inhIdx).Trim()) Then
+                    If Not CantusEvaluator.IsValidIdentifier(var.Remove(inhIdx).Trim()) Then
                         Throw New EvaluatorException("Invalid class name")
                     End If
                     _eval.DefineUserClass(var.Trim(), blocks(0).Content,
                                      var.Substring(inhIdx + 1).Split(","c), keywords)
                 Else
-                    If Not Evaluator.IsValidIdentifier(var.Trim()) Then Throw New EvaluatorException("Invalid class name")
+                    If Not CantusEvaluator.IsValidIdentifier(var.Trim()) Then Throw New EvaluatorException("Invalid class name")
                     _eval.DefineUserClass(var, blocks(0).Content, modifiers:=keywords)
                 End If
 
@@ -776,7 +776,7 @@ Namespace Evaluator
                 var = var.Trim()
 
                 If isGlobal Then
-                    Dim ref As Reference = DirectCast(Globals.Evaluator.GetVariableRef(var), Reference).ResolveRef()
+                    Dim ref As Reference = DirectCast(Globals.RootEvaluator.GetVariableRef(var), Reference).ResolveRef()
                     ref.SetValue(def)
                     _eval.SetVariable(var, ref, modifiers:=keywords)
                 Else
@@ -814,7 +814,7 @@ Namespace Evaluator
                                 _eval.Import(path) ' confirmed, import
                                 Exit Try
                             ElseIf IsParentScopeOf(path, fn.DeclaringScope, _eval.scope) Then ' import relative to current scope?
-                                _eval.Import(_eval.Scope & Evaluator.SCOPE_SEP & path) ' confirmed, import
+                                _eval.Import(_eval.Scope & CantusEvaluator.SCOPE_SEP & path) ' confirmed, import
                                 Exit Try
                             End If
                         Next
@@ -824,7 +824,7 @@ Namespace Evaluator
                                 _eval.Import(path) ' confirmed, import
                                 Exit Try
                             ElseIf IsParentScopeOf(path, var.DeclaringScope, _eval.Scope) Then ' import relative to current scope?
-                                _eval.Import(_eval.Scope & Evaluator.SCOPE_SEP & path) ' confirmed, import
+                                _eval.Import(_eval.Scope & CantusEvaluator.SCOPE_SEP & path) ' confirmed, import
                                 Exit Try
                             End If
                         Next
@@ -853,7 +853,7 @@ Namespace Evaluator
 
         Private Function StatementNamespace(blocks As List(Of Block)) As StatementResult
             If blocks.Count <> 1 Then Throw New SyntaxException("Namespace declaration is invalid ")
-            If Not Evaluator.IsValidIdentifier(blocks(0).Argument.Trim()) Then Throw New EvaluatorException("Invalid namespace name")
+            If Not CantusEvaluator.IsValidIdentifier(blocks(0).Argument.Trim()) Then Throw New EvaluatorException("Invalid namespace name")
 
             _eval.SubScope(blocks(0).Argument.Trim())
 
@@ -873,13 +873,13 @@ Namespace Evaluator
 
             If blocks(0).Argument.ToLower().Contains(":") Then
                 Dim inhIdx As Integer = blocks(0).Argument.ToLower().IndexOf(":")
-                If Not Evaluator.IsValidIdentifier(blocks(0).Argument.Remove(inhIdx).Trim()) Then
+                If Not CantusEvaluator.IsValidIdentifier(blocks(0).Argument.Remove(inhIdx).Trim()) Then
                     Throw New EvaluatorException("Invalid class name")
                 End If
                 _eval.DefineUserClass(blocks(0).Argument.Remove(inhIdx).Trim(), blocks(0).Content,
                                      blocks(0).Argument.Substring(inhIdx + 1).Split(","c))
             Else
-                If Not Evaluator.IsValidIdentifier(blocks(0).Argument.Trim()) Then Throw New EvaluatorException("Invalid class name")
+                If Not CantusEvaluator.IsValidIdentifier(blocks(0).Argument.Trim()) Then Throw New EvaluatorException("Invalid class name")
                 _eval.DefineUserClass(blocks(0).Argument, blocks(0).Content)
             End If
 

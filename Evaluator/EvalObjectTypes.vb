@@ -6,10 +6,11 @@ Imports System.Reflection.Emit
 Imports System.Text
 Imports Cantus.Evaluator.CommonTypes
 Imports Cantus.Evaluator.ObjectTypes
-Imports Cantus.Evaluator.Evaluator
+Imports Cantus.Evaluator.CantusEvaluator
 Imports Cantus.Evaluator.Exceptions
 
 Namespace Evaluator
+
     ' To define a new type for use with the evaluator, add a class implementing IEvalType in this namespace, 
     '    change the StrDetectType function and add converter functions as necessary
 
@@ -52,11 +53,12 @@ Namespace Evaluator
         ''' <param name="identifierAsText">If true, parses remaining into Text's instead of Identifiers</param>
         ''' <param name="primitiveOnly">If true, only checks number, boolean, text types</param>
         ''' <returns></returns>
-        Public Shared Function StrDetectType(str As String, Optional eval As Evaluator = Nothing,
+        Public Shared Function StrDetectType(str As String, Optional eval As CantusEvaluator = Nothing,
                                                  Optional identifierAsText As Boolean = False,
-                                                      Optional primitiveOnly As Boolean = True) As EvalObjectBase
+                                                      Optional primitiveOnly As Boolean = True,
+                                             Optional numberPreserveSigFigs As Boolean = False) As EvalObjectBase
             If Number.StrIsType(str) Then
-                Return New Number(str)
+                Return New Number(str, numberPreserveSigFigs)
             ElseIf [Boolean].StrIsType(str) Then
                 Return New [Boolean](str)
             Else
@@ -67,7 +69,12 @@ Namespace Evaluator
                         If Not identifierAsText AndAlso t = GetType(Text) Then Continue For
 
                         If CBool(t.GetMethod("StrIsType").Invoke(t, {str})) Then
-                            Return DirectCast(Activator.CreateInstance(t, {CObj(str)}), EvalObjectBase)
+                            Try
+                                t.GetConstructor({GetType(String)})
+                                Return DirectCast(Activator.CreateInstance(t, {CObj(str)}), EvalObjectBase)
+                            Catch
+                                Return DirectCast(Activator.CreateInstance(t, {CObj(str), eval}), EvalObjectBase)
+                            End Try
                         End If
                     Next
                 Else
@@ -155,6 +162,7 @@ Namespace Evaluator
         Public NotInheritable Class Number : Inherits EvalObjectBase
             Private _value As BigDecimal
 
+            Public ReadOnly Property DecimalSep As String = Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
             Public Overrides Function GetValue() As Object
                 Return CDbl(_value)
             End Function
@@ -177,7 +185,7 @@ Namespace Evaluator
 
             Public Shared Shadows Function StrIsType(str As String) As Boolean
                 str = str.ToLowerInvariant()
-                Return str = "null" OrElse str = "undefined" OrElse
+                Return str = "null" OrElse str = "undefined" OrElse str.StartsWith("0x") OrElse
                     (Double.TryParse(str.Trim(), Nothing) AndAlso Not str.Contains("e"))
             End Function
 
@@ -195,7 +203,7 @@ Namespace Evaluator
 
             Protected Overrides Function DeepCopy() As EvalObjectBase
                 Me._value.Normalize()
-                Return New Number(New BigDecimal(Me._value.Mantissa, Me._value.Exponent, Me._value.IsUndefined))
+                Return New Number(New BigDecimal(Me._value.Mantissa, Me._value.Exponent, Me._value.IsUndefined, Me._value.SigFigs))
             End Function
 
             Public Sub New(value As Double)
@@ -206,13 +214,36 @@ Namespace Evaluator
                 Me._value = value
             End Sub
 
-            Public Sub New(str As String)
+            Public Sub New(str As String, Optional numberPreserveSigFigs As Boolean = False)
                 str = str.ToLowerInvariant()
-                If str.ToLower() = "undefined" Then
+
+                If str = "undefined" Then
                     Me._value = BigDecimal.Undefined
+                ElseIf str.StartsWith("0x") AndAlso str.Length > 2 Then
+                    Me._value = Long.Parse(str.Substring(2), System.Globalization.NumberStyles.HexNumber)
+                ElseIf str.StartsWith("00") AndAlso str.Length > 2 Then
+                    Me._value = Convert.ToInt64(str.Substring(2), 8)
                 Else
                     Try
-                        Me._value = Double.Parse(str.Trim())
+                        str = str.Trim()
+                        Dim mantissa As BigInteger = BigInteger.Parse(str.Replace(DecimalSep, ""))
+                        Dim expo As Integer
+                        Dim tmp As String = str.Trim({"-"c, "0"c})
+                        Dim ind As Integer = str.IndexOf(DecimalSep)
+                        If ind = 0 Then
+                            expo = -str.Length
+                        ElseIf ind < 0 Then
+                            expo = 0
+                        Else
+                            expo = -str.Substring(ind + DecimalSep.Length).Length
+                        End If
+
+                        If numberPreserveSigFigs Then
+                            Me._value = New BigDecimal(mantissa, expo,
+                                                       sigFigs:=CInt(New InternalFunctions(Nothing).CountSigFigs(str.Trim())))
+                        Else
+                            Me._value = New BigDecimal(mantissa, expo)
+                        End If
                     Catch
                         Me._value = BigDecimal.Undefined
                     End Try
@@ -289,7 +320,7 @@ Namespace Evaluator
             Public Sub New(value As Numerics.Complex)
                 Me._value = value
             End Sub
-            Public Sub New(str As String, eval As Evaluator)
+            Public Sub New(str As String, eval As CantusEvaluator)
                 If StrIsType(str) Then
                     str = str.Trim().Remove(str.Length - 1).Substring(1).Trim()
                     Dim split As String() = str.Split({" "c}, StringSplitOptions.RemoveEmptyEntries)
@@ -695,7 +726,7 @@ Namespace Evaluator
                 Dim str As New StringBuilder("(")
                 For Each k As Reference In _value
                     If Not str.Length = 1 Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
+                    Dim ef As InternalFunctions = New InternalFunctions(New CantusEvaluator(reloadDefault:=False))
                     str.Append(ef.O(k.GetRefObject()))
                 Next
                 str.Append(")")
@@ -727,7 +758,7 @@ Namespace Evaluator
             ''' Create a new tuple
             ''' </summary>
             ''' <param name="conditions">If true, all members are evaluated in condition mode into booleans</param>
-            Public Sub New(str As String, eval As Evaluator, Optional ByVal conditions As Boolean = True)
+            Public Sub New(str As String, eval As CantusEvaluator, Optional ByVal conditions As Boolean = True)
                 'Try
                 If StrIsType(str) Then
                     str = str.Trim().Remove(str.Length - 1).Substring(1).Trim(","c)
@@ -1010,7 +1041,7 @@ Namespace Evaluator
                     Dim evalStr As String = GetCoord(j, 0).ToString() & "*" & other.GetCoord(k, 0).ToString() & "-" &
                     GetCoord(k, 0).ToString() & "*" & other.GetCoord(j, 0).ToString()
 
-                    Dim result As EvalObjectBase = DetectType(New Evaluator(reloadDefault:=False).EvalExprRaw(
+                    Dim result As EvalObjectBase = DetectType(New CantusEvaluator(reloadDefault:=False).EvalExprRaw(
                                                               evalStr.ToString(), True))
                     If TypeOf result Is Reference Then
                         newValue.Add(DirectCast(result, Reference))
@@ -1321,7 +1352,7 @@ Namespace Evaluator
                 Dim str As New StringBuilder("[")
                 For Each k As Reference In _value
                     If Not str.Length = 1 Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
+                    Dim ef As InternalFunctions = New InternalFunctions(New CantusEvaluator(reloadDefault:=False))
                     str.Append(ef.O(k.GetRefObject()))
                 Next
                 str.Append("]")
@@ -1480,7 +1511,7 @@ Namespace Evaluator
             ''' <summary>
             ''' Create a new matrix from a string in matrix format: [[1,2,3],[2,3,4],[3,4,5]]
             ''' </summary>
-            Public Sub New(str As String, eval As Evaluator)
+            Public Sub New(str As String, eval As CantusEvaluator)
                 Try
                     If StrIsType(str) Then
                         str = str.Trim().Remove(str.Length - 1).Substring(1).Trim()
@@ -1574,7 +1605,7 @@ Namespace Evaluator
                 Dim str As New StringBuilder("{")
                 For Each k As KeyValuePair(Of Reference, Reference) In _value
                     If Not str.Length = 1 Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
+                    Dim ef As InternalFunctions = New InternalFunctions(New CantusEvaluator(reloadDefault:=False))
                     str.Append(ef.O(k.Key.GetRefObject()))
                     If Not k.Value Is Nothing Then
                         str.Append(":" & ef.O(k.Value.GetRefObject()))
@@ -1600,7 +1631,7 @@ Namespace Evaluator
                     Me._value(New Reference(ObjectTypes.DetectType(k.Key, True))) = New Reference(ObjectTypes.DetectType(k.Value, True))
                 Next
             End Sub
-            Public Sub New(str As String, eval As Evaluator)
+            Public Sub New(str As String, eval As CantusEvaluator)
                 Try
                     If StrIsType(str) Then
                         str = str.Trim().Remove(str.Length - 1).Substring(1).Trim(","c)
@@ -1680,7 +1711,7 @@ Namespace Evaluator
                 Dim str As New StringBuilder("HashSet({")
                 For Each k As KeyValuePair(Of Reference, Reference) In _value
                     If Not str.Chars(str.Length - 1) = "{" Then str.Append(", ")
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
+                    Dim ef As InternalFunctions = New InternalFunctions(New CantusEvaluator(reloadDefault:=False))
                     str.Append(ef.O(k.Key.GetRefObject()))
                     If Not k.Value Is Nothing Then
                         str.Append(":" & ef.O(k.Value.GetRefObject()))
@@ -1706,7 +1737,7 @@ Namespace Evaluator
                     Me._value(New Reference(ObjectTypes.DetectType(k.Key, True))) = New Reference(ObjectTypes.DetectType(k.Value, True))
                 Next
             End Sub
-            Public Sub New(str As String, eval As Evaluator)
+            Public Sub New(str As String, eval As CantusEvaluator)
                 Try
                     If StrIsType(str) Then
                         str = str.Trim().Remove(str.Length - 2).Substring("HashSet({".Length).Trim(","c)
@@ -1856,7 +1887,7 @@ Namespace Evaluator
                 Dim init As Boolean = True
                 For Each r As Reference In _value
                     If Not init Then str.Append(", ") Else init = False
-                    Dim ef As InternalFunctions = New InternalFunctions(New Evaluator(reloadDefault:=False))
+                    Dim ef As InternalFunctions = New InternalFunctions(New CantusEvaluator(reloadDefault:=False))
                     str.Append(ef.O(r.GetRefObject()))
                 Next
                 str.Append("])")
@@ -2177,9 +2208,9 @@ Namespace Evaluator
             ''' Run this function on the specified evaluator and return the result
             ''' </summary>
             ''' <returns></returns>
-            Public Function Execute(eval As Evaluator, args As IEnumerable(Of Object), Optional executingScope As String = "") As Object
+            Public Function Execute(eval As CantusEvaluator, args As IEnumerable(Of Object), Optional executingScope As String = "") As Object
 
-                Dim tmpEval As Evaluator = eval.SubEvaluator()
+                Dim tmpEval As CantusEvaluator = eval.SubEvaluator()
                 If executingScope <> "" Then tmpEval.Scope = executingScope
 
                 For i As Integer = 0 To _Args.Count - 1
@@ -2188,12 +2219,38 @@ Namespace Evaluator
 
                 Dim res As Object = tmpEval.EvalRaw(_value, noSaveAns:=True)
 
-                If TypeOf res Is Reference Then
+                If TypeOf res Is Reference AndAlso
+                    Not TypeOf DirectCast(res, Reference).GetRefObject() Is Reference Then
+
                     Dim ref As Reference = DirectCast(res, Reference)
                     Return ref.GetRefObject()
                 Else
                     Return res
                 End If
+            End Function
+
+            Public Function ExecuteAsync(eval As CantusEvaluator, args As IEnumerable(Of Object),
+                                         Optional callBack As Lambda = Nothing, Optional executingScope As String = "") As Integer
+
+                Dim tmpEval As CantusEvaluator = eval.SubEvaluator()
+                If executingScope <> "" Then tmpEval.Scope = executingScope
+
+                For i As Integer = 0 To _Args.Count - 1
+                    tmpEval.SetVariable(_Args(i), args(i))
+                Next
+
+                AddHandler tmpEval.EvalComplete, Sub(sender As Object, result As Object)
+                                                     If Not callBack Is Nothing Then
+                                                         If TypeOf result Is Reference AndAlso
+                                                             Not TypeOf DirectCast(result, Reference).GetRefObject() Is Reference Then
+                                                             Dim ref As Reference = DirectCast(result, Reference)
+                                                             callBack.Execute(eval, {ref.GetRefObject()})
+                                                         Else
+                                                             callBack.Execute(eval, {result})
+                                                         End If
+                                                     End If
+                                                 End Sub
+                Return tmpEval.EvalRawAsync(_value, noSaveAns:=True)
             End Function
 
             ''' <summary>
@@ -2277,7 +2334,7 @@ Namespace Evaluator
             End Function
 
             ''' <summary>
-            ''' Create a new lambda expression directly from an expression and some arguments
+            ''' Create a new lambda expression from a string expression
             ''' </summary>
             ''' <param name="expr">Either the lambda expression or the function name</param>
             ''' <param name="args">The list of argument names</param>
@@ -2291,9 +2348,9 @@ Namespace Evaluator
             End Sub
 
             ''' <summary>
-            ''' Create a lambda expression that functions as a function pointer to a user function. 
-            ''' If flatten is set to true, creates a lambda expression
-            ''' with the user function's content instead.
+            ''' Create a function pointer to a user function. 
+            ''' If flatten is set to true, creates a new lambda expression
+            ''' with the user function's definition instead.
             ''' </summary>
             ''' <param name="uf"></param>
             ''' <param name="flatten"></param>
@@ -2306,7 +2363,7 @@ Namespace Evaluator
             End Sub
 
             ''' <summary>
-            ''' Create a new lambda expression from syntax
+            ''' Create a new lambda expression from lambda expression syntax
             ''' </summary>
             Public Sub New(lambda As String)
                 Me.SetLambdaExprRaw(lambda)
@@ -2404,14 +2461,14 @@ Namespace Evaluator
             Public Function ResolveField(fieldName As String, scope As String) As Reference
                 If String.IsNullOrWhiteSpace(fieldName) Then Throw New Exception("Field name cannot be blank")
                 Try
-                    Dim spl As String() = fieldName.Split(Evaluator.SCOPE_SEP)
+                    Dim spl As String() = fieldName.Split(CantusEvaluator.SCOPE_SEP)
                     Dim curVar As Reference = New Reference(Me)
 
                     For i As Integer = 0 To spl.Length - 1
                         If TypeOf curVar.GetRefObject() Is ClassInstance Then
                             Dim ci As ClassInstance = DirectCast(curVar.ResolveObj(), ClassInstance)
                             If Not ci.UserClass.AllFields(spl(i)).Modifiers.Contains("private") OrElse
-                                Evaluator.IsParentScopeOf(ci.InnerScope, scope) Then
+                                CantusEvaluator.IsParentScopeOf(ci.InnerScope, scope) Then
                                 curVar = ci.Fields(spl(i))
                             Else
                                 Throw New EvaluatorException("Field " & fieldName & " is private.")
@@ -2452,7 +2509,7 @@ Namespace Evaluator
                 If Me._disposed Then Return ""
                 If Me.Fields.ContainsKey("text") AndAlso TypeOf Me.Fields("text").ResolveObj() Is Lambda Then
                     ' use the "text" function within the class definition
-                    Dim tmpEval As Evaluator = UserClass.Evaluator.SubEvaluator()
+                    Dim tmpEval As CantusEvaluator = UserClass.Evaluator.SubEvaluator()
                     tmpEval.Scope = Me.InnerScope
                     'tmpEval.Import(UserClass.InnerScope)
                     tmpEval.SubScope()
@@ -2476,7 +2533,7 @@ Namespace Evaluator
                 ' add 'instaneid' function
                 Dim iidFn As New UserFunction("type", String.Format("return " & ControlChars.Quote & Me.InnerScope &
                                                                     ControlChars.Quote,
-                                                                    Evaluator.ROOT_NAMESPACE, Evaluator.SCOPE_SEP),
+                                                                    CantusEvaluator.ROOT_NAMESPACE, CantusEvaluator.SCOPE_SEP),
                                                New List(Of String), Me.InnerScope)
                 iidFn.Modifiers.Add("internal")
                 Me.Fields(iidFn.Name) = New Reference(New Lambda(iidFn, True))
@@ -2507,7 +2564,7 @@ Namespace Evaluator
                     ' load default values 
                     For Each kvp As KeyValuePair(Of String, Variable) In uc.AllFields
                         Me.Fields(kvp.Key) = kvp.Value.Reference()
-                        uc.Evaluator.SetVariable(kvp.Key, kvp.Value.Reference())
+                        uc.Evaluator.SetVariable(kvp.Key, kvp.Value.Reference(), modifiers:={"internal"})
                     Next
                 Catch
                 End Try
@@ -2522,7 +2579,7 @@ Namespace Evaluator
 
                 Dim constructor As Lambda = uc.Constructor
 
-                Dim tmpEval As Evaluator = uc.Evaluator.SubEvaluator()
+                Dim tmpEval As CantusEvaluator = uc.Evaluator.SubEvaluator()
                 tmpEval.Scope = uc.Evaluator.Scope & SCOPE_SEP &
                                                           "__instance_" & Me.UserClass.Name & "_" & RandomInstanceId()
                 Me.InnerScope = tmpEval.Scope
@@ -2639,20 +2696,30 @@ Namespace Evaluator.CommonTypes
         ''' <param name="y"></param>
         ''' <returns></returns>
         Public Shared Function CompareObjs(x As Object, y As Object) As Integer
-            While x.GetType().ToString().StartsWith("Cantus.Calculator.Evaluator.ObjectTypes") AndAlso
+            While x.GetType().ToString().StartsWith("Cantus.Evaluator.ObjectTypes") AndAlso
                 Not x.GetType().ToString().EndsWith("[]")
-                x = DirectCast(x, EvalObjectBase).GetValue()
+                If x.GetType() = GetType(Number) Then
+                    x = DirectCast(x, Number).BigDecValue()
+                Else
+                    x = DirectCast(x, EvalObjectBase).GetValue()
+                End If
             End While
-            While y.GetType().ToString().StartsWith("Cantus.Calculator.Evaluator.ObjectTypes") AndAlso
+            While y.GetType().ToString().StartsWith("Cantus.Evaluator.ObjectTypes") AndAlso
                 Not y.GetType().ToString().EndsWith("[]")
-                y = DirectCast(y, EvalObjectBase).GetValue()
+                If y.GetType() = GetType(Number) Then
+                    y = DirectCast(y, Number).BigDecValue()
+                Else
+                    y = DirectCast(y, EvalObjectBase).GetValue()
+                End If
             End While
 
             If TypeToId(x) <> TypeToId(y) Then
                 Return If(TypeToId(x) > TypeToId(y), 1, -1)
 
             ElseIf TypeOf x Is BigDecimal AndAlso TypeOf y Is BigDecimal
-                Return CType(x, BigDecimal).CompareTo(CType(y, BigDecimal))
+                Dim xd As BigDecimal = CType(x, BigDecimal)
+                Dim yd As BigDecimal = CType(y, BigDecimal)
+                Return If(xd > yd, 1, If(xd = yd, 0, -1))
             ElseIf TypeOf x Is Double AndAlso TypeOf y Is Double
                 Return CDbl(x).CompareTo(CDbl(y))
             ElseIf TypeOf x Is Integer AndAlso TypeOf y Is Integer

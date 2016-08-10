@@ -27,7 +27,7 @@
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Viewer))
             Me.lbTitle = New System.Windows.Forms.Label()
             Me.btnMin = New System.Windows.Forms.Button()
-            Me.btnLog = New System.Windows.Forms.Button()
+            Me.btnConsole = New System.Windows.Forms.Button()
             Me.btnGraph = New System.Windows.Forms.Button()
             Me.pnl = New System.Windows.Forms.Panel()
             Me.tt = New System.Windows.Forms.ToolTip(Me.components)
@@ -66,27 +66,27 @@
             Me.btnMin.UseVisualStyleBackColor = False
             Me.btnMin.Visible = False
             '
-            'btnLog
+            'btnConsole
             '
-            Me.btnLog.BackColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(37, Byte), Integer))
-            Me.btnLog.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnLog.FlatAppearance.BorderSize = 0
-            Me.btnLog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnLog.ForeColor = System.Drawing.Color.White
-            Me.btnLog.Image = CType(resources.GetObject("btnLog.Image"), System.Drawing.Image)
-            Me.btnLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-            Me.btnLog.Location = New System.Drawing.Point(1, 0)
-            Me.btnLog.Name = "btnLog"
-            Me.btnLog.Padding = New System.Windows.Forms.Padding(0, 0, 10, 0)
-            Me.btnLog.Size = New System.Drawing.Size(135, 48)
-            Me.btnLog.TabIndex = 1
-            Me.btnLog.Tag = "log"
-            Me.btnLog.Text = "Console"
-            Me.btnLog.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            Me.tt.SetToolTip(Me.btnLog, "See saved results (Alt+R)")
-            Me.btnLog.UseVisualStyleBackColor = False
+            Me.btnConsole.BackColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(37, Byte), Integer))
+            Me.btnConsole.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnConsole.FlatAppearance.BorderSize = 0
+            Me.btnConsole.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.btnConsole.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.btnConsole.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.btnConsole.ForeColor = System.Drawing.Color.White
+            Me.btnConsole.Image = CType(resources.GetObject("btnConsole.Image"), System.Drawing.Image)
+            Me.btnConsole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+            Me.btnConsole.Location = New System.Drawing.Point(1, 0)
+            Me.btnConsole.Name = "btnConsole"
+            Me.btnConsole.Padding = New System.Windows.Forms.Padding(0, 0, 10, 0)
+            Me.btnConsole.Size = New System.Drawing.Size(135, 48)
+            Me.btnConsole.TabIndex = 1
+            Me.btnConsole.Tag = "console"
+            Me.btnConsole.Text = "Console"
+            Me.btnConsole.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.tt.SetToolTip(Me.btnConsole, "See saved results (Alt+R)")
+            Me.btnConsole.UseVisualStyleBackColor = False
             '
             'btnGraph
             '
@@ -139,11 +139,11 @@
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.Controls.Add(Me.pnl)
             Me.Controls.Add(Me.btnGraph)
-            Me.Controls.Add(Me.btnLog)
+            Me.Controls.Add(Me.btnConsole)
             Me.Controls.Add(Me.btnMin)
             Me.Controls.Add(Me.lbTitle)
             Me.Controls.Add(Me.PbLogo)
-            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.Name = "Viewer"
             Me.Size = New System.Drawing.Size(621, 700)
@@ -155,7 +155,7 @@
 
         Friend WithEvents lbTitle As Label
         Friend WithEvents btnMin As Button
-        Friend WithEvents btnLog As Button
+        Friend WithEvents btnConsole As Button
         Friend WithEvents btnGraph As Button
         Friend WithEvents pnl As Panel
         Friend WithEvents tt As ToolTip

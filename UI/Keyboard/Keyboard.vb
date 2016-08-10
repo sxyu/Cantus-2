@@ -26,7 +26,7 @@ Namespace UI.Keyboards
                     LbKbd.Hide()
                     FrmEditor.Editor.Height = 400
                 End If
-                My.Settings.ShowKbd = Not _minimized
+                My.Settings.ShowKeyboard = Not _minimized
                 My.Settings.Save()
             End Set
         End Property
@@ -145,7 +145,7 @@ Namespace UI.Keyboards
 
         Private Sub btnFn_Click(sender As Object, e As EventArgs) Handles btnAsin.Click, btnAcos.Click,
             btnSin.Click, btnCos.Click, btnTan.Click, btnAtan.Click, btnLn.Click, btnRand.Click,
-            btnAlert.Click, btnInput.Click, btnAvg.Click, btnMedian.Click
+            btnPrint.Click, btnRead.Click, btnAvg.Click, btnMedian.Click
 
             WriteFunction(DirectCast(sender, Button).Text & "()")
         End Sub

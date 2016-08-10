@@ -45,8 +45,8 @@ Namespace UI.Graphing
         Dim _tmpbuffer As Bitmap
 
         Dim _traceOn As Boolean = False
-        Dim _eval As Evaluator.Evaluator
-        Dim _eval2 As Evaluator.Evaluator
+        Dim _eval As Evaluator.CantusEvaluator
+        Dim _eval2 As Evaluator.CantusEvaluator
 
         Dim SCREENFACT As Integer = 30
 
@@ -63,7 +63,7 @@ Namespace UI.Graphing
         Private Sub FrmGraph_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             ' set icon, styles, etc.
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
-            Me.split.SplitterDistance = Me.Height - My.Settings.GrpSplitDistance
+            Me.split.SplitterDistance = Me.Height - My.Settings.GraphSplitter
 
             ' position
             Me.Top = Screen.PrimaryScreen.WorkingArea.Top
@@ -77,7 +77,7 @@ Namespace UI.Graphing
             Dim g As Graphics = Graphics.FromImage(_buffer)
             g.Clear(Color.Transparent)
 
-            _eval = Evaluator.Globals.Evaluator ' use global evaluator
+            _eval = Evaluator.Globals.RootEvaluator ' use global evaluator
 
             _curfn = 0
 
@@ -796,7 +796,7 @@ Namespace UI.Graphing
 
         Private Function Eval(str As String, Optional useEval2 As Boolean = False) As Double
             Try
-                Dim prevmode As Evaluator.Evaluator.eOutputFormat = _eval.OutputFormat
+                Dim prevmode As Evaluator.CantusEvaluator.eOutputFormat = _eval.OutputFormat
                 Dim ret As Double
                 If useEval2 Then
                     ret = CDbl(CType(_eval2.EvalExprRaw(str, True), Evaluator.CommonTypes.BigDecimal))

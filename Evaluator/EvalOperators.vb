@@ -290,8 +290,8 @@ Namespace Evaluator
         ''' <summary>
         ''' Maximum length in characters of a single operator
         ''' </summary>
-        Public Const MAX_OPERATOR_LENGTH As Integer = 9
-        Private _eval As Evaluator
+        Public Const MAX_OPERATOR_LENGTH As Integer = 8
+        Private _eval As CantusEvaluator
 
         ''' <summary>
         ''' A list of lists operators, with each inner list containing all operators of the precedence level of its index
@@ -324,7 +324,7 @@ Namespace Evaluator
         ''' <summary>
         ''' Create a new Operator Registar for registering and accessing operators like if/else
         ''' </summary>
-        Public Sub New(parent As Evaluator, Optional ByVal conditional As Boolean = False)
+        Public Sub New(parent As CantusEvaluator, Optional ByVal conditional As Boolean = False)
             Me._eval = parent
             Me.ConditionMode = conditional
             RegisterOperators()
@@ -399,6 +399,8 @@ Namespace Evaluator
             Register(New BinaryOperator({">="}, ePrecedence.comparison, AddressOf BinaryOperatorGreaterThanOrEqualTo))
             Register(New BinaryOperator({"<"}, ePrecedence.comparison, AddressOf BinaryOperatorLessThan))
             Register(New BinaryOperator({"<="}, ePrecedence.comparison, AddressOf BinaryOperatorLessThanOrEqualTo))
+
+            Register(New BinaryOperator({"?:"}, ePrecedence.assignment, AddressOf BinaryOperatorElvis))
 
             ' assignment (use RegisterByRef, with same format)
 
@@ -519,8 +521,8 @@ Namespace Evaluator
         End Function
 
         Private Function BracketOperatorAsync(inner As String, ByRef left As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
-            _eval.InternalFunctions.Async(inner)
-            Return New ObjectTypes.Identifier("")
+
+            Return New ObjectTypes.Number(_eval.InternalFunctions.Async(New ObjectTypes.Lambda(inner, {})))
         End Function
 
         Private Function BracketOperatorQuotedText(inner As String, ByRef left As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
@@ -707,6 +709,7 @@ Namespace Evaluator
 
         Private Function BinaryOperatorAdd(left As ObjectTypes.EvalObjectBase, right As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
             If left Is Nothing Then left = New ObjectTypes.Number(0)
+
             If ObjectTypes.Number.IsType(left) And ObjectTypes.Complex.IsType(right) Then Return BinaryOperatorAdd(right, left)
             Dim lv As Object = left.GetValue()
             Dim rv As Object = right.GetValue()
@@ -1030,7 +1033,12 @@ Namespace Evaluator
         Private Function BinaryOperatorExponent(left As ObjectTypes.EvalObjectBase, right As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
             If left Is Nothing Then Throw New SyntaxException("Invalid Exponent")
             Try
-                Return ObjectTypes.DetectType(_eval.InternalFunctions.Pow(left.GetValue(), right.GetValue()))
+                If TypeOf left Is ObjectTypes.Number AndAlso TypeOf right Is ObjectTypes.Number Then
+                    Return ObjectTypes.DetectType(_eval.InternalFunctions.Pow(DirectCast(left, ObjectTypes.Number).BigDecValue(),
+                                                                              DirectCast(right, ObjectTypes.Number).BigDecValue()))
+                Else
+                    Return ObjectTypes.DetectType(_eval.InternalFunctions.Pow(left.GetValue(), right.GetValue()))
+                End If
             Catch 'ex As Exception
                 Throw New SyntaxException("Invalid Exponent")
             End Try
@@ -1448,11 +1456,22 @@ Namespace Evaluator
             End Try
         End Function
 
+        ''' <summary>
+        ''' The elvis operator
+        ''' </summary>
+        Private Function BinaryOperatorElvis(left As ObjectTypes.EvalObjectBase, right As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
+            If _eval.InternalFunctions.IsTrue(left.GetValue()) Then Return left Else Return right
+        End Function
+
         Private Function BinaryOperatorExp10(left As ObjectTypes.EvalObjectBase, right As ObjectTypes.EvalObjectBase) As ObjectTypes.EvalObjectBase
-            Dim lv As Object = left.GetValue()
-            Dim rv As Object = right.GetValue()
             If ObjectTypes.Number.IsType(left) And ObjectTypes.Number.IsType(right) Then
-                Return New ObjectTypes.Number(CDbl(lv) * BigDecimal.Pow(10, CLng(rv)))
+                Dim lv As BigDecimal = DirectCast(left, ObjectTypes.Number).BigDecValue()
+                Dim rv As BigDecimal = DirectCast(right, ObjectTypes.Number).BigDecValue()
+                If rv.Exponent >= 0 Then
+                    Return New ObjectTypes.Number(New BigDecimal(mantissa:=lv.Mantissa, exponent:=CInt(lv.Exponent + rv)))
+                Else
+                    Return New ObjectTypes.Number(lv * BigDecimal.Pow(10, rv))
+                End If
             Else
                 Throw New SyntaxException("Invalid types for the E (exp10) operator")
             End If
