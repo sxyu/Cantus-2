@@ -31,7 +31,7 @@ Namespace UI
         ''' <summary>
         ''' URL to get info about the latest version number of cantus
         ''' </summary>
-        Private Const VERSION_URL As String = "https://drive.google.com/uc?export=download&id=0B314tJw3ioySY0k1THVWZFV6S00"
+        Private Const VERSION_URL As String = "https://raw.githubusercontent.com/sxyu/Cantus-Core/master/meta/ver"
 
         ''' <summary>
         ''' The main evaluator
