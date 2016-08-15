@@ -21,13 +21,14 @@ Namespace UI.Updater
         Dim _newVersion As String = ""
         Dim _manifestFile() As String
         Dim _downloadCount As Integer = 0
-        Dim _reRun As Boolean = False
+        Dim _reRun As Boolean = True
 
         Public Sub DownloadComplete(ByVal cancelled As Boolean)
             Me.btnCancel.Enabled = False
             If cancelled Then
                 Try
                     FileIO.FileSystem.RenameFile(BACKUP_NAME, EXECUTABLE_NAME)
+                    FileIO.FileSystem.RenameFile("cantus.core.backup", "cantus.core.dll")
                 Catch
                 End Try
                 Application.Exit()
@@ -184,7 +185,9 @@ Namespace UI.Updater
 
                 Me.Invoke(safedelegate, length, nRead, percent, currentspeed)
 
-                If bytesread = 0 Then Exit Do
+                If bytesread = 0 Then
+                    Exit Do
+                End If
 
                 writeStream.Write(readBytes, 0, bytesread)
 
