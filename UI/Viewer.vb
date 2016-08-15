@@ -561,7 +561,7 @@ Namespace UI
                                 _prevPrompt.Add(lastLineText)
                                 _idx = _prevPrompt.Count
                             Else
-                                _prevPrompt(_idx) = lastLineText
+                                _prevPrompt.Insert(_idx + 1, lastLineText)
                             End If
                         End If
                         ConsoleControl.AutoCCancel()
