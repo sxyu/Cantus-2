@@ -146,8 +146,7 @@
             Me.lbNote.Name = "lbNote"
             Me.lbNote.Size = New System.Drawing.Size(600, 20)
             Me.lbNote.TabIndex = 0
-            Me.lbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" &
-    "is dialog"
+            Me.lbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" &     "is dialog"
             '
             'btnClose
             '

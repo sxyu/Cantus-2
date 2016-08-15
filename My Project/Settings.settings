@@ -5,19 +5,19 @@
     <Setting Name="Position" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ShowKeyboard" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowKeyboard" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="NewInstall" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="GraphSplitter" Type="System.Int32" Scope="User">
+    <Setting Name="GraphSplitter" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">98</Value>
     </Setting>
-    <Setting Name="AutoUpdate" Type="System.Boolean" Scope="User">
+    <Setting Name="AutoUpdate" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ErrorSaveState" Type="System.String" Scope="User">
+    <Setting Name="ErrorSaveState" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

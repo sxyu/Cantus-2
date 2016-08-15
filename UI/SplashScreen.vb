@@ -3,7 +3,7 @@
         Private Sub SplashScreen_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
             TmrAnim.Start()
-            lbVer.Text = Application.ProductVersion
+            lbVer.Text = Version
         End Sub
 
         Private Sub TmrAnim_Tick(sender As Object, e As EventArgs) Handles TmrAnim.Tick

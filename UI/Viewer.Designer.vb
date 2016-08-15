@@ -40,7 +40,7 @@
             Me.lbTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lbTitle.AutoSize = True
             Me.lbTitle.ForeColor = System.Drawing.Color.LightGray
-            Me.lbTitle.Location = New System.Drawing.Point(460, 15)
+            Me.lbTitle.Location = New System.Drawing.Point(447, 15)
             Me.lbTitle.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
             Me.lbTitle.Name = "lbTitle"
             Me.lbTitle.Size = New System.Drawing.Size(96, 20)
@@ -125,7 +125,7 @@
             '
             Me.PbLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
             Me.PbLogo.Image = Global.Cantus.My.Resources.Resources.Cantus_Logo
-            Me.PbLogo.Location = New System.Drawing.Point(424, 10)
+            Me.PbLogo.Location = New System.Drawing.Point(411, 10)
             Me.PbLogo.Name = "PbLogo"
             Me.PbLogo.Size = New System.Drawing.Size(29, 29)
             Me.PbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom

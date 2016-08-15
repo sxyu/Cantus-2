@@ -33,7 +33,7 @@
             Me.lbDlSize = New System.Windows.Forms.Label()
             Me.lbSpeed = New System.Windows.Forms.Label()
             Me.lbTSize = New System.Windows.Forms.Label()
-            Me.pb = New UI.UserControls.FlatProgressBar()
+            Me.pb = New Cantus.UI.UserControls.FlatProgressBar()
             CType(Me.logo, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SuspendLayout()
             '
@@ -62,34 +62,36 @@
             'lbStep
             '
             Me.lbStep.AutoSize = True
+            Me.lbStep.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbStep.ForeColor = System.Drawing.Color.White
             Me.lbStep.Location = New System.Drawing.Point(447, 142)
             Me.lbStep.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
             Me.lbStep.Name = "lbStep"
-            Me.lbStep.Size = New System.Drawing.Size(44, 21)
+            Me.lbStep.Size = New System.Drawing.Size(50, 22)
             Me.lbStep.TabIndex = 22
             Me.lbStep.Text = "1 of 1"
             '
             'lbTitle
             '
             Me.lbTitle.AutoSize = True
-            Me.lbTitle.Font = New System.Drawing.Font("OpenSans Semilight", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.lbTitle.Font = New System.Drawing.Font(OpenSans, 14.25!)
             Me.lbTitle.ForeColor = System.Drawing.Color.White
             Me.lbTitle.Location = New System.Drawing.Point(99, 30)
             Me.lbTitle.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
             Me.lbTitle.Name = "lbTitle"
-            Me.lbTitle.Size = New System.Drawing.Size(140, 25)
+            Me.lbTitle.Size = New System.Drawing.Size(155, 26)
             Me.lbTitle.TabIndex = 14
             Me.lbTitle.Text = "Cantus Updater"
             '
             'lbFile
             '
             Me.lbFile.AutoSize = True
+            Me.lbFile.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbFile.ForeColor = System.Drawing.Color.White
             Me.lbFile.Location = New System.Drawing.Point(447, 113)
             Me.lbFile.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
             Me.lbFile.Name = "lbFile"
-            Me.lbFile.Size = New System.Drawing.Size(82, 21)
+            Me.lbFile.Size = New System.Drawing.Size(86, 22)
             Me.lbFile.TabIndex = 21
             Me.lbFile.Text = "cantus.exe"
             '
@@ -104,6 +106,7 @@
             '
             'lbVer
             '
+            Me.lbVer.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbVer.ForeColor = System.Drawing.Color.White
             Me.lbVer.Location = New System.Drawing.Point(63, 91)
             Me.lbVer.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
@@ -115,6 +118,7 @@
             '
             'lbDlSize
             '
+            Me.lbDlSize.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbDlSize.ForeColor = System.Drawing.Color.White
             Me.lbDlSize.Location = New System.Drawing.Point(63, 138)
             Me.lbDlSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
@@ -126,6 +130,7 @@
             '
             'lbSpeed
             '
+            Me.lbSpeed.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbSpeed.ForeColor = System.Drawing.Color.White
             Me.lbSpeed.Location = New System.Drawing.Point(67, 113)
             Me.lbSpeed.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
@@ -137,6 +142,7 @@
             '
             'lbTSize
             '
+            Me.lbTSize.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.lbTSize.ForeColor = System.Drawing.Color.White
             Me.lbTSize.Location = New System.Drawing.Point(59, 163)
             Me.lbTSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
@@ -175,7 +181,7 @@
             Me.Controls.Add(Me.lbDlSize)
             Me.Controls.Add(Me.lbSpeed)
             Me.Controls.Add(Me.lbTSize)
-            Me.Font = New System.Drawing.Font("OpenSans Semilight", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.Font = New System.Drawing.Font(OpenSans, 12.0!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.Margin = New System.Windows.Forms.Padding(43, 23, 43, 23)
             Me.Name = "FrmUpdate"

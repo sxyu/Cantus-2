@@ -42,7 +42,7 @@
             Me.lbName.BackColor = System.Drawing.Color.Transparent
             Me.lbName.Font = New System.Drawing.Font("Open Sans Light", 40.0!)
             Me.lbName.ForeColor = System.Drawing.Color.White
-            Me.lbName.Location = New System.Drawing.Point(221, 76)
+            Me.lbName.Location = New System.Drawing.Point(250, 130)
             Me.lbName.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
             Me.lbName.Name = "lbName"
             Me.lbName.Size = New System.Drawing.Size(202, 74)
@@ -54,12 +54,12 @@
             Me.lbVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.lbVer.AutoSize = True
             Me.lbVer.BackColor = System.Drawing.Color.Transparent
-            Me.lbVer.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
+            Me.lbVer.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.lbVer.ForeColor = System.Drawing.Color.LightGray
-            Me.lbVer.Location = New System.Drawing.Point(13, 6)
+            Me.lbVer.Location = New System.Drawing.Point(13, 320)
             Me.lbVer.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
             Me.lbVer.Name = "lbVer"
-            Me.lbVer.Size = New System.Drawing.Size(58, 22)
+            Me.lbVer.Size = New System.Drawing.Size(57, 20)
             Me.lbVer.TabIndex = 2
             Me.lbVer.Text = "2.0.0.0"
             '
@@ -68,12 +68,12 @@
             Me.lbCredits.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.lbCredits.AutoSize = True
             Me.lbCredits.BackColor = System.Drawing.Color.Transparent
-            Me.lbCredits.Font = New System.Drawing.Font("Open Sans", 12.0!)
+            Me.lbCredits.Font = New System.Drawing.Font("Open Sans", 11.0!)
             Me.lbCredits.ForeColor = System.Drawing.Color.Gray
-            Me.lbCredits.Location = New System.Drawing.Point(13, 252)
+            Me.lbCredits.Location = New System.Drawing.Point(450, 320)
             Me.lbCredits.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
             Me.lbCredits.Name = "lbCredits"
-            Me.lbCredits.Size = New System.Drawing.Size(127, 22)
+            Me.lbCredits.Size = New System.Drawing.Size(122, 20)
             Me.lbCredits.TabIndex = 4
             Me.lbCredits.Text = "Alex Yu 2015-16"
             '
@@ -82,7 +82,7 @@
             Me.PbSettingsLogo.BackColor = System.Drawing.Color.Transparent
             Me.PbSettingsLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
             Me.PbSettingsLogo.Image = Global.Cantus.My.Resources.Resources.Cantus_Logo_Large
-            Me.PbSettingsLogo.Location = New System.Drawing.Point(63, 74)
+            Me.PbSettingsLogo.Location = New System.Drawing.Point(94, 120)
             Me.PbSettingsLogo.Name = "PbSettingsLogo"
             Me.PbSettingsLogo.Size = New System.Drawing.Size(151, 127)
             Me.PbSettingsLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -100,7 +100,7 @@
             Me.lbWelcome.BackColor = System.Drawing.Color.Transparent
             Me.lbWelcome.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
             Me.lbWelcome.ForeColor = System.Drawing.Color.White
-            Me.lbWelcome.Location = New System.Drawing.Point(234, 150)
+            Me.lbWelcome.Location = New System.Drawing.Point(261, 204)
             Me.lbWelcome.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
             Me.lbWelcome.Name = "lbWelcome"
             Me.lbWelcome.Size = New System.Drawing.Size(242, 19)
@@ -109,16 +109,15 @@
             '
             'Progress
             '
-            Me.Progress.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.Progress.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.Progress.Dock = System.Windows.Forms.DockStyle.Top
             Me.Progress.DrawBorder = False
             Me.Progress.ForeColor = System.Drawing.Color.White
-            Me.Progress.Location = New System.Drawing.Point(238, 180)
+            Me.Progress.Location = New System.Drawing.Point(0, 0)
             Me.Progress.Name = "Progress"
             Me.Progress.ProgressColor = System.Drawing.Color.DarkOliveGreen
             Me.Progress.ProgressText = ""
-            Me.Progress.Size = New System.Drawing.Size(293, 11)
+            Me.Progress.Size = New System.Drawing.Size(585, 30)
             Me.Progress.Style = System.Windows.Forms.ProgressBarStyle.Continuous
             Me.Progress.TabIndex = 3
             Me.Progress.Tag = ""
@@ -131,7 +130,7 @@
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), System.Drawing.Image)
             Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-            Me.ClientSize = New System.Drawing.Size(585, 283)
+            Me.ClientSize = New System.Drawing.Size(585, 349)
             Me.Controls.Add(Me.Progress)
             Me.Controls.Add(Me.lbWelcome)
             Me.Controls.Add(Me.lbVer)

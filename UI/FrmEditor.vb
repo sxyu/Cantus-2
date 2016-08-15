@@ -3,12 +3,16 @@ Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Cantus.Evaluator
-Imports Cantus.Evaluator.CommonTypes
-Imports Cantus.Evaluator.CantusEvaluator
-Imports Cantus.Evaluator.CantusEvaluator.CantusIOEventArgs
-Imports Cantus.Evaluator.ObjectTypes
+
+Imports Cantus.Core
+Imports Cantus.Core.CommonTypes
+Imports Cantus.Core.CantusEvaluator
+Imports Cantus.Core.CantusEvaluator.CantusIOEventArgs
+Imports Cantus.Core.CantusEvaluator.ObjectTypes
 Imports Cantus.UI.ScintillaForCantus
+
+Imports Cantus.Core.Scoping
+
 Imports ScintillaNET
 
 Namespace UI
@@ -29,12 +33,10 @@ Namespace UI
         ''' </summary>
         Private Const VERSION_URL As String = "https://drive.google.com/uc?export=download&id=0B314tJw3ioySY0k1THVWZFV6S00"
 
-        Private Const RELEASE_TYPE As String = "Alpha"
-
         ''' <summary>
         ''' The main evaluator
         ''' </summary>
-        Private _eval As Evaluator.CantusEvaluator
+        Private _eval As Core.CantusEvaluator
 
         ''' <summary>
         ''' The path to the file currently open in the editor. 
@@ -73,7 +75,6 @@ Namespace UI
 #End Region
 #Region "Form Events"
         Private Sub FrmEditor_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-            SplashScreen.Show()
             SplashScreen.BringToFront()
             TmrLoad.Start()
 
@@ -92,6 +93,7 @@ Namespace UI
             AddHandler Globals.RootEvaluator.EvalComplete, AddressOf EvalComplete
             AddHandler Globals.RootEvaluator.WriteOutput, AddressOf WriteOutput
             AddHandler Globals.RootEvaluator.ReadInput, AddressOf ReadInput
+            AddHandler Globals.RootEvaluator.ClearConsole, AddressOf ClearConsole
 
             ' process additional command line args involving UI
             Dim args As String() = Environment.GetCommandLineArgs()
@@ -114,7 +116,7 @@ Namespace UI
             If opengraph Then
                 Viewer.View = Viewer.eView.graphing
                 Viewer.GraphingControl.tb.Text = def
-            Else
+            ElseIf Not def = "" Then
                 Tb.Text = def
             End If
 
@@ -148,22 +150,22 @@ Namespace UI
 
             ' set up UI
             CbAutoUpd.Checked = My.Settings.AutoUpdate
-            LbAbout.Text = LbAbout.Text.Replace("{VER}", Application.ProductVersion & " " & RELEASE_TYPE)
+            LbAbout.Text = LbAbout.Text.Replace("{VER}", Version)
 
             ' faster drawing
             Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
 
             ' set up modes
-            If _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Math Then
+            If _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Math Then
                 BtnOutputFormat.Text = "MathO"
-            ElseIf _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific Then
+            ElseIf _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific Then
                 BtnOutputFormat.Text = "SciO"
             Else
                 BtnOutputFormat.Text = "LineO"
             End If
-            If _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Radian Then
+            If _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Radian Then
                 BtnAngleRepr.Text = "Radian"
-            ElseIf _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree Then
+            ElseIf _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree Then
                 BtnAngleRepr.Text = "Degree"
             Else
                 BtnAngleRepr.Text = "Gradian"
@@ -171,14 +173,6 @@ Namespace UI
 
             ' set up scintilla
             SetTheme("dark")
-
-            ' check for update
-            If My.Settings.AutoUpdate Then
-                _updTh = New Thread(CType(Sub()
-                                              CheckUpdate()
-                                          End Sub, ThreadStart))
-                _updTh.Start()
-            End If
 
             My.Settings.Save()
         End Sub
@@ -215,7 +209,8 @@ Namespace UI
         End Sub
 
         Dim _ignoreNextKey As Boolean = False
-        Private Sub FrmEditor_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, Tb.KeyUp
+        Private Sub FrmEditor_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, Tb.KeyUp,
+            BtnAngleRepr.KeyUp, PnlSettings.KeyUp, Keyboard.KeyUp, Viewer.KeyUp
             If e.KeyCode = Keys.Enter And e.Alt Then
                 If sender Is Me Then Return
                 EvaluateExpr()
@@ -245,10 +240,6 @@ Namespace UI
                     End If
                     BtnOutputFormat.Text = _eval.OutputFormat.ToString()
                     EvaluateExpr(True)
-                ElseIf e.KeyCode = Keys.T Then
-                    btnOptions_Click(BtnExplicit, New EventArgs())
-                ElseIf e.KeyCode = Keys.F Then
-                    btnOptions_Click(BtnSigFigs, New EventArgs())
                 End If
             End If
         End Sub
@@ -288,14 +279,12 @@ Namespace UI
                     logText = Tb.Text
                 End If
 
-                If _eval.InternalFunctions.Count(logText, """") Mod 2 = 1 Then logText &= """"
-                If _eval.InternalFunctions.Count(logText, "'") Mod 2 = 1 Then logText &= "'"
+                If New InternalFunctions(Nothing).Count(logText, """") Mod 2 = 1 Then logText &= """"
+                If New InternalFunctions(Nothing).Count(logText, "'") Mod 2 = 1 Then logText &= "'"
 
-                _firstOutput = True
-
-                    ' write expression to log
-                    Viewer.WriteConsoleSection(String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName) & logText)
-                End If
+                ' write expression to log
+                Viewer.WriteConsoleSection(String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName) & logText)
+            End If
         End Sub
 
         Private _lastAnsCount As Integer = 0
@@ -346,30 +335,70 @@ Namespace UI
             Return res
         End Function
 
-        Private _firstOutput As Boolean = True
         Private Sub WriteOutput(sender As Object, e As CantusIOEventArgs)
             If Me.InvokeRequired Then
                 Me.BeginInvoke(Sub() WriteOutput(sender, e))
             Else
-                If _firstOutput Then
-                    Viewer.autoAddLine()
-                    _firstOutput = False
-                End If
-
                 Viewer.WriteConsole(e.Content)
             End If
         End Sub
 
+        Private _ev As New ManualResetEventSlim(False)
+
         Private Sub ReadInput(sender As Object, e As CantusIOEventArgs, ByRef [return] As Object)
-            Select Case e.Message
-                Case eMessage.readChar, eMessage.readWord, eMessage.readLine
-                    [return] = InputBox(e.Content, "Virtual Console Input - Cantus", "")
-                Case eMessage.confirm
-                    Dim result As DialogResult = MessageBox.Show(Me, e.Content, "Confirm - Cantus",
-                                    If(e.Args("yes").ToString() = "yes", MessageBoxButtons.YesNo, MessageBoxButtons.OKCancel),
-                                    MessageBoxIcon.Information)
-                    [return] = result = DialogResult.OK OrElse result = DialogResult.Yes
-            End Select
+            Dim ret As String = ""
+            Dim method As Viewer.InputReadEventHandler = Sub(senderR As Object, eR As Viewer.InputEventArgs)
+                                                             ret = eR.Text
+                                                             _ev.Set()
+                                                         End Sub
+            AddHandler Viewer.InputRead, method
+            If e.Message = eMessage.readLine Then
+                Viewer.ReadLine()
+            ElseIf e.Message = eMessage.readChar
+                Viewer.ReadChar()
+            ElseIf e.Message = eMessage.readWord
+                Viewer.ReadWord()
+            Else
+                If e.Args("yes").ToString() = "yes" Then
+                    Viewer.WriteConsoleLine("Please enter 'Y', 'N', 'yes', or 'no'")
+                Else
+                    Viewer.WriteConsoleLine("Please enter 'Y', 'N', 'ok', or 'cancel'")
+                End If
+                Viewer.ReadWord()
+            End If
+            _ev.Wait()
+            _ev.Reset()
+            RemoveHandler Viewer.InputRead, method
+
+            If e.Message = eMessage.confirm Then
+                If e.Args("yes").ToString() = "yes" Then
+                    ret = ret.ToLowerInvariant().Trim()
+                    If ret = "yes" OrElse ret = "y" Then
+                        [return] = True
+                    ElseIf ret = "no" OrElse ret = "n" Then
+                        [return] = False
+                    Else
+                        ' ask again
+                        ReadInput(sender, e, [return])
+                    End If
+                Else
+                    ret = ret.ToLowerInvariant().Trim()
+                    If ret = "ok" OrElse ret = "y" Then
+                        [return] = True
+                    ElseIf ret = "cancel" OrElse ret = "n" Then
+                        [return] = False
+                    Else
+                        ' ask again
+                        ReadInput(sender, e, [return])
+                    End If
+                End If
+            Else
+                [return] = ret
+            End If
+        End Sub
+
+        Private Sub ClearConsole(sender As Object, e As EventArgs)
+            Viewer.ClearConsole()
         End Sub
 
         Public Sub SetTheme(name As String)
@@ -443,8 +472,7 @@ Namespace UI
                     curText = IO.File.ReadAllText("init.can")
 
                     ' cut everything up to the end comment
-                    Dim endComment As String = "# end of cantus auto-generated initialization script." &
-                        " do not modify this comment."
+                    Dim endComment As String = "# end of cantus auto-generated initialization script." & " do not modify this comment."
                     If curText.ToLower().Contains(endComment) Then
                         curText = curText.Substring(curText.ToLower().LastIndexOf(endComment) + endComment.Length +
                                                     ControlChars.NewLine.Length +
@@ -514,7 +542,8 @@ Namespace UI
         Private Sub NewScript()
             If String.IsNullOrEmpty(Me.File) Then
                 If (Tb.TextLength < 10 AndAlso String.IsNullOrWhiteSpace(Tb.Text)) OrElse
-                    MsgBox("All unsaved changes will be lost. " & ControlChars.NewLine & "Are you sure you want to create a new script?",
+                           MsgBox("All unsaved changes will be lost. " & ControlChars.NewLine &
+                                  "Are you sure you want to create a new script?",
                            MsgBoxStyle.YesNo Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "New Script") =
                            MsgBoxResult.Yes Then
                     Tb.Text = ""
@@ -641,7 +670,7 @@ Namespace UI
             ElseIf e.KeyCode = Keys.N AndAlso e.Control AndAlso Not e.Alt
                 _ignoreNextKey = True
                 NewScript()
-            ElseIf e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.O AndAlso e.Control
+            ElseIf e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.O AndAlso e.Control AndAlso Not e.Alt
                 _ignoreNextKey = True
                 Open()
 
@@ -666,6 +695,12 @@ Namespace UI
                         _eval.EvalAsync(IO.File.ReadAllText(diag.FileName))
                     End If
                 End Using
+            Else
+                If e.KeyCode = Keys.T Then
+                    BtnExplicit.PerformClick()
+                ElseIf e.KeyCode = Keys.F Then
+                    BtnSigFigs.PerformClick()
+                End If
             End If
         End Sub
 #End Region
@@ -750,11 +785,11 @@ Namespace UI
         ''' </summary>
         Private Sub UpdateLetterTT()
             For Each c As Control In PnlSettings.Controls
-                If c.Tag Is Nothing OrElse c.Tag.ToString() = "-" Then Continue For
+                If c.Tag Is Nothing OrElse c.Tag.ToString().StartsWith("-") Then Continue For
 
                 Dim val As String
                 Try
-                    val = _eval.GetVariableRef(c.Text.Remove(0, 1)(0)).ToString()
+                    val = _eval.GetVariableRepr(c.Text.Remove(0, 1)(0))
                 Catch
                     val = "Undefined"
                 End Try
@@ -769,7 +804,8 @@ Namespace UI
             If _updateStarted Then
                 If (Me.InvokeRequired) Then
                     Me.BeginInvoke(Sub()
-                                       MsgBox("Please wait, we're already checking for updates.", MsgBoxStyle.Exclamation, "Checking For Updates")
+                                       MsgBox("Please wait, we're already checking for updates.",
+                                              MsgBoxStyle.Exclamation, "Checking For Updates")
                                    End Sub)
                 Else
                     MsgBox("Please wait, we're already checking for updates.", MsgBoxStyle.Exclamation, "Checking For Updates")
@@ -783,16 +819,17 @@ Namespace UI
                     nv = wc.DownloadString(VERSION_URL)
                 End Using
                 Dim spl() As String = nv.Split("."c)
-                Dim curverspl() As String = Application.ProductVersion.Split("."c)
+                Dim curverspl() As String = Version.Split("."c)
                 For i As Integer = 0 To spl.Length - 1
                     If CInt(spl(i)) > CInt(curverspl(i)) Then
-                        If MessageBox.Show(Me, "New version of Cantus: " & nv & " found." & vbCrLf & "Update now?", "Update Found",
-                              MessageBoxButtons.YesNo, MessageBoxIcon.Information,
-                              MessageBoxDefaultButton.Button1) = DialogResult.Yes Then
-                            Exit For ' needs update
-                        Else
-                            Exit Sub
-                        End If
+                        Using upd As New Updater.DiagUpdateAvailable(nv)
+                            If upd.ShowDialog() = DialogResult.OK Then
+                                Exit For ' needs update
+                            Else
+                                _updateStarted = False
+                                Exit Sub ' does not need update
+                            End If
+                        End Using
                     ElseIf CInt(spl(i)) < CInt(curverspl(i)) OrElse i = spl.Length - 1 Then
                         If promptuser Then MessageBox.Show(Me, "You are running the latest version of Cantus.", "No Update Found",
                               MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -861,18 +898,11 @@ Namespace UI
             End If
         End Sub
 
-        Dim sw As Integer = 0
         Friend Sub FrmEditor_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove,
             PnlResults.MouseMove, LbResult.MouseMove
             If _isMoving Then
-                If sw = 0 Then
-                    Dim newLft As Integer = Me.Left + e.X - _movingPrevPt.X
-                    Dim newTop As Integer = Me.Top + e.Y - _movingPrevPt.Y
-                    If newTop > Me.Top Then Me.Top = newTop
-                    Me.Left = newLft
-                    If newTop < Me.Top Then Me.Top = newTop
-                End If
-                sw = (sw + 1) Mod 5
+                Me.Left = Me.Left + e.X - _movingPrevPt.X
+                Me.Top = Me.Top + e.Y - _movingPrevPt.Y
             End If
         End Sub
 
@@ -887,14 +917,14 @@ Namespace UI
         End Sub
 
         Private Sub btnOutputFormat_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
-            If _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific Then
-                _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Raw
+            If _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific Then
+                _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Raw
             Else
-                _eval.OutputFormat = CType(CInt(_eval.OutputFormat) + 1, Evaluator.CantusEvaluator.eOutputFormat)
+                _eval.OutputFormat = CType(CInt(_eval.OutputFormat) + 1, Core.CantusEvaluator.eOutputFormat)
             End If
-            If _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Math Then
+            If _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Math Then
                 BtnOutputFormat.Text = "Math"
-            ElseIf _eval.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific Then
+            ElseIf _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific Then
                 BtnOutputFormat.Text = "Scientific"
             Else
                 BtnOutputFormat.Text = "Raw"
@@ -903,14 +933,14 @@ Namespace UI
         End Sub
 
         Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles BtnAngleRepr.Click
-            If _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Gradian Then
-                _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree
+            If _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Gradian Then
+                _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree
             Else
-                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Evaluator.CantusEvaluator.eAngleRepresentation)
+                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Core.CantusEvaluator.eAngleRepresentation)
             End If
-            If _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Radian Then
+            If _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Radian Then
                 BtnAngleRepr.Text = "Radian"
-            ElseIf _eval.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree Then
+            ElseIf _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree Then
                 BtnAngleRepr.Text = "Degree"
             Else
                 BtnAngleRepr.Text = "Gradian"
@@ -938,6 +968,7 @@ Namespace UI
             _updTh = New Thread(CType(Sub()
                                           CheckUpdate(True)
                                       End Sub, ThreadStart))
+            _updTh.IsBackground = True
             _updTh.Start()
         End Sub
 
@@ -955,9 +986,11 @@ Namespace UI
             _editCt -= 1
         End Sub
 
-        Private Sub btnOptions_Click(sender As Object, e As EventArgs) Handles BtnExplicit.Click, BtnSigFigs.Click
+        Private Sub BtnOptions_Click(sender As Object, e As EventArgs) Handles BtnExplicit.Click, BtnSigFigs.Click
             Dim mode As Boolean
-            If sender Is BtnExplicit Then
+            Dim btn As Button = DirectCast(sender, Button)
+
+            If btn.Tag.ToString().EndsWith("E") Then
                 _eval.ExplicitMode = Not _eval.ExplicitMode
                 mode = _eval.ExplicitMode
             Else
@@ -969,7 +1002,6 @@ Namespace UI
                 End If
             End If
 
-            Dim btn As Button = DirectCast(sender, Button)
             If mode Then
                 btn.BackColor = BtnEval.BackColor
                 btn.ForeColor = BtnEval.ForeColor
@@ -997,8 +1029,7 @@ Namespace UI
 #Region "Scintilla"
         Private Shared Function IsBrace(c As Integer) As Boolean
             Select Case ChrW(c)
-                Case "("c, ")"c, "["c, "]"c, "{"c, "}"c,
-            "<"c, ">"c
+                Case "("c, ")"c, "["c, "]"c, "{"c, "}"c
                     Return True
             End Select
 
@@ -1054,8 +1085,7 @@ Namespace UI
                 e.Text += indent.Value
 
 
-                Dim blockKwd As New HashSet(Of String)(("class function namespace if else elif for repeat " &
-                                                "switch case run try catch finally while until with").Split(" "c))
+                Dim blockKwd As New HashSet(Of String)(("class function namespace if else elif for repeat " & "switch case run try catch finally while until with").Split(" "c))
                 curLineText = curLineText.Trim()
                 If curLineText.Contains(" ") Then curLineText = curLineText.Remove(curLineText.IndexOf(" "))
 
@@ -1071,10 +1101,7 @@ Namespace UI
             Dim wordStartPos As Integer = Tb.CurrentPosition
 
             While wordStartPos - 1 >= 0 AndAlso (
-                  Tb.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse
-                  Tb.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse
-                  Tb.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse
-                  Tb.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW("."c))
+                  Tb.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse Tb.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse Tb.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW("."c))
                 wordStartPos -= 1
             End While
 
@@ -1106,8 +1133,7 @@ Namespace UI
                 If blockKwd.Contains(keyword) Then Return ' do not autocomplete class, function, namespace names 
 
                 ' do not autocomplete variable declarations unless after keyword
-                If (keyword = "let" OrElse keyword = "global") AndAlso
-                    Not curLineText.Contains("=") Then Return
+                If (keyword = "let" OrElse keyword = "global") AndAlso Not curLineText.Contains("=") Then Return
 
                 Dim keywords As String() = "function global let private public static".Split(" "c)
 
@@ -1120,21 +1146,18 @@ Namespace UI
 
                     If Not nsMode Then
                         autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
-                                   "let static global ref " &
-                                   "switch case run try catch finally while until with in step to choose").Split(" "c))
+                                           "let static global ref undefined null " &
+                                           "switch case run try catch finally while until with in step to choose").Split(" "c))
 
                         autoCList.Add(ROOT_NAMESPACE)
                     End If
 
                     For Each v As Variable In _eval.Variables.Values
                         ' ignore private
-                        If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso
-                        Not IsParentScopeOf(v.DeclaringScope, _eval.Scope)) Then Continue For
+                        If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(v.DeclaringScope, _eval.Scope)) Then Continue For
 
                         ' ignore null
-                        If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse
-                        TypeOf v.Value Is BigDecimal AndAlso
-                            DirectCast(v.Value, BigDecimal).IsUndefined Then Continue For
+                        If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse TypeOf v.Value Is BigDecimal AndAlso DirectCast(v.Value, BigDecimal).IsUndefined Then Continue For
 
                         If nsMode Then ' filter namespace
                             Dim partialName As String = RemoveRedundantScope(v.FullName, _eval.Scope)
@@ -1145,16 +1168,13 @@ Namespace UI
                             ElseIf partialName.ToLower().StartsWith(enteredWord.ToLower()) Then
                                 autoCList.Add(partialName.ToLower())
 
-                            ElseIf enteredWord.ToLower().StartsWith(partialName.ToLower()) OrElse
-                            enteredWord.ToLower().StartsWith(v.FullName.ToLower())
+                            ElseIf enteredWord.ToLower().StartsWith(partialName.ToLower()) OrElse enteredWord.ToLower().StartsWith(v.FullName.ToLower())
                                 If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
                                 If TypeOf v.Reference.Resolve() Is ClassInstance Then
                                     Dim ci As ClassInstance = DirectCast(v.Reference.Resolve(), ClassInstance)
                                     For Each f As String In ci.Fields.Keys
                                         autoCList.Add(CombineScope(partialName,
-                                                   f &
-                                            If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" &
-                                                  If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
+                                                   f & If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" & If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
                                               "")))
                                     Next
                                 End If
@@ -1162,9 +1182,7 @@ Namespace UI
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(v.FullName, _eval.Scope) &
-                                          If(TypeOf v.Value Is Lambda, "(" &
-                                          If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
+                            autoCList.Add(RemoveRedundantScope(v.FullName, _eval.Scope) & If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
                         End If
                     Next
 
@@ -1175,8 +1193,7 @@ Namespace UI
 
                     Dim varname As String = ""
                     Dim type As Type = Nothing
-                    If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso
-                        _eval.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
+                    If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso _eval.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
 
                         varname = enteredWord.Remove(enteredWord.IndexOf("."))
 
@@ -1192,71 +1209,59 @@ Namespace UI
                     For Each fn As MethodInfo In info
                         If nsMode Then
                             If enteredWord.StartsWith("cantus") Then
-                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" &
-                                              If(fn.GetParameters().Count = 0, "", "_") & ")")
+                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
 
                             ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) Then
                                 If fn.GetParameters(0).ParameterType.IsAssignableFrom(type) Then
-                                    autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" &
-                                          If(fn.GetParameters().Count <= 1, "", "_") & ")")
+                                    autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count <= 1, "", "_") & ")")
                                 End If
                             End If
                         Else
-                            autoCList.Add(fn.Name.ToLower() & "(" &
-                                          If(fn.GetParameters().Count = 0, "", "_") & ")")
+                            autoCList.Add(fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
                         End If
                     Next
 
                     For Each fn As UserFunction In _eval.UserFunctions.Values
                         If nsMode Then
-                            If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso
-                           Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, _eval.Scope).ToLower()) Then
+                            If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, _eval.Scope).ToLower()) Then
                                 Continue For
                             End If
                         End If
                         ' ignore private
-                        If fn.Modifiers.Contains("internal") OrElse (fn.Modifiers.Contains("private") AndAlso
-                        Not IsParentScopeOf(fn.DeclaringScope, _eval.Scope)) Then Continue For
+                        If fn.Modifiers.Contains("internal") OrElse (fn.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(fn.DeclaringScope, _eval.Scope)) Then Continue For
 
                         If nsMode Then ' filter namespace
                             If fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(fn.FullName & "(" &
-                                          If(fn.Args.Count = 0, "", "_") & ")")
+                                autoCList.Add(fn.FullName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
                             ElseIf RemoveRedundantScope(fn.FullName, _eval.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "(" &
-                                          If(fn.Args.Count = 0, "", "_") & ")")
+                                autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
                             Else
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "(" &
-                                          If(fn.Args.Count = 0, "", "_") & ")")
+                            autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
                         End If
                     Next
 
                     For Each uc As UserClass In _eval.UserClasses.Values
                         If nsMode Then
-                            If Not uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso
-                               Not uc.FullName.ToLower().StartsWith(RemoveRedundantScope(uc.FullName, _eval.Scope).ToLower()) Then
+                            If Not uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not uc.FullName.ToLower().StartsWith(RemoveRedundantScope(uc.FullName, _eval.Scope).ToLower()) Then
                                 Continue For
                             End If
                         End If
                         ' ignore private
-                        If uc.Modifiers.Contains("internal") OrElse (uc.Modifiers.Contains("private") AndAlso
-                            Not IsParentScopeOf(uc.DeclaringScope, _eval.Scope)) Then Continue For
+                        If uc.Modifiers.Contains("internal") OrElse (uc.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(uc.DeclaringScope, _eval.Scope)) Then Continue For
 
                         If nsMode Then ' filter namespace
                             If uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
                                 autoCList.Add(uc.FullName & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                             ElseIf RemoveRedundantScope(uc.FullName, _eval.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope) & "(" &
-                                              If(uc.Constructor.Args.Count = 0, "", "_") & ")")
+                                autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                             Else
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope) & "(" &
-                                          If(uc.Constructor.Args.Count = 0, "", "_") & ")")
+                            autoCList.Add(RemoveRedundantScope(uc.FullName, _eval.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                         End If
                     Next
                     autoCList.Sort(New AutoCompleteComparer())
@@ -1267,8 +1272,7 @@ Namespace UI
             End If
 
             ' brace completion
-            If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse
-               e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
+            If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
 
                 Dim startPos As Integer
                 Dim curLine As Integer = Tb.CurrentLine
@@ -1340,10 +1344,7 @@ Namespace UI
                 End If
 
             ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) OrElse e.Char = AscW("`"c) Then
-                If e.Char = AscW(""""c) AndAlso Tb.CurrentPosition > 1 AndAlso
-                    Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = """""" OrElse
-                    e.Char = AscW("'"c) AndAlso Tb.CurrentPosition > 1 AndAlso
-                    Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = "'" & "'" Then
+                If e.Char = AscW(""""c) AndAlso Tb.CurrentPosition > 1 AndAlso Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = """""" OrElse e.Char = AscW("'"c) AndAlso Tb.CurrentPosition > 1 AndAlso Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = "'" & "'" Then
 
                     ' if there were already two quotes before, do not add another: user probably wanted to type triple quotes
                     Tb.SelectionStart += 1
@@ -1383,14 +1384,22 @@ Namespace UI
                 SplashScreen.SendToBack()
                 Try
                     Process.Start(
-                    "cmd", "/c Assoc .can=Cantus.CBool  && Ftype Cantus.CantusScript=" &
-                    ControlChars.Quote & Application.ExecutablePath & ControlChars.Quote & " ""%1""")
+                    "cmd", "/c Assoc .can=Cantus.CBool  && Ftype Cantus.CantusScript=" & ControlChars.Quote & Application.ExecutablePath & ControlChars.Quote & " ""%1""")
                 Catch
                 End Try
                 TmrLoad.Stop()
                 Using diag As New Dialogs.DiagFeatureList()
                     diag.ShowDialog()
                 End Using
+            End If
+
+            ' check for update
+            If My.Settings.AutoUpdate Then
+                _updTh = New Thread(CType(Sub()
+                                              CheckUpdate()
+                                          End Sub, ThreadStart))
+                _updTh.IsBackground = True
+                _updTh.Start()
             End If
 
             ' Minimize/show Keyboard 
@@ -1402,9 +1411,7 @@ Namespace UI
             If (My.Settings.Position <> "") Then
                 Dim spl() As String = My.Settings.Position.Split(","c)
                 Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
-                If Me.Location.X <= -Me.Width OrElse Me.Location.Y <= -Me.Height OrElse
-                    Me.Right >= Screen.PrimaryScreen.WorkingArea.Width + Me.Width OrElse
-                    Me.Bottom >= Screen.PrimaryScreen.WorkingArea.Height + Me.Height Then
+                If Me.Location.X <= -Me.Width OrElse Me.Location.Y <= -Me.Height OrElse Me.Right >= Screen.PrimaryScreen.WorkingArea.Width + Me.Width OrElse Me.Bottom >= Screen.PrimaryScreen.WorkingArea.Height + Me.Height Then
                     Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
                     Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - Me.Height / 2)
                 End If
@@ -1415,7 +1422,17 @@ Namespace UI
 
             ' save location
             My.Settings.Position = Me.Left & "," & Me.Top
+
+            Me.Tb.Select()
         End Sub
 #End Region
     End Class
+    Public Module Globals
+        ''' <summary>
+        ''' The default evaluator in the root namespace
+        ''' </summary>
+        Public ReadOnly Property RootEvaluator As New CantusEvaluator()
+        Public ReadOnly Property Version As String = Assembly.GetAssembly(GetType(Cantus.Core.CantusEvaluator)).GetName().
+                                                        Version.ToString() & " Alpha"
+    End Module
 End Namespace

@@ -1,6 +1,6 @@
 ﻿Imports System.Text
 Imports System.Text.RegularExpressions
-Imports Cantus.Evaluator.CommonTypes
+Imports Cantus.Core.CommonTypes
 Imports ScintillaNET
 
 Namespace UI.ScintillaForCantus
@@ -53,7 +53,6 @@ Namespace UI.ScintillaForCantus
         ''' Decimal point
         ''' </summary>
         Private Shared ReadOnly Property DecPt As String = Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
-
         ''' <summary>
         ''' The type of token we are currently styling
         ''' </summary>
@@ -74,8 +73,7 @@ Namespace UI.ScintillaForCantus
         ''' <summary>
         ''' A hashset of block keywords
         ''' </summary>
-        Private _keywords As New HashSet(Of String)(("class function namespace if else elif for in to step repeat " &
-                                                "switch case run try catch finally while until with").Split(" "c))
+        Private _keywords As New HashSet(Of String)(("class function namespace if else elif for in to step repeat " & "switch case run try catch finally while until with").Split(" "c))
 
         ''' <summary>
         ''' A hashset of inline keywords
@@ -103,9 +101,8 @@ Namespace UI.ScintillaForCantus
 
                 Dim tripleQuote As String = ControlChars.Quote & ControlChars.Quote & ControlChars.Quote
                 Dim upperText As String = scintilla.GetTextRange(0, scintilla.Lines(line).Position)
-                If Evaluator.Globals.RootEvaluator.InternalFunctions.Count(
-                upperText, tripleQuote) Mod 2 = 1 OrElse
-                Evaluator.Globals.RootEvaluator.InternalFunctions.Count(
+                If New Core.CantusEvaluator.InternalFunctions(Nothing).Count(
+                upperText, tripleQuote) Mod 2 = 1 OrElse New Core.CantusEvaluator.InternalFunctions(Nothing).Count(
                    upperText, "'''") Mod 2 = 1 Then
                     state = eState.string
                 End If
@@ -184,11 +181,12 @@ Namespace UI.ScintillaForCantus
                                 length += 1
                                 If length = 1 Then scintilla.SetStyling(1, StyleNumberBoolean)
                             Else
+                                If length = 0 Then scintilla.SetStyling(1, StyleIdentifier)
                                 length = 0
-                                state = eState.unknown
-                                Continue While
-                            End If
-                            Exit Select
+                                    state = eState.unknown
+                                    Continue While
+                                End If
+                                Exit Select
 
                         Case eState.identifier
                             If [Char].IsLetterOrDigit(c) OrElse c = "_"c Then
@@ -198,7 +196,7 @@ Namespace UI.ScintillaForCantus
                                 Dim identifier As String = scintilla.GetTextRange(startPos - length, length)
 
                                 If identifier.ToLowerInvariant() = "true" OrElse identifier.ToLowerInvariant() = "false" OrElse
-                                 identifier.ToLowerInvariant() = "undefined" Then
+                                    identifier.ToLowerInvariant() = "undefined" OrElse identifier.ToLowerInvariant() = "null" Then
                                     identifierStyle = StyleNumberBoolean
                                 ElseIf _keywords.Contains(identifier) Then
                                     identifierStyle = StyleKeyword
@@ -210,9 +208,8 @@ Namespace UI.ScintillaForCantus
 
                                     If Not restOfLine.Contains("=") Then
                                         Try
-                                            Dim res As Object = Evaluator.Globals.RootEvaluator.EvalExprRaw(identifier, True)
-                                            If (Not TypeOf res Is Double OrElse Not Double.IsNaN(CDbl(res))) AndAlso
-                                       (Not TypeOf res Is BigDecimal OrElse Not DirectCast(res, BigDecimal).IsUndefined) Then
+                                            Dim res As Object = Globals.RootEvaluator.EvalExprRaw(identifier, True)
+                                            If (Not TypeOf res Is Double OrElse Not Double.IsNaN(CDbl(res))) AndAlso                                       (Not TypeOf res Is BigDecimal OrElse Not DirectCast(res, BigDecimal).IsUndefined) Then
                                                 identifierStyle = StyleIdentifier
                                             End If
                                         Catch ' do nothing, display error style

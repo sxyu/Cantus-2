@@ -2,7 +2,7 @@
 
 Cantus is a powerful yet lightweight mathematical language and expression evaluator 
 created By Alex Yu 2015-16
-https://github.com/sxyu/Cantus-2
+https://github.com/sxyu/Cantus-GUI
 
 *********************************************************************************************
 Credits
@@ -26,6 +26,32 @@ Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resourc
 
 *********************************************************************************************
 What's new
+*********************************************************************************************
+General
+-Separated application into multiple files: core library is now a separate project
+-New console interpreter: can.exe. Run directly to run in interactive mode.
+
+Console
+-Interactive mode: simply run can.exe to run commands line-by-line. End any line with ':' to temporarily enter block mode.
+-Block mode: run 'can -b' to run blocks. Expressions are run line-by-line using a ScriptFeeder,
+  but no result is returned until 'return' is used.
+-Execute a file: run 'can <filename>'. The .can extension may be omitted: to run test.can, you may type 'can test'
+-Quick evaluation: use 'can <expression>' to quickly evaluate an expression. E.g. 'can 1+2 * 3' returns 7.
+  Spaces are ignored.
+
+Core
+-Sig figs mode (Hotkey Ctrl+Alt+F): Keep track of sig figs during all calculations. 
+  Automatically rounds when necessary.
+-Added ScriptFeeder class for executing scripts part-by-part, on-demand
+
+GUI
+-The 'my results' section is now an interactive virtual console
+	-Supports read, print, and clear
+	-End a line with ':' to use block mode. This lets you run multiple statements at once and
+	  use statements such as if and while.
+
+*********************************************************************************************
+New from 2.3.0.92
 *********************************************************************************************
 -New logo (designed by myself)!
 -The window is no longer always on top, so you can move things above Cantus while working
@@ -59,8 +85,7 @@ New from 2.2.0.91
 -Better support for optional/named arguments, now works as expected
 -Multiline strings: """ Use triple quotes 
  """
--Improved syntax highlighting and autocompletion in the editor
--Added save and open buttons to the editor as well as the shortcuts Ctrl+S and Ctrl+O
+-Improved syntax highlighting and autocompletion in the editOr -Added save and open buttons to the editor as well as the shortcuts Ctrl+S and Ctrl+O
   (Older shortcuts F11 and F12 still available)
 -Editor is now slightly taller
 -Minor fixes
@@ -119,8 +144,8 @@ class cat : pet
 		return "Cat name: " + name
 
 myCat = cat("Alex")
-alert(myCat) # alerts Cat name: Alex
-alert(myCat.speak()) # alerts Meow!
+printline(myCat) # prints Cat name: Alex
+printline(myCat.speak()) # prints Meow!
 
 -Static keyword to make a variable shared across all class instances
 -Access modifiers: public, private
@@ -192,8 +217,7 @@ New From 2.0.0.68:
 -Almost everything is now asynchroneous and non-blocking, each
   evaluation is done on a different thread,
   and graphics is drawn on a different thread in the graphing
-  calculator
-
+  calculatOr 
 -Added Increment/Decrement/Operator AND assign operators 
   (++, --, +=, -=, etc.)
 -Operator = now supports both assignment and comparison

@@ -1,19 +1,19 @@
 ﻿Imports System
 Imports System.Reflection
+Imports System.Resources
 Imports System.Runtime.InteropServices
 
 ' General Information about an assembly is controlled through the following 
 ' set of attributes. Change these attribute values to modify the information
 ' associated with an assembly.
 
-' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Cantus")>
+<Assembly: AssemblyTitle("Cantus Editor")>
 <Assembly: AssemblyDescription("A powerful mathematical expression evaluator and graphing calculator")>
 <Assembly: AssemblyCompany("Alex Yu")>
 <Assembly: AssemblyProduct("Cantus")>
-<Assembly: AssemblyCopyright("By Alex Yu 2015-16")>
-<Assembly: AssemblyTrademark("Alex Yu")> 
+<Assembly: AssemblyCopyright("Copyright © Alex Yu 2015-16")>
+<Assembly: AssemblyTrademark("The MIT License (MIT)")>
 
 <Assembly: ComVisible(False)>
 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.3.0.92")>
-<Assembly: AssemblyFileVersion("2.3.0.92")>
+<Assembly: AssemblyVersion("2.4.0.95")>
+<Assembly: AssemblyFileVersion("2.4.0.95")>

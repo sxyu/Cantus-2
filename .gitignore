@@ -1,14 +1,16 @@
 # Old code no longer in use
-Evaluator/EvaluatorOld.vb
+Evaluator/
+Evaluator/*
 Graphing/FrmDrawGraph.*
 
 # Exclude updater files
-bin/Release/ver
-bin/Release/manifest
 bin/Release/init.can
 bin/Release/cantus.xml
 bin/Release/ScintillaNet.dll
 bin/Release/plugin/
+*.pvk
+*.pfx
+*.cer
 *.backup
 
 ## Ignore Visual Studio temporary files, build results, and
@@ -82,7 +84,7 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
-*.exe.config
+*.vshost.exe.config
 *.exe.manifest
 
 # Chutzpah Test files

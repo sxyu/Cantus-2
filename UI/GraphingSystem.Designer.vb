@@ -7,16 +7,17 @@
         <System.Diagnostics.DebuggerNonUserCode()>
         Protected Overrides Sub Dispose(ByVal disposing As Boolean)
             Try
-                _ended = True
-                _buffer.Dispose()
                 My.Settings.GraphSplitter = Me.Height - split.SplitterDistance
                 My.Settings.Save()
+
+                _buffer.Dispose()
+                _tmpbuffer.Dispose()
 
                 If disposing AndAlso components IsNot Nothing Then
                     components.Dispose()
                 End If
-            Finally
                 MyBase.Dispose(disposing)
+            Catch
             End Try
         End Sub
 
@@ -162,8 +163,7 @@
             Me.btnScale.TabStop = False
             Me.btnScale.Text = "Window"
             Me.btnScale.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            Me.tt.SetToolTip(Me.btnScale, "Left click to adjust the range graphed on the window" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right click to reset to def" &
-        "ault (centered) view" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle click to go to first quadrant view")
+            Me.tt.SetToolTip(Me.btnScale, "Left click to adjust the range graphed on the window" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right click to reset to def" &         "ault (centered) view" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle click to go to first quadrant view")
             Me.btnScale.UseVisualStyleBackColor = False
             '
             'pnlWindow

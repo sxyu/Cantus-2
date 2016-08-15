@@ -114,12 +114,10 @@ Namespace UI.Keyboards
             If FrmEditor.Tb.Text.Length > 0 Then
                 Dim start As Integer = FrmEditor.Tb.SelectionStart
                 If FrmEditor.Tb.SelectionEnd - FrmEditor.Tb.SelectionStart > 0 Then
-                    FrmEditor.Tb.Text = FrmEditor.Tb.Text.Substring(0, FrmEditor.Tb.SelectionStart) &
-                        FrmEditor.Tb.Text.Substring(FrmEditor.Tb.SelectionStart + FrmEditor.Tb.SelectionEnd - FrmEditor.Tb.SelectionStart)
+                    FrmEditor.Tb.Text = FrmEditor.Tb.Text.Substring(0, FrmEditor.Tb.SelectionStart) &                         FrmEditor.Tb.Text.Substring(FrmEditor.Tb.SelectionStart + FrmEditor.Tb.SelectionEnd - FrmEditor.Tb.SelectionStart)
                     FrmEditor.Tb.SelectionStart = start
                 ElseIf FrmEditor.Tb.SelectionStart > 0 Then
-                    FrmEditor.Tb.Text = FrmEditor.Tb.Text.Substring(0, FrmEditor.Tb.SelectionStart - 1) &
-                        FrmEditor.Tb.Text.Substring(FrmEditor.Tb.SelectionStart)
+                    FrmEditor.Tb.Text = FrmEditor.Tb.Text.Substring(0, FrmEditor.Tb.SelectionStart - 1) &                         FrmEditor.Tb.Text.Substring(FrmEditor.Tb.SelectionStart)
                     FrmEditor.Tb.SelectionStart = start - 1
                 Else
                     FrmEditor.Tb.Text = FrmEditor.Tb.Text.Substring(1)
@@ -168,8 +166,7 @@ Namespace UI.Keyboards
         End Sub
 
         Private Sub CompleteBrace(chr As Char)
-            If chr = "(" OrElse chr = "[" OrElse chr = "{" OrElse
-               chr = ")" OrElse chr = "]" OrElse chr = "}" Then
+            If chr = "(" OrElse chr = "[" OrElse chr = "{" OrElse                chr = ")" OrElse chr = "]" OrElse chr = "}" Then
 
                 Dim startPos As Integer
                 Dim curLine As Integer = FrmEditor.Tb.CurrentLine
@@ -241,10 +238,7 @@ Namespace UI.Keyboards
                 End If
 
             ElseIf chr = "|" OrElse chr = """"c OrElse chr = "'"c OrElse chr = "`"c Then
-                If chr = """"c AndAlso FrmEditor.Tb.CurrentPosition > 1 AndAlso
-                    FrmEditor.Tb.GetTextRange(FrmEditor.Tb.CurrentPosition - 2, 2) = """""" OrElse
-                    chr = "'"c AndAlso FrmEditor.Tb.CurrentPosition > 1 AndAlso
-                    FrmEditor.Tb.GetTextRange(FrmEditor.Tb.CurrentPosition - 2, 2) = "'" & "'" Then
+                If chr = """"c AndAlso FrmEditor.Tb.CurrentPosition > 1 AndAlso                    FrmEditor.Tb.GetTextRange(FrmEditor.Tb.CurrentPosition - 2, 2) = """""" OrElse                     chr = "'"c AndAlso FrmEditor.Tb.CurrentPosition > 1 AndAlso                    FrmEditor.Tb.GetTextRange(FrmEditor.Tb.CurrentPosition - 2, 2) = "'" & "'" Then
 
                     ' if there were already two quotes before, do not add another: user probably wanted to type triple quotes
                     FrmEditor.Tb.SelectionStart += 1

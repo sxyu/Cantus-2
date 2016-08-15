@@ -146,7 +146,7 @@
             Me.btnlog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnlog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnlog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnlog.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
+            Me.btnlog.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.btnlog.ForeColor = System.Drawing.Color.White
             Me.btnlog.Location = New System.Drawing.Point(536, 105)
             Me.btnlog.Margin = New System.Windows.Forms.Padding(2)
@@ -263,7 +263,7 @@
             Me.btnCalc.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.btnCalc.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
             Me.btnCalc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCalc.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
+            Me.btnCalc.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.btnCalc.ForeColor = System.Drawing.Color.White
             Me.btnCalc.Location = New System.Drawing.Point(624, 237)
             Me.btnCalc.Margin = New System.Windows.Forms.Padding(2)
@@ -580,7 +580,7 @@
             Me.btnComment.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnComment.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnComment.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnComment.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnComment.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnComment.ForeColor = System.Drawing.Color.White
             Me.btnComment.Location = New System.Drawing.Point(580, 18)
             Me.btnComment.Margin = New System.Windows.Forms.Padding(2)
@@ -601,7 +601,7 @@
             Me.btnTripleQuote.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnTripleQuote.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnTripleQuote.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTripleQuote.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
+            Me.btnTripleQuote.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.btnTripleQuote.ForeColor = System.Drawing.Color.White
             Me.btnTripleQuote.Location = New System.Drawing.Point(536, 18)
             Me.btnTripleQuote.Margin = New System.Windows.Forms.Padding(2)
@@ -622,7 +622,7 @@
             Me.btnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
             Me.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Brown
             Me.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnClose.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnClose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnClose.ForeColor = System.Drawing.Color.White
             Me.btnClose.Image = CType(resources.GetObject("btnClose.Image"), System.Drawing.Image)
             Me.btnClose.Location = New System.Drawing.Point(624, 18)
@@ -643,7 +643,7 @@
             Me.btnNot.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnNot.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnNot.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnNot.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
+            Me.btnNot.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.btnNot.ForeColor = System.Drawing.Color.White
             Me.btnNot.Location = New System.Drawing.Point(438, 18)
             Me.btnNot.Margin = New System.Windows.Forms.Padding(2)
@@ -664,7 +664,7 @@
             Me.btnQuote.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnQuote.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnQuote.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnQuote.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
+            Me.btnQuote.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.btnQuote.ForeColor = System.Drawing.Color.White
             Me.btnQuote.Location = New System.Drawing.Point(482, 18)
             Me.btnQuote.Margin = New System.Windows.Forms.Padding(2)
@@ -685,7 +685,7 @@
             Me.btnOr.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnOr.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnOr.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnOr.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
+            Me.btnOr.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.btnOr.ForeColor = System.Drawing.Color.White
             Me.btnOr.Location = New System.Drawing.Point(394, 18)
             Me.btnOr.Margin = New System.Windows.Forms.Padding(2)
@@ -706,7 +706,7 @@
             Me.btnAnd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnAnd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnAnd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAnd.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnAnd.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnAnd.ForeColor = System.Drawing.Color.White
             Me.btnAnd.Location = New System.Drawing.Point(350, 18)
             Me.btnAnd.Margin = New System.Windows.Forms.Padding(2)
@@ -822,7 +822,7 @@
             Me.btnImagUnit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnImagUnit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnImagUnit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnImagUnit.Font = New System.Drawing.Font("Open Sans Light", 12.25!)
+            Me.btnImagUnit.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
             Me.btnImagUnit.ForeColor = System.Drawing.Color.White
             Me.btnImagUnit.Location = New System.Drawing.Point(105, 238)
             Me.btnImagUnit.Margin = New System.Windows.Forms.Padding(2)
@@ -1051,7 +1051,7 @@
             Me.btnRand.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnRand.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnRand.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnRand.Font = New System.Drawing.Font("Open Sans Light", 7.0!)
+            Me.btnRand.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
             Me.btnRand.ForeColor = System.Drawing.Color.White
             Me.btnRand.Location = New System.Drawing.Point(207, 106)
             Me.btnRand.Margin = New System.Windows.Forms.Padding(2)
@@ -1072,7 +1072,7 @@
             Me.btnSigma.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnSigma.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnSigma.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSigma.Font = New System.Drawing.Font("Open Sans Light", 13.0!)
+            Me.btnSigma.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
             Me.btnSigma.ForeColor = System.Drawing.Color.White
             Me.btnSigma.Location = New System.Drawing.Point(163, 106)
             Me.btnSigma.Margin = New System.Windows.Forms.Padding(2)
@@ -1093,7 +1093,7 @@
             Me.btnDyDx.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnDyDx.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnDyDx.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnDyDx.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnDyDx.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnDyDx.ForeColor = System.Drawing.Color.White
             Me.btnDyDx.Location = New System.Drawing.Point(251, 106)
             Me.btnDyDx.Margin = New System.Windows.Forms.Padding(2)
@@ -1113,7 +1113,7 @@
             Me.btnTick.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnTick.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnTick.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTick.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnTick.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnTick.ForeColor = System.Drawing.Color.White
             Me.btnTick.Location = New System.Drawing.Point(482, 62)
             Me.btnTick.Margin = New System.Windows.Forms.Padding(2)
@@ -1134,7 +1134,7 @@
             Me.btnIntegral.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnIntegral.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnIntegral.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnIntegral.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnIntegral.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnIntegral.ForeColor = System.Drawing.Color.White
             Me.btnIntegral.Location = New System.Drawing.Point(295, 106)
             Me.btnIntegral.Margin = New System.Windows.Forms.Padding(2)
@@ -1154,7 +1154,7 @@
             Me.btnIf.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnIf.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnIf.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnIf.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
+            Me.btnIf.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.btnIf.ForeColor = System.Drawing.Color.White
             Me.btnIf.Location = New System.Drawing.Point(350, 106)
             Me.btnIf.Margin = New System.Windows.Forms.Padding(2)
@@ -1175,7 +1175,7 @@
             Me.btnWhile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnWhile.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnWhile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWhile.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnWhile.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnWhile.ForeColor = System.Drawing.Color.White
             Me.btnWhile.Location = New System.Drawing.Point(350, 62)
             Me.btnWhile.Margin = New System.Windows.Forms.Padding(2)
@@ -1215,7 +1215,7 @@
             Me.btnLn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnLn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnLn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnLn.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
+            Me.btnLn.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.btnLn.ForeColor = System.Drawing.Color.White
             Me.btnLn.Location = New System.Drawing.Point(536, 61)
             Me.btnLn.Margin = New System.Windows.Forms.Padding(2)
@@ -1351,7 +1351,7 @@
             Me.btnMedian.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnMedian.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnMedian.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMedian.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnMedian.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnMedian.ForeColor = System.Drawing.Color.White
             Me.btnMedian.Location = New System.Drawing.Point(295, 62)
             Me.btnMedian.Margin = New System.Windows.Forms.Padding(2)
@@ -1372,7 +1372,7 @@
             Me.btnAvg.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnAvg.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnAvg.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAvg.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnAvg.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnAvg.ForeColor = System.Drawing.Color.White
             Me.btnAvg.Location = New System.Drawing.Point(251, 62)
             Me.btnAvg.Margin = New System.Windows.Forms.Padding(2)
@@ -1393,7 +1393,7 @@
             Me.btnYesNo.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnYesNo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnYesNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnYesNo.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnYesNo.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnYesNo.ForeColor = System.Drawing.Color.White
             Me.btnYesNo.Location = New System.Drawing.Point(295, 18)
             Me.btnYesNo.Margin = New System.Windows.Forms.Padding(2)
@@ -1528,7 +1528,7 @@
             Me.btnPerm.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnPerm.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnPerm.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPerm.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnPerm.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnPerm.ForeColor = System.Drawing.Color.White
             Me.btnPerm.Location = New System.Drawing.Point(207, 62)
             Me.btnPerm.Margin = New System.Windows.Forms.Padding(2)
@@ -1549,7 +1549,7 @@
             Me.btnChoose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnChoose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnChoose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnChoose.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnChoose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnChoose.ForeColor = System.Drawing.Color.White
             Me.btnChoose.Location = New System.Drawing.Point(163, 62)
             Me.btnChoose.Margin = New System.Windows.Forms.Padding(2)
@@ -1570,7 +1570,7 @@
             Me.btnRead.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnRead.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnRead.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnRead.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnRead.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnRead.ForeColor = System.Drawing.Color.White
             Me.btnRead.Location = New System.Drawing.Point(207, 18)
             Me.btnRead.Margin = New System.Windows.Forms.Padding(2)
@@ -1591,7 +1591,7 @@
             Me.btnConfirm.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnConfirm.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnConfirm.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnConfirm.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnConfirm.ForeColor = System.Drawing.Color.White
             Me.btnConfirm.Location = New System.Drawing.Point(251, 18)
             Me.btnConfirm.Margin = New System.Windows.Forms.Padding(2)
@@ -1612,7 +1612,7 @@
             Me.btnPrint.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnPrint.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPrint.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnPrint.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnPrint.ForeColor = System.Drawing.Color.White
             Me.btnPrint.Location = New System.Drawing.Point(163, 18)
             Me.btnPrint.Margin = New System.Windows.Forms.Padding(2)
@@ -1633,7 +1633,7 @@
             Me.btnPow10.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnPow10.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnPow10.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPow10.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnPow10.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnPow10.ForeColor = System.Drawing.Color.White
             Me.btnPow10.Location = New System.Drawing.Point(350, 238)
             Me.btnPow10.Margin = New System.Windows.Forms.Padding(2)
@@ -1653,7 +1653,7 @@
             Me.btnQdtc.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnQdtc.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnQdtc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnQdtc.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnQdtc.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnQdtc.ForeColor = System.Drawing.Color.White
             Me.btnQdtc.Location = New System.Drawing.Point(350, 194)
             Me.btnQdtc.Margin = New System.Windows.Forms.Padding(2)
@@ -1674,7 +1674,7 @@
             Me.btnAtan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnAtan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnAtan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAtan.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnAtan.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnAtan.ForeColor = System.Drawing.Color.White
             Me.btnAtan.Location = New System.Drawing.Point(482, 238)
             Me.btnAtan.Margin = New System.Windows.Forms.Padding(2)
@@ -1694,7 +1694,7 @@
             Me.btnAcos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnAcos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnAcos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAcos.Font = New System.Drawing.Font("Open Sans Light", 8.0!)
+            Me.btnAcos.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
             Me.btnAcos.ForeColor = System.Drawing.Color.White
             Me.btnAcos.Location = New System.Drawing.Point(438, 238)
             Me.btnAcos.Margin = New System.Windows.Forms.Padding(2)
@@ -1714,7 +1714,7 @@
             Me.btnAsin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnAsin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnAsin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAsin.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnAsin.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnAsin.ForeColor = System.Drawing.Color.White
             Me.btnAsin.Location = New System.Drawing.Point(394, 238)
             Me.btnAsin.Margin = New System.Windows.Forms.Padding(2)
@@ -1734,7 +1734,7 @@
             Me.btnTan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnTan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnTan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTan.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnTan.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnTan.ForeColor = System.Drawing.Color.White
             Me.btnTan.Location = New System.Drawing.Point(482, 194)
             Me.btnTan.Margin = New System.Windows.Forms.Padding(2)
@@ -1754,7 +1754,7 @@
             Me.btnCos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnCos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnCos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCos.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnCos.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnCos.ForeColor = System.Drawing.Color.White
             Me.btnCos.Location = New System.Drawing.Point(438, 194)
             Me.btnCos.Margin = New System.Windows.Forms.Padding(2)
@@ -1774,7 +1774,7 @@
             Me.btnSin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnSin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnSin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSin.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
+            Me.btnSin.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnSin.ForeColor = System.Drawing.Color.White
             Me.btnSin.Location = New System.Drawing.Point(394, 194)
             Me.btnSin.Margin = New System.Windows.Forms.Padding(2)
@@ -1794,7 +1794,7 @@
             Me.btnMod.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnMod.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnMod.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMod.Font = New System.Drawing.Font("Open Sans Light", 7.0!)
+            Me.btnMod.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
             Me.btnMod.ForeColor = System.Drawing.Color.White
             Me.btnMod.Location = New System.Drawing.Point(536, 149)
             Me.btnMod.Margin = New System.Windows.Forms.Padding(2)
@@ -1834,7 +1834,7 @@
             Me.btnFunctions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(160, Byte), Integer), CType(CType(110, Byte), Integer))
             Me.btnFunctions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkOliveGreen
             Me.btnFunctions.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFunctions.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
+            Me.btnFunctions.Font = New System.Drawing.Font(OpenSans, 9.0!)
             Me.btnFunctions.ForeColor = System.Drawing.Color.White
             Me.btnFunctions.Location = New System.Drawing.Point(536, 237)
             Me.btnFunctions.Margin = New System.Windows.Forms.Padding(2)
@@ -1855,7 +1855,7 @@
             Me.btnAns.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
             Me.btnAns.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnAns.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAns.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
+            Me.btnAns.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.btnAns.ForeColor = System.Drawing.Color.White
             Me.btnAns.Location = New System.Drawing.Point(580, 237)
             Me.btnAns.Margin = New System.Windows.Forms.Padding(2)
@@ -1876,7 +1876,7 @@
             Me.btnAC.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnAC.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnAC.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAC.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
+            Me.btnAC.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.btnAC.ForeColor = System.Drawing.Color.White
             Me.btnAC.Location = New System.Drawing.Point(580, 193)
             Me.btnAC.Margin = New System.Windows.Forms.Padding(2)
@@ -1897,7 +1897,7 @@
             Me.btnDel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
             Me.btnDel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnDel.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
+            Me.btnDel.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.btnDel.ForeColor = System.Drawing.Color.White
             Me.btnDel.Location = New System.Drawing.Point(624, 193)
             Me.btnDel.Margin = New System.Windows.Forms.Padding(2)
@@ -1937,7 +1937,7 @@
             Me.LbKbd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.LbKbd.AutoSize = True
             Me.LbKbd.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.LbKbd.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.LbKbd.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.LbKbd.ForeColor = System.Drawing.Color.Gray
             Me.LbKbd.Location = New System.Drawing.Point(20, 269)
             Me.LbKbd.Name = "LbKbd"
@@ -1955,7 +1955,7 @@
             Me.Controls.Add(Me.pnl)
             Me.Controls.Add(Me.LbKbd)
             Me.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.Font = New System.Drawing.Font("Open Sans Light", 12.25!)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximumSize = New System.Drawing.Size(728, 300)
             Me.Name = "MainKeyboard"

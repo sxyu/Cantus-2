@@ -1,9 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing.Drawing2D
-Imports System.Text
 Imports System.Threading
-Imports Cantus.Evaluator
-Imports Cantus.UI.Graphing
+Imports Cantus.Core.CantusEvaluator
 
 Namespace UI.Graphing
     Public Class GraphingSystem
@@ -45,8 +43,8 @@ Namespace UI.Graphing
         Dim _tmpbuffer As Bitmap
 
         Dim _traceOn As Boolean = False
-        Dim _eval As Evaluator.CantusEvaluator
-        Dim _eval2 As Evaluator.CantusEvaluator
+        Dim _eval As Core.CantusEvaluator
+        Dim _eval2 As Core.CantusEvaluator
 
         Dim SCREENFACT As Integer = 30
 
@@ -77,7 +75,7 @@ Namespace UI.Graphing
             Dim g As Graphics = Graphics.FromImage(_buffer)
             g.Clear(Color.Transparent)
 
-            _eval = Evaluator.Globals.RootEvaluator ' use global evaluator
+            _eval = Globals.RootEvaluator ' use global evaluator
 
             _curfn = 0
 
@@ -113,8 +111,10 @@ Namespace UI.Graphing
 
         Function GetX(Optional useEval2 As Boolean = False) As Object
             If useEval2 Then
+                If Not _eval2.HasVariable("x") Then Return Double.NaN
                 Return _eval2.GetVariable("x"c)
             Else
+                If Not _eval.HasVariable("x") Then Return Double.NaN
                 Return _eval.GetVariable("x"c)
             End If
         End Function
@@ -129,8 +129,10 @@ Namespace UI.Graphing
 
         Function GetY(Optional useEval2 As Boolean = False) As Object
             If useEval2 Then
+                If Not _eval2.HasVariable("y") Then Return Double.NaN
                 Return _eval2.GetVariable("y"c)
             Else
+                If Not _eval.HasVariable("y") Then Return Double.NaN
                 Return _eval.GetVariable("y"c)
             End If
         End Function
@@ -147,8 +149,10 @@ Namespace UI.Graphing
 
         Function GetT(Optional useEval2 As Boolean = False) As Object
             If useEval2 Then
+                If Not _eval2.HasVariable("t") Then Return Double.NaN
                 Return _eval2.GetVariable("t"c)
             Else
+                If Not _eval.HasVariable("t") Then Return Double.NaN
                 Return _eval.GetVariable("t"c)
             End If
         End Function
@@ -331,8 +335,7 @@ Namespace UI.Graphing
                             Dim res As Double = Eval(fn)
                             Dim y As Double = cfcy(res, True)
                             Dim x As Double = i
-                            If Double.IsNaN(prev) OrElse
-                                Double.IsNaN(res) OrElse y < 0 OrElse y > HIGH OrElse Math.Abs(y - prev) > HIGH / 2 Then
+                            If Double.IsNaN(prev) OrElse Double.IsNaN(res) OrElse y < 0 OrElse y > HIGH OrElse Math.Abs(y - prev) > HIGH / 2 Then
                                 If preview Then
                                     delta = 5
                                 Else
@@ -374,8 +377,7 @@ Namespace UI.Graphing
                             Dim res As Double = Eval(fn)
                             Dim x As Double = cfcx(res, True)
                             Dim y As Double = i
-                            If Double.IsNaN(prev) OrElse
-                                Double.IsNaN(res) OrElse x < 0 OrElse x > WID Then
+                            If Double.IsNaN(prev) OrElse Double.IsNaN(res) OrElse x < 0 OrElse x > WID Then
                                 If preview Then
                                     delta = 5
                                 Else
@@ -405,8 +407,7 @@ Namespace UI.Graphing
                         SetX(prevy)
 
                     Case FunctionType.Parametric
-                        If Not fn.Contains("<"c) OrElse Not fn.Contains(">"c) OrElse fn.IndexOf(","c) > fn.LastIndexOf(">"c) OrElse
-                        fn.IndexOf(","c) < fn.IndexOf("<"c) Then Return ' no range specified or invalid format
+                        If Not fn.Contains("<"c) OrElse Not fn.Contains(">"c) OrElse fn.IndexOf(","c) > fn.LastIndexOf(">"c) OrElse fn.IndexOf(","c) < fn.IndexOf("<"c) Then Return ' no range specified or invalid format
 
                         If Not fn.Contains("["c) OrElse Not fn.Contains("]"c) Then Return ' no range specified
                         Dim range As String = fn.Remove(fn.LastIndexOf("]"c)).Substring(fn.LastIndexOf("["c) + 1)
@@ -443,8 +444,7 @@ Namespace UI.Graphing
                             End If
                             Dim x As Double = cfcx(resx, True)
                             Dim y As Double = cfcy(resy, True)
-                            If Double.IsNaN(resx) OrElse Double.IsInfinity(resy) OrElse
-                            Double.IsNaN(resy) OrElse y < 0 OrElse y > HIGH OrElse x < 0 OrElse x > WID Then
+                            If Double.IsNaN(resx) OrElse Double.IsInfinity(resy) OrElse Double.IsNaN(resy) OrElse y < 0 OrElse y > HIGH OrElse x < 0 OrElse x > WID Then
                                 If pts.Count > 1 Then
                                     g.DrawLines(p, pts.ToArray())
                                 End If
@@ -491,8 +491,7 @@ Namespace UI.Graphing
                             End If
                             Dim y As Double = cfcy(resy, True)
                             Dim x As Double = cfcx(resx, True)
-                            If Double.IsInfinity(resx) OrElse Double.IsNaN(resx) OrElse Double.IsInfinity(resy) OrElse
-                            Double.IsNaN(resy) OrElse y < -5000 OrElse y > 5000 OrElse x < -5000 OrElse x > 5000 Then
+                            If Double.IsInfinity(resx) OrElse Double.IsNaN(resx) OrElse Double.IsInfinity(resy) OrElse Double.IsNaN(resy) OrElse y < -5000 OrElse y > 5000 OrElse x < -5000 OrElse x > 5000 Then
                                 If pts.Count > 1 Then
                                     g.DrawLines(p, pts.ToArray())
                                 End If
@@ -796,12 +795,12 @@ Namespace UI.Graphing
 
         Private Function Eval(str As String, Optional useEval2 As Boolean = False) As Double
             Try
-                Dim prevmode As Evaluator.CantusEvaluator.eOutputFormat = _eval.OutputFormat
+                Dim prevmode As Core.CantusEvaluator.eOutputFormat = _eval.OutputFormat
                 Dim ret As Double
                 If useEval2 Then
-                    ret = CDbl(CType(_eval2.EvalExprRaw(str, True), Evaluator.CommonTypes.BigDecimal))
+                    ret = CDbl(CType(_eval2.EvalExprRaw(str, True), Core.CommonTypes.BigDecimal))
                 Else
-                    ret = CDbl(CType(_eval.EvalExprRaw(str, True), Evaluator.CommonTypes.BigDecimal))
+                    ret = CDbl(CType(_eval.EvalExprRaw(str, True), Core.CommonTypes.BigDecimal))
                 End If
                 Return ret
             Catch
@@ -887,8 +886,7 @@ Namespace UI.Graphing
                                     d = x
                                     x = Eval(fn.Remove(fn.IndexOf(","c)).Substring(fn.IndexOf("<"c) + 1), True)
                                     y = Eval(fn.Remove(fn.LastIndexOf(">"c)).Substring(fn.IndexOf(","c) + 1), True)
-                                    coords = "(" & Math.Round(x, 3) & ", " & Math.Round(y, 3) & ")" & vbCrLf &
-                                    "t = " & CDbl(GetT(True))
+                                    coords = "(" & Math.Round(x, 3) & ", " & Math.Round(y, 3) & ")" & vbCrLf &                                     "t = " & CDbl(GetT(True))
                                 Case FunctionType.Polar
                                     ' check if valid
                                     If Not fn.Contains("["c) OrElse Not fn.Contains("]"c) Then Exit Sub
@@ -914,8 +912,7 @@ Namespace UI.Graphing
                                 Using linep As New Pen(Color.SlateGray)
                                     Dim cx As Double = ccsx(cfcx(x))
                                     Dim cy As Double = ccsy(cfcy(y))
-                                    If Math.Abs(initd - d) > 0.000001 AndAlso
-                                    _functiontype(_curfn) <> FunctionType.Differential Then
+                                    If Math.Abs(initd - d) > 0.000001 AndAlso _functiontype(_curfn) <> FunctionType.Differential Then
                                         npdTVal.Text = Math.Round(d, 5).ToString()
                                     End If
                                     If cx > canvas.Width OrElse cx < 0 Then
@@ -1077,8 +1074,7 @@ Namespace UI.Graphing
                     End If
                     npdTVal.Text = Math.Round(atan, 3).ToString()
                 Case FunctionType.Differential
-                    npdTVal.Text = "(" & Math.Round(ccfx(cscx(p.X)), 3).ToString() & "," &
-                    Math.Round(ccfy(cscy(p.Y)), 3).ToString() & ")"
+                    npdTVal.Text = "(" & Math.Round(ccfx(cscx(p.X)), 3).ToString() & "," &                     Math.Round(ccfy(cscy(p.Y)), 3).ToString() & ")"
             End Select
         End Sub
 
@@ -1175,9 +1171,7 @@ Namespace UI.Graphing
                     dxdy = Double.NaN
                 End If
 
-                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) &
-                    Math.Round(CDbl(GetX(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf &
-                lbFx.Text.Remove(lbFx.Text.IndexOf("(")) & "'(" & Math.Round(CDbl(GetX(True)), 3) & ") = " & dxdy.ToString().Replace("NaN", "Undefined")
+                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) &                     Math.Round(CDbl(GetX(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf &                 lbFx.Text.Remove(lbFx.Text.IndexOf("(")) & "'(" & Math.Round(CDbl(GetX(True)), 3) & ") = " & dxdy.ToString().Replace("NaN", "Undefined")
             Catch ex As Exception
                 MsgBox(ex.ToString()) ' DEBUG
             End Try
@@ -1208,9 +1202,7 @@ Namespace UI.Graphing
                     dxdy = Double.NaN
                 End If
 
-                lbTVal.Text = NameFromFuncId(_curfn) & "(" & Math.Round(CDbl(GetY(True)), 3) & ") = " &
-            o.ToString().Replace("NaN", "Undefined") & vbCrLf & NameFromFuncId(_curfn) &
-            " '(" & Math.Round(CDbl(GetY(True)), 3) & ") = " & dxdy.ToString().Replace("NaN", "Undefined")
+                lbTVal.Text = NameFromFuncId(_curfn) & "(" & Math.Round(CDbl(GetY(True)), 3) & ") = " &             o.ToString().Replace("NaN", "Undefined") & vbCrLf & NameFromFuncId(_curfn) &             " '(" & Math.Round(CDbl(GetY(True)), 3) & ") = " & dxdy.ToString().Replace("NaN", "Undefined")
             Catch 'ex As Exception
                 'MsgBox(ex.ToString()) ' DEBUG
             End Try
@@ -1244,9 +1236,7 @@ Namespace UI.Graphing
                 End If
 
                 If CDbl(GetT(True)) > tend OrElse CDbl(GetT(True)) < tstart Then
-                    lbTVal.Text = NameFromFuncId(_curfn).Replace("t", Math.Round(CDbl(GetT(True)), 3).ToString()) & ") = " &
-                "Undefined" & vbCrLf &
-            "tan. line slope Undefined"
+                    lbTVal.Text = NameFromFuncId(_curfn).Replace("t", Math.Round(CDbl(GetT(True)), 3).ToString()) & ") = " &                 "Undefined" & vbCrLf &             "tan. line slope Undefined"
                     Return
                 End If
 
@@ -1266,8 +1256,7 @@ Namespace UI.Graphing
                                             (Math.Cos(CDbl(GetT(True)) + 0.0005) * ort - Math.Cos(CDbl(GetT(True)) - 0.0005) * olf),
                                             5)
 
-                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) & Math.Round(CDbl(GetT(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf &
-            "tan. line slope " & dydx.ToString().Replace("NaN", "Undefined")
+                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) & Math.Round(CDbl(GetT(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf &             "tan. line slope " & dydx.ToString().Replace("NaN", "Undefined")
             Catch 'ex As Exception
                 'MsgBox(ex.ToString()) ' DEBUG
             End Try
@@ -1303,10 +1292,7 @@ Namespace UI.Graphing
                     Return ' invalid range format
                 End If
                 If CDbl(GetT(True)) > tend OrElse CDbl(GetT(True)) < tstart Then
-                    lbTVal.Text = NameFromFuncId(_curfn).Replace("t", Math.Round(CDbl(GetT(True)), 3).ToString()) & vbCrLf &
-                   "= (" &
-                "Undefined, Undefined)" & vbCrLf &
-            "tan. line slope Undefined"
+                    lbTVal.Text = NameFromFuncId(_curfn).Replace("t", Math.Round(CDbl(GetT(True)), 3).ToString()) & vbCrLf &                    "= (" &                 "Undefined, Undefined)" & vbCrLf &             "tan. line slope Undefined"
                     Return
                 End If
 
@@ -1328,9 +1314,7 @@ Namespace UI.Graphing
                 Dim dydx As Double = Math.Round((oyrt - oylf) / (oxrt - oxlf), 5)
                 DeltaT(-0.05, True)
 
-                lbTVal.Text = NameFromFuncId(_curfn).Replace("t", Math.Round(CDbl(GetT(True)), 3).ToString()) & vbCrLf & "= (" &
-                ox.ToString().Replace("NaN", "Undefined") & ", " & oy.ToString().Replace("NaN", "Undefined") & ")" & vbCrLf &
-            "tan. line slope " & dydx.ToString().Replace("NaN", "Undefined")
+                lbTVal.Text = NameFromFuncId(_curfn).Replace("t", Math.Round(CDbl(GetT(True)), 3).ToString()) & vbCrLf & "= (" &                 ox.ToString().Replace("NaN", "Undefined") & ", " & oy.ToString().Replace("NaN", "Undefined") & ")" & vbCrLf &             "tan. line slope " & dydx.ToString().Replace("NaN", "Undefined")
 
             Catch 'ex As Exception
                 'MsgBox(ex.ToString()) ' DEBUG
@@ -1351,8 +1335,7 @@ Namespace UI.Graphing
                 Dim y As Double = Eval(tuple(1), True)
                 SetX(x, True)
                 SetY(y, True)
-                lbTVal.Text = NameFromFuncId(_curfn) & vbCrLf & " [" & x & "," & y & "]" & vbCrLf & " = " &
-                 Math.Round(CDbl(Eval(_functions(_curfn), True)), 5).ToString().Replace("NaN", "Undefined")
+                lbTVal.Text = NameFromFuncId(_curfn) & vbCrLf & " [" & x & "," & y & "]" & vbCrLf & " = " &                  Math.Round(CDbl(Eval(_functions(_curfn), True)), 5).ToString().Replace("NaN", "Undefined")
                 SetX(prevx, True)
                 SetY(prevy, True)
             Catch
@@ -1434,8 +1417,7 @@ Namespace UI.Graphing
                                 ElseIf _functiontype(i) = FunctionType.Cartesian Then
                                     Dim combine As String = "(" + mfn + ")-(" + _functions(i) + ")"
                                     Dim co As Double = Eval(combine, True)
-                                    If Not Double.IsNaN(co) AndAlso Not Double.IsInfinity(co) AndAlso
-                                    Not Double.IsNaN(pco(i)) AndAlso pco(i) * co <= 0 AndAlso Math.Abs(pco(i) - co) < 5000 * _scale.Y Then
+                                    If Not Double.IsNaN(co) AndAlso Not Double.IsInfinity(co) AndAlso Not Double.IsNaN(pco(i)) AndAlso pco(i) * co <= 0 AndAlso Math.Abs(pco(i) - co) < 5000 * _scale.Y Then
                                         startdetail = CDbl(gx()) - scl / 50
                                         pco(i) = co
                                         Exit While
@@ -1498,9 +1480,7 @@ Namespace UI.Graphing
                                     ElseIf _functiontype(i) = FunctionType.Cartesian
                                         Dim combine As String = "(" + mfn + ")-(" + _functions(i) + ")"
                                         Dim co As Double = Eval(combine, True)
-                                        If Not Double.IsNaN(co) AndAlso Not Double.IsInfinity(co) AndAlso
-                                    Not Double.IsNaN(pco(i)) AndAlso pco(i) * co <= 0 AndAlso
-                                        Math.Abs(pco(i) - co) < 5000 * _scale.Y Then
+                                        If Not Double.IsNaN(co) AndAlso Not Double.IsInfinity(co) AndAlso Not Double.IsNaN(pco(i)) AndAlso pco(i) * co <= 0 AndAlso Math.Abs(pco(i) - co) < 5000 * _scale.Y Then
                                             found = True
                                             pco(i) = co
                                             Exit For
@@ -2064,12 +2044,10 @@ Namespace UI.Graphing
                     Dim nsx As Double = SelectScale(sx)
                     Dim nsy As Double = SelectScale(sy)
                     If nsx < MINSCALE OrElse nsy < MINSCALE Then
-                        MsgBox("Range is below the lower limit. The axis scale must be no smaller than " & MINSCALE &
-                           ".", MsgBoxStyle.Exclamation, "Range too small")
+                        MsgBox("Range is below the lower limit. The axis scale must be no smaller than " & MINSCALE &                            ".", MsgBoxStyle.Exclamation, "Range too small")
                         Return
                     ElseIf nsx > MAXSCALE OrElse nsy > MAXSCALE Then
-                        MsgBox("Range is above the upper limit. The axis scale must be no larger than " & MAXSCALE &
-                           ".", MsgBoxStyle.Exclamation, "Range too large")
+                        MsgBox("Range is above the upper limit. The axis scale must be no larger than " & MAXSCALE &                            ".", MsgBoxStyle.Exclamation, "Range too large")
                         Return
                     End If
                     _scale.X = sx
@@ -2093,8 +2071,7 @@ Namespace UI.Graphing
         End Sub
 
         Private Sub tbWTop_KeyDown(sender As Object, e As KeyEventArgs) Handles tbWTop.KeyDown, tbWRht.KeyDown, tbWLft.KeyDown, tbWBot.KeyDown ', scaleY.KeyDown, scaleX.KeyDown
-            If e.KeyCode = Keys.Escape OrElse (e.KeyCode = Keys.W AndAlso e.Alt) OrElse
-            (e.KeyCode = Keys.S AndAlso e.Alt) Then
+            If e.KeyCode = Keys.Escape OrElse (e.KeyCode = Keys.W AndAlso e.Alt) OrElse (e.KeyCode = Keys.S AndAlso e.Alt) Then
                 btnWClose.PerformClick()
             ElseIf e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.Down
                 Try

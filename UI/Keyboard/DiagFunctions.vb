@@ -1,6 +1,7 @@
 ﻿Imports System.Text
-Imports Cantus.Evaluator
-Imports Cantus.Evaluator.CantusEvaluator
+Imports Cantus.Core
+Imports Cantus.Core.CantusEvaluator
+Imports Cantus.Core.Scoping
 
 Namespace UI.Dialogs
     ''' <summary>
@@ -27,7 +28,7 @@ Namespace UI.Dialogs
             For Each i As Reflection.MethodInfo In info
                 Try
                     ' regex filter
-                    If Not Globals.RootEvaluator.InternalFunctions.Contains(ROOT_NAMESPACE & SCOPE_SEP & i.Name.ToLowerInvariant(),
+                    If Not New InternalFunctions(Nothing).Contains(ROOT_NAMESPACE & SCOPE_SEP & i.Name.ToLowerInvariant(),
                                                                     filter.ToLowerInvariant()) Then Continue For
                 Catch
                 End Try
@@ -108,7 +109,7 @@ Namespace UI.Dialogs
                     If uf.Modifiers.Contains("private") Then Continue For ' ignore private methods
 
                     ' regex filter
-                    If Not Globals.RootEvaluator.InternalFunctions.Contains(uf.FullName.ToLowerInvariant(),
+                    If Not New InternalFunctions(Nothing).Contains(uf.FullName.ToLowerInvariant(),
                                                                 filter.ToLowerInvariant()) Then Continue For
                 Catch
                 End Try
@@ -147,7 +148,7 @@ Namespace UI.Dialogs
 
                 lvI.SubItems.Add("0") ' order at beginning
 
-                If Globals.RootEvaluator.IsExternalScope(uf.DeclaringScope) Then
+                If IsExternalScope(uf.DeclaringScope, Globals.RootEvaluator.Scope) Then
                     lvI.BackColor = Color.FromArgb(35, 35, 35) ' color for user functions
                 Else
                     lvI.BackColor = Color.FromArgb(50, 50, 35) ' color for plugins

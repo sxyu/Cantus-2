@@ -9,9 +9,9 @@ Namespace UI.Updater
         Delegate Sub UpdateMessagesSafe(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
         Delegate Sub DownloadCompleteSafe(ByVal cancelled As Boolean)
 
-        ' urls: hosted on google drive
-        Private Const VERSION_URL As String = "https://drive.google.com/uc?export=download&id=0B314tJw3ioySY0k1THVWZFV6S00"
-        Private Const MANIFEST_URL As String = "https://drive.google.com/uc?export=download&id=0B314tJw3ioySX0hPNFFRS3FFOEk"
+        ' urls: hosted on GitHub
+        Private Const VERSION_URL As String = "https://raw.githubusercontent.com/sxyu/Cantus-Core/master/meta/ver"
+        Private Const MANIFEST_URL As String = "https://raw.githubusercontent.com/sxyu/Cantus-Core/master/meta/manifest"
 
         Private Const BACKUP_NAME As String = "cantus.backup"
         Private Const EXECUTABLE_NAME As String = "cantus.exe"
@@ -44,15 +44,14 @@ Namespace UI.Updater
                 lbFile.Text = ""
                 For Each file As String In _manifestFile
                     Dim tempFile As String = _saveLocation
-                    Dim actualFile As String = Application.StartupPath & "\" & EXECUTABLE_NAME
+                    Dim actualFile As String = Application.StartupPath & "\" & IO.Path.GetFileName(file)
                     Try
                         FileIO.FileSystem.CopyFile(tempFile, actualFile, True)
                     Catch ex As Exception
                     End Try
                 Next
 
-                If MsgBox("We have successfully updated Cantus to version " & _newVersion & "!" & vbCrLf &
-                   "Launch Cantus now?",
+                If MsgBox("We have successfully updated Cantus to version " & _newVersion & "!" & vbCrLf &                    "Launch Cantus now?",
                    MsgBoxStyle.Information Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.YesNo, "Update Successful") =
                MsgBoxResult.Yes Then
 
@@ -119,7 +118,7 @@ Namespace UI.Updater
 
                     If _manifestFile.Length > 0 Then
                         _toDownload = _manifestFile(0).Trim.Replace("%20", " ").Trim()
-                        Dim filename As String = EXECUTABLE_NAME
+                        Dim filename As String = IO.Path.GetFileName(_toDownload)
                         lbFile.Text = filename
                         lbStep.Text = "1 of " & _manifestFile.Length
                         _saveLocation = IO.Path.GetTempFileName()

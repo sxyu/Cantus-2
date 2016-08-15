@@ -2,8 +2,9 @@
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Text
-Imports Cantus.Evaluator
-
+Imports Cantus.Core
+Imports Cantus.Core.CommonTypes
+Imports Cantus.Core.Scoping
 Namespace UI
     Module MainModule
         Public ReadOnly Property OpenSans As FontFamily
@@ -34,7 +35,7 @@ Namespace UI
 
         Private Sub PrintWelcomeMessage()
             Console.WriteLine()
-            Console.WriteLine("Welcome to Cantus v." & Application.ProductVersion & " Alpha")
+            Console.WriteLine("Welcome to Cantus v." & Version)
             Console.WriteLine("By Alex Yu 2016")
         End Sub
 
@@ -42,9 +43,6 @@ Namespace UI
         ''' Load all private fonts
         ''' </summary>
         Friend Sub LoadFonts()
-            EmbeddedAssembly.Load("Cantus.ScintillaNET.dll", "ScintillaNET.dll")
-            AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
-
             If Fonts Is Nothing Then
                 Fonts = New PrivateFontCollection()
                 Dim font As Byte() = My.Resources.OpenSans_Regular
@@ -59,22 +57,18 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub EvalWrite(script As String, Optional ByVal path As String = "", Optional ByVal clone As Boolean = False)
+        Private Sub EvalWrite(script As String, Optional ByVal path As String = "")
             Try
-                Dim res As StatementRegistar.StatementResult =
-                            DirectCast(If(clone, Globals.RootEvaluator.DeepCopy(), Globals.RootEvaluator).
-                                         EvalRaw(script, noSaveAns:=True, internal:=True), StatementRegistar.StatementResult)
+                Dim res As String = Globals.RootEvaluator.DeepCopy().
+                                         Eval(script, noSaveAns:=True, returnedOnly:=True)
 
                 Console.WriteLine()
-                If res.Code = StatementRegistar.StatementResult.ExecCode.return Then
+                If Not res Is Nothing Then
                     ' prints to the user the result only if a value is returned
-                    Console.WriteLine(Globals.RootEvaluator.InternalFunctions.O(res.Value))
-                ElseIf res.Code = StatementRegistar.StatementResult.ExecCode.resume
+                    Console.WriteLine(res)
+                Else
                     ' else if no result is returned we tell the user this executed successfully
                     Console.WriteLine("Finished executing " & IO.Path.GetFileName(path) & ", 0 errors.")
-                Else
-                    ' else if the user tried to break or continue at the top level then we complain
-                    Console.WriteLine("Invalid " & res.Code.ToString() & " statement")
                 End If
 
             Catch ex As Exception
@@ -101,13 +95,13 @@ Namespace UI
 
             ' load initialization, plugin scripts
             Dim initScripts As New List(Of String)
-            If IO.Directory.Exists("plugin") Then initScripts.AddRange(
-                IO.Directory.GetFiles("plugin", "*.can", IO.SearchOption.AllDirectories))
+            If IO.Directory.Exists("plugin/") Then initScripts.AddRange(
+                IO.Directory.GetFiles("plugin/", "*.can", IO.SearchOption.AllDirectories))
 
             ' initialization files: init.can and init/* ran in root scope on startup
             If IO.File.Exists("init.can") Then initScripts.Add("init.can")
-            If IO.Directory.Exists("init") Then initScripts.AddRange(
-                IO.Directory.GetFiles("init", "*.can", IO.SearchOption.AllDirectories))
+            If IO.Directory.Exists("init/") Then initScripts.AddRange(
+                IO.Directory.GetFiles("init/", "*.can", IO.SearchOption.AllDirectories))
 
             For Each file As String In initScripts
                 Try
@@ -116,21 +110,19 @@ Namespace UI
                                            StartsWith("init" & IO.Path.DirectorySeparatorChar))
                 Catch ex As Exception
                     If file = "init.can" Then
-                        MsgBox("Error occurred while processing init.can." & vbNewLine & "Variables and functions may not load." &
-                               vbNewLine & vbNewLine & "Message:" & vbNewLine & ex.Message,
+                        MsgBox("Error occurred while processing init.can." & vbNewLine & "Variables and functions may not load." & vbNewLine & vbNewLine & "Message:" & vbNewLine & ex.Message,
                                MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Critical, "Initialization Error")
-                        MsgBox(ex.ToString)
                     Else
-                        MsgBox("Error occurred while loading ''" & file.Replace(IO.Path.DirectorySeparatorChar,
-                                                                                Evaluator.CantusEvaluator.SCOPE_SEP).
-                               Remove(file.LastIndexOf(".")) & "''" & vbNewLine & ex.Message,
+                        MsgBox("Error occurred while loading """ & file.Replace(IO.Path.DirectorySeparatorChar,
+                                                                                SCOPE_SEP).
+                               Remove(file.LastIndexOf(".")) & """" & vbNewLine & ex.Message,
                                MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "Initialization Error")
                     End If
                 End Try
             Next
 
             ' if init.can not found, restore constants and try restoring from Settings.State
-            If Not String.IsNullOrWhiteSpace(My.Settings.ErrorSaveState) Then
+            If My.Settings IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(My.Settings.ErrorSaveState) Then
                 Try
                     Globals.RootEvaluator.Eval(My.Settings.ErrorSaveState)
                 Catch
@@ -158,15 +150,14 @@ Namespace UI
                     Console.WriteLine("Available commands:")
                     Console.WriteLine("-i --input [file1] [file2]..." & vbTab & "Run scripts at the specified paths")
                     Console.WriteLine()
-                    Console.WriteLine("--sigfigs/--nosigfigx        " & vbTab & "SigFig mode on/off")
+                    Console.WriteLine("--sigfigs/--nosigfigs        " & vbTab & "SigFig mode on/off")
                     Console.WriteLine("--explicit/--implicit        " & vbTab & "Explicit mode on/off")
                     Console.WriteLine("--anglerepr=[deg/rad/grad]   " & vbTab & "Set angle representation")
                     Console.WriteLine("--output=[raw/math/sci]      " & vbTab & "Set output format")
                     Console.WriteLine("--output=[raw/math/sci]      " & vbTab & "Set output format")
                     Console.WriteLine()
                     Console.WriteLine("-g --graphing                " & vbTab & "Default graphing view")
-                    Console.WriteLine("-d [text] --default [text]   " & vbTab &
-                                      "Set initial editor/graphing view editor text (depending on -g)")
+                    Console.WriteLine("-d [text] --default [text]   " & vbTab & "Set initial editor/graphing view editor text (depending on -g)")
                     Console.WriteLine(" [file]                      " & vbTab & "Open the file in the editor")
                     Console.WriteLine()
                     Console.WriteLine("-h --help                    " & vbTab & "Show this help")
@@ -182,20 +173,20 @@ Namespace UI
                 ElseIf s = "--implicit" Then
                     Globals.RootEvaluator.ExplicitMode = False
                 ElseIf s = "--anglerepr=rad" Then
-                    Globals.RootEvaluator.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Radian
+                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Radian
                 ElseIf s = "--anglerepr=deg" Then
-                    Globals.RootEvaluator.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Degree
+                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree
                 ElseIf s = "--anglerepr=grad" Then
-                    Globals.RootEvaluator.AngleMode = Evaluator.CantusEvaluator.eAngleRepresentation.Gradian
+                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Gradian
                 ElseIf s = "--output=raw" Then
-                    Globals.RootEvaluator.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Raw
+                    Globals.RootEvaluator.OutputFormat = Core.CantusEvaluator.eOutputFormat.Raw
                 ElseIf s = "--output=math" Then
-                    Globals.RootEvaluator.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Math
+                    Globals.RootEvaluator.OutputFormat = Core.CantusEvaluator.eOutputFormat.Math
                 ElseIf s = "--output=sci" Then
-                    Globals.RootEvaluator.OutputFormat = Evaluator.CantusEvaluator.eOutputFormat.Scientific
+                    Globals.RootEvaluator.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific
                 End If
 
-                EvalWrite(IO.File.ReadAllText(s), s, True)
+                EvalWrite(IO.File.ReadAllText(s), s)
             Next
 
             If runFiles Then
@@ -210,9 +201,5 @@ Namespace UI
                 Application.Run(SplashScreen)
             End If
         End Sub
-
-        Private Function CurrentDomain_AssemblyResolve(sender As Object, args As ResolveEventArgs) As Assembly
-            Return EmbeddedAssembly.Get(args.Name)
-        End Function
     End Module
 End Namespace

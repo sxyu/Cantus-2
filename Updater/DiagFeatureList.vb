@@ -12,7 +12,7 @@
         Private Sub DiagFeatureList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             Me.Opacity = 0
             Me.Icon = My.Resources.Cantus
-            tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion).Replace(vbLf, vbCrLf)
+            tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Version).Replace(vbLf, vbCrLf)
             tb.SelectionStart = 0
             Dim cCode As String = Globalization.CultureInfo.CurrentCulture.Name
 
@@ -63,7 +63,7 @@
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             _allowNavigation = True
             SwitchTab("docs")
-            wb.Navigate("https://github.com/sxyu/Cantus-2/blob/master/README.md")
+            wb.Navigate("https://github.com/sxyu/Cantus-GUI/blob/master/README.md")
             wb.Show()
             wb.Focus()
         End Sub
@@ -80,7 +80,7 @@
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             SwitchTab("log")
             wb.Hide()
-            tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Application.ProductVersion).Replace(vbLf, vbCrLf)
+            tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Version).Replace(vbLf, vbCrLf)
         End Sub
 
         Private _allowNavigation As Boolean = False

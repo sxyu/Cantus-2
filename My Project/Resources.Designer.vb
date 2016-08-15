@@ -97,7 +97,7 @@ Namespace My.Resources
         '''
         '''Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
         '''
-        '''The above copyright n [rest of string was truncated]&quot;;.
+        '''The above copyright notice  [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property LICENSE() As String
             Get
@@ -134,13 +134,15 @@ Namespace My.Resources
                 Return CType(obj,System.Drawing.Icon)
             End Get
         End Property
-        
+
         '''<summary>
         '''  Looks up a localized string similar to Welcome to Cantus (Previously Calculatorˣ) Version {ver} (Alpha)!
         '''
         '''Cantus is a powerful yet lightweight mathematical language and expression evaluator 
-        '''created By Alex Yu 2015-16
-        '''https://github.com/sxyu/Cantus-2
+        '''Created By Alex Yu 2015-16
+        '''Cantus Core Library: https://github.com/sxyu/Cantus-Core
+        '''GUI Application: https://github.com/sxyu/Cantus-GUI
+        '''Console Application: https://github.com/sxyu/Cantus-Console
         '''
         '''*********************************************************************************************
         '''Credits

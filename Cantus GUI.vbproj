@@ -16,6 +16,9 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,11 +31,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -68,10 +68,10 @@
     <OptionStrict>On</OptionStrict>
   </PropertyGroup>
   <PropertyGroup>
-    <OptionInfer>Off</OptionInfer>
+    <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\Calculator.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\cantus.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -99,23 +99,20 @@
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>ayu_spc.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ScintillaNET">
+    <Reference Include="ScintillaNET, Version=3.5.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\ScintillaNET.dll</HintPath>
-      <Private>False</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
@@ -146,17 +143,10 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\Scintilla\ScintillaForCantus.vb" />
-    <Compile Include="EmbeddedAssembly.vb" />
     <Compile Include="Main.vb" />
-    <Compile Include="Evaluator\BigDecimal.vb" />
-    <Compile Include="Evaluator\EvalExceptions.vb" />
-    <Compile Include="Evaluator\EvalStatements.vb" />
-    <Compile Include="Evaluator\EvalFunctions.vb" />
     <Compile Include="Controls\FlatProgressBar.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Evaluator\EvalOperators.vb" />
-    <Compile Include="Evaluator\EvalObjectTypes.vb" />
     <Compile Include="UI\FrmEditor.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -170,7 +160,6 @@
     <Compile Include="UI\GraphingSystem.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Evaluator\Evaluator.vb" />
     <Compile Include="UI\Keyboard\DiagFunctions.Designer.vb">
       <DependentUpon>DiagFunctions.vb</DependentUpon>
     </Compile>
@@ -189,6 +178,12 @@
     <Compile Include="Updater\DiagFeatureList.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Updater\DiagUpdateAvailable.Designer.vb">
+      <DependentUpon>DiagUpdateAvailable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Updater\DiagUpdateAvailable.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Updater\FrmUpdate.Designer.vb">
       <DependentUpon>FrmUpdate.vb</DependentUpon>
     </Compile>
@@ -196,10 +191,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
-    <Compile Include="My Project\Application.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Application.myapp</DependentUpon>
-    </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -213,14 +204,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\FrmEditor.resx">
       <DependentUpon>FrmEditor.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Viewer.resx">
       <DependentUpon>Viewer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\GraphingSystem.resx">
       <DependentUpon>GraphingSystem.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Keyboard\DiagFunctions.resx">
       <DependentUpon>DiagFunctions.vb</DependentUpon>
@@ -231,14 +230,11 @@
     <EmbeddedResource Include="Updater\DiagFeatureList.resx">
       <DependentUpon>DiagFeatureList.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Updater\DiagUpdateAvailable.resx">
+      <DependentUpon>DiagUpdateAvailable.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Updater\FrmUpdate.resx">
       <DependentUpon>FrmUpdate.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Keyboard\Keyboard.resx">
       <DependentUpon>Keyboard.vb</DependentUpon>
@@ -246,18 +242,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ayu_spc.pfx" />
     <None Include="bin\Release\ver" />
     <None Include="LICENSE" />
     <None Include="README.md" />
     <None Include="My Project\app.manifest" />
-    <None Include="My Project\Application.myapp">
-      <Generator>MyApplicationCodeGenerator</Generator>
-      <LastGenOutput>Application.Designer.vb</LastGenOutput>
-    </None>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +260,6 @@
     <None Include="Resources\cantus-logo-large.png" />
     <None Include="Resources\cantus-logo-64x64.png" />
     <None Include="Resources\cantus.ico" />
-    <EmbeddedResource Include="UI\Scintilla\ScintillaNET.dll" />
     <None Include="Resources\OpenSans-Light.ttf" />
     <None Include="Resources\OpenSans-Regular.ttf" />
     <None Include="Resources\windowsettings.png" />
@@ -291,7 +284,16 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cantus\Cantus.csproj">
+      <Project>{19ff193a-1165-4779-b0be-1b7b27d02e8f}</Project>
+      <Name>Cantus</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /f "E:\Programming\DotNet\ayu_spc.pfx" "$(TargetDir)ScintillaNET.dll" &amp;&amp;"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /f "E:\Programming\DotNet\ayu_spc.pfx" "$(TargetDir)cantus.exe"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
