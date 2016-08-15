@@ -32,7 +32,7 @@ Namespace UI.Updater
 
             _downloadCount += 1
             If _downloadCount >= _manifestFile.Length Then
-                lbStep.Text = "Deleting Temporary Files..."
+                lbStep.Text = "Preparing to start installer..."
                 Me.lbDlSize.Text = "Finishing Up..."
                 lbFile.Text = ""
 
@@ -50,7 +50,7 @@ Namespace UI.Updater
                 Dim filename As String = IO.Path.GetFileName(_toDownload)
                 lbFile.Text = filename
                 lbStep.Text = _downloadCount + 1 & " of " & _manifestFile.Length
-                _saveLocation = IO.Path.GetTempFileName()
+                _saveLocation = IO.Path.GetTempFileName() + ".exe"
                 _reRun = True
             End If
         End Sub

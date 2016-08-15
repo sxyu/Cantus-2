@@ -25,7 +25,8 @@ You can run Cantus on Mac or Linux with Wine and Mono.
 Note that Cantus as a language can really be implemented elsewhere, but since this is done using .Net unfortunately cross-platform support is poor at this time.
 
 **Now go ahead and download *Cantus* **  
-[**Download the installer here**](https://github.com/sxyu/Cantus-Core/blob/master/setup/setup.exe)  
+[**Download the installer here**]
+(https://raw.githubusercontent.com/sxyu/Cantus-Core/master/setup/cantus-latest.exe) 
 Just run the installer and follow the steps.
 
 **Important: I have not yet obtained a codes signing certificate to sign the executable, so your computer will probably either block it or display a warning. If Smartscreen blocks it, please click "more" and "run anyway".** 
