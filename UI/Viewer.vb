@@ -373,8 +373,8 @@ Namespace UI
                     Return True
                 End If
             ElseIf Not (ConsoleControl.SelectionStart = lastLineStart AndAlso ConsoleControl.SelectionEnd > lastLineStart) Then
-                If keyData = (Keys.Control Or Keys.X) OrElse keyData = (Keys.Control Or Keys.V) OrElse keyData = Keys.Back OrElse
-                   (keyData = Keys.Delete AndAlso
+                If keyData = (Keys.Control Or Keys.X) OrElse keyData = Keys.Back OrElse
+                   ((keyData = Keys.Delete OrElse keyData = (Keys.Control Or Keys.V)) AndAlso
                    Not (ConsoleControl.SelectionStart = lastLineStart AndAlso ConsoleControl.SelectionEnd = lastLineStart)) Then
 
                     Return True
