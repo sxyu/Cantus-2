@@ -816,10 +816,13 @@ Namespace UI
             Dim nv As String = ""
             Try
                 Using wc As New System.Net.WebClient()
-                    nv = wc.DownloadString(VERSION_URL)
+                    nv = wc.DownloadString(VERSION_URL).Trim()
                 End Using
+                If nv.Contains(" ") Then nv = nv.Remove(nv.IndexOf(" "))
                 Dim spl() As String = nv.Split("."c)
-                Dim curverspl() As String = Version.Split("."c)
+                Dim curVer As String = Version
+                If curVer.Contains(" ") Then curVer = curVer.Remove(curVer.IndexOf(" "))
+                Dim curverspl() As String = curVer.Split("."c)
                 For i As Integer = 0 To spl.Length - 1
                     If CInt(spl(i)) > CInt(curverspl(i)) Then
                         Using upd As New Updater.DiagUpdateAvailable(nv)

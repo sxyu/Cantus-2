@@ -35,45 +35,35 @@ Namespace UI.Updater
 
             Me.pb.Value = 0
             Me.lbTSize.Text = ""
-            Me.lbDlSize.Text = "Finishing Up..."
             Me.lbSpeed.Text = ""
 
-            _downloadCount += 1
-            If _downloadCount = _manifestFile.Length Then
-                lbStep.Text = "Deleting Temporary Files..."
-                lbFile.Text = ""
-                For Each file As String In _manifestFile
-                    Dim tempFile As String = _saveLocation
-                    Dim actualFile As String = Application.StartupPath & "\" & IO.Path.GetFileName(file)
-                    Try
-                        FileIO.FileSystem.CopyFile(tempFile, actualFile, True)
-                    Catch ex As Exception
-                    End Try
-                Next
+            Dim tempFile As String = _saveLocation
+            Dim actualFile As String = Application.StartupPath & "\" & IO.Path.GetFileName(_manifestFile(_downloadCount))
+            Try
+                FileIO.FileSystem.CopyFile(tempFile, actualFile, True)
+            Catch ex As Exception
+            End Try
 
-                If MsgBox("We have successfully updated Cantus to version " & _newVersion & "!" & vbCrLf &                    "Launch Cantus now?",
+            _downloadCount += 1
+            If _downloadCount >= _manifestFile.Length Then
+                lbStep.Text = "Deleting Temporary Files..."
+                Me.lbDlSize.Text = "Finishing Up..."
+                lbFile.Text = ""
+
+                _reRun = False
+                If MsgBox("We've successfully updated Cantus to version " & _newVersion.Trim() & "!" & vbCrLf & "Launch Cantus now?",
                    MsgBoxStyle.Information Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.YesNo, "Update Successful") =
                MsgBoxResult.Yes Then
-
-                    Dim pi As New ProcessStartInfo
-                    Dim p As New Process
-                    With pi
-                        .UseShellExecute = True
-                        .FileName = EXECUTABLE_NAME
-                        .WindowStyle = ProcessWindowStyle.Normal
-                        .Verb = "runas"
-                    End With
-
                     Try
-                        p = Process.Start(pi) ' try getting admin privileges to set file associations
-                    Catch
-                        Process.Start(Application.StartupPath & "\cantus.exe") ' if refused, run normally
+                        Process.Start(EXECUTABLE_NAME)
+                    Catch ex As Exception
+                        MsgBox("Application failed to start!", MsgBoxStyle.Critical, "Error launching Cantus")
                     End Try
                 End If
-                _reRun = False
                 Application.Exit()
 
             Else
+                Me.lbDlSize.Text = "Sending Request..."
                 _toDownload = _manifestFile(_downloadCount).Trim.Replace("%20", " ")
                 Dim filename As String = IO.Path.GetFileName(_toDownload)
                 lbFile.Text = filename
@@ -208,7 +198,7 @@ Namespace UI.Updater
                     speedtimer.Reset()
                     readings = 0
                 End If
-            Loop
+            Loop Until Not _reRun
 
             'Close the streams
             resp.GetResponseStream.Close()
