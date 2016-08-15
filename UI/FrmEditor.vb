@@ -846,7 +846,7 @@ Namespace UI
                         FileIO.FileSystem.DeleteFile(Application.StartupPath & "\cantus.backup")
                     End If
                     If FileIO.FileSystem.FileExists(Application.StartupPath & "\cantus.core.backup") Then
-                        FileIO.FileSystem.DeleteFile(Application.StartupPath & "\cantus.core.backup")
+                        FileIO.FileSystem.DeleteFile(Application.StartupPath & "\calculator.backup")
                     End If
                     If FileIO.FileSystem.FileExists(Application.StartupPath & "\calculator.backup") Then
                         FileIO.FileSystem.DeleteFile(Application.StartupPath & "\calculator.backup")
@@ -854,11 +854,6 @@ Namespace UI
                 Catch 'ex2 As Exception
                 End Try
 
-                Try
-                    FileIO.FileSystem.RenameFile(Application.ExecutablePath, "cantus.backup")
-                    FileIO.FileSystem.RenameFile("cantus.core.dll", "cantus.core.backup")
-                Catch 'ex As Exception
-                End Try
                 If (Me.InvokeRequired) Then
                     Me.BeginInvoke(Sub()
                                        ShowUpdForm()

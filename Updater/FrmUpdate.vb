@@ -13,10 +13,7 @@ Namespace UI.Updater
         Private Const VERSION_URL As String = "https://raw.githubusercontent.com/sxyu/Cantus-Core/master/meta/ver"
         Private Const MANIFEST_URL As String = "https://raw.githubusercontent.com/sxyu/Cantus-Core/master/meta/manifest"
 
-        Private Const BACKUP_NAME As String = "cantus.backup"
-        Private Const EXECUTABLE_NAME As String = "cantus.exe"
-
-        Dim _saveLocation As String = Application.StartupPath
+        Dim _saveLocation As String = ""
         Dim _toDownload As String = ""
         Dim _newVersion As String = ""
         Dim _manifestFile() As String
@@ -26,24 +23,12 @@ Namespace UI.Updater
         Public Sub DownloadComplete(ByVal cancelled As Boolean)
             Me.btnCancel.Enabled = False
             If cancelled Then
-                Try
-                    FileIO.FileSystem.RenameFile(BACKUP_NAME, EXECUTABLE_NAME)
-                    FileIO.FileSystem.RenameFile("cantus.core.backup", "cantus.core.dll")
-                Catch
-                End Try
                 Application.Exit()
             End If
 
             Me.pb.Value = 0
             Me.lbTSize.Text = ""
             Me.lbSpeed.Text = ""
-
-            Dim tempFile As String = _saveLocation
-            Dim actualFile As String = Application.StartupPath & "\" & IO.Path.GetFileName(_manifestFile(_downloadCount))
-            Try
-                FileIO.FileSystem.CopyFile(tempFile, actualFile, True)
-            Catch ex As Exception
-            End Try
 
             _downloadCount += 1
             If _downloadCount >= _manifestFile.Length Then
@@ -52,15 +37,11 @@ Namespace UI.Updater
                 lbFile.Text = ""
 
                 _reRun = False
-                If MsgBox("We've successfully updated Cantus to version " & _newVersion.Trim() & "!" & vbCrLf & "Launch Cantus now?",
-                   MsgBoxStyle.Information Or MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.YesNo, "Update Successful") =
-               MsgBoxResult.Yes Then
-                    Try
-                        Process.Start(EXECUTABLE_NAME)
-                    Catch ex As Exception
-                        MsgBox("Application failed to start!", MsgBoxStyle.Critical, "Error launching Cantus")
-                    End Try
-                End If
+                Try
+                    Process.Start(_saveLocation)
+                Catch ex As Exception
+                    MsgBox("installer failed to start!", MsgBoxStyle.Critical, "Error launching Cantus installer")
+                End Try
                 Application.Exit()
 
             Else
