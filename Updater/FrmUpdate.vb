@@ -93,7 +93,7 @@ Namespace UI.Updater
                         Dim filename As String = IO.Path.GetFileName(_toDownload)
                         lbFile.Text = filename
                         lbStep.Text = "1 of " & _manifestFile.Length
-                        _saveLocation = IO.Path.GetTempFileName()
+                        _saveLocation = IO.Path.GetTempFileName() + ".exe"
                         bw.RunWorkerAsync()
                     Else
                         MsgBox("Updater Error: the update manifest is corrupted or failed to download. If this persists, please contact Mr. Yu.",
