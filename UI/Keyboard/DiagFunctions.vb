@@ -1,5 +1,4 @@
 ﻿Imports System.Text
-Imports Cantus.Core
 Imports Cantus.Core.CantusEvaluator
 Imports Cantus.Core.Scoping
 

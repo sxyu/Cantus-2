@@ -25,7 +25,16 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new
+What's new in 2.4.0.102
+*********************************************************************************************
+-Fixed log function
+-Min, max functions now support arbitrary precision
+-Decimal numbers starting with multiple zeros no longer identified as octal 
+  (which raises an error)
+-Removed unnecessary references
+
+*********************************************************************************************
+New from 2.4.0.97
 *********************************************************************************************
 General
 -Separated application into multiple files: core library is now a separate project
