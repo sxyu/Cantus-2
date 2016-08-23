@@ -697,7 +697,7 @@ Namespace UI
                         _eval.EvalAsync(IO.File.ReadAllText(diag.FileName))
                     End If
                 End Using
-            Else
+            ElseIf e.Control AndAlso e.Alt
                 If e.KeyCode = Keys.T Then
                     BtnExplicit.PerformClick()
                 ElseIf e.KeyCode = Keys.F Then
@@ -1361,13 +1361,13 @@ Namespace UI
                 End If
 
                 Dim curText As String = Tb.Lines(Tb.CurrentLine).Text
-            Dim ct As Boolean = False
+                Dim ct As Boolean = False
 
-            For i As Integer = 0 To curText.Length - 1
-                If curText(i) = ChrW(e.Char) Then ct = Not ct
-            Next
+                For i As Integer = 0 To curText.Length - 1
+                    If curText(i) = ChrW(e.Char) Then ct = Not ct
+                Next
 
-            If ct Then Tb.InsertText(Tb.CurrentPosition, ChrW(e.Char))
+                If ct Then Tb.InsertText(Tb.CurrentPosition, ChrW(e.Char))
 
             End If
         End Sub
