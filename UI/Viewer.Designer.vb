@@ -143,7 +143,7 @@
             Me.Controls.Add(Me.btnMin)
             Me.Controls.Add(Me.lbTitle)
             Me.Controls.Add(Me.PbLogo)
-            Me.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.Name = "Viewer"
             Me.Size = New System.Drawing.Size(621, 700)

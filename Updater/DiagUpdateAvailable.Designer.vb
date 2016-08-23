@@ -40,7 +40,7 @@
             'Label1
             '
             Me.Label1.AutoSize = True
-            Me.Label1.Font = New System.Drawing.Font("Open Sans", 13.25!)
+            Me.Label1.Font = New System.Drawing.Font(OpenSans, 13.25!)
             Me.Label1.ForeColor = System.Drawing.Color.White
             Me.Label1.Location = New System.Drawing.Point(70, 23)
             Me.Label1.Name = "Label1"
@@ -51,7 +51,7 @@
             'Label2
             '
             Me.Label2.AutoSize = True
-            Me.Label2.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
+            Me.Label2.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(230, Byte), Integer), CType(CType(230, Byte), Integer))
             Me.Label2.Location = New System.Drawing.Point(30, 68)
             Me.Label2.Name = "Label2"
@@ -75,7 +75,7 @@
             '
             Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.Label3.AutoSize = True
-            Me.Label3.Font = New System.Drawing.Font("Open Sans", 11.25!)
+            Me.Label3.Font = New System.Drawing.Font(OpenSans, 11.25!)
             Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer))
             Me.Label3.Location = New System.Drawing.Point(30, 217)
             Me.Label3.Name = "Label3"
@@ -87,7 +87,7 @@
             '
             Me.LbNewVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.LbNewVer.AutoSize = True
-            Me.LbNewVer.Font = New System.Drawing.Font("Open Sans", 11.25!)
+            Me.LbNewVer.Font = New System.Drawing.Font(OpenSans, 11.25!)
             Me.LbNewVer.ForeColor = System.Drawing.Color.FromArgb(CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer))
             Me.LbNewVer.Location = New System.Drawing.Point(128, 217)
             Me.LbNewVer.Name = "LbNewVer"
@@ -105,7 +105,7 @@
             Me.BtnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnCancel.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
+            Me.BtnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.BtnCancel.ForeColor = System.Drawing.Color.White
             Me.BtnCancel.Location = New System.Drawing.Point(258, 197)
             Me.BtnCancel.Name = "BtnCancel"
@@ -123,7 +123,7 @@
             Me.btnOK.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.btnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
             Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnOK.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
+            Me.btnOK.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.btnOK.ForeColor = System.Drawing.Color.White
             Me.btnOK.Location = New System.Drawing.Point(381, 197)
             Me.btnOK.Name = "btnOK"
@@ -136,7 +136,7 @@
             '
             Me.LbOldVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.LbOldVer.AutoSize = True
-            Me.LbOldVer.Font = New System.Drawing.Font("Open Sans", 11.25!)
+            Me.LbOldVer.Font = New System.Drawing.Font(OpenSans, 11.25!)
             Me.LbOldVer.ForeColor = System.Drawing.Color.FromArgb(CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer))
             Me.LbOldVer.Location = New System.Drawing.Point(128, 194)
             Me.LbOldVer.Name = "LbOldVer"
@@ -148,7 +148,7 @@
             '
             Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.Label5.AutoSize = True
-            Me.Label5.Font = New System.Drawing.Font("Open Sans", 11.25!)
+            Me.Label5.Font = New System.Drawing.Font(OpenSans, 11.25!)
             Me.Label5.ForeColor = System.Drawing.Color.FromArgb(CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(250, Byte), Integer))
             Me.Label5.Location = New System.Drawing.Point(30, 194)
             Me.Label5.Name = "Label5"
@@ -177,7 +177,7 @@
             Me.Controls.Add(Me.PbLogo)
             Me.Controls.Add(Me.Label2)
             Me.Controls.Add(Me.Label1)
-            Me.Font = New System.Drawing.Font("Open Sans", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.Font = New System.Drawing.Font(OpenSans, 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximizeBox = False

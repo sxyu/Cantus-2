@@ -40,7 +40,7 @@
             Me.lbName.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.lbName.AutoSize = True
             Me.lbName.BackColor = System.Drawing.Color.Transparent
-            Me.lbName.Font = New System.Drawing.Font("Open Sans Light", 40.0!)
+            Me.lbName.Font = New System.Drawing.Font(OpenSansLight, 40.0!)
             Me.lbName.ForeColor = System.Drawing.Color.White
             Me.lbName.Location = New System.Drawing.Point(250, 130)
             Me.lbName.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
@@ -54,7 +54,7 @@
             Me.lbVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.lbVer.AutoSize = True
             Me.lbVer.BackColor = System.Drawing.Color.Transparent
-            Me.lbVer.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.lbVer.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.lbVer.ForeColor = System.Drawing.Color.LightGray
             Me.lbVer.Location = New System.Drawing.Point(13, 320)
             Me.lbVer.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
@@ -68,7 +68,7 @@
             Me.lbCredits.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
             Me.lbCredits.AutoSize = True
             Me.lbCredits.BackColor = System.Drawing.Color.Transparent
-            Me.lbCredits.Font = New System.Drawing.Font("Open Sans", 11.0!)
+            Me.lbCredits.Font = New System.Drawing.Font(OpenSans, 11.0!)
             Me.lbCredits.ForeColor = System.Drawing.Color.Gray
             Me.lbCredits.Location = New System.Drawing.Point(450, 320)
             Me.lbCredits.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
@@ -98,7 +98,7 @@
             Me.lbWelcome.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.lbWelcome.AutoSize = True
             Me.lbWelcome.BackColor = System.Drawing.Color.Transparent
-            Me.lbWelcome.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
+            Me.lbWelcome.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.lbWelcome.ForeColor = System.Drawing.Color.White
             Me.lbWelcome.Location = New System.Drawing.Point(261, 204)
             Me.lbWelcome.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
@@ -137,7 +137,7 @@
             Me.Controls.Add(Me.lbCredits)
             Me.Controls.Add(Me.PbSettingsLogo)
             Me.Controls.Add(Me.lbName)
-            Me.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
             Me.MaximizeBox = False

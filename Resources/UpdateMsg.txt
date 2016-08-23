@@ -1,4 +1,4 @@
-﻿Welcome to Cantus Version {ver} (Alpha)!
+﻿Welcome to Cantus Version {ver}!
 
 Cantus is a powerful yet lightweight mathematical language and expression evaluator 
 created By Alex Yu 2015-16
@@ -25,7 +25,11 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
+<<<<<<< HEAD
 What's new in 2.4.1.104
+=======
+What's new in 2.4.1.105
+>>>>>>> dev
 *********************************************************************************************
 -Fixed the broken modulo operator
 -Modulo operator now respects significant figures
@@ -35,7 +39,11 @@ What's new in 2.4.1.104
 -When switching to sig figs mode, automatically detects number of sig figs on existing
   variables. When switching from sig figs mode, automatically sets all variables to 
   infinitely precise.
+<<<<<<< HEAD
 -Fixed an exceptions that occurs when rapidly typing in the textbox while modifying options
+=======
+-Fixed an exception that occurs when rapidly typing in the textbox while modifying options
+>>>>>>> dev
   in the graphing window
 -Fixed crashes that occur sometimes when closing the console window
 
