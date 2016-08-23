@@ -2,9 +2,9 @@
 
 Namespace UI.Updater
 
-    ''' <summary>
-    ''' Very basic Google drive based updater for Cantus
-    ''' </summary>
+    '' <summary>
+    '' Very basic Google drive based updater for Cantus
+    '' </summary>
     Public Class FrmUpdate
         Delegate Sub UpdateMessagesSafe(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
         Delegate Sub DownloadCompleteSafe(ByVal cancelled As Boolean)

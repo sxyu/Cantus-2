@@ -1,9 +1,9 @@
 ﻿Namespace UI.Updater
     Public Class DiagUpdateAvailable
-        ''' <summary>
-        ''' Create a new Update Available dialog
-        ''' </summary>
-        ''' <param name="newVersion">The new version of the application we're updating to, to be displayed on the dialog</param>
+        '' <summary>
+        '' Create a new Update Available dialog
+        '' </summary>
+        '' <param name="newVersion">The new version of the application we're updating to, to be displayed on the dialog</param>
         Public Sub New(newVersion As String)
 
             ' This call is required by the designer.

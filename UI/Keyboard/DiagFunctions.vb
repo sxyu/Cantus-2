@@ -3,9 +3,9 @@ Imports Cantus.Core.CantusEvaluator
 Imports Cantus.Core.Scoping
 
 Namespace UI.Dialogs
-    ''' <summary>
-    ''' Dialog for listing all available functions
-    ''' </summary>
+    '' <summary>
+    '' Dialog for listing all available functions
+    '' </summary>
     Public Class DiagFunctions
 
         Public Property Result As String = ""
@@ -18,10 +18,8 @@ Namespace UI.Dialogs
         Private Sub LoadLv(Optional filter As String = "")
             lv.Items.Clear()
             Dim toAdd As New List(Of ListViewItem)
-            Dim info As Reflection.MethodInfo()
-            info = GetType(InternalFunctions).GetMethods(
-                        Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
-                    Reflection.BindingFlags.DeclaredOnly)
+            Dim info As IEnumerable(Of Reflection.MethodInfo)
+            info = InternalFunctions.Methods
 
             ' add internal functions
             For Each i As Reflection.MethodInfo In info

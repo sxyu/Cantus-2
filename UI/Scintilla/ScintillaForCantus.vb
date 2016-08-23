@@ -4,58 +4,58 @@ Imports Cantus.Core.CommonTypes
 Imports ScintillaNET
 
 Namespace UI.ScintillaForCantus
-    ''' <summary>
-    ''' Custom lexer for the Cantus language for Scintilla.Net. Code adapted from Scintilla wiki
-    ''' https://github.com/jacobslusser/ScintillaNET/wiki/Custom-Syntax-Highlighting
-    ''' </summary>
+    '' <summary>
+    '' Custom lexer for the Cantus language for Scintilla.Net. Code adapted from Scintilla wiki
+    '' https://github.com/jacobslusser/ScintillaNET/wiki/Custom-Syntax-Highlighting
+    '' </summary>
     Friend Class CantusLexer
-        ''' <summary>
-        ''' Default style used when none other (even identifier) is applicable.
-        ''' </summary>
+        '' <summary>
+        '' Default style used when none other (even identifier) is applicable.
+        '' </summary>
         Public Const StyleDefault As Integer = 0
 
-        ''' <summary>
-        ''' Style used for block-level keywords like while
-        ''' </summary>
+        '' <summary>
+        '' Style used for block-level keywords like while
+        '' </summary>
         Public Const StyleKeyword As Integer = 1
 
-        ''' <summary>
-        ''' Style used for inline keywords like let or continue
-        ''' </summary>
+        '' <summary>
+        '' Style used for inline keywords like let or continue
+        '' </summary>
         Public Const StyleInlineKeyword As Integer = 2
 
-        ''' <summary>
-        ''' Style used for arbitrary identifiers like abc
-        ''' </summary>
+        '' <summary>
+        '' Style used for arbitrary identifiers like abc
+        '' </summary>
         Public Const StyleIdentifier As Integer = 3
 
-        ''' <summary>
-        ''' Style used for apparently incorrect identifiers
-        ''' </summary>
+        '' <summary>
+        '' Style used for apparently incorrect identifiers
+        '' </summary>
         Public Const StyleError As Integer = 4
 
-        ''' <summary>
-        ''' Style used for numbers
-        ''' </summary>
+        '' <summary>
+        '' Style used for numbers
+        '' </summary>
         Public Const StyleNumberBoolean As Integer = 5
 
-        ''' <summary>
-        ''' Style used for strings (both single and double quoted as well as raw strings)
-        ''' </summary>
+        '' <summary>
+        '' Style used for strings (both single and double quoted as well as raw strings)
+        '' </summary>
         Public Const StyleString As Integer = 6
 
-        ''' <summary>
-        ''' Style used for comments
-        ''' </summary>
+        '' <summary>
+        '' Style used for comments
+        '' </summary>
         Public Const StyleComment As Integer = 7
 
-        ''' <summary>
-        ''' Decimal point
-        ''' </summary>
+        '' <summary>
+        '' Decimal point
+        '' </summary>
         Private Shared ReadOnly Property DecPt As String = Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
-        ''' <summary>
-        ''' The type of token we are currently styling
-        ''' </summary>
+        '' <summary>
+        '' The type of token we are currently styling
+        '' </summary>
         Private Enum eState
             unknown = 0
             identifier
@@ -65,19 +65,19 @@ Namespace UI.ScintillaForCantus
             comment
         End Enum
 
-        ''' <summary>
-        ''' Indicates if we are currently styling a raw string
-        ''' </summary>
+        '' <summary>
+        '' Indicates if we are currently styling a raw string
+        '' </summary>
         Private _rawString As Boolean = False
 
-        ''' <summary>
-        ''' A hashset of block keywords
-        ''' </summary>
+        '' <summary>
+        '' A hashset of block keywords
+        '' </summary>
         Private _keywords As New HashSet(Of String)(("class function namespace if else elif for in to step repeat " & "switch case run try catch finally while until with").Split(" "c))
 
-        ''' <summary>
-        ''' A hashset of inline keywords
-        ''' </summary>
+        '' <summary>
+        '' A hashset of inline keywords
+        '' </summary>
         Private _inlineKeywords As New HashSet(Of String)(
                                                 "import load static let public private static global continue return break".Split(" "c))
 
@@ -103,7 +103,7 @@ Namespace UI.ScintillaForCantus
                 Dim upperText As String = scintilla.GetTextRange(0, scintilla.Lines(line).Position)
                 If New Core.CantusEvaluator.InternalFunctions(Nothing).Count(
                 upperText, tripleQuote) Mod 2 = 1 OrElse New Core.CantusEvaluator.InternalFunctions(Nothing).Count(
-                   upperText, "'''") Mod 2 = 1 Then
+                   upperText, "'") Mod 2 = 1 Then
                     state = eState.string
                 End If
 
@@ -183,10 +183,10 @@ Namespace UI.ScintillaForCantus
                             Else
                                 If length = 0 Then scintilla.SetStyling(1, StyleIdentifier)
                                 length = 0
-                                    state = eState.unknown
-                                    Continue While
-                                End If
-                                Exit Select
+                                state = eState.unknown
+                                Continue While
+                            End If
+                            Exit Select
 
                         Case eState.identifier
                             If [Char].IsLetterOrDigit(c) OrElse c = "_"c Then
@@ -209,7 +209,7 @@ Namespace UI.ScintillaForCantus
                                     If Not restOfLine.Contains("=") Then
                                         Try
                                             Dim res As Object = Globals.RootEvaluator.EvalExprRaw(identifier, True)
-                                            If (Not TypeOf res Is Double OrElse Not Double.IsNaN(CDbl(res))) AndAlso                                       (Not TypeOf res Is BigDecimal OrElse Not DirectCast(res, BigDecimal).IsUndefined) Then
+                                            If (Not TypeOf res Is Double OrElse Not Double.IsNaN(CDbl(res))) AndAlso (Not TypeOf res Is BigDecimal OrElse Not DirectCast(res, BigDecimal).IsUndefined) Then
                                                 identifierStyle = StyleIdentifier
                                             End If
                                         Catch ' do nothing, display error style
@@ -242,9 +242,9 @@ Namespace UI.ScintillaForCantus
         End Sub
     End Class
 
-    ''' <summary>
-    ''' Comparer used for the autoComplete
-    ''' </summary>
+    '' <summary>
+    '' Comparer used for the autoComplete
+    '' </summary>
     Friend Class AutoCompleteComparer
         Implements IComparer(Of String)
         Public Function Compare(x As String, y As String) As Integer Implements IComparer(Of String).Compare

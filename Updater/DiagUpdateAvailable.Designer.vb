@@ -20,7 +20,7 @@
 
         'NOTE: The following procedure is required by the Windows Form Designer
         'It can be modified using the Windows Form Designer.  
-        'Do not modify it using the code editor.
+        'Do not modify it using the codeditor.
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
@@ -57,7 +57,7 @@
             Me.Label2.Name = "Label2"
             Me.Label2.Size = New System.Drawing.Size(331, 100)
             Me.Label2.TabIndex = 1
-            Me.Label2.Text = "An update for Cantus is available for download." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Would you like to update now?" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Warning: The editor will need to be closed." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Please save all your changes befor" &
+            Me.Label2.Text = "An update for Cantus is available for download." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Would you like to update now?" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Warning: Theditor will need to be closed." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Please save all your changes befor" &
     "e proceeding."
             '
             'PbLogo
