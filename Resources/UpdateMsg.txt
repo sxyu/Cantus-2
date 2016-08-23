@@ -25,7 +25,7 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.1.104
+What's new in 2.4.1.105
 *********************************************************************************************
 -Fixed the broken modulo operator
 -Modulo operator now respects significant figures

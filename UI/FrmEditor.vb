@@ -802,6 +802,10 @@ Namespace UI
 #End Region
 #Region "Update"
         Private _updateStarted As Boolean = False
+        ''' <summary>
+        ''' Check for updates
+        ''' </summary>
+        ''' <param name="promptuser">If true, shows a message to the user when done, even if no update is found.</param>
         Private Sub CheckUpdate(Optional ByVal promptuser As Boolean = False)
             If _updateStarted Then
                 If (Me.InvokeRequired) Then
@@ -815,11 +819,12 @@ Namespace UI
                 Exit Sub
             End If
             _updateStarted = True
-            Dim nv As String = ""
             Try
+                Dim newVer As String = ""
                 Using wc As New System.Net.WebClient()
-                    nv = wc.DownloadString(VERSION_URL).Trim()
+                    newVer = wc.DownloadString(VERSION_URL).Trim()
                 End Using
+                Dim nv As String = newVer
                 If nv.Contains(" ") Then nv = nv.Remove(nv.IndexOf(" "))
                 Dim spl() As String = nv.Split("."c)
                 Dim curVer As String = Version
@@ -827,7 +832,7 @@ Namespace UI
                 Dim curverspl() As String = curVer.Split("."c)
                 For i As Integer = 0 To spl.Length - 1
                     If CInt(spl(i)) > CInt(curverspl(i)) Then
-                        Using upd As New Updater.DiagUpdateAvailable(nv)
+                        Using upd As New Updater.DiagUpdateAvailable(newVer)
                             If upd.ShowDialog() = DialogResult.OK Then
                                 Exit For ' needs update
                             Else
@@ -1356,13 +1361,13 @@ Namespace UI
                 End If
 
                 Dim curText As String = Tb.Lines(Tb.CurrentLine).Text
-            Dim ct As Boolean = False
+                Dim ct As Boolean = False
 
-            For i As Integer = 0 To curText.Length - 1
-                If curText(i) = ChrW(e.Char) Then ct = Not ct
-            Next
+                For i As Integer = 0 To curText.Length - 1
+                    If curText(i) = ChrW(e.Char) Then ct = Not ct
+                Next
 
-            If ct Then Tb.InsertText(Tb.CurrentPosition, ChrW(e.Char))
+                If ct Then Tb.InsertText(Tb.CurrentPosition, ChrW(e.Char))
 
             End If
         End Sub
