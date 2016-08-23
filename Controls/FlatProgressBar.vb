@@ -1,35 +1,35 @@
 ﻿Namespace UI.UserControls
-    ''' <summary>
-    ''' A flat progress bar
-    ''' </summary>
+    '' <summary>
+    '' A flat progress bar
+    '' </summary>
     Public Class FlatProgressBar : Inherits ProgressBar
-        ''' <summary>
-        ''' The color of the progress bar
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
+        '' <summary>
+        '' The color of the progress bar
+        '' </summary>
+        '' <value></value>
+        '' <returns></returns>
+        '' <remarks></remarks>
         Public Property ProgressColor As Color
-        ''' <summary>
-        ''' Text to display on progressbar
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
+        '' <summary>
+        '' Text to display on progressbar
+        '' </summary>
+        '' <value></value>
+        '' <returns></returns>
+        '' <remarks></remarks>
         Public Property ProgressText As String
-        ''' <summary>
-        ''' Specifies if a border should be drawn
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
+        '' <summary>
+        '' Specifies if a border should be drawn
+        '' </summary>
+        '' <value></value>
+        '' <returns></returns>
+        '' <remarks></remarks>
         Public Property DrawBorder As Boolean
-        ''' <summary>
-        ''' specifies if the control should be drawn vertically
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
+        '' <summary>
+        '' specifies if the control should be drawn vertically
+        '' </summary>
+        '' <value></value>
+        '' <returns></returns>
+        '' <remarks></remarks>
         Public Property Vertical As Boolean
         Public Sub New()
             Me.SetStyle(ControlStyles.UserPaint, True)

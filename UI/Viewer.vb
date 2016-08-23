@@ -11,33 +11,33 @@ Imports ScintillaNET
 
 Namespace UI
     Public Class Viewer
-        ''' <summary>
-        ''' Max number of lines to display in log
-        ''' </summary>
+        '' <summary>
+        '' Max number of lines to display in log
+        '' </summary>
         Private Const MAX_LINES As Integer = 500
         Dim _defaultPromptText As String = String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName)
         Dim _promptText As String = String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName)
         Dim _prevPrompt As New List(Of String)
         Dim _idx As Integer = 0
 
-        ''' <summary>
-        ''' If true, the console is reading user input, rather than taking commands
-        ''' </summary>
+        '' <summary>
+        '' If true, the console is reading user input, rather than taking commands
+        '' </summary>
         Dim _reading As Boolean = False
 
-        ''' <summary>
-        ''' If true, executes blocks
-        ''' </summary>
+        '' <summary>
+        '' If true, executes blocks
+        '' </summary>
         Dim _block As Boolean = False
 
-        ''' <summary>
-        ''' Event used to synchronize threads
-        ''' </summary>
+        '' <summary>
+        '' Event used to synchronize threads
+        '' </summary>
         Dim _ev As New ManualResetEventSlim(False)
 
-        ''' <summary>
-        ''' The remaining text that the user entered
-        ''' </summary>
+        '' <summary>
+        '' The remaining text that the user entered
+        '' </summary>
         Private _buf As New StringBuilder
 
         Public Class InputEventArgs
@@ -48,15 +48,15 @@ Namespace UI
             End Sub
         End Class
 
-        ''' <summary>
-        ''' Raised when input is read
-        ''' </summary>
+        '' <summary>
+        '' Raised when input is read
+        '' </summary>
         Public Event InputRead(ByVal sender As Object, ByVal e As InputEventArgs)
 
 
-        ''' <summary>
-        ''' Represents a view in the viewer
-        ''' </summary>
+        '' <summary>
+        '' Represents a view in the viewer
+        '' </summary>
         Public Enum eView
             none = -1
             console = 0
@@ -70,10 +70,10 @@ Namespace UI
         Private _cantusLexer As New CantusLexer()
         Private _feeder As New ScriptFeeder("", False, Globals.RootEvaluator)
 
-        ''' <summary>
-        ''' Get or set the current view of the viewer
-        ''' </summary>
-        ''' <returns></returns>
+        '' <summary>
+        '' Get or set the current view of the viewer
+        '' </summary>
+        '' <returns></returns>
         Public Property View As eView
             Get
                 Return _view
@@ -147,10 +147,10 @@ Namespace UI
             End If
         End Sub
 
-        ''' <summary>
-        ''' Write a separator to the log
-        ''' </summary>
-        ''' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
+        '' <summary>
+        '' Write a separator to the log
+        '' </summary>
+        '' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
         Public Sub WriteLogSeparator(Optional appendPrevious As Boolean = True)
             DeletePromptLine()
             AutoAddLine()
@@ -158,10 +158,10 @@ Namespace UI
             WritePromptLine(appendPrevious)
         End Sub
 
-        ''' <summary>
-        ''' Write the specified text to the log, appending a separator before if appropriate
-        ''' </summary>
-        ''' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
+        '' <summary>
+        '' Write the specified text to the log, appending a separator before if appropriate
+        '' </summary>
+        '' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
         Public Sub WriteConsoleSection(text As String, Optional appendPrevious As Boolean = True)
             DeletePromptLine()
 
@@ -180,16 +180,17 @@ Namespace UI
             WritePromptLine(appendPrevious)
         End Sub
 
-        ''' <summary>
-        ''' Write the specified text followed by a line break to the log
-        ''' </summary>
-        ''' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
+        '' <summary>
+        '' Write the specified text followed by a line break to the log
+        '' </summary>
+        '' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
         Public Sub WriteConsoleLine(text As String, Optional appendPrevious As Boolean = True)
             DeletePromptLine()
 
             If ConsoleControl.GetCharAt(ConsoleControl.TextLength - 1) <> AscW(ControlChars.Lf) Then
                 ConsoleControl.AppendText(vbLf)
             End If
+
             ConsoleControl.AppendText(text & vbLf)
             If ConsoleControl.Lines.Count > MAX_LINES Then ConsoleControl.DeleteRange(0, ConsoleControl.Lines(MAX_LINES).Position)
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
@@ -198,10 +199,10 @@ Namespace UI
             WritePromptLine(appendPrevious)
         End Sub
 
-        ''' <summary>
-        ''' Write the specified text to the log
-        ''' </summary>
-        ''' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
+        '' <summary>
+        '' Write the specified text to the log
+        '' </summary>
+        '' <param name="appendPrevious">If true, sets the text on the new line to the text that was being edited on the previous line.</param>
         Public Sub WriteConsole(text As String, Optional appendPrevious As Boolean = True)
             DeletePromptLine()
 
@@ -213,17 +214,17 @@ Namespace UI
             WritePromptLine(appendPrevious)
         End Sub
 
-        ''' <summary>
-        ''' Clear this console
-        ''' </summary>
+        '' <summary>
+        '' Clear this console
+        '' </summary>
         Public Sub ClearConsole()
             ConsoleControl.Text = ""
             WritePromptLine()
         End Sub
 
-        ''' <summary>
-        ''' Ask the user to enter text
-        ''' </summary>
+        '' <summary>
+        '' Ask the user to enter text
+        '' </summary>
         Private Sub PromptRead()
             If ConsoleControl.InvokeRequired Then
                 ConsoleControl.BeginInvoke(Sub() PromptRead())
@@ -235,9 +236,9 @@ Namespace UI
             End If
         End Sub
 
-        ''' <summary>
-        ''' Read one character from the console. Raises InputRead event when done.
-        ''' </summary>
+        '' <summary>
+        '' Read one character from the console. Raises InputRead event when done.
+        '' </summary>
         Public Sub ReadChar()
             While _buf.Length > 0 AndAlso AscW(_buf(0)) <= AscW(" ")
                 _buf.Remove(0, 1)
@@ -260,9 +261,9 @@ Namespace UI
             End If
         End Sub
 
-        ''' <summary>
-        ''' Read one line from the console. Raises InputRead event when done.
-        ''' </summary>
+        '' <summary>
+        '' Read one line from the console. Raises InputRead event when done.
+        '' </summary>
         Public Sub ReadLine()
             While _buf.Length > 0 AndAlso AscW(_buf(0)) <= AscW(" ")
                 _buf.Remove(0, 1)
@@ -290,14 +291,14 @@ Namespace UI
                                          ReadLine()
                                      End Sub)
                 PromptRead()
-                th.IsBackground = true
+                th.IsBackground = True
                 th.Start()
             End If
         End Sub
 
-        ''' <summary>
-        ''' Read one word from the console. Raises InputRead event when done.
-        ''' </summary>
+        '' <summary>
+        '' Read one word from the console. Raises InputRead event when done.
+        '' </summary>
         Public Sub ReadWord()
             While _buf.Length > 0 AndAlso AscW(_buf(0)) <= AscW(" ")
                 _buf.Remove(0, 1)
@@ -360,7 +361,8 @@ Namespace UI
         Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
             If _view <> eView.console Then Return False
             Dim lastLineStart As Integer = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1).Position + _promptText.Length
-            If keyData = Keys.Home OrElse keyData = (Keys.Shift Or Keys.Home) OrElse keyData = (Keys.Control Or Keys.Home) OrElse keyData = Keys.Enter OrElse keyData = (Keys.Control Or Keys.Z) OrElse keyData = (Keys.Control Or Keys.Y) Then
+            If keyData = Keys.Home OrElse keyData = (Keys.Shift Or Keys.Home) OrElse
+                keyData = (Keys.Control Or Keys.Home) OrElse keyData = Keys.Enter OrElse keyData = (Keys.Control Or Keys.Z) OrElse keyData = (Keys.Control Or Keys.Y) Then
                 Return True
             End If
             If ConsoleControl.SelectionStart > lastLineStart AndAlso ConsoleControl.SelectionEnd > lastLineStart Then
@@ -480,7 +482,7 @@ Namespace UI
             WriteConsoleSection(
                 String.Format(vbLf & "# Welcome to Cantus version {0}!" & vbLf & "# Copyright © Alex Yu 2016." & vbLf & "# http://github.com/sxyu/Cantus-Console" & vbLf & vbLf & """""""" & vbLf &
                 "---Virtual Console Help---" & vbLf & "Basic Input/Output" & vbLf & "Printing: print() or printline()" & vbLf & "Reading: read() readline() or readchar()" & vbLf & vbLf & "You can directly use this console for simple calculations:" & vbLf &
-                "Simply enter mathematical expressions to begin." & vbLf & "Note: End the line with an extra ':' character to run blocks. Enter an empty line to end a block." & vbLf & vbLf & "Press Alt + Enter or click the ''Run & Record'' button on the" & vbLf & "bottom right " & "of the editor to print out the current result." & vbLf & """""""",
+                "Simply enter mathematical expressions to begin." & vbLf & "Note: End the line with an extra ':' character to run blocks. Enter an empty line to end a block." & vbLf & vbLf & "Press Alt + Enter or click the 'Run' button on the" & vbLf & "bottom right " & "of the editor to print out the current result." & vbLf & """""""",
                                    Version.ToString))
 
             pnl.Select()
@@ -490,22 +492,52 @@ Namespace UI
         Dim allowKey As Boolean = False
         Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs)
             If e.Alt Then
-                If e.KeyCode = Keys.G Then
-                    btnGraph.PerformClick()
-                ElseIf e.KeyCode = Keys.C Then
-                    btnConsole.PerformClick()
-                ElseIf e.KeyCode = Keys.E Then
-                    FrmEditor.BringToFront()
-                    FrmEditor.Tb.Select()
-                ElseIf e.KeyCode = Keys.S Then
-                    FrmEditor.BringToFront()
-                    FrmEditor.BtnSettings.PerformClick()
-                ElseIf e.KeyCode = Keys.F Then
-                    FrmEditor.BringToFront()
-                    FrmEditor.BtnFunctions.PerformClick()
-                ElseIf e.KeyCode = Keys.T Then
-                    FrmEditor.BtnTranslucent.PerformClick()
-                    DirectCast(sender, Control).Focus()
+                If e.Control Then
+                    If e.KeyCode = Keys.F Then
+                        FrmEditor.BtnSigFigs.PerformClick()
+                    ElseIf e.KeyCode = Keys.T Then
+                        FrmEditor.BtnExplicit.PerformClick()
+                    End If
+                Else
+                    If e.KeyCode = Keys.G Then
+                        btnGraph.PerformClick()
+                    ElseIf e.KeyCode = Keys.C Then
+                        btnConsole.PerformClick()
+                    ElseIf e.KeyCode = Keys.E Then
+                        FrmEditor.BringToFront()
+                    ElseIf e.KeyCode = Keys.S Then
+                        FrmEditor.BtnSettings.PerformClick()
+                    ElseIf e.KeyCode = Keys.F Then
+                        FrmEditor.BtnFunctions.PerformClick()
+                    ElseIf e.KeyCode = Keys.T Then
+                        FrmEditor.BtnTranslucent.PerformClick()
+                        DirectCast(sender, Control).Focus()
+                    ElseIf e.KeyCode = Keys.P Then
+                        FrmEditor.BtnAngleRepr.PerformClick()
+                    ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
+                        If e.KeyCode = Keys.D Then
+                            RootEvaluator.AngleMode = eAngleRepresentation.Degree
+                        ElseIf e.KeyCode = Keys.R
+                            RootEvaluator.AngleMode = eAngleRepresentation.Radian
+                        Else
+                            RootEvaluator.AngleMode = eAngleRepresentation.Gradian
+                        End If
+                        FrmEditor.BtnAngleRepr.Text = RootEvaluator.AngleMode.ToString()
+                        FrmEditor.EvaluateExpr(True)
+                    ElseIf e.KeyCode = Keys.O Then
+                        FrmEditor.BtnOutputFormat.PerformClick()
+                    ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
+                        If e.KeyCode = Keys.M Then
+                            RootEvaluator.OutputFormat = eOutputFormat.Math
+                            e.SuppressKeyPress = True
+                        ElseIf e.KeyCode = Keys.W
+                            RootEvaluator.OutputFormat = eOutputFormat.Raw
+                        Else
+                            RootEvaluator.OutputFormat = eOutputFormat.Scientific
+                        End If
+                        FrmEditor.BtnOutputFormat.Text = RootEvaluator.OutputFormat.ToString()
+                        FrmEditor.EvaluateExpr(True)
+                    End If
                 End If
             End If
         End Sub
@@ -562,6 +594,7 @@ Namespace UI
                                 _idx = _prevPrompt.Count
                             Else
                                 _prevPrompt.Insert(_idx + 1, lastLineText)
+                                _idx += 1
                             End If
                         End If
                         ConsoleControl.AutoCCancel()
@@ -697,12 +730,14 @@ Namespace UI
                         autoCList.Add(ROOT_NAMESPACE)
                     End If
 
-                    For Each v As Variable In Globals.RootEvaluator.Variables.Values.ToArray()
+                    For Each v As Variable In RootEvaluator.Variables.Values.ToArray()
                         ' ignore private
-                        If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(v.DeclaringScope, Globals.RootEvaluator.Scope)) Then Continue For
+                        If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso
+                            Not IsParentScopeOf(v.DeclaringScope, RootEvaluator.Scope)) Then Continue For
 
                         ' ignore null
-                        If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse TypeOf v.Value Is BigDecimal AndAlso DirectCast(v.Value, BigDecimal).IsUndefined Then Continue For
+                        If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse
+                            TypeOf v.Value Is BigDecimal AndAlso DirectCast(v.Value, BigDecimal).IsUndefined Then Continue For
 
                         If nsMode Then ' filter namespace
                             Dim partialName As String = RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope)
@@ -717,9 +752,10 @@ Namespace UI
                                 If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
                                 If TypeOf v.Reference.Resolve() Is ClassInstance Then
                                     Dim ci As ClassInstance = DirectCast(v.Reference.Resolve(), ClassInstance)
-                                    For Each f As String In ci.Fields.Keys
+                                    For Each f As String In ci.Fields.Keys.ToArray()
                                         autoCList.Add(CombineScope(partialName,
-                                                   f &                                             If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" &                                                   If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
+                                                   f & If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" &
+                                                   If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
                                               "")))
                                     Next
                                 End If
@@ -727,15 +763,12 @@ Namespace UI
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope) &                                           If(TypeOf v.Value Is Lambda, "(" &                                           If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
+                            autoCList.Add(RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope) &
+                                          If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
                         End If
                     Next
 
                     ' internal functions
-                    Dim info As MethodInfo() = GetType(InternalFunctions).GetMethods(
-                        Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
-                        Reflection.BindingFlags.DeclaredOnly)
-
                     Dim varname As String = ""
                     Dim type As Type = Nothing
                     If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso Globals.RootEvaluator.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
@@ -751,22 +784,22 @@ Namespace UI
                         End If
                     End If
 
-                    For Each fn As MethodInfo In info
+                    For Each fn As MethodInfo In InternalFunctions.Methods
                         If nsMode Then
                             If enteredWord.StartsWith("cantus") Then
-                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" &                                               If(fn.GetParameters().Count = 0, "", "_") & ")")
+                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
 
                             ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) Then
                                 If fn.GetParameters(0).ParameterType.IsAssignableFrom(type) Then
-                                    autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" &                                           If(fn.GetParameters().Count <= 1, "", "_") & ")")
+                                    autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count <= 1, "", "_") & ")")
                                 End If
                             End If
                         Else
-                            autoCList.Add(fn.Name.ToLower() & "(" &                                           If(fn.GetParameters().Count = 0, "", "_") & ")")
+                            autoCList.Add(fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
                         End If
                     Next
 
-                    For Each fn As UserFunction In Globals.RootEvaluator.UserFunctions.Values
+                    For Each fn As UserFunction In Globals.RootEvaluator.UserFunctions.Values.ToArray()
                         If nsMode Then
                             If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
                                 Continue For
@@ -777,18 +810,18 @@ Namespace UI
 
                         If nsMode Then ' filter namespace
                             If fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(fn.FullName & "(" &                                           If(fn.Args.Count = 0, "", "_") & ")")
+                                autoCList.Add(fn.FullName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
                             ElseIf RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope) & "(" &                                           If(fn.Args.Count = 0, "", "_") & ")")
+                                autoCList.Add(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
                             Else
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope) & "(" &                                           If(fn.Args.Count = 0, "", "_") & ")")
+                            autoCList.Add(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
                         End If
                     Next
 
-                    For Each uc As UserClass In Globals.RootEvaluator.UserClasses.Values
+                    For Each uc As UserClass In Globals.RootEvaluator.UserClasses.Values.ToArray()
                         If nsMode Then
                             If Not uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not uc.FullName.ToLower().StartsWith(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
                                 Continue For
@@ -801,12 +834,12 @@ Namespace UI
                             If uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
                                 autoCList.Add(uc.FullName & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                             ElseIf RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" &                                               If(uc.Constructor.Args.Count = 0, "", "_") & ")")
+                                autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                             Else
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" &                                           If(uc.Constructor.Args.Count = 0, "", "_") & ")")
+                            autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
                         End If
                     Next
                     autoCList.Sort(New AutoCompleteComparer())

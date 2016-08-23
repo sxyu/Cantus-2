@@ -44,11 +44,11 @@
             FrmEditor.Tb.AddText(btn.Text)
         End Sub
 
-        ''' <summary>
-        ''' Write a string in function notation to the evaluator textbox
-        ''' </summary>
-        ''' <param name="s"></param>
-        ''' <param name="sep"></param>
+        '' <summary>
+        '' Write a string in function notation to the evaluator textbox
+        '' </summary>
+        '' <param name="s"></param>
+        '' <param name="sep"></param>
         Private Sub WriteFunction(ByVal s As String, Optional ByVal sep As String = "(")
             FrmEditor.Tb.Focus()
             Dim start As Integer = FrmEditor.Tb.SelectionStart

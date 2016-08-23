@@ -609,7 +609,7 @@
             Me.btnTripleQuote.Size = New System.Drawing.Size(40, 40)
             Me.btnTripleQuote.TabIndex = 93
             Me.btnTripleQuote.TabStop = False
-            Me.btnTripleQuote.Text = "'''"
+            Me.btnTripleQuote.Text = "" '"
             Me.tt.SetToolTip(Me.btnTripleQuote, "Multi-Line Text")
             Me.btnTripleQuote.UseVisualStyleBackColor = False
             '

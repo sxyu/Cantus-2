@@ -1,4 +1,4 @@
-﻿Welcome to Cantus (Previously Calculatorˣ) Version {ver} (Alpha)!
+﻿Welcome to Cantus Version {ver} (Alpha)!
 
 Cantus is a powerful yet lightweight mathematical language and expression evaluator 
 created By Alex Yu 2015-16
@@ -25,7 +25,22 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.0.103
+What's new in 2.4.1.104
+*********************************************************************************************
+-Fixed the broken modulo operator
+-Modulo operator now respects significant figures
+-Fixed the manual critical point finding system
+-Round, floor, ceil, truncate, abs functions now support arbitrary precision decimals
+-PI and E are now defined very precisely -- to 400 decimal places!
+-When switching to sig figs mode, automatically detects number of sig figs on existing
+  variables. When switching from sig figs mode, automatically sets all variables to 
+  infinitely precise.
+-Fixed an exceptions that occurs when rapidly typing in the textbox while modifying options
+  in the graphing window
+-Fixed crashes that occur sometimes when closing the console window
+
+*********************************************************************************************
+New from 2.4.0.103
 *********************************************************************************************
 -Fixed updater
 
@@ -97,9 +112,9 @@ New from 2.2.0.91
    Press Alt+Enter to evaluate the current expression and write it to this window
   -Graph: Same as the old graphing window
 -Better support for optional/named arguments, now works as expected
--Multiline strings: """ Use triple quotes 
+-Multi-line strings: """ Use triple quotes 
  """
--Improved syntax highlighting and autocompletion in the editOr -Added save and open buttons to the editor as well as the shortcuts Ctrl+S and Ctrl+O
+-Improved syntax highlighting and auto-completion in the editOr -Added save and open buttons to the editor as well as the shortcuts Ctrl+S and Ctrl+O
   (Older shortcuts F11 and F12 still available)
 -Editor is now slightly taller
 -Minor fixes
@@ -228,7 +243,7 @@ New From 2.0.0.68:
   Click this new button to choose a function from all defined
   functions.
 
--Almost everything is now asynchroneous and non-blocking, each
+-Almost everything is now asynchronous and non-blocking, each
   evaluation is done on a different thread,
   and graphics is drawn on a different thread in the graphing
   calculatOr 

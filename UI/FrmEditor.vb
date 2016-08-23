@@ -6,7 +6,7 @@ Imports System.Threading
 Imports Cantus.Core
 Imports Cantus.Core.CommonTypes
 Imports Cantus.Core.CantusEvaluator
-Imports Cantus.Core.CantusEvaluator.CantusIOEventArgs
+Imports Cantus.Core.CantusEvaluator.IOEventArgs
 Imports Cantus.Core.CantusEvaluator.ObjectTypes
 Imports Cantus.UI.ScintillaForCantus
 
@@ -17,30 +17,30 @@ Imports ScintillaNET
 Namespace UI
     Public Class FrmEditor
 #Region "Declarations"
-        ''' <summary>
-        ''' Maximum length of text to display on the tooltip
-        ''' </summary>
+        '' <summary>
+        '' Maximum length of text to display on the tooltip
+        '' </summary>
         Private Const TT_LEN_LIMIT As Integer = 500
 
-        ''' <summary>
-        ''' Max number of previous expressions to store
-        ''' </summary>
+        '' <summary>
+        '' Max number of previous expressions to store
+        '' </summary>
         Private Const PREV_EXPRESSION_LIMIT As Integer = 15
 
-        ''' <summary>
-        ''' URL to get info about the latest version number of cantus
-        ''' </summary>
+        '' <summary>
+        '' URL to get info about the latest version number of cantus
+        '' </summary>
         Private Const VERSION_URL As String = "https://raw.githubusercontent.com/sxyu/Cantus-Core/master/meta/ver"
 
-        ''' <summary>
-        ''' The main evaluator
-        ''' </summary>
+        '' <summary>
+        '' The main evaluator
+        '' </summary>
         Private _eval As Core.CantusEvaluator
 
-        ''' <summary>
-        ''' The path to the file currently open in the editor. 
-        ''' If no file is open, stores an empty string.
-        ''' </summary>
+        '' <summary>
+        '' The path to the file currently open in the editor. 
+        '' If no file is open, stores an empty string.
+        '' </summary>
         Public ReadOnly Property File As String = ""
 
         ' expression memory (up/down arrow keys)
@@ -51,24 +51,24 @@ Namespace UI
         ' update checking thread
         Private _updTh As Thread
 
-        ''' <summary>
-        '''  if true, allows user to press enter in textbox
-        ''' </summary>
+        '' <summary>
+        ''  if true, allows user to press enter in text box
+        '' </summary>
         Private _allowEnter As Boolean = False
 
-        ''' <summary>
-        ''' If true, displays the update message after load
-        ''' </summary>
+        '' <summary>
+        '' If true, displays the update message after load
+        '' </summary>
         Private _displayUpdateMessage As Boolean = False
 
-        ''' <summary>
-        ''' Custom lexer for scintilla
-        ''' </summary>
+        '' <summary>
+        '' Custom lexer for scintilla
+        '' </summary>
         Private _cantusLexer As New CantusLexer()
 
-        ''' <summary>
-        ''' Counter used for lazy evaluation of expressions
-        ''' </summary>
+        '' <summary>
+        '' Counter used for lazy evaluation of expressions
+        '' </summary>
         Private _editCt As Integer = 0
 
 #End Region
@@ -251,10 +251,10 @@ Namespace UI
         End Sub
 #End Region
 #Region "Shared functions"
-        ''' <summary>
-        ''' Send the event to asynchroneously evalute the expression
-        ''' </summary>
-        Private Sub EvaluateExpr(Optional noSaveAns As Boolean = False)
+        '' <summary>
+        '' Send the event to asynchronously evaluate the expression
+        '' </summary>
+        Friend Sub EvaluateExpr(Optional noSaveAns As Boolean = False)
             _eval.EvalAsync(Tb.Text, noSaveAns) ' evaluate & wait for event
 
             If Not noSaveAns Then
@@ -271,37 +271,40 @@ Namespace UI
                     _curExpId -= 1
                 End If
 
-                Dim logText As String = "'"
-                If Tb.TextLength > 103 Then
-                    logText = Tb.GetTextRange(0, 100) & "..."
+                Dim logText As String = ""
+                If Tb.Lines.Count > 4 Then
+                    logText = Tb.GetTextRange(0, Tb.Lines(4).Position) & "..."
                 Else
-                    logText = Tb.Text
+                    If Tb.Lines.Count > 1 Then logText = vbLf
+                    logText += Tb.Text
                 End If
 
-                If New InternalFunctions(Nothing).Count(logText, """") Mod 2 = 1 Then logText &= """"
-                If New InternalFunctions(Nothing).Count(logText, "'") Mod 2 = 1 Then logText &= "'"
+                If New InternalFunctions(Nothing).Count(logText, """""""") Mod 2 = 1 Then logText &= """"""""
+                If New InternalFunctions(Nothing).Count(logText, "'''") Mod 2 = 1 Then logText &= "'''"
+
+                While New InternalFunctions(Nothing).Count(logText, """") Mod 2 = 1
+                    logText &= """"
+                End While
+                While New InternalFunctions(Nothing).Count(logText, "'") Mod 2 = 1
+                    logText &= "'"
+                End While
 
                 ' write expression to log
                 Viewer.WriteConsoleSection(String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName) & logText)
             End If
         End Sub
 
-        Private _lastAnsCount As Integer = 0
-        Private Sub EvalComplete(sender As Object, result As Object)
+        Private Sub EvalComplete(sender As Object, e As AnswerEventArgs)
             If LbResult.InvokeRequired Then
-                LbResult.BeginInvoke(Sub() EvalComplete(sender, result))
+                LbResult.BeginInvoke(Sub() EvalComplete(sender, e))
             Else
-                Dim ans As String = result.ToString()
-
-                ' display answer
-                LbResult.Text = AutoTrimDisplayText(ans)
-                If _eval.PrevAns.Count > _lastAnsCount Then
-                    Viewer.WriteConsoleLine("Result: " & ans)
+                ' display & print answer
+                LbResult.Text = AutoTrimDisplayText(e.ResultString)
+                If Not e.NoSaveAns Then
+                    Viewer.WriteConsoleLine("Result: " & vbLf & e.FormattedString)
                     Viewer.WriteLogSeparator()
+                    Tb.Focus()
                 End If
-                _lastAnsCount = _eval.PrevAns.Count
-
-                Tb.Focus()
             End If
         End Sub
 
@@ -334,7 +337,7 @@ Namespace UI
             Return res
         End Function
 
-        Private Sub WriteOutput(sender As Object, e As CantusIOEventArgs)
+        Private Sub WriteOutput(sender As Object, e As IOEventArgs)
             If Me.InvokeRequired Then
                 Me.BeginInvoke(Sub() WriteOutput(sender, e))
             Else
@@ -344,18 +347,18 @@ Namespace UI
 
         Private _ev As New ManualResetEventSlim(False)
 
-        Private Sub ReadInput(sender As Object, e As CantusIOEventArgs, ByRef [return] As Object)
+        Private Sub ReadInput(sender As Object, e As IOEventArgs, ByRef [return] As Object)
             Dim ret As String = ""
             Dim method As Viewer.InputReadEventHandler = Sub(senderR As Object, eR As Viewer.InputEventArgs)
                                                              ret = eR.Text
                                                              _ev.Set()
                                                          End Sub
             AddHandler Viewer.InputRead, method
-            If e.Message = eMessage.readLine Then
+            If e.Message = IOMessage.readLine Then
                 Viewer.ReadLine()
-            ElseIf e.Message = eMessage.readChar
+            ElseIf e.Message = IOMessage.readChar
                 Viewer.ReadChar()
-            ElseIf e.Message = eMessage.readWord
+            ElseIf e.Message = IOMessage.readWord
                 Viewer.ReadWord()
             Else
                 If e.Args("yes").ToString() = "yes" Then
@@ -369,7 +372,7 @@ Namespace UI
             _ev.Reset()
             RemoveHandler Viewer.InputRead, method
 
-            If e.Message = eMessage.confirm Then
+            If e.Message = IOMessage.confirm Then
                 If e.Args("yes").ToString() = "yes" Then
                     ret = ret.ToLowerInvariant().Trim()
                     If ret = "yes" OrElse ret = "y" Then
@@ -461,9 +464,9 @@ Namespace UI
             End Select
         End Sub
 
-        ''' <summary>
-        ''' Save all settings to the init.can file
-        ''' </summary>
+        '' <summary>
+        '' Save all settings to the init.can file
+        '' </summary>
         Public Sub SaveSettings()
             Try
                 Dim curText As String = ""
@@ -491,9 +494,9 @@ Namespace UI
             My.Settings.Save()
         End Sub
 
-        ''' <summary>
-        ''' Open a 'save as' dialogue to save as another file
-        ''' </summary>
+        '' <summary>
+        '' Open a 'save as' dialogue to save as another file
+        '' </summary>
         Private Sub OpenSaveAs()
             Using diag As New SaveFileDialog()
                 diag.Filter = "Cantus Script (.can)|*.can"
@@ -507,9 +510,9 @@ Namespace UI
             End Using
         End Sub
 
-        ''' <summary>
-        ''' Open the 'open script' dialog to open a script
-        ''' </summary>
+        '' <summary>
+        '' Open the 'open script' dialog to open a script
+        '' </summary>
         Private Sub Open()
             Using diag As New OpenFileDialog()
                 diag.Filter = "Cantus Script (.can)|*.can"
@@ -524,9 +527,9 @@ Namespace UI
             End Using
         End Sub
 
-        ''' <summary>
-        ''' Save the file; if the editor is not linked to any file, opens the save as dialogue.
-        ''' </summary>
+        '' <summary>
+        '' Save the file; if the editor is not linked to any file, opens the save as dialogue.
+        '' </summary>
         Private Sub Save()
             If String.IsNullOrEmpty(Me.File) Then
                 OpenSaveAs()
@@ -535,9 +538,9 @@ Namespace UI
             End If
         End Sub
 
-        ''' <summary>
-        ''' Create and edit a new, empty script, closing the currently opened script
-        ''' </summary>
+        '' <summary>
+        '' Create and edit a new, empty script, closing the currently opened script
+        '' </summary>
         Private Sub NewScript()
             If String.IsNullOrEmpty(Me.File) Then
                 If (Tb.TextLength < 10 AndAlso String.IsNullOrWhiteSpace(Tb.Text)) OrElse
@@ -779,9 +782,9 @@ Namespace UI
             _eval.SetVariable(varnm, ObjectTypes.DetectType(data))
         End Sub
 
-        ''' <summary>
-        ''' Update tooltips for variable buttons
-        ''' </summary>
+        '' <summary>
+        '' Update tooltips for variable buttons
+        '' </summary>
         Private Sub UpdateLetterTT()
             For Each c As Control In PnlSettings.Controls
                 If c.Tag Is Nothing OrElse c.Tag.ToString().StartsWith("-") Then Continue For
@@ -974,8 +977,10 @@ Namespace UI
         End Sub
 
         Private Sub tb_TextChanged(sender As Object, e As EventArgs) Handles Tb.TextChanged
-            _editCt = 2
-            TmrReCalc.Start()
+            If Tb.Lines.Count = 1 Then
+                _editCt = 2
+                TmrReCalc.Start()
+            End If
         End Sub
 
         Private Sub TmrReCalc_Tick(sender As Object, e As EventArgs) Handles TmrReCalc.Tick
@@ -1015,6 +1020,7 @@ Namespace UI
                 btn.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
             End If
 
+            EvaluateExpr(True)
             SaveSettings()
         End Sub
 
@@ -1153,7 +1159,7 @@ Namespace UI
                         autoCList.Add(ROOT_NAMESPACE)
                     End If
 
-                    For Each v As Variable In _eval.Variables.Values
+                    For Each v As Variable In _eval.Variables.Values.ToArray()
                         ' ignore private
                         If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(v.DeclaringScope, _eval.Scope)) Then Continue For
 
@@ -1173,7 +1179,7 @@ Namespace UI
                                 If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
                                 If TypeOf v.Reference.Resolve() Is ClassInstance Then
                                     Dim ci As ClassInstance = DirectCast(v.Reference.Resolve(), ClassInstance)
-                                    For Each f As String In ci.Fields.Keys
+                                    For Each f As String In ci.Fields.Keys.ToArray()
                                         autoCList.Add(CombineScope(partialName,
                                                    f & If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" & If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
                                               "")))
@@ -1188,10 +1194,6 @@ Namespace UI
                     Next
 
                     ' internal functions
-                    Dim info As MethodInfo() = GetType(InternalFunctions).GetMethods(
-                        Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or
-                        Reflection.BindingFlags.DeclaredOnly)
-
                     Dim varname As String = ""
                     Dim type As Type = Nothing
                     If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso _eval.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
@@ -1207,7 +1209,7 @@ Namespace UI
                         End If
                     End If
 
-                    For Each fn As MethodInfo In info
+                    For Each fn As MethodInfo In InternalFunctions.Methods
                         If nsMode Then
                             If enteredWord.StartsWith("cantus") Then
                                 autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
@@ -1222,7 +1224,7 @@ Namespace UI
                         End If
                     Next
 
-                    For Each fn As UserFunction In _eval.UserFunctions.Values
+                    For Each fn As UserFunction In _eval.UserFunctions.Values.ToArray()
                         If nsMode Then
                             If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, _eval.Scope).ToLower()) Then
                                 Continue For
@@ -1244,7 +1246,7 @@ Namespace UI
                         End If
                     Next
 
-                    For Each uc As UserClass In _eval.UserClasses.Values
+                    For Each uc As UserClass In _eval.UserClasses.Values.ToArray()
                         If nsMode Then
                             If Not uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not uc.FullName.ToLower().StartsWith(RemoveRedundantScope(uc.FullName, _eval.Scope).ToLower()) Then
                                 Continue For
@@ -1345,7 +1347,8 @@ Namespace UI
                 End If
 
             ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) OrElse e.Char = AscW("`"c) Then
-                If e.Char = AscW(""""c) AndAlso Tb.CurrentPosition > 1 AndAlso Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = """""" OrElse e.Char = AscW("'"c) AndAlso Tb.CurrentPosition > 1 AndAlso Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = "'" & "'" Then
+                If e.Char = AscW(""""c) AndAlso Tb.CurrentPosition > 1 AndAlso Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = """""" OrElse
+                    e.Char = AscW("'"c) AndAlso Tb.CurrentPosition > 1 AndAlso Tb.GetTextRange(Tb.CurrentPosition - 2, 2) = "'" & "'" Then
 
                     ' if there were already two quotes before, do not add another: user probably wanted to type triple quotes
                     Tb.SelectionStart += 1
@@ -1353,13 +1356,13 @@ Namespace UI
                 End If
 
                 Dim curText As String = Tb.Lines(Tb.CurrentLine).Text
-                Dim ct As Boolean = False
+            Dim ct As Boolean = False
 
-                For i As Integer = 0 To curText.Length - 1
-                    If curText(i) = ChrW(e.Char) Then ct = Not ct
-                Next
+            For i As Integer = 0 To curText.Length - 1
+                If curText(i) = ChrW(e.Char) Then ct = Not ct
+            Next
 
-                If ct Then Tb.InsertText(Tb.CurrentPosition, ChrW(e.Char))
+            If ct Then Tb.InsertText(Tb.CurrentPosition, ChrW(e.Char))
 
             End If
         End Sub
@@ -1429,9 +1432,9 @@ Namespace UI
 #End Region
     End Class
     Public Module Globals
-        ''' <summary>
-        ''' The default evaluator in the root namespace
-        ''' </summary>
+        '' <summary>
+        '' The default evaluator in the root namespace
+        '' </summary>
         Public ReadOnly Property RootEvaluator As New CantusEvaluator()
         Public ReadOnly Property Version As String = Assembly.GetAssembly(GetType(Cantus.Core.CantusEvaluator)).GetName().
                                                         Version.ToString() & " Alpha"

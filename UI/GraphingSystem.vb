@@ -332,7 +332,9 @@ Namespace UI.Graphing
 
                         While i <= WID
                             SetX(ccfx(i, True))
+
                             Dim res As Double = Eval(fn)
+
                             Dim y As Double = cfcy(res, True)
                             Dim x As Double = i
                             If Double.IsNaN(prev) OrElse Double.IsNaN(res) OrElse y < 0 OrElse y > HIGH OrElse Math.Abs(y - prev) > HIGH / 2 Then
@@ -349,9 +351,9 @@ Namespace UI.Graphing
                             Else
                                 Dim inner As Double = 100 + Math.Abs((y - prev) / delta)
                                 If preview Then
-                                    delta = Math.Log(inner) / Math.Log(8) * 2
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(8) * 2, 0.001)
                                 Else
-                                    delta = Math.Log(inner) / Math.Log(19) * 0.8
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(19) * 0.8, 0.001)
                                 End If
                                 If y < HIGH / 4 OrElse y > HIGH / 4 * 3 Then
                                     delta = Math.Max(delta, 2)
@@ -361,6 +363,7 @@ Namespace UI.Graphing
                             End If
                             prev = y
                         End While
+
                         If pts.Count > 0 Then
                             g.DrawLines(p, pts.ToArray())
                         End If
@@ -392,9 +395,9 @@ Namespace UI.Graphing
                             Else
                                 Dim inner As Double = 100 + Math.Abs((x - prev) / delta)
                                 If preview Then
-                                    delta = Math.Log(inner) / Math.Log(8) * 2
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(8) * 2, 0.001)
                                 Else
-                                    delta = Math.Log(inner) / Math.Log(19) * 0.8
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(19) * 0.8, 0.001)
                                 End If
                                 If x < WID / 4 OrElse x > WID / 4 * 3 Then
                                     delta = Math.Max(delta, 2)
@@ -795,15 +798,21 @@ Namespace UI.Graphing
 
         Private Function Eval(str As String, Optional useEval2 As Boolean = False) As Double
             Try
-                Dim prevmode As Core.CantusEvaluator.eOutputFormat = _eval.OutputFormat
+                Dim prevsf As Boolean
                 Dim ret As Double
                 If useEval2 Then
+                    prevsf = _eval2.SignificantMode
+                    _eval2.SignificantMode = False
                     ret = CDbl(CType(_eval2.EvalExprRaw(str, True), Core.CommonTypes.BigDecimal))
+                    _eval2.SignificantMode = prevsf
                 Else
+                    prevsf = _eval.SignificantMode
+                    _eval.SignificantMode = False
                     ret = CDbl(CType(_eval.EvalExprRaw(str, True), Core.CommonTypes.BigDecimal))
+                    _eval.SignificantMode = prevsf
                 End If
                 Return ret
-            Catch
+            Catch 'ex As Exception
                 Return Double.NaN
             End Try
         End Function
@@ -1074,12 +1083,13 @@ Namespace UI.Graphing
                     End If
                     npdTVal.Text = Math.Round(atan, 3).ToString()
                 Case FunctionType.Differential
-                    npdTVal.Text = "(" & Math.Round(ccfx(cscx(p.X)), 3).ToString() & "," &                     Math.Round(ccfy(cscy(p.Y)), 3).ToString() & ")"
+                    npdTVal.Text = "(" & Math.Round(ccfx(cscx(p.X)), 3).ToString() & "," & Math.Round(ccfy(cscy(p.Y)), 3).ToString() & ")"
             End Select
         End Sub
 
         Private Sub canvas_MouseDown(sender As Object, e As MouseEventArgs) Handles canvas.MouseDown
             pnlFnType.Hide()
+
             If _traceOn AndAlso _functiontype(_curfn) <> FunctionType.Parametric AndAlso e.Button = MouseButtons.Left Then
                 TraceUpdateCoords(e.Location)
                 tmrTraceUpdate.Start()
@@ -1088,6 +1098,7 @@ Namespace UI.Graphing
                 ppt.Y = Cursor.Position.Y
                 dragging = True
                 tmrDrag.Start()
+                canvas.Cursor = Cursors.Hand
             End If
         End Sub
 
@@ -1103,6 +1114,7 @@ Namespace UI.Graphing
                 dragging = False
                 _loc.X += Cursor.Position.X - ppt.X
                 _loc.Y -= Cursor.Position.Y - ppt.Y
+                canvas.Cursor = Cursors.Arrow
             End If
         End Sub
 
@@ -1171,9 +1183,9 @@ Namespace UI.Graphing
                     dxdy = Double.NaN
                 End If
 
-                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) &                     Math.Round(CDbl(GetX(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf &                 lbFx.Text.Remove(lbFx.Text.IndexOf("(")) & "'(" & Math.Round(CDbl(GetX(True)), 3) & ") = " & dxdy.ToString().Replace("NaN", "Undefined")
-            Catch ex As Exception
-                MsgBox(ex.ToString()) ' DEBUG
+                lbTVal.Text = lbFx.Text.Remove(lbFx.Text.IndexOf("(") + 1) & Math.Round(CDbl(GetX(True)), 3) & ") = " & o.ToString().Replace("NaN", "Undefined") & vbCrLf & lbFx.Text.Remove(lbFx.Text.IndexOf("(")) & "(" & Math.Round(CDbl(GetX(True)), 3) & ") = " & dxdy.ToString().Replace("NaN", "Undefined")
+            Catch 'ex As Exception
+                'MsgBox(ex.ToString()) ' DEBUG
             End Try
             SetX(prevx, True)
         End Sub
@@ -1367,18 +1379,38 @@ Namespace UI.Graphing
                 Dim delta As Action(Of Double)
                 Dim scl As Double
                 If _functiontype(_curfn) = FunctionType.Cartesian Then
-                    gx = New Func(Of Object)(AddressOf GetX)
-                    gy = New Func(Of Object)(AddressOf GetY)
-                    sx = New Action(Of Object)(AddressOf SetX)
-                    sy = New Action(Of Object)(AddressOf SetY)
-                    delta = New Action(Of Double)(AddressOf DeltaX)
+                    gx = New Func(Of Object)(Function() As Object
+                                                 Return GetX(True)
+                                             End Function)
+                    gy = New Func(Of Object)(Function() As Object
+                                                 Return GetY(True)
+                                             End Function)
+                    sx = New Action(Of Object)(Sub(x As Object)
+                                                   SetX(x, True)
+                                               End Sub)
+                    sy = New Action(Of Object)(Sub(y As Object)
+                                                   SetY(y, True)
+                                               End Sub)
+                    delta = New Action(Of Double)(Sub(x As Double)
+                                                      DeltaX(x, True)
+                                                  End Sub)
                     scl = _scale.X
                 Else
-                    gy = New Func(Of Object)(AddressOf GetX)
-                    gx = New Func(Of Object)(AddressOf GetY)
-                    sy = New Action(Of Object)(AddressOf SetX)
-                    sx = New Action(Of Object)(AddressOf SetY)
-                    delta = New Action(Of Double)(AddressOf DeltaY)
+                    gx = New Func(Of Object)(Function() As Object
+                                                 Return GetY(True)
+                                             End Function)
+                    gy = New Func(Of Object)(Function() As Object
+                                                 Return GetX(True)
+                                             End Function)
+                    sx = New Action(Of Object)(Sub(x As Object)
+                                                   SetY(x, True)
+                                               End Sub)
+                    sy = New Action(Of Object)(Sub(y As Object)
+                                                   SetX(y, True)
+                                               End Sub)
+                    delta = New Action(Of Double)(Sub(x As Double)
+                                                      DeltaY(x, True)
+                                                  End Sub)
                     scl = _scale.Y
                 End If
                 Dim oldx As Object = gx()
@@ -1646,6 +1678,7 @@ Namespace UI.Graphing
                 Case FunctionType.Polar
                     TraceSpecialPolar()
             End Select
+            canvas.Invalidate()
         End Sub
 
         Private Sub btnTNext_Click(sender As Object, e As EventArgs) Handles btnTNext.Click
@@ -1680,6 +1713,7 @@ Namespace UI.Graphing
                 pnlTrace.Hide()
                 tb.Focus()
             End If
+            canvas.Invalidate()
         End Sub
 
         Private Sub npdTVal_ValueChanged(sender As Object, e As EventArgs) Handles npdTVal.TextChanged
@@ -1770,8 +1804,6 @@ Namespace UI.Graphing
             ElseIf e.Button = MouseButtons.Middle Then
                 _scale.X = 1
                 _scale.Y = 1
-                'scaleX.Value = 1000 - Math.Abs(CInt((Math.Log10(_scale.X) + 3) ^ 1.17647058824 * 100))
-                'scaleY.Value = 1000 - Math.Abs(CInt((Math.Log10(_scale.Y) + 3) ^ 1.17647058824 * 100))
                 _loc = New Coord(-CSng(canvas.Width / 2), -CSng(canvas.Height / 2))
             End If
         End Sub
@@ -1836,7 +1868,7 @@ Namespace UI.Graphing
                     "-atanr(x)", "-round(x)", "0.5*x^2", "x mod 3", "-x mod 2", "-x^2+2", "x mod 1", "x^2 -2",
                     "0.1*x^3", "-0.1*x^3", "-2/x", "-3/x", "-4/x", "sinr(x)", "x*cosr(x)", "90x", "-90x",
                     "(x^3+1)/x", "(x^2+1)/x^2", "(x^3+x^2-x-2)/(x^2+x)", "(x^2+x+2)/(x^2-x+2)", "x!", "-x!",
-                    "(-x)!", "0.5x!", "-0.5x!", "sgn(x)", "shl(x,1)", "shr(x,1)", "x*cotr(x)", "x*tanr(x)",
+                    "(-x)!", "0.5x!", "-0.5x!", "sgn(x)", "x << 1", "x >> 1", "x*cotr(x)", "x*tanr(x)",
                     "-1/x^2", "-xtanr(x)", "x^2sinr(x)"}
                     If _functiontype(_curfn) = FunctionType.Inverse Then
                         For i As Integer = 0 To showcaselst.Length - 1
@@ -2003,12 +2035,14 @@ Namespace UI.Graphing
         lbOptCartesianL.MouseDown,
         pnlOptOriginRay.MouseDown, lbOptOriginRayL.MouseDown, lbOptOriginRayR.MouseDown, pnlOptInverse.MouseDown,
         lbOptInverseL.MouseDown, lbOptInverseR.MouseDown
+
             Dim id As Integer = Integer.Parse(DirectCast(sender, Control).Tag.ToString())
             If _functiontype(_curfn) = DirectCast(id, FunctionType) Then Exit Sub
             _functiontype(_curfn) = DirectCast(id, FunctionType)
             SetPnlSelect(id)
             ResetFunc()
             pnlFnType.Hide()
+
         End Sub
 
         Private Sub UpdateFnLabelColor()
@@ -2090,6 +2124,7 @@ Namespace UI.Graphing
         Dim pnldragging As Boolean
         Private Sub pnlWindow_MouseDown(sender As Object, e As MouseEventArgs) Handles pnlWindow.MouseDown,
         pnlWHeader.MouseDown, lbWindow.MouseDown, lbWTop.MouseDown, lbWRht.MouseDown, lbWLft.MouseDown, lbWBot.MouseDown, lbWLogo.MouseDown
+
             pnldragging = True
             pnlppt = e.Location
         End Sub

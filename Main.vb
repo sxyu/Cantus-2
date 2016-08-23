@@ -39,9 +39,9 @@ Namespace UI
             Console.WriteLine("By Alex Yu 2016")
         End Sub
 
-        ''' <summary>
-        ''' Load all private fonts
-        ''' </summary>
+        '' <summary>
+        '' Load all private fonts
+        '' </summary>
         Friend Sub LoadFonts()
             If Fonts Is Nothing Then
                 Fonts = New PrivateFontCollection()

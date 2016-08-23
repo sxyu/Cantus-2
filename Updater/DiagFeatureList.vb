@@ -16,7 +16,7 @@
             tb.SelectionStart = 0
             Dim cCode As String = Globalization.CultureInfo.CurrentCulture.Name
 
-            If cCode.StartsWith("en") AndAlso cCode <> "en-US" Then btnLicense.Text = "Licence" ' spelling for non-american english...
+            If cCode.StartsWith("en") AndAlso cCode <> "en-US" Then btnLicense.Text = "Licence" ' spelling for non-americannglish...
             TmrAnim.Start()
         End Sub
 
