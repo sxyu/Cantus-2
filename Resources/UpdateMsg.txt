@@ -1,4 +1,4 @@
-﻿Welcome to Cantus Version {ver} (Alpha)!
+﻿Welcome to Cantus Version {ver}!
 
 Cantus is a powerful yet lightweight mathematical language and expression evaluator 
 created By Alex Yu 2015-16
