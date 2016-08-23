@@ -23,6 +23,7 @@ Found: http://stackoverflow.com/a/4524254
 
 EmbeddedAssembly Class: Class to simplify embedding dlls within the executable by Adriancs
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
+
 *********************************************************************************************
 What's new in 2.4.1.106
 *********************************************************************************************
@@ -31,6 +32,16 @@ What's new in 2.4.1.106
 -Added some path functions (getext())
 
 *********************************************************************************************
+<<<<<<< HEAD
+=======
+What's new in 2.4.1.106
+*********************************************************************************************
+-Fixed user function arguments
+-Fixed version number ver() -- returns assembly instead of file version
+-Added some path functions (getext())
+
+*********************************************************************************************
+>>>>>>> dev
 New from 2.4.1.105
 *********************************************************************************************
 -Fixed the broken modulo operator
