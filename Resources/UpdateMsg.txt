@@ -25,7 +25,15 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.1.107
+What's new in 2.4.2.108
+*********************************************************************************************
+-Matrices are better and more consistently formatted in output
+-select() function now supports full matrices (preserves row/column structure)
+-Fixed a bug with the union() function for sets
+-symmetricdifference() function renamed to differencesymmetric()
+
+*********************************************************************************************
+New from 2.4.1.107
 *********************************************************************************************
 -Fixed a bug with the explicit mode keyboard shortcut
 -Sgn (sign) function now supports arbitrary precision decimals

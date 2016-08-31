@@ -301,7 +301,7 @@ Namespace UI
                 ' display & print answer
                 LbResult.Text = AutoTrimDisplayText(e.ResultString)
                 If Not e.NoSaveAns Then
-                    Viewer.WriteConsoleLine("Result: " & vbLf & e.FormattedString)
+                    Viewer.WriteConsoleLine("Result: " & vbLf & e.ResultString)
                     Viewer.WriteLogSeparator()
                     Tb.Focus()
                 End If
