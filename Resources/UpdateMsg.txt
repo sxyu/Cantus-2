@@ -25,7 +25,28 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.2.108
+What's new in 2.4.3.110
+*********************************************************************************************
+-Added isupper() islower() isdigit() isletter() ispunctuation() etc. functions to ease
+  detection of character types
+-Fixed a bug where continuing in the last loop of a for/while/repeat loop will raise an error
+  saying continue statements are invalid in block mode
+-The virtual console no longer (erroneously) appends a new line character after a string 
+  printed with print() (as opposed to printline())
+-Other minor bug fixes
+
+*********************************************************************************************
+New from 2.4.3.109
+*********************************************************************************************
+-Fixed a bug where the path of the cantus executable was incorrectly detected as the
+  current console path
+-Improved run() function to use a callback lambda function
+-Hashset and set creation from lists no longer creates extra unnecessary references
+-basedir() function renamed to currentdir()
+-Added execdir() execpath() functions to identify the path/directory of the current script
+
+*********************************************************************************************
+New from 2.4.2.108
 *********************************************************************************************
 -Matrices are better and more consistently formatted in output
 -select() function now supports full matrices (preserves row/column structure)

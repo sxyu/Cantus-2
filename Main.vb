@@ -82,8 +82,10 @@ Namespace UI
 
         <STAThread>
         Public Sub Main()
+            Dim cantusPath As String = IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) & IO.Path.DirectorySeparatorChar
+
             ' setup folders, etc.
-            Dim requiredFolders As String() = {"plugin", "include", "init"}
+            Dim requiredFolders As String() = {cantusPath + "plugin", cantusPath + "include", cantusPath + "init"}
             For Each dir As String In requiredFolders
                 If Not IO.Directory.Exists(dir) Then
                     Try
@@ -95,21 +97,21 @@ Namespace UI
 
             ' load initialization, plugin scripts
             Dim initScripts As New List(Of String)
-            If IO.Directory.Exists("plugin/") Then initScripts.AddRange(
-                IO.Directory.GetFiles("plugin/", "*.can", IO.SearchOption.AllDirectories))
+            If IO.Directory.Exists(cantusPath + "plugin/") Then initScripts.AddRange(
+                IO.Directory.GetFiles(cantusPath + "plugin/", "*.can", IO.SearchOption.AllDirectories))
 
             ' initialization files: init.can and init/* ran in root scope on startup
-            If IO.File.Exists("init.can") Then initScripts.Add("init.can")
-            If IO.Directory.Exists("init/") Then initScripts.AddRange(
-                IO.Directory.GetFiles("init/", "*.can", IO.SearchOption.AllDirectories))
+            If IO.File.Exists(cantusPath + "init.can") Then initScripts.Add(cantusPath + "init.can")
+            If IO.Directory.Exists(cantusPath + "init/") Then initScripts.AddRange(
+                IO.Directory.GetFiles(cantusPath + "init/", "*.can", IO.SearchOption.AllDirectories))
 
             For Each file As String In initScripts
                 Try
                     ' Evaluate each file. On error, ignore.
-                    Globals.RootEvaluator.Load(file, file = "init.can" OrElse file.ToLower().
-                                           StartsWith("init" & IO.Path.DirectorySeparatorChar))
+                    Globals.RootEvaluator.Load(file, file = cantusPath + "init.can" OrElse file.ToLower().
+                                           StartsWith(cantusPath + "init" & IO.Path.DirectorySeparatorChar))
                 Catch ex As Exception
-                    If file = "init.can" Then
+                    If file = cantusPath + "init.can" Then
                         MsgBox("Error occurred while processing init.can." & vbNewLine & "Variables and functions may not load." & vbNewLine & vbNewLine & "Message:" & vbNewLine & ex.Message,
                                MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Critical, "Initialization Error")
                     Else

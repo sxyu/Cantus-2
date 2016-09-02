@@ -127,14 +127,17 @@ Namespace UI
             Dim lastline As Line = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1)
             If lastline.Text.StartsWith(_promptText) Then
                 _lastPromptLine = ConsoleControl.GetTextRange(lastline.Position, lastline.Length).Trim({ControlChars.Lf, ControlChars.Cr})
-                ConsoleControl.DeleteRange(lastline.Position, lastline.Length)
+                ConsoleControl.DeleteRange(lastline.Position - 1, lastline.Length + 1)
+                If ConsoleControl.Lines(ConsoleControl.Lines.Count - 1).Text.StartsWith(_promptText) Then
+                    ConsoleControl.AppendText(ControlChars.Lf)
+                End If
             End If
         End Sub
 
         Private Sub WritePromptLine(Optional appendPrevious As Boolean = False)
             AutoAddLine()
             If Not String.IsNullOrEmpty(_lastPromptLine) AndAlso appendPrevious Then
-                ConsoleControl.AppendText(_lastPromptLine)
+                ConsoleControl.AppendText(_lastPromptLine.Trim({ControlChars.Lf, ControlChars.Cr}))
             Else
                 ConsoleControl.AppendText(_promptText)
             End If
@@ -615,7 +618,7 @@ Namespace UI
                             Try
                                 Dim th As New Thread(Sub()
                                                          Try
-                                                             Dim res As String = RootEvaluator.EvalExpr(lastLineText)
+                                                             Dim res As String = RootEvaluator.Eval(lastLineText)
                                                              ConsoleControl.BeginInvoke(Sub()
                                                                                             WriteConsoleLine(res)
                                                                                         End Sub)
