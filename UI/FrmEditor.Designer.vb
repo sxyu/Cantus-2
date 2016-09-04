@@ -43,6 +43,7 @@
             Me.LbResult = New System.Windows.Forms.Label()
             Me.PnlResults = New System.Windows.Forms.Panel()
             Me.BtnMin = New System.Windows.Forms.Button()
+            Me.BtnMax = New System.Windows.Forms.Button()
             Me.BtnTranslucent = New System.Windows.Forms.Button()
             Me.BtnClose = New System.Windows.Forms.Button()
             Me.BtnSettings = New System.Windows.Forms.Button()
@@ -55,9 +56,10 @@
             Me.TmrReCalc = New System.Windows.Forms.Timer(Me.components)
             Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
             Me.Editor = New System.Windows.Forms.Panel()
-            Me.Keyboard = New Cantus.UI.Keyboards.MainKeyboard()
             Me.Viewer = New Cantus.UI.Viewer()
             Me.TmrAnim = New System.Windows.Forms.Timer(Me.components)
+            Me.BtnKeyboard = New System.Windows.Forms.Button()
+            Me.Split = New System.Windows.Forms.SplitContainer()
             Me.PnlSettings.SuspendLayout()
             CType(Me.PbSettingsLogo, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.PnlResults.SuspendLayout()
@@ -65,11 +67,30 @@
             Me.Editor.SuspendLayout()
             Me.SuspendLayout()
             '
+            'Split
+            '
+            Me.Split.Name = "Split"
+            Me.Split.Location = New Point(4, 4)
+            Me.Split.Size = New Size(1341, 700)
+            Me.Split.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+                                Or System.Windows.Forms.AnchorStyles.Left) _
+                                Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Split.BackColor = System.Drawing.Color.FromArgb(45, 45, 45)
+            Me.Split.Panel1.Controls.Add(Me.Viewer)
+            Me.Split.Panel2.Controls.Add(Me.Editor)
+            Me.Split.Panel2MinSize = 53
+            Me.Split.Panel1MinSize = 0
+            Me.Split.Panel1Collapsed = False
+            Me.Split.Panel2Collapsed = False
+            Me.Split.SplitterDistance = 614
+            Me.Split.SplitterWidth = 2
+            Me.Split.Cursor = Cursors.Arrow
+            '
             'Tb
             '
             Me.Tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                Or System.Windows.Forms.AnchorStyles.Left) _
+                Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.Tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
             Me.Tb.BorderStyle = System.Windows.Forms.BorderStyle.None
             Me.Tb.CaretForeColor = System.Drawing.Color.GhostWhite
@@ -79,7 +100,7 @@
             Me.Tb.ForeColor = System.Drawing.Color.White
             Me.Tb.Location = New System.Drawing.Point(3, 18)
             Me.Tb.Name = "Tb"
-            Me.Tb.Size = New System.Drawing.Size(675, 334)
+            Me.Tb.Size = New System.Drawing.Size(675, 634)
             Me.Tb.TabIndex = 0
             '
             'PnlSettings
@@ -103,12 +124,13 @@
             Me.PnlSettings.Controls.Add(Me.BtnX)
             Me.PnlSettings.Location = New System.Drawing.Point(680, 1)
             Me.PnlSettings.Name = "PnlSettings"
-            Me.PnlSettings.Size = New System.Drawing.Size(678, 355)
+            Me.PnlSettings.Size = New System.Drawing.Size(678, 655)
             Me.PnlSettings.TabIndex = 6
+            Me.PnlSettings.Visible = False
             '
             'BtnSigFigs
             '
-            Me.BtnSigFigs.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnSigFigs.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.BtnSigFigs.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnSigFigs.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnSigFigs.FlatAppearance.BorderSize = 0
@@ -117,7 +139,7 @@
             Me.BtnSigFigs.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnSigFigs.Font = New System.Drawing.Font(OpenSansLight, 12.75!)
             Me.BtnSigFigs.ForeColor = System.Drawing.Color.White
-            Me.BtnSigFigs.Location = New System.Drawing.Point(315, 139)
+            Me.BtnSigFigs.Location = New System.Drawing.Point(315, 289)
             Me.BtnSigFigs.Name = "BtnSigFigs"
             Me.BtnSigFigs.Size = New System.Drawing.Size(86, 40)
             Me.BtnSigFigs.TabIndex = 15
@@ -128,13 +150,13 @@
             '
             'LbSettings
             '
-            Me.LbSettings.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.LbSettings.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.LbSettings.AutoSize = True
             Me.LbSettings.BackColor = System.Drawing.Color.Transparent
             Me.LbSettings.Cursor = System.Windows.Forms.Cursors.Arrow
             Me.LbSettings.Font = New System.Drawing.Font(OpenSansLight, 16.0!)
             Me.LbSettings.ForeColor = System.Drawing.Color.White
-            Me.LbSettings.Location = New System.Drawing.Point(326, 99)
+            Me.LbSettings.Location = New System.Drawing.Point(326, 249)
             Me.LbSettings.Name = "LbSettings"
             Me.LbSettings.Size = New System.Drawing.Size(91, 30)
             Me.LbSettings.TabIndex = 13
@@ -143,11 +165,11 @@
             '
             'PbSettingsLogo
             '
-            Me.PbSettingsLogo.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.PbSettingsLogo.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.PbSettingsLogo.BackColor = System.Drawing.Color.Transparent
             Me.PbSettingsLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
             Me.PbSettingsLogo.Image = CType(resources.GetObject("PbSettingsLogo.Image"), System.Drawing.Image)
-            Me.PbSettingsLogo.Location = New System.Drawing.Point(300, 98)
+            Me.PbSettingsLogo.Location = New System.Drawing.Point(300, 248)
             Me.PbSettingsLogo.Name = "PbSettingsLogo"
             Me.PbSettingsLogo.Size = New System.Drawing.Size(32, 34)
             Me.PbSettingsLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -163,9 +185,9 @@
             Me.BtnLog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent
             Me.BtnLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.BtnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnLog.Font = New System.Drawing.Font(OpenSans, 9.0!)
+            Me.BtnLog.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.BtnLog.ForeColor = System.Drawing.Color.LightSteelBlue
-            Me.BtnLog.Location = New System.Drawing.Point(393, 316)
+            Me.BtnLog.Location = New System.Drawing.Point(393, 616)
             Me.BtnLog.Name = "BtnLog"
             Me.BtnLog.Size = New System.Drawing.Size(129, 29)
             Me.BtnLog.TabIndex = 12
@@ -175,7 +197,7 @@
             '
             'BtnExplicit
             '
-            Me.BtnExplicit.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnExplicit.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.BtnExplicit.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnExplicit.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnExplicit.FlatAppearance.BorderSize = 0
@@ -184,7 +206,7 @@
             Me.BtnExplicit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnExplicit.Font = New System.Drawing.Font(OpenSansLight, 12.75!)
             Me.BtnExplicit.ForeColor = System.Drawing.Color.White
-            Me.BtnExplicit.Location = New System.Drawing.Point(223, 139)
+            Me.BtnExplicit.Location = New System.Drawing.Point(223, 289)
             Me.BtnExplicit.Name = "BtnExplicit"
             Me.BtnExplicit.Size = New System.Drawing.Size(86, 40)
             Me.BtnExplicit.TabIndex = 0
@@ -201,7 +223,7 @@
             Me.CbAutoUpd.Cursor = System.Windows.Forms.Cursors.Hand
             Me.CbAutoUpd.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.CbAutoUpd.ForeColor = System.Drawing.Color.White
-            Me.CbAutoUpd.Location = New System.Drawing.Point(530, 321)
+            Me.CbAutoUpd.Location = New System.Drawing.Point(530, 621)
             Me.CbAutoUpd.Name = "CbAutoUpd"
             Me.CbAutoUpd.Size = New System.Drawing.Size(123, 21)
             Me.CbAutoUpd.TabIndex = 11
@@ -213,7 +235,7 @@
             '
             'BtnUpdate
             '
-            Me.BtnUpdate.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnUpdate.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.BtnUpdate.BackColor = System.Drawing.Color.DarkSlateBlue
             Me.BtnUpdate.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnUpdate.FlatAppearance.BorderSize = 0
@@ -222,7 +244,7 @@
             Me.BtnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnUpdate.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.BtnUpdate.ForeColor = System.Drawing.Color.White
-            Me.BtnUpdate.Location = New System.Drawing.Point(406, 185)
+            Me.BtnUpdate.Location = New System.Drawing.Point(406, 335)
             Me.BtnUpdate.Name = "BtnUpdate"
             Me.BtnUpdate.Size = New System.Drawing.Size(86, 50)
             Me.BtnUpdate.TabIndex = 9
@@ -241,7 +263,7 @@
             Me.LbAbout.Cursor = System.Windows.Forms.Cursors.Hand
             Me.LbAbout.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.LbAbout.ForeColor = System.Drawing.Color.White
-            Me.LbAbout.Location = New System.Drawing.Point(28, 322)
+            Me.LbAbout.Location = New System.Drawing.Point(28, 622)
             Me.LbAbout.Name = "LbAbout"
             Me.LbAbout.Size = New System.Drawing.Size(191, 17)
             Me.LbAbout.TabIndex = 10
@@ -250,7 +272,7 @@
             '
             'BtnAngleRepr
             '
-            Me.BtnAngleRepr.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnAngleRepr.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.BtnAngleRepr.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
             Me.BtnAngleRepr.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnAngleRepr.FlatAppearance.BorderSize = 0
@@ -259,7 +281,7 @@
             Me.BtnAngleRepr.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnAngleRepr.Font = New System.Drawing.Font(OpenSansLight, 12.75!)
             Me.BtnAngleRepr.ForeColor = System.Drawing.Color.White
-            Me.BtnAngleRepr.Location = New System.Drawing.Point(223, 184)
+            Me.BtnAngleRepr.Location = New System.Drawing.Point(223, 334)
             Me.BtnAngleRepr.Name = "BtnAngleRepr"
             Me.BtnAngleRepr.Size = New System.Drawing.Size(86, 50)
             Me.BtnAngleRepr.TabIndex = 7
@@ -271,7 +293,7 @@
             '
             'BtnOutputFormat
             '
-            Me.BtnOutputFormat.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnOutputFormat.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.BtnOutputFormat.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
             Me.BtnOutputFormat.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnOutputFormat.FlatAppearance.BorderSize = 0
@@ -280,7 +302,7 @@
             Me.BtnOutputFormat.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnOutputFormat.Font = New System.Drawing.Font(OpenSansLight, 12.75!)
             Me.BtnOutputFormat.ForeColor = System.Drawing.Color.White
-            Me.BtnOutputFormat.Location = New System.Drawing.Point(315, 185)
+            Me.BtnOutputFormat.Location = New System.Drawing.Point(315, 335)
             Me.BtnOutputFormat.Name = "BtnOutputFormat"
             Me.BtnOutputFormat.Size = New System.Drawing.Size(86, 50)
             Me.BtnOutputFormat.TabIndex = 8
@@ -293,7 +315,7 @@
             '
             'BtnY
             '
-            Me.BtnY.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnY.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.BtnY.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnY.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnY.FlatAppearance.BorderSize = 0
@@ -302,7 +324,7 @@
             Me.BtnY.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnY.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.BtnY.ForeColor = System.Drawing.Color.White
-            Me.BtnY.Location = New System.Drawing.Point(453, 139)
+            Me.BtnY.Location = New System.Drawing.Point(453, 289)
             Me.BtnY.Name = "BtnY"
             Me.BtnY.Size = New System.Drawing.Size(40, 40)
             Me.BtnY.TabIndex = 3
@@ -312,7 +334,7 @@
             '
             'BtnX
             '
-            Me.BtnX.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.BtnX.Anchor = System.Windows.Forms.AnchorStyles.None
             Me.BtnX.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnX.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnX.FlatAppearance.BorderSize = 0
@@ -321,7 +343,7 @@
             Me.BtnX.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnX.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
             Me.BtnX.ForeColor = System.Drawing.Color.White
-            Me.BtnX.Location = New System.Drawing.Point(407, 139)
+            Me.BtnX.Location = New System.Drawing.Point(407, 289)
             Me.BtnX.Name = "BtnX"
             Me.BtnX.Size = New System.Drawing.Size(40, 40)
             Me.BtnX.TabIndex = 2
@@ -341,7 +363,7 @@
             Me.BtnEval.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
             Me.BtnEval.ForeColor = System.Drawing.Color.White
             Me.BtnEval.Image = CType(resources.GetObject("BtnEval.Image"), System.Drawing.Image)
-            Me.BtnEval.Location = New System.Drawing.Point(673, 348)
+            Me.BtnEval.Location = New System.Drawing.Point(673, 648)
             Me.BtnEval.Name = "BtnEval"
             Me.BtnEval.Size = New System.Drawing.Size(56, 52)
             Me.BtnEval.TabIndex = 1
@@ -370,6 +392,7 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.PnlResults.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.PnlResults.Controls.Add(Me.BtnMin)
+            Me.PnlResults.Controls.Add(Me.BtnMax)
             Me.PnlResults.Controls.Add(Me.BtnTranslucent)
             Me.PnlResults.Controls.Add(Me.BtnClose)
             Me.PnlResults.Controls.Add(Me.LbResult)
@@ -377,6 +400,24 @@
             Me.PnlResults.Name = "PnlResults"
             Me.PnlResults.Size = New System.Drawing.Size(730, 49)
             Me.PnlResults.TabIndex = 4
+            '
+            'BtnMax
+            '
+            Me.BtnMax.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnMax.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMax.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnMax.FlatAppearance.BorderSize = 0
+            Me.BtnMax.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnMax.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMax.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnMax.ForeColor = System.Drawing.Color.White
+            Me.BtnMax.Location = New System.Drawing.Point(623, 1)
+            Me.BtnMax.Name = "BtnMax"
+            Me.BtnMax.Size = New System.Drawing.Size(53, 48)
+            Me.BtnMax.TabIndex = 0
+            Me.BtnMax.Text = "□"
+            Me.TTLetters.SetToolTip(Me.BtnMax, "Maximize (Win+Up)")
+            Me.BtnMax.UseVisualStyleBackColor = False
             '
             'BtnMin
             '
@@ -388,7 +429,7 @@
             Me.BtnMin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnMin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnMin.ForeColor = System.Drawing.Color.White
-            Me.BtnMin.Location = New System.Drawing.Point(623, 1)
+            Me.BtnMin.Location = New System.Drawing.Point(570, 1)
             Me.BtnMin.Name = "BtnMin"
             Me.BtnMin.Size = New System.Drawing.Size(53, 48)
             Me.BtnMin.TabIndex = 0
@@ -407,7 +448,7 @@
             Me.BtnTranslucent.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnTranslucent.ForeColor = System.Drawing.Color.White
             Me.BtnTranslucent.Image = CType(resources.GetObject("BtnTranslucent.Image"), System.Drawing.Image)
-            Me.BtnTranslucent.Location = New System.Drawing.Point(564, 1)
+            Me.BtnTranslucent.Location = New System.Drawing.Point(511, 1)
             Me.BtnTranslucent.Name = "BtnTranslucent"
             Me.BtnTranslucent.Size = New System.Drawing.Size(53, 48)
             Me.BtnTranslucent.TabIndex = 6
@@ -443,7 +484,7 @@
             Me.BtnSettings.Font = New System.Drawing.Font(OpenSansLight, 1.0!)
             Me.BtnSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnSettings.Image = CType(resources.GetObject("BtnSettings.Image"), System.Drawing.Image)
-            Me.BtnSettings.Location = New System.Drawing.Point(674, 101)
+            Me.BtnSettings.Location = New System.Drawing.Point(675, 150)
             Me.BtnSettings.Name = "BtnSettings"
             Me.BtnSettings.Size = New System.Drawing.Size(53, 47)
             Me.BtnSettings.TabIndex = 3
@@ -488,7 +529,7 @@
             Me.BtnSave.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
             Me.BtnSave.ForeColor = System.Drawing.Color.White
             Me.BtnSave.Image = CType(resources.GetObject("BtnSave.Image"), System.Drawing.Image)
-            Me.BtnSave.Location = New System.Drawing.Point(675, 299)
+            Me.BtnSave.Location = New System.Drawing.Point(675, 599)
             Me.BtnSave.Margin = New System.Windows.Forms.Padding(2)
             Me.BtnSave.Name = "BtnSave"
             Me.BtnSave.Size = New System.Drawing.Size(53, 47)
@@ -510,7 +551,7 @@
             Me.BtnOpen.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
             Me.BtnOpen.ForeColor = System.Drawing.Color.White
             Me.BtnOpen.Image = CType(resources.GetObject("BtnOpen.Image"), System.Drawing.Image)
-            Me.BtnOpen.Location = New System.Drawing.Point(675, 248)
+            Me.BtnOpen.Location = New System.Drawing.Point(675, 548)
             Me.BtnOpen.Margin = New System.Windows.Forms.Padding(2)
             Me.BtnOpen.Name = "BtnOpen"
             Me.BtnOpen.Size = New System.Drawing.Size(53, 47)
@@ -530,7 +571,7 @@
             Me.BtnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnNew.Font = New System.Drawing.Font(OpenSansLight, 19.0!)
             Me.BtnNew.ForeColor = System.Drawing.Color.White
-            Me.BtnNew.Location = New System.Drawing.Point(675, 198)
+            Me.BtnNew.Location = New System.Drawing.Point(675, 498)
             Me.BtnNew.Margin = New System.Windows.Forms.Padding(2)
             Me.BtnNew.Name = "BtnNew"
             Me.BtnNew.Size = New System.Drawing.Size(53, 47)
@@ -550,7 +591,7 @@
             Me.PnlTb.Controls.Add(Me.Tb)
             Me.PnlTb.Location = New System.Drawing.Point(-3, 46)
             Me.PnlTb.Name = "PnlTb"
-            Me.PnlTb.Size = New System.Drawing.Size(678, 361)
+            Me.PnlTb.Size = New System.Drawing.Size(678, 661)
             Me.PnlTb.TabIndex = 0
             '
             'TmrReCalc
@@ -565,37 +606,19 @@
             '
             Me.Editor.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.Editor.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Editor.Controls.Add(Me.BtnKeyboard)
             Me.Editor.Controls.Add(Me.BtnNew)
             Me.Editor.Controls.Add(Me.BtnOpen)
             Me.Editor.Controls.Add(Me.BtnSave)
-            Me.Editor.Controls.Add(Me.PnlResults)
             Me.Editor.Controls.Add(Me.PnlTb)
             Me.Editor.Controls.Add(Me.BtnSettings)
             Me.Editor.Controls.Add(Me.BtnEval)
             Me.Editor.Controls.Add(Me.BtnFunctions)
+            Me.Editor.Controls.Add(Me.PnlResults)
             Me.Editor.Location = New System.Drawing.Point(621, 0)
-            Me.Editor.MaximumSize = New System.Drawing.Size(728, 700)
-            Me.Editor.MinimumSize = New System.Drawing.Size(728, 400)
             Me.Editor.Name = "Editor"
-            Me.Editor.Size = New System.Drawing.Size(728, 400)
+            Me.Editor.Dock = DockStyle.Fill
             Me.Editor.TabIndex = 15
-            '
-            'Keyboard
-            '
-            Me.Keyboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.Keyboard.AutoSize = True
-            Me.Keyboard.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-            Me.Keyboard.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-            Me.Keyboard.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.Keyboard.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
-            Me.Keyboard.Location = New System.Drawing.Point(621, 400)
-            Me.Keyboard.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-            Me.Keyboard.MaximumSize = New System.Drawing.Size(728, 300)
-            Me.Keyboard.Minimized = False
-            Me.Keyboard.MinimumSize = New System.Drawing.Size(728, 300)
-            Me.Keyboard.Name = "Keyboard"
-            Me.Keyboard.Size = New System.Drawing.Size(728, 300)
-            Me.Keyboard.TabIndex = 16
             '
             'Viewer
             '
@@ -604,6 +627,7 @@
             Me.Viewer.Location = New System.Drawing.Point(0, 0)
             Me.Viewer.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.Viewer.Name = "Viewer"
+            Me.Viewer.Dock = DockStyle.Fill
             Me.Viewer.Size = New System.Drawing.Size(621, 700)
             Me.Viewer.TabIndex = 17
             Me.Viewer.View = Cantus.UI.Viewer.eView.console
@@ -611,25 +635,42 @@
             'TmrAnim
             '
             '
+            'BtnKeyboard
+            '
+            Me.BtnKeyboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnKeyboard.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnKeyboard.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnKeyboard.FlatAppearance.BorderSize = 0
+            Me.BtnKeyboard.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnKeyboard.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnKeyboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnKeyboard.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.BtnKeyboard.ForeColor = System.Drawing.Color.White
+            Me.BtnKeyboard.Location = New System.Drawing.Point(675, 99)
+            Me.BtnKeyboard.Name = "BtnKeyboard"
+            Me.BtnKeyboard.Size = New System.Drawing.Size(53, 47)
+            Me.BtnKeyboard.TabIndex = 31
+            Me.BtnKeyboard.Text = "⌨"
+            Me.TTLetters.SetToolTip(Me.BtnKeyboard, "Open the on-screen keyboard (Alt+K)")
+            Me.BtnKeyboard.UseVisualStyleBackColor = False
+            '
             'FrmEditor
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-            Me.AutoSize = True
+            Me.AutoSize = False
             Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-            Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BackColor = System.Drawing.Color.FromArgb(40, 40, 40)
             Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-            Me.ClientSize = New System.Drawing.Size(1349, 700)
+            Me.ClientSize = New System.Drawing.Size(1349, 708)
             Me.ControlBox = False
-            Me.Controls.Add(Me.Viewer)
-            Me.Controls.Add(Me.Editor)
-            Me.Controls.Add(Me.Keyboard)
+            Me.Controls.Add(Me.Split)
             Me.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.KeyPreview = True
             Me.MaximizeBox = False
-            Me.MaximumSize = New System.Drawing.Size(1349, 700)
-            Me.MinimumSize = New System.Drawing.Size(1349, 700)
+            Me.MinimumSize = New Size(150, 100)
+            Me.Cursor = Cursors.SizeAll
             Me.Name = "FrmEditor"
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
             Me.Text = "Cantus"
@@ -640,7 +681,6 @@
             Me.PnlTb.ResumeLayout(False)
             Me.Editor.ResumeLayout(False)
             Me.ResumeLayout(False)
-            Me.PerformLayout()
 
         End Sub
         Friend WithEvents Tb As ScintillaNET.Scintilla
@@ -656,6 +696,7 @@
         Friend WithEvents BtnClose As Button
         Friend WithEvents PnlTb As Panel
         Friend WithEvents BtnMin As Button
+        Friend WithEvents BtnMax As Button
         Friend WithEvents BtnAngleRepr As Button
         Friend WithEvents LbAbout As Label
         Friend WithEvents CbAutoUpd As CheckBox
@@ -672,9 +713,10 @@
         Friend WithEvents BtnTranslucent As Button
         Friend WithEvents BtnNew As Button
         Friend WithEvents Editor As Panel
-        Friend WithEvents Keyboard As Keyboards.MainKeyboard
         Friend WithEvents Viewer As Viewer
         Friend WithEvents TmrAnim As Timer
         Friend WithEvents BtnSigFigs As Button
+        Friend WithEvents BtnKeyboard As Button
+        Friend WithEvents Split As SplitContainer
     End Class
 End Namespace

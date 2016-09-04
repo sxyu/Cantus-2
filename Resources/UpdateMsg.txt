@@ -25,7 +25,17 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.3.110
+What's new in 2.4.4.111
+*********************************************************************************************
+-The window can now be resized & maximized
+-There is now a splitter that allows you to resize the console and the editor
+-The on-screen keyboard is now on a separate window
+-Each run in the editor is now performed on a fresh evaluator
+-Before each plugin is loaded all modes are now reset to default values
+-Minor fixes
+
+*********************************************************************************************
+New from 2.4.3.110
 *********************************************************************************************
 -Added isupper() islower() isdigit() isletter() ispunctuation() etc. functions to ease
   detection of character types

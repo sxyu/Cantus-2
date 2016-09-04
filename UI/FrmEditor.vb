@@ -13,6 +13,7 @@ Imports Cantus.UI.ScintillaForCantus
 Imports Cantus.Core.Scoping
 
 Imports ScintillaNET
+Imports Cantus.UI.KeyBoards
 
 Namespace UI
     Public Class FrmEditor
@@ -87,13 +88,6 @@ Namespace UI
             ' icon
             Me.Icon = My.Resources.Cantus
 
-            ' setup evaluator
-            Me._eval = Globals.RootEvaluator
-            AddHandler Globals.RootEvaluator.EvalComplete, AddressOf EvalComplete
-            AddHandler Globals.RootEvaluator.WriteOutput, AddressOf WriteOutput
-            AddHandler Globals.RootEvaluator.ReadInput, AddressOf ReadInput
-            AddHandler Globals.RootEvaluator.ClearConsole, AddressOf ClearConsole
-
             ' process additional command line args involving UI
             Dim args As String() = Environment.GetCommandLineArgs()
             Dim def As String = ""
@@ -132,7 +126,6 @@ Namespace UI
                 If IO.Path.GetFileName(Application.ExecutablePath).ToLower() = "calculator.exe" Then
                     Try
                         ' update from legacy CalculatorX: Clear state
-                        My.Settings.ErrorSaveState = ""
                         My.Settings.Save()
                         FileSystem.Rename(Application.ExecutablePath, "cantus.exe")
                         Process.Start(IO.Path.Combine("cantus.exe"))
@@ -154,17 +147,18 @@ Namespace UI
             ' faster drawing
             Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
 
+            _eval = Globals.RootEvaluator
             ' set up modes
-            If _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Math Then
+            If _eval.OutputFormat = eOutputFormat.Math Then
                 BtnOutputFormat.Text = "MathO"
-            ElseIf _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific Then
+            ElseIf _eval.OutputFormat = eOutputFormat.Scientific Then
                 BtnOutputFormat.Text = "SciO"
             Else
                 BtnOutputFormat.Text = "LineO"
             End If
-            If _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Radian Then
+            If _eval.AngleMode = AngleRepresentation.Radian Then
                 BtnAngleRepr.Text = "Radian"
-            ElseIf _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree Then
+            ElseIf _eval.AngleMode = AngleRepresentation.Degree Then
                 BtnAngleRepr.Text = "Degree"
             Else
                 BtnAngleRepr.Text = "Gradian"
@@ -173,6 +167,7 @@ Namespace UI
             ' set up scintilla
             SetTheme("dark")
 
+            Me.PnlResults.BringToFront()
             My.Settings.Save()
         End Sub
 
@@ -191,25 +186,10 @@ Namespace UI
         Private Sub FrmEditor_Deactivate(sender As Object, e As EventArgs) Handles MyBase.Deactivate
             ShowSettings(False)
         End Sub
-        'Private Sub FrmEditor_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
-        '    If deactivated Then
-        '        KeyboardLeft.BringToFront()
-        '        KeyboardRight.BringToFront()
-        '        FrmViewer.BringToFront()
-        '        deactivated = False
-        '        Me.BringToFront()
-        '        deactivated = True
-        '    End If
-        'End Sub
-
-        Private Sub FrmEditor_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
-            ' make sure the window doesn't get maximized - that would cause weird behaviour
-            If Me.WindowState = FormWindowState.Maximized Then Me.WindowState = FormWindowState.Normal
-        End Sub
 
         Dim _ignoreNextKey As Boolean = False
         Private Sub FrmEditor_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, Tb.KeyUp,
-            BtnAngleRepr.KeyUp, PnlSettings.KeyUp, Keyboard.KeyUp, Viewer.KeyUp
+            BtnAngleRepr.KeyUp, PnlSettings.KeyUp, Viewer.KeyUp
             If e.KeyCode = Keys.Enter And e.Alt Then
                 If sender Is Me Then Return
                 EvaluateExpr()
@@ -218,11 +198,11 @@ Namespace UI
                     btnAngleRep_Click(BtnAngleRepr, New EventArgs)
                 ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
                     If e.KeyCode = Keys.D Then
-                        _eval.AngleMode = eAngleRepresentation.Degree
+                        _eval.AngleMode = AngleRepresentation.Degree
                     ElseIf e.KeyCode = Keys.R
-                        _eval.AngleMode = eAngleRepresentation.Radian
+                        _eval.AngleMode = AngleRepresentation.Radian
                     Else
-                        _eval.AngleMode = eAngleRepresentation.Gradian
+                        _eval.AngleMode = AngleRepresentation.Gradian
                     End If
                     BtnAngleRepr.Text = _eval.AngleMode.ToString()
                     EvaluateExpr(True)
@@ -255,6 +235,26 @@ Namespace UI
         '' Send the event to asynchronously evaluate the expression
         '' </summary>
         Friend Sub EvaluateExpr(Optional noSaveAns As Boolean = False)
+            If Not _eval Is Nothing Then _eval.Dispose()
+
+            ' set up evaluator
+            Me._eval = New CantusEvaluator(scope:=If(String.IsNullOrWhiteSpace(File), "cantus", Scoping.GetFileScopeName(File)), reloadDefault:=False)
+            Me._eval.ReloadDefault()
+            Dim cantusPath As String = IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) & IO.Path.DirectorySeparatorChar
+
+            If String.IsNullOrWhiteSpace(File) OrElse Not IO.Path.GetFullPath(File).StartsWith(cantusPath + "plugin") Then
+                Try
+                    Me._eval.ReInitialize()
+                Catch ex As Exception
+                    MsgBox(ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.ApplicationModal, "Reinitialization Error")
+                End Try
+            End If
+
+            AddHandler _eval.EvalComplete, AddressOf EvalComplete
+            AddHandler _eval.WriteOutput, AddressOf WriteOutput
+            AddHandler _eval.ReadInput, AddressOf ReadInput
+            AddHandler _eval.ClearConsole, AddressOf ClearConsole
+
             _eval.EvalAsync(Tb.Text, noSaveAns) ' evaluate & wait for event
 
             If Not noSaveAns Then
@@ -469,6 +469,10 @@ Namespace UI
         '' </summary>
         Public Sub SaveSettings()
             Try
+                My.Settings.Position = String.Join(",", DirectCast({Me.Left, Me.Top, Me.Width, Me.Height,
+                                                   Me.WindowState, Split.SplitterDistance}, Object()))
+                My.Settings.Save()
+
                 Dim curText As String = ""
                 If IO.File.Exists("init.can") Then
                     curText = IO.File.ReadAllText("init.can")
@@ -485,10 +489,7 @@ Namespace UI
 
                 ' try writing to init.can
                 IO.File.WriteAllText("init.can", _eval.ToScript() & curText)
-                My.Settings.ErrorSaveState = ""
             Catch 'ex As Exception
-                ' we weren't able to write to init.can, so write to Settings.State
-                My.Settings.ErrorSaveState = _eval.ToScript()
             End Try
 
             My.Settings.Save()
@@ -564,13 +565,6 @@ Namespace UI
             EvaluateExpr()
         End Sub
 
-        Private Sub btnGraph_Click(sender As Object, e As EventArgs)
-            ' open graphing window
-            Tb.Focus()
-            ' GRAPH
-            BtnMin.PerformClick()
-        End Sub
-
         Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles BtnFunctions.Click
             Tb.Focus()
             Using diag As New Dialogs.DiagFunctions
@@ -623,7 +617,7 @@ Namespace UI
             NewScript()
         End Sub
 
-#Region "textbox & labels"
+#Region "Textbox & Labels"
 
         Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb.KeyDown
             If e.Alt AndAlso Not e.Control Then
@@ -663,6 +657,8 @@ Namespace UI
                     End Try
                 ElseIf e.KeyCode = Keys.T Then
                     BtnTranslucent.PerformClick()
+                ElseIf e.KeyCode = Keys.K
+                    BtnKeyboard.PerformClick()
                 End If
             ElseIf e.KeyCode = Keys.F12
                 OpenSaveAs()
@@ -707,9 +703,13 @@ Namespace UI
         End Sub
 #End Region
 #End Region
-#Region "memory ui"
+#Region "Settings"
         Friend Sub ShowSettings(Optional show As Boolean = True)
             If TmrAnim.Enabled Then Return
+            If show Then
+                PnlSettings.Show()
+                PnlSettings.Left = Tb.Right
+            End If
             _showSettings = show
             PnlSettings.BringToFront()
             _slideRate = 50
@@ -735,6 +735,7 @@ Namespace UI
                 If PnlSettings.Left + _slideRate > PnlTb.Width Then
                     TmrAnim.Stop()
                     PnlSettings.Left = PnlTb.Width + 1
+                    PnlSettings.Hide()
 
                     BtnSettings.BackColor = Color.FromArgb(55, 55, 55)
                     BtnSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(55, 55, 55)
@@ -874,7 +875,6 @@ Namespace UI
             _updateStarted = False
         End Sub
         Private Sub ShowUpdForm()
-            Keyboard.Visible = False
             Me.Visible = False
             Using fup As New Updater.FrmUpdate
                 Updater.FrmUpdate.ShowDialog()
@@ -891,6 +891,14 @@ Namespace UI
             Me.WindowState = FormWindowState.Minimized
         End Sub
 
+        Private Sub btnMax_Click(sender As Object, e As EventArgs) Handles BtnMax.Click
+            If Me.WindowState = FormWindowState.Normal Then
+                Me.WindowState = FormWindowState.Maximized
+            Else
+                Me.WindowState = FormWindowState.Normal
+            End If
+        End Sub
+
         Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles BtnSettings.Enter, BtnEval.Enter, BtnMin.Enter, BtnClose.Enter
             Tb.Focus()
         End Sub
@@ -899,29 +907,78 @@ Namespace UI
         Private _isMoving As Boolean
         Private _movingPrevPt As Point
 
-        Friend Sub FrmEditor_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown,
-            PnlResults.MouseDown, LbResult.MouseDown
+        Friend Sub FrmEditor_MouseDown(sender As Object, e As MouseEventArgs) Handles PnlResults.MouseDown, LbResult.MouseDown
             If e.Button <> MouseButtons.Right And Not _isMoving Then
                 _movingPrevPt = e.Location
                 _isMoving = True
             End If
         End Sub
 
-        Friend Sub FrmEditor_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove,
-            PnlResults.MouseMove, LbResult.MouseMove
+        Friend Sub FrmEditor_MouseMove(sender As Object, e As MouseEventArgs) Handles PnlResults.MouseMove, LbResult.MouseMove
             If _isMoving Then
                 Me.Left = Me.Left + e.X - _movingPrevPt.X
                 Me.Top = Me.Top + e.Y - _movingPrevPt.Y
             End If
         End Sub
 
-        Friend Sub FrmEditor_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, PnlResults.MouseUp,
-            LbResult.MouseUp, Tb.MouseUp, PnlTb.MouseUp
+        Friend Sub FrmEditor_MouseUp(sender As Object, e As MouseEventArgs) Handles PnlResults.MouseUp, LbResult.MouseUp, Tb.MouseUp, PnlTb.MouseUp
             Tb.Focus()
             ShowSettings(False)
             _isMoving = False
 
-            My.Settings.Position = Me.Left & "," & Me.Top
+            My.Settings.Position = String.Join(",", DirectCast({Me.Left, Me.Top, Me.Width, Me.Height, Me.WindowState,
+                                               Split.SplitterDistance}, Object()))
+            My.Settings.Save()
+        End Sub
+
+        ''' <summary>
+        ''' Specifies the side of the window being scaled
+        ''' </summary>
+        Private Enum ScaleSide
+            Top = 1
+            Bottom = 2
+            Left = 4
+            Right = 8
+            None = 0
+        End Enum
+        Dim _scaleSide As ScaleSide = ScaleSide.None
+        Friend Sub FrmEditor_scale_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown
+            Dim dist As Integer() = {e.Y, Me.Height - e.Y, e.X, Me.Width - e.X}
+            Dim MAX_DIST As Integer = 15
+            _scaleSide = ScaleSide.None
+            For i As Integer = 0 To dist.Length - 1
+                If dist(i) < MAX_DIST Then
+                    _scaleSide = _scaleSide Or CType(2 ^ i, ScaleSide)
+                End If
+            Next
+        End Sub
+
+        Friend Sub FrmEditor_scale_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove
+            If _scaleSide = ScaleSide.None Then Return
+
+            If (_scaleSide And ScaleSide.Top) <> 0 Then
+                Me.Height = Me.Bottom - Cursor.Position.Y
+                Me.Top = Cursor.Position.Y
+            End If
+
+            If (_scaleSide And ScaleSide.Bottom) <> 0 Then
+                Me.Height = Cursor.Position.Y - Me.Top
+            End If
+
+            If (_scaleSide And ScaleSide.Left) <> 0 Then
+                Me.Width = Me.Right - Cursor.Position.X
+                Me.Left = Cursor.Position.X
+            End If
+
+            If (_scaleSide And ScaleSide.Right) <> 0 Then
+                Me.Width = Cursor.Position.X - Me.Left
+            End If
+        End Sub
+
+        Friend Sub FrmEditor_scale_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp
+            _scaleSide = ScaleSide.None
+            My.Settings.Position = String.Join(",", DirectCast({Me.Left, Me.Top, Me.Width, Me.Height, Me.WindowState,
+                                               Split.SplitterDistance}, Object()))
             My.Settings.Save()
         End Sub
 
@@ -942,14 +999,14 @@ Namespace UI
         End Sub
 
         Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles BtnAngleRepr.Click
-            If _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Gradian Then
-                _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree
+            If _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Gradian Then
+                _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree
             Else
-                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Core.CantusEvaluator.eAngleRepresentation)
+                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Core.CantusEvaluator.AngleRepresentation)
             End If
-            If _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Radian Then
+            If _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Radian Then
                 BtnAngleRepr.Text = "Radian"
-            ElseIf _eval.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree Then
+            ElseIf _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree Then
                 BtnAngleRepr.Text = "Degree"
             Else
                 BtnAngleRepr.Text = "Gradian"
@@ -1411,15 +1468,15 @@ Namespace UI
                 _updTh.Start()
             End If
 
-            ' Minimize/show Keyboard 
-            Keyboard.Minimized = Not My.Settings.ShowKeyboard
-
             SplashScreen.Hide()
 
             ' set location
-            If (My.Settings.Position <> "") Then
+            If My.Settings.Position <> "" Then
                 Dim spl() As String = My.Settings.Position.Split(","c)
-                Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
+                If spl.Length > 1 Then Me.Location = New Point(CInt(spl(0)), CInt(spl(1)))
+                If spl.Length > 3 Then Me.Size = New Size(CInt(spl(2)), CInt(spl(3)))
+                If spl.Length > 4 Then Me.WindowState = DirectCast([Enum].Parse(GetType(FormWindowState), spl(4)), FormWindowState)
+                If spl.Length > 5 Then Split.SplitterDistance = CInt(spl(5))
                 If Me.Location.X <= -Me.Width OrElse Me.Location.Y <= -Me.Height OrElse Me.Right >= Screen.PrimaryScreen.WorkingArea.Width + Me.Width OrElse Me.Bottom >= Screen.PrimaryScreen.WorkingArea.Height + Me.Height Then
                     Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width / 2)
                     Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - Me.Height / 2)
@@ -1429,19 +1486,48 @@ Namespace UI
                 Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - Me.Height / 2)
             End If
 
+            ' Minimize/show Keyboard 
+            If My.Settings.ShowKeyboard Then
+                FrmKeyboard.Show()
+            End If
+
             ' save location
-            My.Settings.Position = Me.Left & "," & Me.Top
+            My.Settings.Position = String.Join(",", DirectCast({Me.Left, Me.Top, Me.Width, Me.Height, Me.WindowState,
+                                               Split.SplitterDistance}, Object()))
 
             Me.Tb.Select()
         End Sub
+
+        Private Sub BtnKeyboard_Click(sender As Object, e As EventArgs) Handles BtnKeyboard.Click
+            Tb.Focus()
+            If FrmKeyboard.Visible Then
+                FrmKeyboard.Hide()
+                My.Settings.ShowKeyboard = False
+            Else
+                FrmKeyboard.Show()
+                My.Settings.ShowKeyboard = True
+                Tb.Focus()
+            End If
+            My.Settings.Save()
+        End Sub
+
+        Private Sub FrmEditor_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
+            If Me.WindowState = FormWindowState.Normal Then
+                Me.TTLetters.SetToolTip(Me.BtnMax, "Maximize (Win+Up)")
+            Else
+                Me.TTLetters.SetToolTip(Me.BtnMax, "Restore (Win+Down)")
+            End If
+        End Sub
 #End Region
     End Class
+
     Public Module Globals
         '' <summary>
         '' The default evaluator in the root namespace
         '' </summary>
-        Public ReadOnly Property RootEvaluator As New CantusEvaluator()
-        Public ReadOnly Property Version As String = Assembly.GetAssembly(GetType(Cantus.Core.CantusEvaluator)).GetName().
-                                                        Version.ToString() & " Alpha"
+        Friend Property RootEvaluator As CantusEvaluator
+        Public Const ReleaseType As String = "Alpha"
+        Public ReadOnly Property Version As String = Assembly.GetAssembly(GetType(CantusEvaluator)).GetName().
+                                                        Version.ToString() & " " & ReleaseType
     End Module
 End Namespace

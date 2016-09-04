@@ -116,19 +116,6 @@ Namespace My
                 Me("AutoUpdate") = value
             End Set
         End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute(""),  _
-         Global.System.Configuration.SettingsManageabilityAttribute(Global.System.Configuration.SettingsManageability.Roaming)>  _
-        Public Property ErrorSaveState() As String
-            Get
-                Return CType(Me("ErrorSaveState"),String)
-            End Get
-            Set
-                Me("ErrorSaveState") = value
-            End Set
-        End Property
     End Class
 End Namespace
 

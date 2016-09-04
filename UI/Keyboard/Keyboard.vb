@@ -1,33 +1,11 @@
 ﻿Namespace UI.Keyboards
-    Public Class MainKeyboard
+    Public Class Keyboard
+        ''' <summary>
+        ''' Raised when the user has requested to close the keyboard
+        ''' </summary>
+        Public Event CloseKeyboard As EventHandler(Of EventArgs)
         Dim _minimized As Boolean = False
         Dim _init As Boolean = True
-        Public Property Minimized As Boolean
-            Get
-                Return _minimized
-            End Get
-            Set(value As Boolean)
-                If _init Then
-                    _init = False
-                    Return
-                End If
-
-                _minimized = value
-                Me.Top = 400
-                If _minimized Then
-                    FrmEditor.Editor.Height = Me.Top + LbKbd.Top - 10
-                    pnl.Hide()
-                    LbKbd.Show()
-
-                Else
-                    pnl.Show()
-                    LbKbd.Hide()
-                    FrmEditor.Editor.Height = 400
-                End If
-                My.Settings.ShowKeyboard = Not _minimized
-                My.Settings.Save()
-            End Set
-        End Property
 
         Private Sub GenericButtonClick(sender As Object, e As EventArgs) Handles btnFact.Click, btnMul.Click,
             btnDiv.Click, btnAdd.Click, btnMin.Click,
@@ -328,22 +306,18 @@
             Next
         End Sub
 
-        Private Sub pnl_MouseDown(sender As Object, e As MouseEventArgs) Handles pnl.MouseDown, Me.MouseDown, LbKbd.MouseDown
-            FrmEditor.FrmEditor_MouseDown(FrmEditor, e)
+        Private Sub pnl_MouseDown(sender As Object, e As MouseEventArgs) Handles pnl.MouseDown
+            Me.OnMouseDown(e)
         End Sub
-        Private Sub pnl_MouseMove(sender As Object, e As MouseEventArgs) Handles pnl.MouseMove, Me.MouseMove, LbKbd.MouseMove
-            FrmEditor.FrmEditor_MouseMove(FrmEditor, e)
+        Private Sub pnl_MouseMove(sender As Object, e As MouseEventArgs) Handles pnl.MouseMove
+            Me.OnMouseMove(e)
         End Sub
-        Private Sub pnl_MouseUp(sender As Object, e As MouseEventArgs) Handles pnl.MouseUp, Me.MouseUp, LbKbd.MouseUp
-            FrmEditor.FrmEditor_MouseUp(FrmEditor, e)
+        Private Sub pnl_MouseUp(sender As Object, e As MouseEventArgs) Handles pnl.MouseUp
+            Me.OnMouseUp(e)
         End Sub
 
         Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-            Me.Minimized = True
-        End Sub
-
-        Private Sub LbKbd_Click(sender As Object, e As EventArgs) Handles LbKbd.Click, Me.Click
-            Me.Minimized = False
+            If Not CloseKeyboardEvent Is Nothing Then RaiseEvent CloseKeyboard(Me, e)
         End Sub
     End Class
 End Namespace

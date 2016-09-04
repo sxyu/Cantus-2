@@ -1,6 +1,6 @@
 ﻿Namespace UI.Keyboards
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-    Partial Class MainKeyboard
+    Partial Class Keyboard
         Inherits System.Windows.Forms.UserControl
 
         'Form overrides dispose to clean up the component list.
@@ -24,7 +24,7 @@
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
-            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainKeyboard))
+            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Keyboard))
             Me.btnSqrt = New System.Windows.Forms.Button()
             Me.btnlog = New System.Windows.Forms.Button()
             Me.btnMin = New System.Windows.Forms.Button()
@@ -113,7 +113,6 @@
             Me.btnDel = New System.Windows.Forms.Button()
             Me.btnComma = New System.Windows.Forms.Button()
             Me.tt = New System.Windows.Forms.ToolTip(Me.components)
-            Me.LbKbd = New System.Windows.Forms.Label()
             Me.pnl.SuspendLayout()
             Me.SuspendLayout()
             '
@@ -609,7 +608,6 @@
             Me.btnTripleQuote.Size = New System.Drawing.Size(40, 40)
             Me.btnTripleQuote.TabIndex = 93
             Me.btnTripleQuote.TabStop = False
-            Me.btnTripleQuote.Text = "" '"
             Me.tt.SetToolTip(Me.btnTripleQuote, "Multi-Line Text")
             Me.btnTripleQuote.UseVisualStyleBackColor = False
             '
@@ -1834,7 +1832,7 @@
             Me.btnFunctions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(160, Byte), Integer), CType(CType(110, Byte), Integer))
             Me.btnFunctions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkOliveGreen
             Me.btnFunctions.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFunctions.Font = New System.Drawing.Font(OpenSans, 9.0!)
+            Me.btnFunctions.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
             Me.btnFunctions.ForeColor = System.Drawing.Color.White
             Me.btnFunctions.Location = New System.Drawing.Point(536, 237)
             Me.btnFunctions.Margin = New System.Windows.Forms.Padding(2)
@@ -1932,20 +1930,7 @@
             '
             Me.tt.ShowAlways = True
             '
-            'LbKbd
-            '
-            Me.LbKbd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.LbKbd.AutoSize = True
-            Me.LbKbd.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.LbKbd.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
-            Me.LbKbd.ForeColor = System.Drawing.Color.Gray
-            Me.LbKbd.Location = New System.Drawing.Point(20, 269)
-            Me.LbKbd.Name = "LbKbd"
-            Me.LbKbd.Size = New System.Drawing.Size(138, 20)
-            Me.LbKbd.TabIndex = 91
-            Me.LbKbd.Text = "+ Cantus Keyboard"
-            '
-            'MainKeyboard
+            'Keyboard
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
@@ -1953,16 +1938,14 @@
             Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
             Me.Controls.Add(Me.pnl)
-            Me.Controls.Add(Me.LbKbd)
             Me.Cursor = System.Windows.Forms.Cursors.Hand
             Me.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximumSize = New System.Drawing.Size(728, 300)
-            Me.Name = "MainKeyboard"
+            Me.Name = "Keyboard"
             Me.Size = New System.Drawing.Size(728, 300)
             Me.pnl.ResumeLayout(False)
             Me.ResumeLayout(False)
-            Me.PerformLayout()
 
         End Sub
 
@@ -2052,7 +2035,6 @@
         Friend WithEvents btnNot As Button
         Friend WithEvents pnl As Panel
         Friend WithEvents btnClose As Button
-        Friend WithEvents LbKbd As Label
         Friend WithEvents btnTripleQuote As Button
         Friend WithEvents btnComment As Button
     End Class

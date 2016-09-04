@@ -82,6 +82,14 @@ Namespace UI
 
         <STAThread>
         Public Sub Main()
+            Try
+                RootEvaluator = New CantusEvaluator()
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.ApplicationModal, "Initialization Error")
+            End Try
+
+            RootEvaluator.ThreadController.MaxThreads = 5
+
             Dim cantusPath As String = IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) & IO.Path.DirectorySeparatorChar
 
             ' setup folders, etc.
@@ -94,45 +102,6 @@ Namespace UI
                     End Try
                 End If
             Next
-
-            ' load initialization, plugin scripts
-            Dim initScripts As New List(Of String)
-            If IO.Directory.Exists(cantusPath + "plugin/") Then initScripts.AddRange(
-                IO.Directory.GetFiles(cantusPath + "plugin/", "*.can", IO.SearchOption.AllDirectories))
-
-            ' initialization files: init.can and init/* ran in root scope on startup
-            If IO.File.Exists(cantusPath + "init.can") Then initScripts.Add(cantusPath + "init.can")
-            If IO.Directory.Exists(cantusPath + "init/") Then initScripts.AddRange(
-                IO.Directory.GetFiles(cantusPath + "init/", "*.can", IO.SearchOption.AllDirectories))
-
-            For Each file As String In initScripts
-                Try
-                    ' Evaluate each file. On error, ignore.
-                    Globals.RootEvaluator.Load(file, file = cantusPath + "init.can" OrElse file.ToLower().
-                                           StartsWith(cantusPath + "init" & IO.Path.DirectorySeparatorChar))
-                Catch ex As Exception
-                    If file = cantusPath + "init.can" Then
-                        MsgBox("Error occurred while processing init.can." & vbNewLine & "Variables and functions may not load." & vbNewLine & vbNewLine & "Message:" & vbNewLine & ex.Message,
-                               MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Critical, "Initialization Error")
-                    Else
-                        MsgBox("Error occurred while loading """ & file.Replace(IO.Path.DirectorySeparatorChar,
-                                                                                SCOPE_SEP).
-                               Remove(file.LastIndexOf(".")) & """" & vbNewLine & ex.Message,
-                               MsgBoxStyle.MsgBoxSetForeground Or MsgBoxStyle.Exclamation, "Initialization Error")
-                    End If
-                End Try
-            Next
-
-            ' if init.can not found, restore constants and try restoring from Settings.State
-            If My.Settings IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(My.Settings.ErrorSaveState) Then
-                Try
-                    Globals.RootEvaluator.Eval(My.Settings.ErrorSaveState)
-                Catch
-                    ' clear the state if it is invalid
-                    My.Settings.ErrorSaveState = ""
-                    My.Settings.Save()
-                End Try
-            End If
 
             ' process command line args
             Dim args As String() = Environment.GetCommandLineArgs()
@@ -175,11 +144,11 @@ Namespace UI
                 ElseIf s = "--implicit" Then
                     Globals.RootEvaluator.ExplicitMode = False
                 ElseIf s = "--anglerepr=rad" Then
-                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Radian
+                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Radian
                 ElseIf s = "--anglerepr=deg" Then
-                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Degree
+                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree
                 ElseIf s = "--anglerepr=grad" Then
-                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.eAngleRepresentation.Gradian
+                    Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Gradian
                 ElseIf s = "--output=raw" Then
                     Globals.RootEvaluator.OutputFormat = Core.CantusEvaluator.eOutputFormat.Raw
                 ElseIf s = "--output=math" Then

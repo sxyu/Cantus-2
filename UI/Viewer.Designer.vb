@@ -123,6 +123,7 @@
             '
             'PbLogo
             '
+            Me.PbLogo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.PbLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
             Me.PbLogo.Image = Global.Cantus.My.Resources.Resources.Cantus_Logo
             Me.PbLogo.Location = New System.Drawing.Point(411, 10)

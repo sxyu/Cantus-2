@@ -500,30 +500,15 @@ Namespace UI
                         FrmEditor.BtnSigFigs.PerformClick()
                     ElseIf e.KeyCode = Keys.T Then
                         FrmEditor.BtnExplicit.PerformClick()
-                    End If
-                Else
-                    If e.KeyCode = Keys.G Then
-                        btnGraph.PerformClick()
-                    ElseIf e.KeyCode = Keys.C Then
-                        btnConsole.PerformClick()
-                    ElseIf e.KeyCode = Keys.E Then
-                        FrmEditor.BringToFront()
-                    ElseIf e.KeyCode = Keys.S Then
-                        FrmEditor.BtnSettings.PerformClick()
-                    ElseIf e.KeyCode = Keys.F Then
-                        FrmEditor.BtnFunctions.PerformClick()
-                    ElseIf e.KeyCode = Keys.T Then
-                        FrmEditor.BtnTranslucent.PerformClick()
-                        DirectCast(sender, Control).Focus()
                     ElseIf e.KeyCode = Keys.P Then
                         FrmEditor.BtnAngleRepr.PerformClick()
                     ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
                         If e.KeyCode = Keys.D Then
-                            RootEvaluator.AngleMode = eAngleRepresentation.Degree
+                            RootEvaluator.AngleMode = AngleRepresentation.Degree
                         ElseIf e.KeyCode = Keys.R
-                            RootEvaluator.AngleMode = eAngleRepresentation.Radian
+                            RootEvaluator.AngleMode = AngleRepresentation.Radian
                         Else
-                            RootEvaluator.AngleMode = eAngleRepresentation.Gradian
+                            RootEvaluator.AngleMode = AngleRepresentation.Gradian
                         End If
                         FrmEditor.BtnAngleRepr.Text = RootEvaluator.AngleMode.ToString()
                         FrmEditor.EvaluateExpr(True)
@@ -540,6 +525,25 @@ Namespace UI
                         End If
                         FrmEditor.BtnOutputFormat.Text = RootEvaluator.OutputFormat.ToString()
                         FrmEditor.EvaluateExpr(True)
+                    End If
+                Else
+                    If e.KeyCode = Keys.G Then
+                        btnGraph.PerformClick()
+                    ElseIf e.KeyCode = Keys.C Then
+                        btnConsole.PerformClick()
+                    ElseIf e.KeyCode = Keys.E Then
+                        FrmEditor.BringToFront()
+                    ElseIf e.KeyCode = Keys.S Then
+                        FrmEditor.BtnSettings.PerformClick()
+                    ElseIf e.KeyCode = Keys.F Then
+                        FrmEditor.BtnFunctions.PerformClick()
+                    ElseIf e.KeyCode = Keys.T Then
+                        FrmEditor.BtnTranslucent.PerformClick()
+                        DirectCast(sender, Control).Focus()
+                    ElseIf e.KeyCode = keys.K Then
+                        FrmEditor.BtnKeyboard.PerformClick()
+                        DirectCast(sender, Control).Focus()
+
                     End If
                 End If
             End If
