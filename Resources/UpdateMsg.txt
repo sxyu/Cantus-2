@@ -25,7 +25,7 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.4.111
+What's new in 2.4.4.112
 *********************************************************************************************
 -The window can now be resized & maximized
 -There is now a splitter that allows you to resize the console and the editor
