@@ -13,7 +13,7 @@ Imports Cantus.UI.ScintillaForCantus
 Imports Cantus.Core.Scoping
 
 Imports ScintillaNET
-Imports Cantus.UI.KeyBoards
+Imports Cantus.UI.Keyboards
 
 Namespace UI
     Public Class FrmEditor
@@ -149,9 +149,9 @@ Namespace UI
 
             _eval = Globals.RootEvaluator
             ' set up modes
-            If _eval.OutputFormat = eOutputFormat.Math Then
+            If _eval.OutputMode = OutputFormat.Math Then
                 BtnOutputFormat.Text = "MathO"
-            ElseIf _eval.OutputFormat = eOutputFormat.Scientific Then
+            ElseIf _eval.OutputMode = OutputFormat.Scientific Then
                 BtnOutputFormat.Text = "SciO"
             Else
                 BtnOutputFormat.Text = "LineO"
@@ -163,6 +163,12 @@ Namespace UI
             Else
                 BtnAngleRepr.Text = "Gradian"
             End If
+
+            ' attach events to evaluator
+            AddHandler RootEvaluator.EvalComplete, AddressOf EvalComplete
+            AddHandler RootEvaluator.WriteOutput, AddressOf WriteOutput
+            AddHandler RootEvaluator.ReadInput, AddressOf ReadInput
+            AddHandler RootEvaluator.ClearConsole, AddressOf ClearConsole
 
             ' set up scintilla
             SetTheme("dark")
@@ -210,14 +216,14 @@ Namespace UI
                     btnOutputFormat_Click(BtnOutputFormat, New EventArgs)
                 ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
                     If e.KeyCode = Keys.M Then
-                        _eval.OutputFormat = eOutputFormat.Math
+                        _eval.OutputMode = OutputFormat.Math
                         e.SuppressKeyPress = True
                     ElseIf e.KeyCode = Keys.W
-                        _eval.OutputFormat = eOutputFormat.Raw
+                        _eval.OutputMode = OutputFormat.Raw
                     Else
-                        _eval.OutputFormat = eOutputFormat.Scientific
+                        _eval.OutputMode = OutputFormat.Scientific
                     End If
-                    BtnOutputFormat.Text = _eval.OutputFormat.ToString()
+                    BtnOutputFormat.Text = _eval.OutputMode.ToString()
                     EvaluateExpr(True)
                 End If
             End If
@@ -368,6 +374,7 @@ Namespace UI
                 End If
                 Viewer.ReadWord()
             End If
+
             _ev.Wait()
             _ev.Reset()
             RemoveHandler Viewer.InputRead, method
@@ -749,7 +756,7 @@ Namespace UI
             If PnlSettings.Left > 0 Then
                 PnlTb.Focus()
                 BtnAngleRepr.Text = _eval.AngleMode.ToString()
-                BtnOutputFormat.Text = _eval.OutputFormat.ToString()
+                BtnOutputFormat.Text = _eval.OutputMode.ToString()
                 If _eval.ExplicitMode Then
                     BtnExplicit.BackColor = BtnEval.BackColor
                     BtnExplicit.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
@@ -983,14 +990,14 @@ Namespace UI
         End Sub
 
         Private Sub btnOutputFormat_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
-            If _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific Then
-                _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Raw
+            If _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific Then
+                _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Raw
             Else
-                _eval.OutputFormat = CType(CInt(_eval.OutputFormat) + 1, Core.CantusEvaluator.eOutputFormat)
+                _eval.OutputMode = CType(CInt(_eval.OutputMode) + 1, Core.CantusEvaluator.OutputFormat)
             End If
-            If _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Math Then
+            If _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Math Then
                 BtnOutputFormat.Text = "Math"
-            ElseIf _eval.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific Then
+            ElseIf _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific Then
                 BtnOutputFormat.Text = "Scientific"
             Else
                 BtnOutputFormat.Text = "Raw"
@@ -1038,22 +1045,6 @@ Namespace UI
             _updTh.Start()
         End Sub
 
-        Private Sub tb_TextChanged(sender As Object, e As EventArgs) Handles Tb.TextChanged
-            If Tb.Lines.Count = 1 Then
-                _editCt = 2
-                TmrReCalc.Start()
-            End If
-        End Sub
-
-        Private Sub TmrReCalc_Tick(sender As Object, e As EventArgs) Handles TmrReCalc.Tick
-            If _editCt <= 0 Then
-                TmrReCalc.Stop()
-                If Not String.IsNullOrEmpty(File) Then Save() ' save if file available
-                EvaluateExpr(True)
-            End If
-            _editCt -= 1
-        End Sub
-
         Private Sub BtnOptions_Click(sender As Object, e As EventArgs) Handles BtnExplicit.Click, BtnSigFigs.Click
             Dim mode As Boolean
             Dim btn As Button = DirectCast(sender, Button)
@@ -1064,8 +1055,8 @@ Namespace UI
             Else
                 _eval.SignificantMode = Not _eval.SignificantMode
                 mode = _eval.SignificantMode
-                If mode AndAlso _eval.OutputFormat = eOutputFormat.Math Then
-                    _eval.OutputFormat = eOutputFormat.Raw
+                If mode AndAlso _eval.OutputMode = OutputFormat.Math Then
+                    _eval.OutputMode = OutputFormat.Raw
                     BtnOutputFormat.Text = "Raw"
                 End If
             End If

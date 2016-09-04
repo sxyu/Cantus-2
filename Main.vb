@@ -150,11 +150,11 @@ Namespace UI
                 ElseIf s = "--anglerepr=grad" Then
                     Globals.RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Gradian
                 ElseIf s = "--output=raw" Then
-                    Globals.RootEvaluator.OutputFormat = Core.CantusEvaluator.eOutputFormat.Raw
+                    Globals.RootEvaluator.OutputMode = Core.CantusEvaluator.OutputFormat.Raw
                 ElseIf s = "--output=math" Then
-                    Globals.RootEvaluator.OutputFormat = Core.CantusEvaluator.eOutputFormat.Math
+                    Globals.RootEvaluator.OutputMode = Core.CantusEvaluator.OutputFormat.Math
                 ElseIf s = "--output=sci" Then
-                    Globals.RootEvaluator.OutputFormat = Core.CantusEvaluator.eOutputFormat.Scientific
+                    Globals.RootEvaluator.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific
                 End If
 
                 EvalWrite(IO.File.ReadAllText(s), s)

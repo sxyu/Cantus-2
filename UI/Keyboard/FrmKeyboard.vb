@@ -1,4 +1,4 @@
-﻿Namespace UI.KeyBoards
+﻿Namespace UI.Keyboards
     Public Class FrmKeyboard
         Dim _ppt As Point
         Dim _dragging As Boolean

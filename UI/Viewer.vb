@@ -236,6 +236,7 @@ Namespace UI
                 _promptText = ""
                 WritePromptLine()
                 _reading = True
+                ConsoleControl.Focus()
             End If
         End Sub
 
@@ -327,6 +328,7 @@ Namespace UI
                                              _reading = True
                                              _ev.Wait()
                                              _ev.Reset()
+                                             WritePromptLine()
                                          End While
                                          ReadWord()
                                      End Sub)
@@ -516,14 +518,14 @@ Namespace UI
                         FrmEditor.BtnOutputFormat.PerformClick()
                     ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
                         If e.KeyCode = Keys.M Then
-                            RootEvaluator.OutputFormat = eOutputFormat.Math
+                            RootEvaluator.OutputMode = OutputFormat.Math
                             e.SuppressKeyPress = True
                         ElseIf e.KeyCode = Keys.W
-                            RootEvaluator.OutputFormat = eOutputFormat.Raw
+                            RootEvaluator.OutputMode = OutputFormat.Raw
                         Else
-                            RootEvaluator.OutputFormat = eOutputFormat.Scientific
+                            RootEvaluator.OutputMode = OutputFormat.Scientific
                         End If
-                        FrmEditor.BtnOutputFormat.Text = RootEvaluator.OutputFormat.ToString()
+                        FrmEditor.BtnOutputFormat.Text = RootEvaluator.OutputMode.ToString()
                         FrmEditor.EvaluateExpr(True)
                     End If
                 Else
@@ -601,7 +603,7 @@ Namespace UI
                                 _idx = _prevPrompt.Count
                             Else
                                 _prevPrompt.Insert(_idx + 1, lastLineText)
-                                _idx += 1
+                                _idx += 2
                             End If
                         End If
                         ConsoleControl.AutoCCancel()

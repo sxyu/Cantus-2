@@ -1,4 +1,4 @@
-﻿Namespace UI.KeyBoards
+﻿Namespace UI.Keyboards
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
     Partial Class FrmKeyboard
         Inherits System.Windows.Forms.Form
@@ -23,7 +23,7 @@
         'Do not modify it using the code editor.
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
-            Me.MainKeyboard = New Cantus.UI.KeyBoards.Keyboard()
+            Me.MainKeyboard = New Cantus.UI.Keyboards.Keyboard()
             Me.SuspendLayout()
             '
             'MainKeyboard
@@ -64,6 +64,6 @@
 
         End Sub
 
-        Friend WithEvents MainKeyboard As UI.KeyBoards.Keyboard
+        Friend WithEvents MainKeyboard As UI.Keyboards.Keyboard
     End Class
 End Namespace

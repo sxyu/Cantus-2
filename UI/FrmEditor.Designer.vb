@@ -53,7 +53,6 @@
             Me.BtnOpen = New System.Windows.Forms.Button()
             Me.BtnNew = New System.Windows.Forms.Button()
             Me.PnlTb = New System.Windows.Forms.Panel()
-            Me.TmrReCalc = New System.Windows.Forms.Timer(Me.components)
             Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
             Me.Editor = New System.Windows.Forms.Panel()
             Me.Viewer = New Cantus.UI.Viewer()
@@ -594,10 +593,6 @@
             Me.PnlTb.Size = New System.Drawing.Size(678, 661)
             Me.PnlTb.TabIndex = 0
             '
-            'TmrReCalc
-            '
-            Me.TmrReCalc.Interval = 150
-            '
             'TmrLoad
             '
             Me.TmrLoad.Interval = 50
@@ -701,7 +696,6 @@
         Friend WithEvents LbAbout As Label
         Friend WithEvents CbAutoUpd As CheckBox
         Friend WithEvents BtnUpdate As Button
-        Friend WithEvents TmrReCalc As Timer
         Friend WithEvents BtnExplicit As Button
         Friend WithEvents BtnFunctions As Button
         Friend WithEvents BtnLog As Button
