@@ -157,7 +157,7 @@ Namespace UI
         Public Sub WriteLogSeparator(Optional appendPrevious As Boolean = True)
             DeletePromptLine()
             AutoAddLine()
-            ConsoleControl.AppendText("".PadRight(43, "-"c) & vbLf)
+            ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c) & vbLf)
             WritePromptLine(appendPrevious)
         End Sub
 
@@ -171,7 +171,7 @@ Namespace UI
             If ConsoleControl.TextLength > 0 Then
                 AutoAddLine()
                 If ConsoleControl.Lines(ConsoleControl.Lines.Count - 2).Text.Trim().Replace("-", "") <> "" Then
-                    ConsoleControl.AppendText("".PadRight(43, "-"c) & vbLf)
+                    ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c) & vbLf)
                 End If
             End If
 
@@ -548,6 +548,18 @@ Namespace UI
 
                     End If
                 End If
+            ElseIf e.KeyCode = Keys.F5 Then
+                If e.Control Then
+                    FrmEditor.OpenRunScript()
+                Else
+                    FrmEditor.BtnEval.PerformClick()
+                End If
+            ElseIf e.KeyCode = Keys.F6 Then
+                FrmEditor.OpenImportScript()
+            ElseIf e.KeyCode = Keys.F11 OrElse e.KeyCode = Keys.O AndAlso e.Control Then
+                FrmEditor.BtnOpen.PerformClick()
+            ElseIf e.KeyCode = Keys.F12 OrElse e.KeyCode = Keys.S AndAlso e.Control Then
+                FrmEditor.OpenSaveAs()
             End If
         End Sub
 
