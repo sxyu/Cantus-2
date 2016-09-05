@@ -181,6 +181,7 @@ Namespace UI
         Private Sub FrmEditor_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
             Try
                 SaveSettings()
+                If Not String.IsNullOrWhiteSpace(File) Then Save()
                 _eval.Dispose()
                 Thread.Sleep(250)
             Catch
@@ -270,6 +271,9 @@ Namespace UI
             AddHandler _eval.ReadInput, AddressOf ReadInput
             AddHandler _eval.ClearConsole, AddressOf ClearConsole
 
+
+            SaveSettings()
+            If Not String.IsNullOrWhiteSpace(Me.File) Then Save()
             _eval.EvalAsync(text, noSaveAns) ' evaluate & wait for event
 
             If Not noSaveAns Then
@@ -310,6 +314,7 @@ Namespace UI
 
                 ' write expression to console
                 Viewer.WriteConsoleSection(logText)
+
             End If
         End Sub
 
@@ -1469,6 +1474,11 @@ Namespace UI
             End If
         End Sub
 
+        Private Sub TmrAutoSave_Tick(sender As Object, e As EventArgs) Handles TmrAutoSave.Tick
+            SaveSettings()
+            If Not String.IsNullOrWhiteSpace(File) Then Save()
+        End Sub
+
         Private Sub TmrLoad_Tick(sender As Object, e As EventArgs) Handles TmrLoad.Tick
             Dim newProgress As Integer = SplashScreen.Progress.Value + 4
             If SplashScreen.Progress.Value < 100 Then
@@ -1526,6 +1536,9 @@ Namespace UI
             ' save location
             My.Settings.Position = String.Join(",", DirectCast({Me.Left, Me.Top, Me.Width, Me.Height, Me.WindowState,
                                                Split.SplitterDistance}, Object()))
+
+            ' start autosave timer
+            TmrAutoSave.Start()
 
             Me.Tb.Select()
         End Sub

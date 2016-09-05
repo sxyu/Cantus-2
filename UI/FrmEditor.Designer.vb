@@ -54,6 +54,7 @@
             Me.BtnNew = New System.Windows.Forms.Button()
             Me.PnlTb = New System.Windows.Forms.Panel()
             Me.TmrLoad = New System.Windows.Forms.Timer(Me.components)
+            Me.TmrAutoSave = New System.Windows.Forms.Timer(Me.components)
             Me.Editor = New System.Windows.Forms.Panel()
             Me.Viewer = New Cantus.UI.Viewer()
             Me.TmrAnim = New System.Windows.Forms.Timer(Me.components)
@@ -597,6 +598,10 @@
             '
             Me.TmrLoad.Interval = 50
             '
+            'TmrAutoSave
+            '
+            Me.TmrAutoSave.Interval = 60000
+            '
             'Editor
             '
             Me.Editor.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -704,6 +709,7 @@
         Friend WithEvents BtnOpen As Button
         Friend WithEvents PbSettingsLogo As PictureBox
         Friend WithEvents TmrLoad As Timer
+        Friend WithEvents TmrAutoSave As Timer
         Friend WithEvents BtnTranslucent As Button
         Friend WithEvents BtnNew As Button
         Friend WithEvents Editor As Panel
