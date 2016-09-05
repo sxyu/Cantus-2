@@ -25,7 +25,13 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.5.114
+What's new in 2.4.5.115
+*********************************************************************************************
+-No longer saves init.can in current directory
+-Minor bug fixes
+
+*********************************************************************************************
+New from in 2.4.5.114
 *********************************************************************************************
 -Block mode in console no longer prints the result of the evaluation twice
 -'Bare' flag for console fixed

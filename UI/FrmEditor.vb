@@ -101,7 +101,7 @@ Namespace UI
                     i += 1
                     def = args(i)
                 ElseIf IO.File.Exists(s) Then
-                    Tb.Text = IO.File.ReadAllText(s)
+                    OpenFile(s)
                 End If
             Next
 
@@ -481,8 +481,9 @@ Namespace UI
                 My.Settings.Save()
 
                 Dim curText As String = ""
-                If IO.File.Exists("init.can") Then
-                    curText = IO.File.ReadAllText("init.can")
+                Dim cantusPath As String = IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) & IO.Path.DirectorySeparatorChar
+                If IO.File.Exists(cantusPath + "init.can") Then
+                    curText = IO.File.ReadAllText(cantusPath + "init.can")
 
                     ' cut everything up to the end comment
                     Dim endComment As String = "# end of cantus auto-generated initialization script." & " do not modify this comment."
@@ -495,7 +496,7 @@ Namespace UI
                 curText = curText.TrimEnd() & vbNewLine
 
                 ' try writing to init.can
-                IO.File.WriteAllText("init.can", _eval.ToScript() & curText)
+                IO.File.WriteAllText(cantusPath + "init.can", _eval.ToScript() & curText)
             Catch 'ex As Exception
             End Try
 
@@ -518,6 +519,17 @@ Namespace UI
             End Using
         End Sub
 
+        ''' <summary>
+        ''' Open a file at the specified path
+        ''' </summary>
+        ''' <param name="path"></param>
+        Private Sub OpenFile(path As String)
+            Tb.Text = IO.File.ReadAllText(path).Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).
+                        Replace(vbLf, vbNewLine) ' fix line endings
+            _File = path
+        End Sub
+
+
         '' <summary>
         '' Open the 'open script' dialog to open a script
         '' </summary>
@@ -528,9 +540,7 @@ Namespace UI
                 diag.Multiselect = False
                 diag.Title = "Open Script"
                 If diag.ShowDialog = DialogResult.OK Then
-                    Tb.Text = IO.File.ReadAllText(diag.FileName).Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).
-                                Replace(vbLf, vbNewLine) ' fix line endings
-                    _File = diag.FileName
+                    OpenFile(diag.FileName)
                 End If
             End Using
         End Sub
