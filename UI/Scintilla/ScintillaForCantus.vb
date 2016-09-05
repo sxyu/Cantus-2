@@ -90,7 +90,7 @@ Namespace UI.ScintillaForCantus
                 Dim styleText As String = scintilla.GetTextRange(startPos, endPos)
 
                 Dim uline As Integer = line
-                While uline > 0 AndAlso scintilla.Lines(uline - 1).Text.EndsWith(" _")
+                While uline > 0 AndAlso scintilla.Lines(uline - 1).Text.EndsWith("\")
                     uline -= 1
                     lineTextSb.Insert(0, scintilla.Lines(uline).Text.Remove(scintilla.Lines(uline).Text.Length - 2))
                 End While

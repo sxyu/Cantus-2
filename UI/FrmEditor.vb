@@ -1375,9 +1375,9 @@ Namespace UI
                 Dim curLine As Integer = Tb.CurrentLine
                 Dim curText As String = Tb.Lines(curLine).Text
 
-                While curLine > 0 AndAlso Tb.Lines(curLine - 1).Text.EndsWith(" _") ' connect _
+                While curLine > 0 AndAlso Tb.Lines(curLine - 1).Text.EndsWith("\") ' connect \
                     curLine -= 1
-                    curText = Tb.Lines(curLine).Text.Remove(Tb.Lines(curLine).Text.Length - 2) & curText
+                    curText = Tb.Lines(curLine).Text.Remove(Tb.Lines(curLine).Text.Length - 1) & curText
                 End While
                 startPos = Tb.Lines(curLine).Position
 

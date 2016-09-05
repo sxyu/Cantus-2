@@ -877,9 +877,9 @@ Namespace UI
                 Dim curLine As Integer = ConsoleControl.CurrentLine
                 Dim curText As String = ConsoleControl.Lines(curLine).Text
 
-                While curLine > 0 AndAlso ConsoleControl.Lines(curLine - 1).Text.EndsWith(" _") ' connect _
+                While curLine > 0 AndAlso ConsoleControl.Lines(curLine - 1).Text.EndsWith("\") ' connect \
                     curLine -= 1
-                    curText = ConsoleControl.Lines(curLine).Text.Remove(ConsoleControl.Lines(curLine).Text.Length - 2) & curText
+                    curText = ConsoleControl.Lines(curLine).Text.Remove(ConsoleControl.Lines(curLine).Text.Length - 1) & curText
                 End While
                 startPos = ConsoleControl.Lines(curLine).Position
 

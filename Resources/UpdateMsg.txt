@@ -25,7 +25,18 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.6.119
+What's new in 2.4.6.120
+*********************************************************************************************
+-Fixed '\' for escaping newlines introduced in the previous version
+-Script feeders (i.e. console block mode) 
+  now allow the use of \ in block mode to extend lines in real time
+-Built-in experimental chem plugin
+-_Reload function renamed to _ReloadConst()
+-New _Reload() function for reloading all constants and initialization scripts
+-Imports 'plugin' namespace by default
+
+*********************************************************************************************
+New from in 2.4.6.119
 *********************************************************************************************
 -Fixed a bug where # characters could not be included in double-quoted strings
 -Fixed a bug where conditions like 'if c =3' did not evaluate properly

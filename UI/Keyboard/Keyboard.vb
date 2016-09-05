@@ -148,9 +148,9 @@
                 Dim curLine As Integer = FrmEditor.Tb.CurrentLine
                 Dim curText As String = FrmEditor.Tb.Lines(curLine).Text
 
-                While curLine > 0 AndAlso FrmEditor.Tb.Lines(curLine - 1).Text.EndsWith(" _") ' connect _
+                While curLine > 0 AndAlso FrmEditor.Tb.Lines(curLine - 1).Text.EndsWith("\") ' connect \
                     curLine -= 1
-                    curText = FrmEditor.Tb.Lines(curLine).Text.Remove(FrmEditor.Tb.Lines(curLine).Text.Length - 2) & curText
+                    curText = FrmEditor.Tb.Lines(curLine).Text.Remove(FrmEditor.Tb.Lines(curLine).Text.Length - 1) & curText
                 End While
                 startPos = FrmEditor.Tb.Lines(curLine).Position
 
