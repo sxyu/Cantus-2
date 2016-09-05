@@ -25,7 +25,15 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.6.118
+What's new in 2.4.6.119
+*********************************************************************************************
+-Fixed a bug where # characters could not be included in double-quoted strings
+-Fixed a bug where conditions like 'if c =3' did not evaluate properly
+-End lines in '\' instead of ' _' to extend them
+-Minor fixes
+
+*********************************************************************************************
+New from 2.4.6.118
 *********************************************************************************************
 -Fixed statement condition scopes: conditions now evaluated at parent scope
 -Partially fixed error line numbers inside functions
