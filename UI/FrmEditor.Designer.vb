@@ -625,7 +625,7 @@
             Me.Viewer.Dock = DockStyle.Fill
             Me.Viewer.Size = New System.Drawing.Size(621, 700)
             Me.Viewer.TabIndex = 17
-            Me.Viewer.View = Cantus.UI.Viewer.eView.console
+            Me.Viewer.View = Cantus.UI.Viewer.ViewType.console
             '
             'TmrAnim
             '

@@ -25,7 +25,18 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.5.115
+What's new in 2.4.6.116
+*********************************************************************************************
+-Operator = is now smarter and is evaluated at two precedences
+-Fixed an issue where the or operator is evaluated before the and operator
+  The logical operators should now work as expected
+-The virtual console separator is now shorter
+-Fixed a bug where using print() or printline() when running a script from the editor
+  will print to the same line as the original text
+-Minor fixes
+
+*********************************************************************************************
+New from in 2.4.5.115
 *********************************************************************************************
 -No longer saves init.can in current directory
 -Minor bug fixes

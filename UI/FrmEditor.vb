@@ -107,7 +107,7 @@ Namespace UI
 
             def = def.Trim().Trim({ControlChars.Quote, "'"c})
             If opengraph Then
-                Viewer.View = Viewer.eView.graphing
+                Viewer.View = Viewer.ViewType.graphing
                 Viewer.GraphingControl.tb.Text = def
             ElseIf Not def = "" Then
                 Tb.Text = def
@@ -295,8 +295,10 @@ Namespace UI
                     logText &= "'"
                 End While
 
-                ' write expression to log
-                Viewer.WriteConsoleSection(String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName) & logText)
+                logText &= vbLf
+
+                ' write expression to console
+                Viewer.WriteConsoleSection(logText)
             End If
         End Sub
 
@@ -661,13 +663,13 @@ Namespace UI
                 ElseIf e.KeyCode = Keys.S Then
                     BtnSettings.PerformClick()
                 ElseIf e.KeyCode = Keys.G Then
-                    Viewer.View = Viewer.eView.graphing
+                    Viewer.View = Viewer.ViewType.graphing
                     Try
                         Viewer.pnl.Controls(0).Select()
                     Catch
                     End Try
                 ElseIf e.KeyCode = Keys.C Then
-                    Viewer.View = Viewer.eView.console
+                    Viewer.View = Viewer.ViewType.console
                     Try
                         Viewer.pnl.Controls(0).Select()
                     Catch

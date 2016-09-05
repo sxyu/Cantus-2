@@ -57,7 +57,7 @@ Namespace UI
         '' <summary>
         '' Represents a view in the viewer
         '' </summary>
-        Public Enum eView
+        Public Enum ViewType
             none = -1
             console = 0
             graphing = 1
@@ -66,7 +66,7 @@ Namespace UI
         Friend GraphingControl As Graphing.GraphingSystem
         Friend ConsoleControl As ScintillaNET.Scintilla
 
-        Private _view As eView = eView.none
+        Private _view As ViewType = ViewType.none
         Private _cantusLexer As New CantusLexer()
         Private _feeder As New ScriptFeeder("", False, Globals.RootEvaluator)
 
@@ -74,11 +74,11 @@ Namespace UI
         '' Get or set the current view of the viewer
         '' </summary>
         '' <returns></returns>
-        Public Property View As eView
+        Public Property View As ViewType
             Get
                 Return _view
             End Get
-            Set(view As eView)
+            Set(view As ViewType)
                 _view = view
                 ' set tab colors
                 Dim inactiveColor As Color = Me.BackColor
@@ -101,11 +101,11 @@ Namespace UI
 
                 pnl.Controls.Clear()
                 Select Case view
-                    Case eView.console
+                    Case ViewType.console
                         If ConsoleControl Is Nothing Then Exit Property
                         pnl.Controls.Add(ConsoleControl)
                         ConsoleControl.Select()
-                    Case eView.graphing
+                    Case ViewType.graphing
                         If GraphingControl Is Nothing Then Exit Property
                         pnl.Controls.Add(GraphingControl)
                         GraphingControl.tb.Select()
@@ -157,7 +157,7 @@ Namespace UI
         Public Sub WriteLogSeparator(Optional appendPrevious As Boolean = True)
             DeletePromptLine()
             AutoAddLine()
-            ConsoleControl.AppendText("".PadRight(63, "-"c) & vbLf)
+            ConsoleControl.AppendText("".PadRight(43, "-"c) & vbLf)
             WritePromptLine(appendPrevious)
         End Sub
 
@@ -171,7 +171,7 @@ Namespace UI
             If ConsoleControl.TextLength > 0 Then
                 AutoAddLine()
                 If ConsoleControl.Lines(ConsoleControl.Lines.Count - 2).Text.Trim().Replace("-", "") <> "" Then
-                    ConsoleControl.AppendText("".PadRight(63, "-"c) & vbLf)
+                    ConsoleControl.AppendText("".PadRight(43, "-"c) & vbLf)
                 End If
             End If
 
@@ -360,11 +360,11 @@ Namespace UI
         Private Sub btnTabs_Click(sender As Object, e As EventArgs)
             pnl.Focus()
             Me.Text = DirectCast(sender, Button).Text & " - Cantus"
-            Me.View = DirectCast([Enum].Parse(GetType(eView), DirectCast(sender, Button).Tag.ToString()), eView)
+            Me.View = DirectCast([Enum].Parse(GetType(ViewType), DirectCast(sender, Button).Tag.ToString()), ViewType)
         End Sub
 
         Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
-            If _view <> eView.console Then Return False
+            If _view <> ViewType.console Then Return False
             Dim lastLineStart As Integer = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1).Position + _promptText.Length
             If keyData = Keys.Home OrElse keyData = (Keys.Shift Or Keys.Home) OrElse
                 keyData = (Keys.Control Or Keys.Home) OrElse keyData = Keys.Enter OrElse keyData = (Keys.Control Or Keys.Z) OrElse keyData = (Keys.Control Or Keys.Y) Then
@@ -482,7 +482,7 @@ Namespace UI
             AddHandler ConsoleControl.AutoCCompleted, AddressOf ConsoleControl_AutoCCompleted
             AddHandler ConsoleControl.StyleNeeded, AddressOf ConsoleControl_StyleNeeded
 
-            Me.View = eView.console
+            Me.View = ViewType.console
 
             WriteConsoleSection(
                 String.Format(vbLf & "# Welcome to Cantus version {0}!" & vbLf & "# Copyright © Alex Yu 2016." & vbLf & "# http://github.com/sxyu/Cantus-GUI" & vbLf & vbLf & """""""" & vbLf &
