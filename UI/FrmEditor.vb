@@ -521,7 +521,7 @@ Namespace UI
         ''' </summary>
         Friend Sub OpenSaveAs()
             Using diag As New SaveFileDialog()
-                diag.Filter = "Cantus Script (.can)|*.can|Any File (*)|*"
+                diag.Filter = "Cantus Script|*.can|Any File|*"
                 diag.RestoreDirectory = True
                 diag.Title = "Save As Script"
                 If diag.ShowDialog = DialogResult.OK Then
@@ -537,7 +537,7 @@ Namespace UI
         ''' </summary>
         Friend Sub OpenRunScript()
             Using diag As New OpenFileDialog()
-                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.Filter = "Cantus Script|*.can|Any File|*"
                 diag.RestoreDirectory = True
                 diag.Multiselect = False
                 diag.Title = "Run Script"
@@ -552,7 +552,7 @@ Namespace UI
         ''' </summary>
         Friend Sub OpenImportScript()
             Using diag As New OpenFileDialog()
-                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.Filter = "Cantus Script|*.can|Any File|*"
                 diag.RestoreDirectory = True
                 diag.Multiselect = False
                 diag.Title = "Import Script"
@@ -578,7 +578,7 @@ Namespace UI
         '' </summary>
         Private Sub Open()
             Using diag As New OpenFileDialog()
-                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.Filter = "Cantus Script|*.can|Any File|*"
                 diag.RestoreDirectory = True
                 diag.Multiselect = False
                 diag.Title = "Open Script"
