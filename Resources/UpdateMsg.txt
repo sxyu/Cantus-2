@@ -25,7 +25,14 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.5.113
+What's new in 2.4.5.114
+*********************************************************************************************
+-Block mode in console no longer prints the result of the evaluation twice
+-'Bare' flag for console fixed
+-Fixed duplicate entry in help text
+
+*********************************************************************************************
+New from 2.4.5.113
 *********************************************************************************************
 -The evaluator property OutputFormat has been renamed to OutputMode
 -The corresponding enum type eOutputFormat has been renamed to OutputFormat
