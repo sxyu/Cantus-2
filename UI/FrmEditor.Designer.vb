@@ -366,7 +366,7 @@
             Me.BtnEval.Name = "BtnEval"
             Me.BtnEval.Size = New System.Drawing.Size(56, 52)
             Me.BtnEval.TabIndex = 1
-            Me.TTLetters.SetToolTip(Me.BtnEval, "Run (Alt+Enter)")
+            Me.TTLetters.SetToolTip(Me.BtnEval, "Run (Alt+Enter or F5)")
             Me.BtnEval.UseVisualStyleBackColor = False
             '
             'LbResult

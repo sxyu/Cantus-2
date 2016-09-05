@@ -25,7 +25,14 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.6.116
+What's new in 2.4.6.117
+*********************************************************************************************
+-Fixed tuple assignment
+-Length of separators in virtual console now adjust automatically based on window width
+-F5 is now a shortcut for running the script in the editor.
+
+*********************************************************************************************
+New from 2.4.6.116
 *********************************************************************************************
 -Operator = is now smarter and is evaluated at two precedences
 -Fixed an issue where the or operator is evaluated before the and operator

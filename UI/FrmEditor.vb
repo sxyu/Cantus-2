@@ -240,15 +240,24 @@ Namespace UI
         '' <summary>
         '' Send the event to asynchronously evaluate the expression
         '' </summary>
-        Friend Sub EvaluateExpr(Optional noSaveAns As Boolean = False)
+        Friend Sub EvaluateExpr(Optional noSaveAns As Boolean = False,
+                                Optional text As String = "",
+                                Optional file As String = "")
             If Not _eval Is Nothing Then _eval.Dispose()
+            Dim fromTb As Boolean = False
+            If text = "" Then
+                text = Tb.Text
+                fromTb = True
+            End If
+            If file = "" Then file = Me.File
 
             ' set up evaluator
-            Me._eval = New CantusEvaluator(scope:=If(String.IsNullOrWhiteSpace(File), "cantus", Scoping.GetFileScopeName(File)), reloadDefault:=False)
+            Me._eval = New CantusEvaluator(scope:=If(String.IsNullOrWhiteSpace(file), "cantus",
+                                           Scoping.GetFileScopeName(file)), reloadDefault:=False)
             Me._eval.ReloadDefault()
             Dim cantusPath As String = IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) & IO.Path.DirectorySeparatorChar
 
-            If String.IsNullOrWhiteSpace(File) OrElse Not IO.Path.GetFullPath(File).StartsWith(cantusPath + "plugin") Then
+            If String.IsNullOrWhiteSpace(file) OrElse Not IO.Path.GetFullPath(file).StartsWith(cantusPath + "plugin") Then
                 Try
                     Me._eval.ReInitialize()
                 Catch ex As Exception
@@ -261,28 +270,30 @@ Namespace UI
             AddHandler _eval.ReadInput, AddressOf ReadInput
             AddHandler _eval.ClearConsole, AddressOf ClearConsole
 
-            _eval.EvalAsync(Tb.Text, noSaveAns) ' evaluate & wait for event
+            _eval.EvalAsync(text, noSaveAns) ' evaluate & wait for event
 
             If Not noSaveAns Then
                 ' save previous expressions 
-                If _prevExp.Count = 0 OrElse _prevExp(_prevExp.Count - 1) <> Tb.Text Then
-                    _prevExp.Add(Tb.Text)
+                If _prevExp.Count = 0 OrElse _prevExp(_prevExp.Count - 1) <> text Then
+                    _prevExp.Add(text)
                     _curExpId += 1
                 End If
 
                 ' remove previous expressions past limit
-                _lastExp = Tb.Text
+                _lastExp = text
                 If _prevExp.Count > PREV_EXPRESSION_LIMIT Then
                     _prevExp.RemoveAt(0) 'max expressions
                     _curExpId -= 1
                 End If
 
                 Dim logText As String = ""
-                If Tb.Lines.Count > 4 Then
-                    logText = Tb.GetTextRange(0, Tb.Lines(4).Position) & "..."
-                Else
-                    If Tb.Lines.Count > 1 Then logText = vbLf
-                    logText += Tb.Text
+                If fromTb Then
+                    If Tb.Lines.Count > 4 Then
+                        logText = Tb.GetTextRange(0, Tb.Lines(4).Position) & "..."
+                    Else
+                        If Tb.Lines.Count > 1 Then logText = vbLf
+                        logText += Tb.Text
+                    End If
                 End If
 
                 If New InternalFunctions(Nothing).Count(logText, """""""") Mod 2 = 1 Then logText &= """"""""
@@ -505,18 +516,48 @@ Namespace UI
             My.Settings.Save()
         End Sub
 
-        '' <summary>
-        '' Open a 'save as' dialogue to save as another file
-        '' </summary>
-        Private Sub OpenSaveAs()
+        ''' <summary>
+        ''' Open a 'save as' dialogue to save as another file
+        ''' </summary>
+        Friend Sub OpenSaveAs()
             Using diag As New SaveFileDialog()
-                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.Filter = "Cantus Script (.can)|*.can|Any File (*)|*"
                 diag.RestoreDirectory = True
                 diag.Title = "Save As Script"
                 If diag.ShowDialog = DialogResult.OK Then
                     IO.File.WriteAllText(diag.FileName, Tb.Text, Encoding.UTF8)
                     _File = diag.FileName ' set new file name
                     _eval.Scope = GetFileScopeName(_File)
+                End If
+            End Using
+        End Sub
+
+        ''' <summary>
+        ''' Open a dialog to select a script to run
+        ''' </summary>
+        Friend Sub OpenRunScript()
+            Using diag As New OpenFileDialog()
+                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.RestoreDirectory = True
+                diag.Multiselect = False
+                diag.Title = "Run Script"
+                If diag.ShowDialog = DialogResult.OK Then
+                    EvaluateExpr(False, IO.File.ReadAllText(diag.FileName), diag.FileName)
+                End If
+            End Using
+        End Sub
+
+        ''' <summary>
+        ''' Open a dialog to select a script to import
+        ''' </summary>
+        Friend Sub OpenImportScript()
+            Using diag As New OpenFileDialog()
+                diag.Filter = "Cantus Script (.can)|*.can"
+                diag.RestoreDirectory = True
+                diag.Multiselect = False
+                diag.Title = "Import Script"
+                If diag.ShowDialog = DialogResult.OK Then
+                    _eval.Load(diag.FileName, False, True)
                 End If
             End Using
         End Sub
@@ -692,26 +733,14 @@ Namespace UI
                 Open()
 
             ElseIf e.KeyCode = Keys.F6
-                Using diag As New OpenFileDialog()
-                    diag.Filter = "Cantus Script (.can)|*.can"
-                    diag.RestoreDirectory = True
-                    diag.Multiselect = False
-                    diag.Title = "Import Script"
-                    If diag.ShowDialog = DialogResult.OK Then
-                        _eval.Load(diag.FileName, False, True)
-                    End If
-                End Using
+                OpenImportScript()
 
             ElseIf e.KeyCode = Keys.F5
-                Using diag As New OpenFileDialog()
-                    diag.Filter = "Cantus Script (.can)|*.can"
-                    diag.RestoreDirectory = True
-                    diag.Multiselect = False
-                    diag.Title = "Run Script"
-                    If diag.ShowDialog = DialogResult.OK Then
-                        _eval.EvalAsync(IO.File.ReadAllText(diag.FileName))
-                    End If
-                End Using
+                If e.Control Then
+                    OpenRunScript()
+                Else
+                    BtnEval.PerformClick()
+                End If
             ElseIf e.Control AndAlso e.Alt
                 If e.KeyCode = Keys.T Then
                     BtnExplicit.PerformClick()
