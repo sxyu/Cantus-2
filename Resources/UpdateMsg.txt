@@ -25,6 +25,11 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
+What's new in 2.4.6.122
+*********************************************************************************************
+-Fixed simplification of radicals
+
+*********************************************************************************************
 What's new in 2.4.6.121
 *********************************************************************************************
 -Added autosave, save on run, and save on exit
