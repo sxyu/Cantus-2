@@ -694,291 +694,296 @@ Namespace UI
         End Sub
 
         Private Sub ConsoleControl_CharAdded(sender As Object, e As CharAddedEventArgs)
+            Try
+                ' autocomplete
+                Dim currentPos As Integer = ConsoleControl.CurrentPosition
+                Dim wordStartPos As Integer = ConsoleControl.CurrentPosition
 
-            ' autocomplete
-            Dim currentPos As Integer = ConsoleControl.CurrentPosition
-            Dim wordStartPos As Integer = ConsoleControl.CurrentPosition
-
-            While wordStartPos - 1 >= 0 AndAlso (
+                While wordStartPos - 1 >= 0 AndAlso (
                   ConsoleControl.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso ConsoleControl.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso ConsoleControl.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso ConsoleControl.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) = AscW("."c))
-                wordStartPos -= 1
-            End While
+                    wordStartPos -= 1
+                End While
 
-            If ConsoleControl.GetCharAt(wordStartPos) = AscW("."c) Then wordStartPos += 1
+                If ConsoleControl.GetCharAt(wordStartPos) = AscW("."c) Then wordStartPos += 1
 
-            Dim enteredWord As String = ConsoleControl.GetTextRange(wordStartPos, currentPos)
+                Dim enteredWord As String = ConsoleControl.GetTextRange(wordStartPos, currentPos)
 
-            Dim lenEntered As Integer = currentPos - wordStartPos
+                Dim lenEntered As Integer = currentPos - wordStartPos
 
-            If lenEntered > 0 AndAlso Not _reading Then
+                If lenEntered > 0 AndAlso Not _reading Then
 
-                Dim curLineText As String = ConsoleControl.GetTextRange(ConsoleControl.Lines(ConsoleControl.CurrentLine).Position, ConsoleControl.CurrentPosition)
+                    Dim curLineText As String = ConsoleControl.GetTextRange(ConsoleControl.Lines(ConsoleControl.CurrentLine).Position, ConsoleControl.CurrentPosition)
 
-                Dim singleQuote As Boolean = False
-                Dim doubleQuote As Boolean = False
-                For i As Integer = 0 To curLineText.Count - 1
-                    If curLineText(i) = "'"c Then singleQuote = Not singleQuote
-                    If curLineText(i) = """"c Then doubleQuote = Not doubleQuote
-                Next
-                If singleQuote OrElse doubleQuote Then Return ' do not autocomplete string
+                    Dim singleQuote As Boolean = False
+                    Dim doubleQuote As Boolean = False
+                    For i As Integer = 0 To curLineText.Count - 1
+                        If curLineText(i) = "'"c Then singleQuote = Not singleQuote
+                        If curLineText(i) = """"c Then doubleQuote = Not doubleQuote
+                    Next
+                    If singleQuote OrElse doubleQuote Then Return ' do not autocomplete string
 
-                curLineText = ConsoleControl.Lines(ConsoleControl.CurrentLine).Text
-                Dim keyword As String = curLineText
+                    curLineText = ConsoleControl.Lines(ConsoleControl.CurrentLine).Text
+                    Dim keyword As String = curLineText
 
-                Dim blockKwd As String() = ("class function namespace").Split(" "c)
-                keyword = keyword.Trim()
-                If keyword.Contains(" ") Then keyword = keyword.Remove(keyword.IndexOf(" "))
+                    Dim blockKwd As String() = ("class function namespace").Split(" "c)
+                    keyword = keyword.Trim()
+                    If keyword.Contains(" ") Then keyword = keyword.Remove(keyword.IndexOf(" "))
 
-                If blockKwd.Contains(keyword) Then Return ' do not autocomplete class, function, namespace names 
+                    If blockKwd.Contains(keyword) Then Return ' do not autocomplete class, function, namespace names 
 
-                ' do not autocomplete variable declarations unless after keyword
-                If (keyword = "let" OrElse keyword = "global") AndAlso Not curLineText.Contains("=") Then Return
+                    ' do not autocomplete variable declarations unless after keyword
+                    If (keyword = "let" OrElse keyword = "global") AndAlso Not curLineText.Contains("=") Then Return
 
-                Dim keywords As String() = "function global let private public static".Split(" "c)
+                    Dim keywords As String() = "function global let private public static".Split(" "c)
 
-                Dim autoCList As New List(Of String)
+                    Dim autoCList As New List(Of String)
 
-                If keywords.Contains(keyword) AndAlso Not curLineText.Contains("=") Then
-                    autoCList.AddRange(keywords)
-                Else
-                    Dim nsMode As Boolean = enteredWord.Contains(".")
+                    If keywords.Contains(keyword) AndAlso Not curLineText.Contains("=") Then
+                        autoCList.AddRange(keywords)
+                    Else
+                        Dim nsMode As Boolean = enteredWord.Contains(".")
 
-                    If Not nsMode Then
-                        autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
+                        If Not nsMode Then
+                            autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
                                            "let static global ref undefined null " &
                                            "switch case run try catch finally while until with in step to choose and or xor not").Split(" "c))
 
-                        autoCList.Add(ROOT_NAMESPACE)
-                    End If
+                            autoCList.Add(ROOT_NAMESPACE)
+                        End If
 
-                    ' variables
-                    For Each v As Variable In RootEvaluator.Variables.Values.ToArray()
-                        ' ignore private
-                        If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso
+                        ' variables
+                        For Each v As Variable In RootEvaluator.Variables.Values.ToArray()
+                            ' ignore private
+                            If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso
                             Not IsParentScopeOf(v.DeclaringScope, RootEvaluator.Scope)) Then Continue For
 
-                        ' ignore null
-                        If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse
+                            ' ignore null
+                            If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse
                             TypeOf v.Value Is BigDecimal AndAlso DirectCast(v.Value, BigDecimal).IsUndefined Then Continue For
 
-                        If nsMode Then ' filter namespace
-                            Dim partialName As String = RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope)
+                            If nsMode Then ' filter namespace
+                                Dim partialName As String = RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope)
 
-                            If v.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(v.FullName)
+                                If v.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
+                                    autoCList.Add(v.FullName)
 
-                            ElseIf partialName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(partialName.ToLower())
+                                ElseIf partialName.ToLower().StartsWith(enteredWord.ToLower()) Then
+                                    autoCList.Add(partialName.ToLower())
 
-                            ElseIf enteredWord.ToLower().StartsWith(partialName.ToLower()) OrElse enteredWord.ToLower().StartsWith(v.FullName.ToLower())
-                                If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
-                                If TypeOf v.Reference.Resolve() Is ClassInstance Then
-                                    Dim ci As ClassInstance = DirectCast(v.Reference.Resolve(), ClassInstance)
-                                    For Each f As String In ci.Fields.Keys.ToArray()
-                                        autoCList.Add(CombineScope(partialName,
+                                ElseIf enteredWord.ToLower().StartsWith(partialName.ToLower()) OrElse enteredWord.ToLower().StartsWith(v.FullName.ToLower())
+                                    If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
+                                    If TypeOf v.Reference.Resolve() Is ClassInstance Then
+                                        Dim ci As ClassInstance = DirectCast(v.Reference.Resolve(), ClassInstance)
+                                        For Each f As String In ci.Fields.Keys.ToArray()
+                                            autoCList.Add(CombineScope(partialName,
                                                    f & If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" &
                                                    If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
                                               "")))
-                                    Next
+                                        Next
+                                    End If
+                                Else
+                                    Continue For
                                 End If
                             Else
-                                Continue For
-                            End If
-                        Else
-                            Dim varn As String = RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope)
-                            autoCList.Add(varn & If(TypeOf v.Value Is Lambda, "(" &
+                                Dim varn As String = RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope)
+                                autoCList.Add(varn & If(TypeOf v.Value Is Lambda, "(" &
                                           If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
-                            If varn.ToLower().StartsWith("plugin") Then
-                                autoCList.Add(varn.Substring("plugin".Length + 1) & If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
+                                If varn.ToLower().StartsWith("plugin") Then
+                                    autoCList.Add(varn.Substring("plugin".Length + 1) & If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
+                                End If
+                            End If
+                        Next
+
+                        ' internal functions
+                        Dim varname As String = ""
+                        Dim type As Type = Nothing
+                        If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso Globals.RootEvaluator.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
+
+                            varname = enteredWord.Remove(enteredWord.IndexOf("."))
+
+                            Dim var As Object = Nothing
+                            var = Globals.RootEvaluator.GetVariable(enteredWord.Remove(enteredWord.IndexOf(".")))
+                            If TypeOf var Is Reference AndAlso Not TypeOf DirectCast(var, Reference).GetRefObject() Is Reference Then
+                                type = DirectCast(var, Reference).Resolve().GetType
+                            Else
+                                type = var.GetType()
                             End If
                         End If
-                    Next
 
-                    ' internal functions
-                    Dim varname As String = ""
-                    Dim type As Type = Nothing
-                    If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso Globals.RootEvaluator.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
+                        For Each fn As MethodInfo In InternalFunctions.Methods
+                            If nsMode Then
+                                If enteredWord.StartsWith("cantus") Then
+                                    autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
 
-                        varname = enteredWord.Remove(enteredWord.IndexOf("."))
-
-                        Dim var As Object = Nothing
-                        var = Globals.RootEvaluator.GetVariable(enteredWord.Remove(enteredWord.IndexOf(".")))
-                        If TypeOf var Is Reference AndAlso Not TypeOf DirectCast(var, Reference).GetRefObject() Is Reference Then
-                            type = DirectCast(var, Reference).Resolve().GetType
-                        Else
-                            type = var.GetType()
-                        End If
-                    End If
-
-                    For Each fn As MethodInfo In InternalFunctions.Methods
-                        If nsMode Then
-                            If enteredWord.StartsWith("cantus") Then
-                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
-
-                            ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) AndAlso
+                                ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) AndAlso
                                 Globals.RootEvaluator.HasVariable(varname) Then
-                                If fn.GetParameters(0).ParameterType.IsAssignableFrom(type) Then
-                                    autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count <= 1, "", "_") & ")")
+                                    If fn.GetParameters(0).ParameterType.IsAssignableFrom(type) Then
+                                        autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count <= 1, "", "_") & ")")
+                                    End If
+                                End If
+                            Else
+                                autoCList.Add(fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
+                            End If
+                        Next
+
+                        ' user functions
+                        For Each fn As UserFunction In Globals.RootEvaluator.UserFunctions.Values.ToArray()
+                            If nsMode Then
+                                If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
+                                    Continue For
                                 End If
                             End If
-                        Else
-                            autoCList.Add(fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
-                        End If
-                    Next
+                            ' ignore private
+                            If fn.Modifiers.Contains("internal") OrElse (fn.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(fn.DeclaringScope, Globals.RootEvaluator.Scope)) Then Continue For
 
-                    ' user functions
-                    For Each fn As UserFunction In Globals.RootEvaluator.UserFunctions.Values.ToArray()
-                        If nsMode Then
-                            If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
-                                Continue For
-                            End If
-                        End If
-                        ' ignore private
-                        If fn.Modifiers.Contains("internal") OrElse (fn.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(fn.DeclaringScope, Globals.RootEvaluator.Scope)) Then Continue For
-
-                        If nsMode Then ' filter namespace
-                            If fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(fn.FullName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                            ElseIf RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                            If nsMode Then ' filter namespace
+                                If fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
+                                    autoCList.Add(fn.FullName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                                ElseIf RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
+                                    autoCList.Add(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                                Else
+                                    Continue For
+                                End If
                             Else
-                                Continue For
+                                Dim fnName As String = RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope)
+                                autoCList.Add(fnName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                                If fnName.ToLower().StartsWith("plugin") Then
+                                    autoCList.Add(fnName.Substring("plugin".Length + 1) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                                End If
                             End If
-                        Else
-                            Dim fnName As String = RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope)
-                            autoCList.Add(fnName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                            If fnName.ToLower().StartsWith("plugin") Then
-                                autoCList.Add(fnName.Substring("plugin".Length + 1) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                            End If
-                        End If
-                    Next
+                        Next
 
-                    For Each uc As UserClass In Globals.RootEvaluator.UserClasses.Values.ToArray()
-                        If nsMode Then
-                            If Not uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not uc.FullName.ToLower().StartsWith(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
-                                Continue For
+                        For Each uc As UserClass In Globals.RootEvaluator.UserClasses.Values.ToArray()
+                            If nsMode Then
+                                If Not uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not uc.FullName.ToLower().StartsWith(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
+                                    Continue For
+                                End If
                             End If
-                        End If
-                        ' ignore private
-                        If uc.Modifiers.Contains("internal") OrElse (uc.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(uc.DeclaringScope, Globals.RootEvaluator.Scope)) Then Continue For
+                            ' ignore private
+                            If uc.Modifiers.Contains("internal") OrElse (uc.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(uc.DeclaringScope, Globals.RootEvaluator.Scope)) Then Continue For
 
-                        If nsMode Then ' filter namespace
-                            If uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                autoCList.Add(uc.FullName & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
-                            ElseIf RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
+                            If nsMode Then ' filter namespace
+                                If uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
+                                    autoCList.Add(uc.FullName & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
+                                ElseIf RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
+                                    autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
+                                Else
+                                    Continue For
+                                End If
+                            Else
                                 autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
-                            Else
-                                Continue For
                             End If
-                        Else
-                            autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
-                        End If
-                    Next
-                    autoCList.Sort(New AutoCompleteComparer())
-                End If
-
-                If autoCList.Count = 0 Then Return
-                ConsoleControl.AutoCShow(lenEntered, String.Join(" ", autoCList))
-            End If
-
-            ' brace completion
-            If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
-
-                Dim startPos As Integer
-                Dim curLine As Integer = ConsoleControl.CurrentLine
-                Dim curText As String = ConsoleControl.Lines(curLine).Text
-
-                While curLine > 0 AndAlso ConsoleControl.Lines(curLine - 1).Text.EndsWith("\") ' connect \
-                    curLine -= 1
-                    curText = ConsoleControl.Lines(curLine).Text.Remove(ConsoleControl.Lines(curLine).Text.Length - 1) & curText
-                End While
-                startPos = ConsoleControl.Lines(curLine).Position
-
-                Dim startBr As Char = ChrW(e.Char)
-                Dim endBr As Char
-                Dim reverse As Boolean = False
-                Dim ct As Integer = 0
-
-                Select Case ChrW(e.Char)
-                    Case "("c
-                        endBr = ")"c
-                    Case "["c
-                        endBr = "]"c
-                    Case "{"c
-                        endBr = "}"c
-                    Case ")"c
-                        endBr = "("c
-                        reverse = True
-                    Case "]"c
-                        endBr = "["c
-                        reverse = True
-                    Case "}"c
-                        endBr = "{"c
-                        reverse = True
-                End Select
-
-                For i As Integer = 0 To curText.Length - 1
-                    If curText(i) = startBr Then ct += 1
-                    If curText(i) = endBr Then ct -= 1
-                Next
-
-                If ct > 0 Then
-                    If reverse Then
-                        Dim len As Integer = ConsoleControl.CurrentPosition - startPos
-                        If curText.Length > len Then curText = curText.Remove(len)
-
-                        Dim braceList As Char() = {"["c, "("c, "{"c}
-                        Dim endBraceList As Char() = {"]"c, ")"c, "}"c}
-                        Dim lvl As List(Of Integer)() = {New List(Of Integer)({0}),
-                            New List(Of Integer)({0}), New List(Of Integer)({0})}
-                        Dim pos As Integer = _promptText.Length
-
-                        For i As Integer = 0 To curText.Length - 2
-                            For j As Integer = 0 To braceList.Count - 1
-                                If braceList(j) = curText(i) Then
-                                    lvl(j).Add(i + 1)
-                                ElseIf endBraceList(j) = curText(i) Then
-                                    If Not lvl(j).Count <= 1 Then lvl(j).RemoveAt(lvl(j).Count - 1)
-                                End If
-                            Next
                         Next
-
-                        For j As Integer = 0 To lvl.Count - 1
-                            pos = Math.Max(lvl(j)(lvl(j).Count - 1), pos)
-                        Next
-
-                        ConsoleControl.InsertText(ConsoleControl.Lines(ConsoleControl.CurrentLine).Position + pos, endBr)
-                    Else
-                        ConsoleControl.InsertText(ConsoleControl.CurrentPosition, endBr)
+                        autoCList.Sort(New AutoCompleteComparer())
                     End If
+
+                    If autoCList.Count = 0 Then Return
+                    ConsoleControl.AutoCShow(lenEntered, String.Join(" ", autoCList))
                 End If
 
-            ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) OrElse e.Char = AscW("`"c) Then
-                If e.Char = AscW(""""c) AndAlso ConsoleControl.CurrentPosition > 1 AndAlso ConsoleControl.GetTextRange(ConsoleControl.CurrentPosition - 2, 2) = """""" OrElse e.Char = AscW("'"c) AndAlso ConsoleControl.CurrentPosition > 1 AndAlso ConsoleControl.GetTextRange(ConsoleControl.CurrentPosition - 2, 2) = "'" & "'" Then
+                ' brace completion
+                If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
 
-                    ' if there were already two quotes before, do not add another: user probably wanted to type triple quotes
-                    ConsoleControl.SelectionStart += 1
-                    Return
+                    Dim startPos As Integer
+                    Dim curLine As Integer = ConsoleControl.CurrentLine
+                    Dim curText As String = ConsoleControl.Lines(curLine).Text
+
+                    While curLine > 0 AndAlso ConsoleControl.Lines(curLine - 1).Text.EndsWith("\") ' connect \
+                        curLine -= 1
+                        curText = ConsoleControl.Lines(curLine).Text.Remove(ConsoleControl.Lines(curLine).Text.Length - 1) & curText
+                    End While
+                    startPos = ConsoleControl.Lines(curLine).Position
+
+                    Dim startBr As Char = ChrW(e.Char)
+                    Dim endBr As Char
+                    Dim reverse As Boolean = False
+                    Dim ct As Integer = 0
+
+                    Select Case ChrW(e.Char)
+                        Case "("c
+                            endBr = ")"c
+                        Case "["c
+                            endBr = "]"c
+                        Case "{"c
+                            endBr = "}"c
+                        Case ")"c
+                            endBr = "("c
+                            reverse = True
+                        Case "]"c
+                            endBr = "["c
+                            reverse = True
+                        Case "}"c
+                            endBr = "{"c
+                            reverse = True
+                    End Select
+
+                    For i As Integer = 0 To curText.Length - 1
+                        If curText(i) = startBr Then ct += 1
+                        If curText(i) = endBr Then ct -= 1
+                    Next
+
+                    If ct > 0 Then
+                        If reverse Then
+                            Dim len As Integer = ConsoleControl.CurrentPosition - startPos
+                            If curText.Length > len Then curText = curText.Remove(len)
+
+                            Dim braceList As Char() = {"["c, "("c, "{"c}
+                            Dim endBraceList As Char() = {"]"c, ")"c, "}"c}
+                            Dim lvl As List(Of Integer)() = {New List(Of Integer)({0}),
+                            New List(Of Integer)({0}), New List(Of Integer)({0})}
+                            Dim pos As Integer = _promptText.Length
+
+                            For i As Integer = 0 To curText.Length - 2
+                                For j As Integer = 0 To braceList.Count - 1
+                                    If braceList(j) = curText(i) Then
+                                        lvl(j).Add(i + 1)
+                                    ElseIf endBraceList(j) = curText(i) Then
+                                        If Not lvl(j).Count <= 1 Then lvl(j).RemoveAt(lvl(j).Count - 1)
+                                    End If
+                                Next
+                            Next
+
+                            For j As Integer = 0 To lvl.Count - 1
+                                pos = Math.Max(lvl(j)(lvl(j).Count - 1), pos)
+                            Next
+
+                            ConsoleControl.InsertText(ConsoleControl.Lines(ConsoleControl.CurrentLine).Position + pos, endBr)
+                        Else
+                            ConsoleControl.InsertText(ConsoleControl.CurrentPosition, endBr)
+                        End If
+                    End If
+
+                ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) OrElse e.Char = AscW("`"c) Then
+                    If e.Char = AscW(""""c) AndAlso ConsoleControl.CurrentPosition > 1 AndAlso ConsoleControl.GetTextRange(ConsoleControl.CurrentPosition - 2, 2) = """""" OrElse e.Char = AscW("'"c) AndAlso ConsoleControl.CurrentPosition > 1 AndAlso ConsoleControl.GetTextRange(ConsoleControl.CurrentPosition - 2, 2) = "'" & "'" Then
+
+                        ' if there were already two quotes before, do not add another: user probably wanted to type triple quotes
+                        ConsoleControl.SelectionStart += 1
+                        Return
+                    End If
+
+                    Dim curText As String = ConsoleControl.Lines(ConsoleControl.CurrentLine).Text
+                    Dim ct As Boolean = False
+
+                    For i As Integer = 0 To curText.Length - 1
+                        If curText(i) = ChrW(e.Char) Then ct = Not ct
+                    Next
+
+                    If ct Then ConsoleControl.InsertText(ConsoleControl.CurrentPosition, ChrW(e.Char))
+
                 End If
-
-                Dim curText As String = ConsoleControl.Lines(ConsoleControl.CurrentLine).Text
-                Dim ct As Boolean = False
-
-                For i As Integer = 0 To curText.Length - 1
-                    If curText(i) = ChrW(e.Char) Then ct = Not ct
-                Next
-
-                If ct Then ConsoleControl.InsertText(ConsoleControl.CurrentPosition, ChrW(e.Char))
-
-            End If
+            Catch
+            End Try
         End Sub
 
         Private Sub ConsoleControl_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs)
-            If e.Text.EndsWith("(_)") Then
-                ConsoleControl.DeleteRange(ConsoleControl.SelectionStart - 2, 1)
-                ConsoleControl.SelectionStart -= 1
-                ConsoleControl.SelectionEnd -= 1
-            End If
+            Try
+                If e.Text.EndsWith("(_)") Then
+                    ConsoleControl.DeleteRange(ConsoleControl.SelectionStart - 2, 1)
+                    ConsoleControl.SelectionStart -= 1
+                    ConsoleControl.SelectionEnd -= 1
+                End If
+            Catch
+            End Try
         End Sub
     End Class
 End Namespace

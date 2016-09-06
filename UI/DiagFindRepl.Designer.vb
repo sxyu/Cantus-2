@@ -80,7 +80,7 @@
             Me.btnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.btnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCancel.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.btnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.btnCancel.ForeColor = System.Drawing.Color.White
             Me.btnCancel.Location = New System.Drawing.Point(202, 205)
             Me.btnCancel.Name = "btnCancel"
@@ -100,7 +100,7 @@
             Me.BtnFind.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnFind.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnFind.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.BtnFind.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.BtnFind.ForeColor = System.Drawing.Color.White
             Me.BtnFind.Location = New System.Drawing.Point(301, 205)
             Me.BtnFind.Name = "BtnFind"
@@ -120,7 +120,7 @@
             Me.BtnRepl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnRepl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnRepl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnRepl.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.BtnRepl.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.BtnRepl.ForeColor = System.Drawing.Color.White
             Me.BtnRepl.Location = New System.Drawing.Point(400, 205)
             Me.BtnRepl.Name = "BtnRepl"

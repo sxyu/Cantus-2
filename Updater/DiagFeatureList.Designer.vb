@@ -24,165 +24,166 @@
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
-            Me.tb = New System.Windows.Forms.TextBox()
-            Me.pnlBottom = New System.Windows.Forms.Panel()
-            Me.pnlNote = New System.Windows.Forms.Panel()
-            Me.btnLog = New System.Windows.Forms.Button()
-            Me.btnLicense = New System.Windows.Forms.Button()
-            Me.btnDocs = New System.Windows.Forms.Button()
-            Me.lbNote = New System.Windows.Forms.Label()
-            Me.btnClose = New System.Windows.Forms.Button()
-            Me.wb = New System.Windows.Forms.WebBrowser()
+            Me.Tb = New System.Windows.Forms.TextBox()
+            Me.PnlBottom = New System.Windows.Forms.Panel()
+            Me.PnlNote = New System.Windows.Forms.Panel()
+            Me.BtnLog = New System.Windows.Forms.Button()
+            Me.BtnLicense = New System.Windows.Forms.Button()
+            Me.BtnDocs = New System.Windows.Forms.Button()
+            Me.LbNote = New System.Windows.Forms.Label()
+            Me.BtnClose = New System.Windows.Forms.Button()
+            Me.Wb = New System.Windows.Forms.WebBrowser()
             Me.TmrAnim = New System.Windows.Forms.Timer(Me.components)
-            Me.pnlBottom.SuspendLayout()
-            Me.pnlNote.SuspendLayout()
+            Me.PnlBottom.SuspendLayout()
+            Me.PnlNote.SuspendLayout()
             Me.SuspendLayout()
             '
-            'tb
+            'Tb
             '
-            Me.tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.Tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
-            Me.tb.BorderStyle = System.Windows.Forms.BorderStyle.None
-            Me.tb.ForeColor = System.Drawing.Color.White
-            Me.tb.Location = New System.Drawing.Point(13, 14)
-            Me.tb.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-            Me.tb.Multiline = True
-            Me.tb.Name = "tb"
-            Me.tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-            Me.tb.Size = New System.Drawing.Size(1186, 624)
-            Me.tb.TabIndex = 0
+            Me.Tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
+            Me.Tb.BorderStyle = System.Windows.Forms.BorderStyle.None
+            Me.Tb.ForeColor = System.Drawing.Color.White
+            Me.Tb.Location = New System.Drawing.Point(13, 14)
+            Me.Tb.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+            Me.Tb.Multiline = True
+            Me.Tb.Name = "Tb"
+            Me.Tb.Font = New System.Drawing.Font("Consolas", 11.0!)
+            Me.Tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+            Me.Tb.Size = New System.Drawing.Size(1186, 624)
+            Me.Tb.TabIndex = 0
             '
-            'pnlBottom
+            'PnlBottom
             '
-            Me.pnlBottom.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-            Me.pnlBottom.Controls.Add(Me.pnlNote)
-            Me.pnlBottom.Controls.Add(Me.btnClose)
-            Me.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom
-            Me.pnlBottom.Location = New System.Drawing.Point(0, 648)
-            Me.pnlBottom.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-            Me.pnlBottom.Name = "pnlBottom"
-            Me.pnlBottom.Size = New System.Drawing.Size(1199, 41)
-            Me.pnlBottom.TabIndex = 1
+            Me.PnlBottom.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.PnlBottom.Controls.Add(Me.PnlNote)
+            Me.PnlBottom.Controls.Add(Me.BtnClose)
+            Me.PnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom
+            Me.PnlBottom.Location = New System.Drawing.Point(0, 648)
+            Me.PnlBottom.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+            Me.PnlBottom.Name = "PnlBottom"
+            Me.PnlBottom.Size = New System.Drawing.Size(1199, 41)
+            Me.PnlBottom.TabIndex = 1
             '
-            'pnlNote
+            'PnlNote
             '
-            Me.pnlNote.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.PnlNote.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlNote.Controls.Add(Me.btnLog)
-            Me.pnlNote.Controls.Add(Me.btnLicense)
-            Me.pnlNote.Controls.Add(Me.btnDocs)
-            Me.pnlNote.Controls.Add(Me.lbNote)
-            Me.pnlNote.Location = New System.Drawing.Point(0, -4)
-            Me.pnlNote.Name = "pnlNote"
-            Me.pnlNote.Size = New System.Drawing.Size(1072, 100)
-            Me.pnlNote.TabIndex = 22
+            Me.PnlNote.Controls.Add(Me.BtnLog)
+            Me.PnlNote.Controls.Add(Me.BtnLicense)
+            Me.PnlNote.Controls.Add(Me.BtnDocs)
+            Me.PnlNote.Controls.Add(Me.LbNote)
+            Me.PnlNote.Location = New System.Drawing.Point(0, -4)
+            Me.PnlNote.Name = "PnlNote"
+            Me.PnlNote.Size = New System.Drawing.Size(1072, 100)
+            Me.PnlNote.TabIndex = 22
             '
-            'btnLog
+            'BtnLog
             '
-            Me.btnLog.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnLog.BackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-            Me.btnLog.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnLog.FlatAppearance.BorderSize = 0
-            Me.btnLog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer))
-            Me.btnLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-            Me.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnLog.ForeColor = System.Drawing.Color.White
-            Me.btnLog.Location = New System.Drawing.Point(688, -1)
-            Me.btnLog.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
-            Me.btnLog.Name = "btnLog"
-            Me.btnLog.Size = New System.Drawing.Size(128, 50)
-            Me.btnLog.TabIndex = 0
-            Me.btnLog.Tag = "log"
-            Me.btnLog.Text = "What's New"
-            Me.btnLog.UseVisualStyleBackColor = False
+            Me.BtnLog.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnLog.BackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+            Me.BtnLog.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnLog.FlatAppearance.BorderSize = 0
+            Me.BtnLog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(85, Byte), Integer))
+            Me.BtnLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+            Me.BtnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnLog.ForeColor = System.Drawing.Color.White
+            Me.BtnLog.Location = New System.Drawing.Point(688, -1)
+            Me.BtnLog.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
+            Me.BtnLog.Name = "BtnLog"
+            Me.BtnLog.Size = New System.Drawing.Size(128, 50)
+            Me.BtnLog.TabIndex = 0
+            Me.BtnLog.Tag = "log"
+            Me.BtnLog.Text = "What's New"
+            Me.BtnLog.UseVisualStyleBackColor = False
             '
             'btnLicense
             '
-            Me.btnLicense.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnLicense.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnLicense.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnLicense.FlatAppearance.BorderSize = 0
-            Me.btnLicense.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-            Me.btnLicense.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnLicense.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnLicense.ForeColor = System.Drawing.Color.White
-            Me.btnLicense.Location = New System.Drawing.Point(816, -1)
-            Me.btnLicense.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
-            Me.btnLicense.Name = "btnLicense"
-            Me.btnLicense.Size = New System.Drawing.Size(128, 50)
-            Me.btnLicense.TabIndex = 1
-            Me.btnLicense.Tag = "license"
-            Me.btnLicense.Text = "License"
-            Me.btnLicense.UseVisualStyleBackColor = False
+            Me.BtnLicense.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnLicense.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnLicense.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnLicense.FlatAppearance.BorderSize = 0
+            Me.BtnLicense.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+            Me.BtnLicense.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnLicense.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnLicense.ForeColor = System.Drawing.Color.White
+            Me.BtnLicense.Location = New System.Drawing.Point(816, -1)
+            Me.BtnLicense.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
+            Me.BtnLicense.Name = "BtnLicense"
+            Me.BtnLicense.Size = New System.Drawing.Size(128, 50)
+            Me.BtnLicense.TabIndex = 1
+            Me.BtnLicense.Tag = "license"
+            Me.BtnLicense.Text = "License"
+            Me.BtnLicense.UseVisualStyleBackColor = False
             '
             'btnDocs
             '
-            Me.btnDocs.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnDocs.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnDocs.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnDocs.FlatAppearance.BorderSize = 0
-            Me.btnDocs.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-            Me.btnDocs.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnDocs.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnDocs.ForeColor = System.Drawing.Color.White
-            Me.btnDocs.Location = New System.Drawing.Point(944, -1)
-            Me.btnDocs.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
-            Me.btnDocs.Name = "btnDocs"
-            Me.btnDocs.Size = New System.Drawing.Size(128, 50)
-            Me.btnDocs.TabIndex = 2
-            Me.btnDocs.Tag = "docs"
-            Me.btnDocs.Text = "Docs"
-            Me.btnDocs.UseVisualStyleBackColor = False
+            Me.BtnDocs.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnDocs.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnDocs.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnDocs.FlatAppearance.BorderSize = 0
+            Me.BtnDocs.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+            Me.BtnDocs.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnDocs.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnDocs.ForeColor = System.Drawing.Color.White
+            Me.BtnDocs.Location = New System.Drawing.Point(944, -1)
+            Me.BtnDocs.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
+            Me.BtnDocs.Name = "BtnDocs"
+            Me.BtnDocs.Size = New System.Drawing.Size(128, 50)
+            Me.BtnDocs.TabIndex = 2
+            Me.BtnDocs.Tag = "docs"
+            Me.BtnDocs.Text = "Docs"
+            Me.BtnDocs.UseVisualStyleBackColor = False
             '
             'lbNote
             '
-            Me.lbNote.Anchor = System.Windows.Forms.AnchorStyles.Left
-            Me.lbNote.AutoSize = True
-            Me.lbNote.ForeColor = System.Drawing.Color.Gainsboro
-            Me.lbNote.Location = New System.Drawing.Point(12, 14)
-            Me.lbNote.Name = "lbNote"
-            Me.lbNote.Size = New System.Drawing.Size(600, 20)
-            Me.lbNote.TabIndex = 0
-            Me.lbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" &     "is dialog"
+            Me.LbNote.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.LbNote.AutoSize = True
+            Me.LbNote.ForeColor = System.Drawing.Color.Gainsboro
+            Me.LbNote.Location = New System.Drawing.Point(12, 14)
+            Me.LbNote.Name = "LbNote"
+            Me.LbNote.Size = New System.Drawing.Size(600, 20)
+            Me.LbNote.TabIndex = 0
+            Me.LbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" & "is dialog"
             '
             'btnClose
             '
-            Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnClose.BackColor = System.Drawing.Color.Brown
-            Me.btnClose.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
-            Me.btnClose.FlatAppearance.BorderSize = 0
-            Me.btnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Brown
-            Me.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnClose.ForeColor = System.Drawing.Color.White
-            Me.btnClose.Location = New System.Drawing.Point(1070, -4)
-            Me.btnClose.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
-            Me.btnClose.Name = "btnClose"
-            Me.btnClose.Size = New System.Drawing.Size(130, 50)
-            Me.btnClose.TabIndex = 0
-            Me.btnClose.Text = "Close"
-            Me.btnClose.UseVisualStyleBackColor = False
+            Me.BtnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnClose.BackColor = System.Drawing.Color.Brown
+            Me.BtnClose.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel
+            Me.BtnClose.FlatAppearance.BorderSize = 0
+            Me.BtnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.BtnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Brown
+            Me.BtnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnClose.ForeColor = System.Drawing.Color.White
+            Me.BtnClose.Location = New System.Drawing.Point(1070, -4)
+            Me.BtnClose.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
+            Me.BtnClose.Name = "BtnClose"
+            Me.BtnClose.Size = New System.Drawing.Size(130, 50)
+            Me.BtnClose.TabIndex = 0
+            Me.BtnClose.Text = "Close"
+            Me.BtnClose.UseVisualStyleBackColor = False
             '
-            'wb
+            'Wb
             '
-            Me.wb.AllowWebBrowserDrop = False
-            Me.wb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.Wb.AllowWebBrowserDrop = False
+            Me.Wb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.wb.IsWebBrowserContextMenuEnabled = False
-            Me.wb.Location = New System.Drawing.Point(0, 0)
-            Me.wb.MinimumSize = New System.Drawing.Size(20, 20)
-            Me.wb.Name = "wb"
-            Me.wb.ScriptErrorsSuppressed = True
-            Me.wb.Size = New System.Drawing.Size(1199, 646)
-            Me.wb.TabIndex = 0
-            Me.wb.Url = New System.Uri("", System.UriKind.Relative)
-            Me.wb.Visible = False
-            Me.wb.WebBrowserShortcutsEnabled = False
+            Me.Wb.IsWebBrowserContextMenuEnabled = False
+            Me.Wb.Location = New System.Drawing.Point(0, 0)
+            Me.Wb.MinimumSize = New System.Drawing.Size(20, 20)
+            Me.Wb.Name = "Wb"
+            Me.Wb.ScriptErrorsSuppressed = True
+            Me.Wb.Size = New System.Drawing.Size(1199, 646)
+            Me.Wb.TabIndex = 0
+            Me.Wb.Url = New System.Uri("", System.UriKind.Relative)
+            Me.Wb.Visible = False
+            Me.Wb.WebBrowserShortcutsEnabled = False
             '
             'TmrAnim
             '
@@ -190,15 +191,15 @@
             '
             'DiagFeatureList
             '
-            Me.AcceptButton = Me.btnClose
+            Me.AcceptButton = Me.BtnClose
             Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
-            Me.CancelButton = Me.btnClose
+            Me.CancelButton = Me.BtnClose
             Me.ClientSize = New System.Drawing.Size(1199, 689)
-            Me.Controls.Add(Me.wb)
-            Me.Controls.Add(Me.pnlBottom)
-            Me.Controls.Add(Me.tb)
+            Me.Controls.Add(Me.Wb)
+            Me.Controls.Add(Me.PnlBottom)
+            Me.Controls.Add(Me.Tb)
             Me.Font = New System.Drawing.Font(OpenSans, 11.0!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximizeBox = False
@@ -207,23 +208,23 @@
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "Welcome to Cantus"
-            Me.pnlBottom.ResumeLayout(False)
-            Me.pnlNote.ResumeLayout(False)
-            Me.pnlNote.PerformLayout()
+            Me.PnlBottom.ResumeLayout(False)
+            Me.PnlNote.ResumeLayout(False)
+            Me.PnlNote.PerformLayout()
             Me.ResumeLayout(False)
             Me.PerformLayout()
 
         End Sub
 
-        Friend WithEvents tb As TextBox
-        Friend WithEvents pnlBottom As Panel
-        Friend WithEvents btnClose As Button
-        Friend WithEvents pnlNote As Panel
-        Friend WithEvents lbNote As Label
-        Friend WithEvents btnDocs As Button
-        Friend WithEvents wb As WebBrowser
-        Friend WithEvents btnLicense As Button
-        Friend WithEvents btnLog As Button
+        Friend WithEvents Tb As TextBox
+        Friend WithEvents PnlBottom As Panel
+        Friend WithEvents BtnClose As Button
+        Friend WithEvents PnlNote As Panel
+        Friend WithEvents LbNote As Label
+        Friend WithEvents BtnDocs As Button
+        Friend WithEvents Wb As WebBrowser
+        Friend WithEvents BtnLicense As Button
+        Friend WithEvents BtnLog As Button
         Friend WithEvents TmrAnim As Timer
     End Class
 End Namespace

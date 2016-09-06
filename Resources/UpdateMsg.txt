@@ -25,6 +25,29 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
+What's new in 2.4.7.124
+*********************************************************************************************
+-Operator overloading added:
+  function operator+(a, b)
+    return myclass(a.x + b.x)
+-Added instanceid() method for getting the id of an instance
+-Fixed type() internal member method
+
+Sample class:
+class mynumber
+  let n=1
+    function init(n)
+       this.n = n
+    function text()
+      return cantus.text(n)
+    function operator+(a,b)
+      return mynumber(a.n+b.n)
+t = mynumber(3)
+return (t + t + t)
+
+-Minor fixes
+
+*********************************************************************************************
 What's new in 2.4.6.123
 *********************************************************************************************
 -Added basic find and replace (Ctrl + F or Ctrl + H) for editor
@@ -209,9 +232,9 @@ Core
 
 GUI
 -The 'my results' section is now an interactive virtual console
-	-Supports read, print, and clear
-	-End a line with ':' to use block mode. This lets you run multiple statements at once and
-	  use statements such as if and while.
+  -Supports read, print, and clear
+  -End a line with ':' to use block mode. This lets you run multiple statements at once and
+    use statements such as if and while.
 
 *********************************************************************************************
 New from 2.3.0.92
@@ -292,19 +315,19 @@ OOP format example:
 # Tip: you can copy this into the editor to see the result for yourself!
 
 class pet
-	name = ""
-	function init(name)
-		this.name = name
-	function text()
-		return "Pet name: " + name
+  name = ""
+  function init(name)
+    this.name = name
+  function text()
+    return "Pet name: " + name
 
 class cat : pet
-	function init(name)
-		this.name = name
-	function speak()
-		return "Meow!"
-	function text()
-		return "Cat name: " + name
+  function init(name)
+    this.name = name
+  function speak()
+    return "Meow!"
+  function text()
+    return "Cat name: " + name
 
 myCat = cat("Alex")
 printline(myCat) # prints Cat name: Alex
@@ -315,16 +338,16 @@ printline(myCat.speak()) # prints Meow!
 -Lambda expressions: `123`, `x=>123`
 -Function pointers: x=sin
 -Multi-line lambda expressions: 
-	max = ` x,y =>
-	    if x>y
-			return x
-		else
-			return y
-	`
+  max = ` x,y =>
+      if x>y
+      return x
+    else
+      return y
+  `
 -Namespacing: create namespaces with the namespace keyword
 
 -Import statement to import a package from any path path or from under 'include/' using member access notation:
-	import cantus_xyz.foo
+  import cantus_xyz.foo
   will import from include/cantus_xyz/foo from under the directory
 
   **Items in imported packages may be accessed directly without any access qualifiers**
@@ -337,11 +360,11 @@ printline(myCat.speak()) # prints Meow!
 
 -New data structures: linkedlist() hashset()
 -Use a reference to move through the linkedlist:
-	a = lst.first() # outputs first item
-	alert(a.type()) # alerts 'Reference'
-	a.next() # outputs second item
-	a.remove() # removes second item, outputs new second item
-	a.prev() # outputs first item
+  a = lst.first() # outputs first item
+  alert(a.type()) # alerts 'Reference'
+  a.next() # outputs second item
+  a.remove() # removes second item, outputs new second item
+  a.prev() # outputs first item
 
 -Default number of spaces per tab changed to 2 from 4
 

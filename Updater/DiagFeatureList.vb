@@ -5,45 +5,45 @@
             InitializeComponent()
         End Sub
 
-        Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+        Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
             Me.Close()
         End Sub
 
         Private Sub DiagFeatureList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             Me.Opacity = 0
             Me.Icon = My.Resources.Cantus
-            tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Version).Replace(vbLf, vbCrLf)
-            tb.SelectionStart = 0
+            Tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Version).Replace(vbLf, vbCrLf)
+            Tb.SelectionStart = 0
             Dim cCode As String = Globalization.CultureInfo.CurrentCulture.Name
 
-            If cCode.StartsWith("en") AndAlso cCode <> "en-US" Then btnLicense.Text = "Licence" ' spelling for non-americannglish...
+            If cCode.StartsWith("en") AndAlso cCode <> "en-US" Then BtnLicense.Text = "Licence" ' spelling for non-americannglish...
             TmrAnim.Start()
         End Sub
 
         Dim ctrl As Boolean = False
 
-        Private Sub tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tb.KeyPress
+        Private Sub tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Tb.KeyPress
             If Not ctrl Then e.Handled = True
         End Sub
 
-        Private Sub tb_KeyDown(sender As Object, e As KeyEventArgs) Handles tb.KeyDown
+        Private Sub tb_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb.KeyDown
             If e.Control Then
                 If e.KeyCode = Keys.A Then
-                    tb.SelectAll()
+                    Tb.SelectAll()
                 ElseIf e.KeyCode = Keys.C
                     ctrl = True
                 End If
             End If
         End Sub
 
-        Private Sub tb_KeyUp(sender As Object, e As KeyEventArgs) Handles tb.KeyUp
+        Private Sub tb_KeyUp(sender As Object, e As KeyEventArgs) Handles Tb.KeyUp
             ctrl = False
         End Sub
 
         Private Sub SwitchTab(btnName As String)
             Dim curBtnColor As Color = Color.FromArgb(70, 70, 70)
             Dim backBtnColor As Color = Color.FromArgb(55, 55, 55)
-            For Each c As Control In pnlNote.Controls
+            For Each c As Control In PnlNote.Controls
                 If TypeOf c Is Button AndAlso Not c.Tag Is Nothing Then
                     Dim btn As Button = DirectCast(c, Button)
                     If btn.Tag.ToString = btnName Then
@@ -59,32 +59,32 @@
             Next
         End Sub
 
-        Private Sub btnDocs_Click(sender As Object, e As EventArgs) Handles btnDocs.Click
+        Private Sub btnDocs_Click(sender As Object, e As EventArgs) Handles BtnDocs.Click
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             _allowNavigation = True
             SwitchTab("docs")
-            wb.Navigate("https://github.com/sxyu/Cantus-GUI/blob/master/README.md")
-            wb.Show()
-            wb.Focus()
+            Wb.Navigate("https://github.com/sxyu/Cantus-GUI/blob/master/README.md")
+            Wb.Show()
+            Wb.Focus()
         End Sub
 
-        Private Sub btnLicense_Click(sender As Object, e As EventArgs) Handles btnLicense.Click
+        Private Sub btnLicense_Click(sender As Object, e As EventArgs) Handles BtnLicense.Click
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             _allowNavigation = True
             SwitchTab("license")
-            wb.Hide()
-            tb.Text = My.Resources.LICENSE.Replace(vbLf, vbCrLf)
+            Wb.Hide()
+            Tb.Text = My.Resources.LICENSE.Replace(vbLf, vbCrLf)
         End Sub
 
-        Private Sub btnLog_Click(sender As Object, e As EventArgs) Handles btnLog.Click
+        Private Sub btnLog_Click(sender As Object, e As EventArgs) Handles BtnLog.Click
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             SwitchTab("log")
-            wb.Hide()
-            tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Version).Replace(vbLf, vbCrLf)
+            Wb.Hide()
+            Tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Version).Replace(vbLf, vbCrLf)
         End Sub
 
         Private _allowNavigation As Boolean = False
-        Private Sub wb_Navigating(sender As Object, e As WebBrowserNavigatingEventArgs) Handles wb.Navigating
+        Private Sub wb_Navigating(sender As Object, e As WebBrowserNavigatingEventArgs) Handles Wb.Navigating
             If Not _allowNavigation Then e.Cancel = True Else _allowNavigation = False
         End Sub
 
