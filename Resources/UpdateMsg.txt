@@ -25,17 +25,24 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.6.122
+What's new in 2.4.6.123
+*********************************************************************************************
+-Added basic find and replace (Ctrl + F or Ctrl + H) for editor
+-Fixed rounding in simplification of radicals
+-Reduced maximum number to interpret as radical to 10000
+
+*********************************************************************************************
+New from 2.4.6.122
 *********************************************************************************************
 -Fixed simplification of radicals
 
 *********************************************************************************************
-What's new in 2.4.6.121
+New from 2.4.6.121
 *********************************************************************************************
 -Added autosave, save on run, and save on exit
 
 *********************************************************************************************
-What's new in 2.4.6.120
+New from 2.4.6.120
 *********************************************************************************************
 -Fixed '\' for escaping newlines introduced in the previous version
 -Script feeders (i.e. console block mode) 
@@ -46,7 +53,7 @@ What's new in 2.4.6.120
 -Imports 'plugin' namespace by default
 
 *********************************************************************************************
-New from in 2.4.6.119
+New from 2.4.6.119
 *********************************************************************************************
 -Fixed a bug where # characters could not be included in double-quoted strings
 -Fixed a bug where conditions like 'if c =3' did not evaluate properly
@@ -79,13 +86,13 @@ New from 2.4.6.116
 -Minor fixes
 
 *********************************************************************************************
-New from in 2.4.5.115
+New from 2.4.5.115
 *********************************************************************************************
 -No longer saves init.can in current directory
 -Minor bug fixes
 
 *********************************************************************************************
-New from in 2.4.5.114
+New from 2.4.5.114
 *********************************************************************************************
 -Block mode in console no longer prints the result of the evaluation twice
 -'Bare' flag for console fixed
@@ -99,7 +106,7 @@ New from 2.4.5.113
 -Various minor fixes
 
 *********************************************************************************************
-New from in 2.4.4.112
+New from 2.4.4.112
 *********************************************************************************************
 -The window can now be resized & maximized
 -There is now a splitter that allows you to resize the console and the editor

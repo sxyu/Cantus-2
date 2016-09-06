@@ -65,7 +65,7 @@ Namespace UI
         '' <summary>
         '' Custom lexer for scintilla
         '' </summary>
-        Private _cantusLexer As New CantusLexer()
+        Friend CantusLexer As New CantusLexer()
 
         '' <summary>
         '' Counter used for lazy evaluation of expressions
@@ -195,37 +195,49 @@ Namespace UI
         End Sub
 
         Dim _ignoreNextKey As Boolean = False
+        Dim _findDiagShown As Boolean = False
         Private Sub FrmEditor_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, Tb.KeyUp,
             BtnAngleRepr.KeyUp, PnlSettings.KeyUp, Viewer.KeyUp
             If e.KeyCode = Keys.Enter And e.Alt Then
                 If sender Is Me Then Return
                 EvaluateExpr()
-            ElseIf e.Control AndAlso e.Alt Then
-                If e.KeyCode = Keys.P Then
-                    btnAngleRep_Click(BtnAngleRepr, New EventArgs)
-                ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
-                    If e.KeyCode = Keys.D Then
-                        _eval.AngleMode = AngleRepresentation.Degree
-                    ElseIf e.KeyCode = Keys.R
-                        _eval.AngleMode = AngleRepresentation.Radian
-                    Else
-                        _eval.AngleMode = AngleRepresentation.Gradian
+            ElseIf e.Control Then
+                If e.Alt Then
+                    If e.KeyCode = Keys.P Then
+                        btnAngleRep_Click(BtnAngleRepr, New EventArgs)
+                    ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
+                        If e.KeyCode = Keys.D Then
+                            _eval.AngleMode = AngleRepresentation.Degree
+                        ElseIf e.KeyCode = Keys.R
+                            _eval.AngleMode = AngleRepresentation.Radian
+                        Else
+                            _eval.AngleMode = AngleRepresentation.Gradian
+                        End If
+                        BtnAngleRepr.Text = _eval.AngleMode.ToString()
+                        EvaluateExpr(True)
+                    ElseIf e.KeyCode = Keys.O Then
+                        btnOutputFormat_Click(BtnOutputFormat, New EventArgs)
+                    ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
+                        If e.KeyCode = Keys.M Then
+                            _eval.OutputMode = OutputFormat.Math
+                            e.SuppressKeyPress = True
+                        ElseIf e.KeyCode = Keys.W
+                            _eval.OutputMode = OutputFormat.Raw
+                        Else
+                            _eval.OutputMode = OutputFormat.Scientific
+                        End If
+                        BtnOutputFormat.Text = _eval.OutputMode.ToString()
+                        EvaluateExpr(True)
                     End If
-                    BtnAngleRepr.Text = _eval.AngleMode.ToString()
-                    EvaluateExpr(True)
-                ElseIf e.KeyCode = Keys.O Then
-                    btnOutputFormat_Click(BtnOutputFormat, New EventArgs)
-                ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
-                    If e.KeyCode = Keys.M Then
-                        _eval.OutputMode = OutputFormat.Math
-                        e.SuppressKeyPress = True
-                    ElseIf e.KeyCode = Keys.W
-                        _eval.OutputMode = OutputFormat.Raw
-                    Else
-                        _eval.OutputMode = OutputFormat.Scientific
+                Else
+                    If (e.KeyCode = Keys.F OrElse e.KeyCode = Keys.H) AndAlso Not _findDiagShown Then
+                        Dim diag As New DiagFindRepl(Tb)
+                        _findDiagShown = True
+                        diag.Show()
+                        AddHandler diag.FormClosing, Sub(sender2 As Object, e2 As FormClosingEventArgs)
+                                                         _findDiagShown = False
+                                                     End Sub
                     End If
-                    BtnOutputFormat.Text = _eval.OutputMode.ToString()
-                    EvaluateExpr(True)
                 End If
             End If
         End Sub
@@ -457,6 +469,8 @@ Namespace UI
                     Tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
 
                     Tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
+                    Tb.Styles(CantusLexer.StyleHighlight).ForeColor = Color.FromArgb(0, 0, 0)
+                    Tb.Styles(CantusLexer.StyleHighlight).BackColor = Color.FromArgb(255, 233, 1)
 
                     Tb.Lexer = Lexer.Container
 
@@ -683,6 +697,14 @@ Namespace UI
         End Sub
 
 #Region "Textbox & Labels"
+
+        Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+            ' do not allow input of Control + F, Control + H
+            If keyData = (Keys.Control Or Keys.F) OrElse keyData = (Keys.Control Or Keys.H) Then
+                Return True
+            End If
+            Return MyBase.ProcessCmdKey(msg, keyData)
+        End Function
 
         Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb.KeyDown
             If e.Alt AndAlso Not e.Control Then
@@ -1178,7 +1200,7 @@ Namespace UI
         Private Sub tb_StyleNeeded(sender As Object, e As StyleNeededEventArgs) Handles Tb.StyleNeeded
             Dim startPos As Integer = Tb.GetEndStyled()
             Dim endPos As Integer = e.Position
-            _cantusLexer.Style(Tb, startPos, endPos)
+            CantusLexer.Style(Tb, startPos, endPos)
         End Sub
 
         ' autoindent
@@ -1253,11 +1275,12 @@ Namespace UI
                     If Not nsMode Then
                         autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
                                            "let static global ref undefined null " &
-                                           "switch case run try catch finally while until with in step to choose").Split(" "c))
+                                           "switch case run try catch finally while until with in step to choose and or xor not").Split(" "c))
 
                         autoCList.Add(ROOT_NAMESPACE)
                     End If
 
+                    ' variables
                     For Each v As Variable In _eval.Variables.Values.ToArray()
                         ' ignore private
                         If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(v.DeclaringScope, _eval.Scope)) Then Continue For
@@ -1288,7 +1311,11 @@ Namespace UI
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(v.FullName, _eval.Scope) & If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
+                            Dim varn As String = RemoveRedundantScope(v.FullName, _eval.Scope)
+                            autoCList.Add(varn & If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
+                            If varn.ToLower().StartsWith("plugin") Then
+                                autoCList.Add(varn.Substring("plugin".Length + 1) & If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
+                            End If
                         End If
                     Next
 
@@ -1310,10 +1337,12 @@ Namespace UI
 
                     For Each fn As MethodInfo In InternalFunctions.Methods
                         If nsMode Then
-                            If enteredWord.StartsWith("cantus") Then
-                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
+                            If enteredWord.StartsWith(ROOT_NAMESPACE) Then
+                                autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() &
+                                              "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
 
-                            ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) Then
+                            ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) AndAlso varname.EndsWith(")") OrElse
+                                _eval.HasVariable(varname) Then
                                 If fn.GetParameters(0).ParameterType.IsAssignableFrom(type) Then
                                     autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count <= 1, "", "_") & ")")
                                 End If
@@ -1323,6 +1352,7 @@ Namespace UI
                         End If
                     Next
 
+                    ' user functions
                     For Each fn As UserFunction In _eval.UserFunctions.Values.ToArray()
                         If nsMode Then
                             If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, _eval.Scope).ToLower()) Then
@@ -1341,7 +1371,11 @@ Namespace UI
                                 Continue For
                             End If
                         Else
-                            autoCList.Add(RemoveRedundantScope(fn.FullName, _eval.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                            Dim fnName As String = RemoveRedundantScope(fn.FullName, _eval.Scope)
+                            autoCList.Add(fnName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                            If fnName.ToLower().StartsWith("plugin") Then
+                                autoCList.Add(fnName.Substring("plugin".Length + 1) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                            End If
                         End If
                     Next
 

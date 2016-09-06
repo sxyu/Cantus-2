@@ -50,6 +50,11 @@ Namespace UI.ScintillaForCantus
         Public Const StyleComment As Integer = 7
 
         '' <summary>
+        '' Style used for highlighting
+        '' </summary>
+        Public Const StyleHighlight As Integer = 8
+
+        '' <summary>
         '' Decimal point
         '' </summary>
         Private Shared ReadOnly Property DecPt As String = Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
@@ -79,7 +84,7 @@ Namespace UI.ScintillaForCantus
         '' A hashset of inline keywords
         '' </summary>
         Private _inlineKeywords As New HashSet(Of String)(
-                                                "import load static let public private static global continue return break".Split(" "c))
+                                                "import load static let public private static global continue return break or and xor not".Split(" "c))
 
         Public Sub Style(scintilla As Scintilla, startPos As Integer, endPos As Integer)
             Try
