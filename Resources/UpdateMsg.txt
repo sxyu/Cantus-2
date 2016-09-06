@@ -25,7 +25,13 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.7.124
+What's new in 2.4.7.125
+*********************************************************************************************
+-Fixed a bug where overloaded operators failed to reload on restart 
+-Fixed a bug where the instanceid() function would return the same id even after a restart
+
+*********************************************************************************************
+New from 2.4.7.124
 *********************************************************************************************
 -Operator overloading added:
   function operator+(a, b)
@@ -48,7 +54,7 @@ return (t + t + t)
 -Minor fixes
 
 *********************************************************************************************
-What's new in 2.4.6.123
+New from 2.4.6.123
 *********************************************************************************************
 -Added basic find and replace (Ctrl + F or Ctrl + H) for editor
 -Fixed rounding in simplification of radicals
