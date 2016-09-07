@@ -25,7 +25,12 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.7.125
+What's new in 2.4.7.126
+*********************************************************************************************
+-Fixed broken operator overloading
+
+*********************************************************************************************
+New from 2.4.7.125
 *********************************************************************************************
 -Fixed a bug where overloaded operators failed to reload on restart 
 -Fixed a bug where the instanceid() function would return the same id even after a restart
