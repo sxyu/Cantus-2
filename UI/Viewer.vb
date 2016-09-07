@@ -768,7 +768,7 @@ Namespace UI
                                     autoCList.Add(v.FullName)
 
                                 ElseIf partialName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(partialName.ToLower())
+                                    autoCList.Add(partialName)
 
                                 ElseIf enteredWord.ToLower().StartsWith(partialName.ToLower()) OrElse enteredWord.ToLower().StartsWith(v.FullName.ToLower())
                                     If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
@@ -829,7 +829,11 @@ Namespace UI
                         ' user functions
                         For Each fn As UserFunction In Globals.RootEvaluator.UserFunctions.Values.ToArray()
                             If nsMode Then
-                                If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
+                                Dim fullName As String = fn.FullName
+                                If fullName.ToLower().StartsWith("plugin.") Then fullName = fullName.Remove("plugin.".Length)
+                                If Not fullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso
+                                Not fullName.ToLower().StartsWith(RemoveRedundantScope(fullName,
+                                                              Globals.RootEvaluator.Scope).ToLower()) Then
                                     Continue For
                                 End If
                             End If

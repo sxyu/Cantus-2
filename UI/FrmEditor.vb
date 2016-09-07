@@ -1310,7 +1310,8 @@ Namespace UI
                         ' variables
                         For Each v As Variable In _eval.Variables.Values.ToArray()
                             ' ignore private
-                            If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(v.DeclaringScope, _eval.Scope)) Then Continue For
+                            If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso
+                                Not IsParentScopeOf(v.DeclaringScope, _eval.Scope)) Then Continue For
 
                             ' ignore null
                             If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse TypeOf v.Value Is BigDecimal AndAlso DirectCast(v.Value, BigDecimal).IsUndefined Then Continue For
@@ -1322,7 +1323,7 @@ Namespace UI
                                     autoCList.Add(v.FullName)
 
                                 ElseIf partialName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(partialName.ToLower())
+                                    autoCList.Add(partialName)
 
                                 ElseIf enteredWord.ToLower().StartsWith(partialName.ToLower()) OrElse enteredWord.ToLower().StartsWith(v.FullName.ToLower())
                                     If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
@@ -1382,7 +1383,11 @@ Namespace UI
                         ' user functions
                         For Each fn As UserFunction In _eval.UserFunctions.Values.ToArray()
                             If nsMode Then
-                                If Not fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not fn.FullName.ToLower().StartsWith(RemoveRedundantScope(fn.FullName, _eval.Scope).ToLower()) Then
+                                Dim fullName = fn.FullName
+                                If fullName.ToLower().StartsWith("plugin.") Then fullName = fullName.Remove("plugin.".Length)
+                                If Not fullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso
+                                    Not fullName.ToLower().StartsWith(RemoveRedundantScope(fullName, _eval.Scope).
+                                    ToLower()) Then
                                     Continue For
                                 End If
                             End If
@@ -1400,8 +1405,9 @@ Namespace UI
                             Else
                                 Dim fnName As String = RemoveRedundantScope(fn.FullName, _eval.Scope)
                                 autoCList.Add(fnName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                                If fnName.ToLower().StartsWith("plugin") Then
-                                    autoCList.Add(fnName.Substring("plugin".Length + 1) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
+                                If fnName.ToLower().StartsWith("plugin.") Then
+                                    autoCList.Add(fnName.Substring("plugin.".Length) &
+                                                  "(" & If(fn.Args.Count = 0, "", "_") & ")")
                                 End If
                             End If
                         Next
