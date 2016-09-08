@@ -25,6 +25,13 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
+What's new in 2.4.7.129
+*********************************************************************************************
+-Keyboard no longer visible by default
+-x, y keys on keyboard no longer insert the letter twice
+-Minor fixes in console
+
+*********************************************************************************************
 What's new in 2.4.7.128
 *********************************************************************************************
 -Fixed plugin member autocompletion in the editor

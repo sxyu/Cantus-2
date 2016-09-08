@@ -19,6 +19,7 @@ Namespace UI
         Dim _promptText As String = String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName)
         Dim _prevPrompt As New List(Of String)
         Dim _idx As Integer = 0
+        Dim _line As Integer = 0
 
         '' <summary>
         '' If true, the console is reading user input, rather than taking commands
@@ -142,6 +143,7 @@ Namespace UI
                 ConsoleControl.AppendText(_promptText)
             End If
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
+            _line = ConsoleControl.Lines.Count
         End Sub
 
         Friend Sub AutoAddLine()
@@ -365,7 +367,7 @@ Namespace UI
 
         Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
             If _view <> ViewType.console Then Return False
-            Dim lastLineStart As Integer = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1).Position + _promptText.Length
+            Dim lastLineStart As Integer = ConsoleControl.Lines(_line - 1).Position + _promptText.Length
             If keyData = Keys.Home OrElse keyData = (Keys.Shift Or Keys.Home) OrElse
                 keyData = (Keys.Control Or Keys.Home) OrElse keyData = Keys.Enter OrElse keyData = (Keys.Control Or Keys.Z) OrElse keyData = (Keys.Control Or Keys.Y) Then
                 Return True
@@ -380,10 +382,11 @@ Namespace UI
                     Return True
                 End If
             ElseIf Not (ConsoleControl.SelectionStart = lastLineStart AndAlso ConsoleControl.SelectionEnd > lastLineStart) Then
-                If keyData = (Keys.Control Or Keys.X) OrElse keyData = Keys.Back OrElse
-                   ((keyData = Keys.Delete OrElse keyData = (Keys.Control Or Keys.V)) AndAlso
+                If keyData = (Keys.Control Or Keys.X) OrElse
+                    (keyData Or Keys.Control Or Keys.Alt Or Keys.Shift) = (Keys.Back Or Keys.Control Or Keys.Alt Or Keys.Shift) OrElse
+                   (((keyData Or Keys.Control Or Keys.Alt Or Keys.Shift) = (Keys.Delete Or Keys.Alt Or Keys.Control Or Keys.Shift) OrElse
+                   keyData = (Keys.Control Or Keys.V)) AndAlso
                    Not (ConsoleControl.SelectionStart = lastLineStart AndAlso ConsoleControl.SelectionEnd = lastLineStart)) Then
-
                     Return True
                 End If
                 If ConsoleControl.SelectionStart = lastLineStart Then
@@ -598,7 +601,10 @@ Namespace UI
                 ConsoleControl.SelectionStart = ConsoleControl.TextLength
 
             ElseIf e.KeyCode = Keys.Enter Then
-                Dim lastLineText As String = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1).Text
+                Dim lastLineText As String = ConsoleControl.Lines(_line - 1).Text
+                For i As Integer = _line To ConsoleControl.Lines.Count - 1
+                    lastLineText += ConsoleControl.Lines(i).Text
+                Next
 
                 If lastLineText.Length >= _promptText.Length Then
                     lastLineText = lastLineText.Substring(_promptText.Length)

@@ -25,868 +25,868 @@
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Keyboard))
-            Me.btnSqrt = New System.Windows.Forms.Button()
-            Me.btnlog = New System.Windows.Forms.Button()
-            Me.btnMin = New System.Windows.Forms.Button()
-            Me.btnAdd = New System.Windows.Forms.Button()
-            Me.btnExp = New System.Windows.Forms.Button()
-            Me.btnDiv = New System.Windows.Forms.Button()
-            Me.btnMul = New System.Windows.Forms.Button()
-            Me.btnCalc = New System.Windows.Forms.Button()
-            Me.btnPrev = New System.Windows.Forms.Button()
-            Me.btnNext = New System.Windows.Forms.Button()
-            Me.btnBrLft = New System.Windows.Forms.Button()
-            Me.btnBrRt = New System.Windows.Forms.Button()
-            Me.btnEnd = New System.Windows.Forms.Button()
-            Me.btnAbs = New System.Windows.Forms.Button()
-            Me.btnFact = New System.Windows.Forms.Button()
-            Me.btnEquals = New System.Windows.Forms.Button()
-            Me.btnLessThan = New System.Windows.Forms.Button()
-            Me.btnMoreThan = New System.Windows.Forms.Button()
-            Me.pnl = New System.Windows.Forms.Panel()
-            Me.btnComment = New System.Windows.Forms.Button()
-            Me.btnTripleQuote = New System.Windows.Forms.Button()
-            Me.btnClose = New System.Windows.Forms.Button()
-            Me.btnNot = New System.Windows.Forms.Button()
-            Me.btnQuote = New System.Windows.Forms.Button()
-            Me.btnOr = New System.Windows.Forms.Button()
-            Me.btnAnd = New System.Windows.Forms.Button()
-            Me.btnE = New System.Windows.Forms.Button()
-            Me.btnPi = New System.Windows.Forms.Button()
-            Me.btnZ = New System.Windows.Forms.Button()
-            Me.btnDecimal = New System.Windows.Forms.Button()
-            Me.btn9 = New System.Windows.Forms.Button()
-            Me.btnImagUnit = New System.Windows.Forms.Button()
-            Me.btn0 = New System.Windows.Forms.Button()
-            Me.btn4 = New System.Windows.Forms.Button()
-            Me.btn5 = New System.Windows.Forms.Button()
+            Me.BtnSqrt = New System.Windows.Forms.Button()
+            Me.Btnlog = New System.Windows.Forms.Button()
+            Me.BtnMinus = New System.Windows.Forms.Button()
+            Me.BtnAdd = New System.Windows.Forms.Button()
+            Me.BtnExp = New System.Windows.Forms.Button()
+            Me.BtnDiv = New System.Windows.Forms.Button()
+            Me.BtnMul = New System.Windows.Forms.Button()
+            Me.BtnCalc = New System.Windows.Forms.Button()
+            Me.BtnPrev = New System.Windows.Forms.Button()
+            Me.BtnNext = New System.Windows.Forms.Button()
+            Me.BtnBrLft = New System.Windows.Forms.Button()
+            Me.BtnBrRt = New System.Windows.Forms.Button()
+            Me.BtnEnd = New System.Windows.Forms.Button()
+            Me.BtnAbs = New System.Windows.Forms.Button()
+            Me.BtnFact = New System.Windows.Forms.Button()
+            Me.BtnEquals = New System.Windows.Forms.Button()
+            Me.BtnLessThan = New System.Windows.Forms.Button()
+            Me.BtnMoreThan = New System.Windows.Forms.Button()
+            Me.Pnl = New System.Windows.Forms.Panel()
+            Me.BtnComment = New System.Windows.Forms.Button()
+            Me.BtnTripleQuote = New System.Windows.Forms.Button()
+            Me.BtnClose = New System.Windows.Forms.Button()
+            Me.BtnNot = New System.Windows.Forms.Button()
+            Me.BtnQuote = New System.Windows.Forms.Button()
+            Me.BtnOr = New System.Windows.Forms.Button()
+            Me.BtnAnd = New System.Windows.Forms.Button()
+            Me.BtnE = New System.Windows.Forms.Button()
+            Me.BtnPi = New System.Windows.Forms.Button()
+            Me.BtnZ = New System.Windows.Forms.Button()
+            Me.BtnDecimal = New System.Windows.Forms.Button()
+            Me.Btn9 = New System.Windows.Forms.Button()
+            Me.BtnImagUnit = New System.Windows.Forms.Button()
+            Me.Btn0 = New System.Windows.Forms.Button()
+            Me.Btn4 = New System.Windows.Forms.Button()
+            Me.Btn5 = New System.Windows.Forms.Button()
             Me.BtnY2 = New System.Windows.Forms.Button()
-            Me.btn6 = New System.Windows.Forms.Button()
+            Me.Btn6 = New System.Windows.Forms.Button()
             Me.BtnX2 = New System.Windows.Forms.Button()
-            Me.btn7 = New System.Windows.Forms.Button()
-            Me.btn8 = New System.Windows.Forms.Button()
-            Me.btn1 = New System.Windows.Forms.Button()
-            Me.btn2 = New System.Windows.Forms.Button()
-            Me.btn3 = New System.Windows.Forms.Button()
-            Me.btnRand = New System.Windows.Forms.Button()
-            Me.btnSigma = New System.Windows.Forms.Button()
-            Me.btnDyDx = New System.Windows.Forms.Button()
-            Me.btnTick = New System.Windows.Forms.Button()
-            Me.btnIntegral = New System.Windows.Forms.Button()
-            Me.btnIf = New System.Windows.Forms.Button()
-            Me.btnWhile = New System.Windows.Forms.Button()
-            Me.btnPt = New System.Windows.Forms.Button()
-            Me.btnLn = New System.Windows.Forms.Button()
-            Me.btnCBR = New System.Windows.Forms.Button()
-            Me.btnCBL = New System.Windows.Forms.Button()
-            Me.btnSqBrR = New System.Windows.Forms.Button()
-            Me.btnSqBrL = New System.Windows.Forms.Button()
-            Me.btnY = New System.Windows.Forms.Button()
-            Me.btnX = New System.Windows.Forms.Button()
-            Me.btnMedian = New System.Windows.Forms.Button()
-            Me.btnAvg = New System.Windows.Forms.Button()
-            Me.btnYesNo = New System.Windows.Forms.Button()
-            Me.btnT = New System.Windows.Forms.Button()
-            Me.btnN = New System.Windows.Forms.Button()
-            Me.btnC = New System.Windows.Forms.Button()
-            Me.btnM = New System.Windows.Forms.Button()
-            Me.btnB = New System.Windows.Forms.Button()
-            Me.btnA = New System.Windows.Forms.Button()
-            Me.btnPerm = New System.Windows.Forms.Button()
-            Me.btnChoose = New System.Windows.Forms.Button()
-            Me.btnRead = New System.Windows.Forms.Button()
-            Me.btnConfirm = New System.Windows.Forms.Button()
-            Me.btnPrint = New System.Windows.Forms.Button()
-            Me.btnPow10 = New System.Windows.Forms.Button()
-            Me.btnQdtc = New System.Windows.Forms.Button()
-            Me.btnAtan = New System.Windows.Forms.Button()
-            Me.btnAcos = New System.Windows.Forms.Button()
-            Me.btnAsin = New System.Windows.Forms.Button()
-            Me.btnTan = New System.Windows.Forms.Button()
-            Me.btnCos = New System.Windows.Forms.Button()
-            Me.btnSin = New System.Windows.Forms.Button()
-            Me.btnMod = New System.Windows.Forms.Button()
-            Me.btnRet = New System.Windows.Forms.Button()
-            Me.btnFunctions = New System.Windows.Forms.Button()
-            Me.btnAns = New System.Windows.Forms.Button()
-            Me.btnAC = New System.Windows.Forms.Button()
-            Me.btnDel = New System.Windows.Forms.Button()
-            Me.btnComma = New System.Windows.Forms.Button()
+            Me.Btn7 = New System.Windows.Forms.Button()
+            Me.Btn8 = New System.Windows.Forms.Button()
+            Me.Btn1 = New System.Windows.Forms.Button()
+            Me.Btn2 = New System.Windows.Forms.Button()
+            Me.Btn3 = New System.Windows.Forms.Button()
+            Me.BtnRand = New System.Windows.Forms.Button()
+            Me.BtnSigma = New System.Windows.Forms.Button()
+            Me.BtnDyDx = New System.Windows.Forms.Button()
+            Me.BtnTick = New System.Windows.Forms.Button()
+            Me.BtnIntegral = New System.Windows.Forms.Button()
+            Me.BtnIf = New System.Windows.Forms.Button()
+            Me.BtnWhile = New System.Windows.Forms.Button()
+            Me.BtnPt = New System.Windows.Forms.Button()
+            Me.BtnLn = New System.Windows.Forms.Button()
+            Me.BtnCBR = New System.Windows.Forms.Button()
+            Me.BtnCBL = New System.Windows.Forms.Button()
+            Me.BtnSqBrR = New System.Windows.Forms.Button()
+            Me.BtnSqBrL = New System.Windows.Forms.Button()
+            Me.BtnY = New System.Windows.Forms.Button()
+            Me.BtnX = New System.Windows.Forms.Button()
+            Me.BtnMedian = New System.Windows.Forms.Button()
+            Me.BtnAvg = New System.Windows.Forms.Button()
+            Me.BtnYesNo = New System.Windows.Forms.Button()
+            Me.BtnT = New System.Windows.Forms.Button()
+            Me.BtnN = New System.Windows.Forms.Button()
+            Me.BtnC = New System.Windows.Forms.Button()
+            Me.BtnM = New System.Windows.Forms.Button()
+            Me.BtnB = New System.Windows.Forms.Button()
+            Me.BtnA = New System.Windows.Forms.Button()
+            Me.BtnPerm = New System.Windows.Forms.Button()
+            Me.BtnChoose = New System.Windows.Forms.Button()
+            Me.BtnRead = New System.Windows.Forms.Button()
+            Me.BtnConfirm = New System.Windows.Forms.Button()
+            Me.BtnPrint = New System.Windows.Forms.Button()
+            Me.BtnPow10 = New System.Windows.Forms.Button()
+            Me.BtnQdtc = New System.Windows.Forms.Button()
+            Me.BtnAtan = New System.Windows.Forms.Button()
+            Me.BtnAcos = New System.Windows.Forms.Button()
+            Me.BtnAsin = New System.Windows.Forms.Button()
+            Me.BtnTan = New System.Windows.Forms.Button()
+            Me.BtnCos = New System.Windows.Forms.Button()
+            Me.BtnSin = New System.Windows.Forms.Button()
+            Me.BtnMod = New System.Windows.Forms.Button()
+            Me.BtnRet = New System.Windows.Forms.Button()
+            Me.BtnFunctions = New System.Windows.Forms.Button()
+            Me.BtnAns = New System.Windows.Forms.Button()
+            Me.BtnAC = New System.Windows.Forms.Button()
+            Me.BtnDel = New System.Windows.Forms.Button()
+            Me.BtnComma = New System.Windows.Forms.Button()
             Me.tt = New System.Windows.Forms.ToolTip(Me.components)
-            Me.pnl.SuspendLayout()
+            Me.Pnl.SuspendLayout()
             Me.SuspendLayout()
             '
-            'btnSqrt
+            'BtnSqrt
             '
-            Me.btnSqrt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnSqrt.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnSqrt.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnSqrt.FlatAppearance.BorderSize = 0
-            Me.btnSqrt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnSqrt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnSqrt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSqrt.ForeColor = System.Drawing.Color.White
-            Me.btnSqrt.Location = New System.Drawing.Point(580, 105)
-            Me.btnSqrt.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnSqrt.Name = "btnSqrt"
-            Me.btnSqrt.Size = New System.Drawing.Size(40, 40)
-            Me.btnSqrt.TabIndex = 2
-            Me.btnSqrt.TabStop = False
-            Me.btnSqrt.Text = "√"
-            Me.tt.SetToolTip(Me.btnSqrt, "Left Click: sqrt()" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right Click: root(,)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle Click: cbrt(,)")
-            Me.btnSqrt.UseVisualStyleBackColor = False
+            Me.BtnSqrt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnSqrt.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnSqrt.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnSqrt.FlatAppearance.BorderSize = 0
+            Me.BtnSqrt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnSqrt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnSqrt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnSqrt.ForeColor = System.Drawing.Color.White
+            Me.BtnSqrt.Location = New System.Drawing.Point(580, 105)
+            Me.BtnSqrt.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnSqrt.Name = "BtnSqrt"
+            Me.BtnSqrt.Size = New System.Drawing.Size(40, 40)
+            Me.BtnSqrt.TabIndex = 2
+            Me.BtnSqrt.TabStop = False
+            Me.BtnSqrt.Text = "√"
+            Me.tt.SetToolTip(Me.BtnSqrt, "Left Click: sqrt()" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right Click: root(,)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle Click: cbrt(,)")
+            Me.BtnSqrt.UseVisualStyleBackColor = False
             '
-            'btnlog
+            'Btnlog
             '
-            Me.btnlog.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnlog.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnlog.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnlog.FlatAppearance.BorderSize = 0
-            Me.btnlog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnlog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnlog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnlog.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
-            Me.btnlog.ForeColor = System.Drawing.Color.White
-            Me.btnlog.Location = New System.Drawing.Point(536, 105)
-            Me.btnlog.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnlog.Name = "btnlog"
-            Me.btnlog.Size = New System.Drawing.Size(40, 40)
-            Me.btnlog.TabIndex = 3
-            Me.btnlog.TabStop = False
-            Me.btnlog.Text = "log"
-            Me.tt.SetToolTip(Me.btnlog, "Left Click: log(,)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right Click: ln()" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle Click: lg()")
-            Me.btnlog.UseVisualStyleBackColor = False
+            Me.Btnlog.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btnlog.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.Btnlog.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btnlog.FlatAppearance.BorderSize = 0
+            Me.Btnlog.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.Btnlog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.Btnlog.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btnlog.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
+            Me.Btnlog.ForeColor = System.Drawing.Color.White
+            Me.Btnlog.Location = New System.Drawing.Point(536, 105)
+            Me.Btnlog.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btnlog.Name = "Btnlog"
+            Me.Btnlog.Size = New System.Drawing.Size(40, 40)
+            Me.Btnlog.TabIndex = 3
+            Me.Btnlog.TabStop = False
+            Me.Btnlog.Text = "log"
+            Me.tt.SetToolTip(Me.Btnlog, "Left Click: log(,)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right Click: ln()" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle Click: lg()")
+            Me.Btnlog.UseVisualStyleBackColor = False
             '
-            'btnMin
+            'BtnMin
             '
-            Me.btnMin.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnMin.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnMin.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnMin.FlatAppearance.BorderSize = 0
-            Me.btnMin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnMin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnMin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMin.ForeColor = System.Drawing.Color.White
-            Me.btnMin.Location = New System.Drawing.Point(624, 105)
-            Me.btnMin.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnMin.Name = "btnMin"
-            Me.btnMin.Size = New System.Drawing.Size(40, 40)
-            Me.btnMin.TabIndex = 4
-            Me.btnMin.TabStop = False
-            Me.btnMin.Text = "-"
-            Me.btnMin.UseVisualStyleBackColor = False
+            Me.BtnMinus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnMinus.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnMinus.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnMinus.FlatAppearance.BorderSize = 0
+            Me.BtnMinus.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnMinus.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnMinus.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnMinus.ForeColor = System.Drawing.Color.White
+            Me.BtnMinus.Location = New System.Drawing.Point(624, 105)
+            Me.BtnMinus.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnMinus.Name = "BtnMin"
+            Me.BtnMinus.Size = New System.Drawing.Size(40, 40)
+            Me.BtnMinus.TabIndex = 4
+            Me.BtnMinus.TabStop = False
+            Me.BtnMinus.Text = "-"
+            Me.BtnMinus.UseVisualStyleBackColor = False
             '
-            'btnAdd
+            'BtnAdd
             '
-            Me.btnAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAdd.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAdd.FlatAppearance.BorderSize = 0
-            Me.btnAdd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnAdd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAdd.ForeColor = System.Drawing.Color.White
-            Me.btnAdd.Location = New System.Drawing.Point(668, 105)
-            Me.btnAdd.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAdd.Name = "btnAdd"
-            Me.btnAdd.Size = New System.Drawing.Size(40, 40)
-            Me.btnAdd.TabIndex = 5
-            Me.btnAdd.TabStop = False
-            Me.btnAdd.Text = "+"
-            Me.btnAdd.UseVisualStyleBackColor = False
+            Me.BtnAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAdd.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnAdd.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAdd.FlatAppearance.BorderSize = 0
+            Me.BtnAdd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnAdd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAdd.ForeColor = System.Drawing.Color.White
+            Me.BtnAdd.Location = New System.Drawing.Point(668, 105)
+            Me.BtnAdd.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAdd.Name = "BtnAdd"
+            Me.BtnAdd.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAdd.TabIndex = 5
+            Me.BtnAdd.TabStop = False
+            Me.BtnAdd.Text = "+"
+            Me.BtnAdd.UseVisualStyleBackColor = False
             '
-            'btnExp
+            'BtnExp
             '
-            Me.btnExp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnExp.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnExp.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnExp.FlatAppearance.BorderSize = 0
-            Me.btnExp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnExp.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnExp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnExp.ForeColor = System.Drawing.Color.White
-            Me.btnExp.Location = New System.Drawing.Point(580, 149)
-            Me.btnExp.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnExp.Name = "btnExp"
-            Me.btnExp.Size = New System.Drawing.Size(40, 40)
-            Me.btnExp.TabIndex = 6
-            Me.btnExp.TabStop = False
-            Me.btnExp.Text = "^"
-            Me.tt.SetToolTip(Me.btnExp, "Left Click: ^" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right Click: E (*10^)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle Click: ^2")
-            Me.btnExp.UseVisualStyleBackColor = False
+            Me.BtnExp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnExp.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnExp.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnExp.FlatAppearance.BorderSize = 0
+            Me.BtnExp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnExp.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnExp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnExp.ForeColor = System.Drawing.Color.White
+            Me.BtnExp.Location = New System.Drawing.Point(580, 149)
+            Me.BtnExp.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnExp.Name = "BtnExp"
+            Me.BtnExp.Size = New System.Drawing.Size(40, 40)
+            Me.BtnExp.TabIndex = 6
+            Me.BtnExp.TabStop = False
+            Me.BtnExp.Text = "^"
+            Me.tt.SetToolTip(Me.BtnExp, "Left Click: ^" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right Click: E (*10^)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle Click: ^2")
+            Me.BtnExp.UseVisualStyleBackColor = False
             '
-            'btnDiv
+            'BtnDiv
             '
-            Me.btnDiv.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnDiv.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnDiv.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnDiv.FlatAppearance.BorderSize = 0
-            Me.btnDiv.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnDiv.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnDiv.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnDiv.ForeColor = System.Drawing.Color.White
-            Me.btnDiv.Location = New System.Drawing.Point(624, 149)
-            Me.btnDiv.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnDiv.Name = "btnDiv"
-            Me.btnDiv.Size = New System.Drawing.Size(40, 40)
-            Me.btnDiv.TabIndex = 7
-            Me.btnDiv.TabStop = False
-            Me.btnDiv.Text = "/"
-            Me.btnDiv.UseVisualStyleBackColor = False
+            Me.BtnDiv.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnDiv.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnDiv.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnDiv.FlatAppearance.BorderSize = 0
+            Me.BtnDiv.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnDiv.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnDiv.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnDiv.ForeColor = System.Drawing.Color.White
+            Me.BtnDiv.Location = New System.Drawing.Point(624, 149)
+            Me.BtnDiv.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnDiv.Name = "BtnDiv"
+            Me.BtnDiv.Size = New System.Drawing.Size(40, 40)
+            Me.BtnDiv.TabIndex = 7
+            Me.BtnDiv.TabStop = False
+            Me.BtnDiv.Text = "/"
+            Me.BtnDiv.UseVisualStyleBackColor = False
             '
-            'btnMul
+            'BtnMul
             '
-            Me.btnMul.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnMul.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnMul.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnMul.FlatAppearance.BorderSize = 0
-            Me.btnMul.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnMul.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnMul.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMul.ForeColor = System.Drawing.Color.White
-            Me.btnMul.Location = New System.Drawing.Point(668, 149)
-            Me.btnMul.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnMul.Name = "btnMul"
-            Me.btnMul.Size = New System.Drawing.Size(40, 40)
-            Me.btnMul.TabIndex = 8
-            Me.btnMul.TabStop = False
-            Me.btnMul.Text = "*"
-            Me.btnMul.UseVisualStyleBackColor = False
+            Me.BtnMul.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnMul.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnMul.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnMul.FlatAppearance.BorderSize = 0
+            Me.BtnMul.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnMul.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnMul.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnMul.ForeColor = System.Drawing.Color.White
+            Me.BtnMul.Location = New System.Drawing.Point(668, 149)
+            Me.BtnMul.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnMul.Name = "BtnMul"
+            Me.BtnMul.Size = New System.Drawing.Size(40, 40)
+            Me.BtnMul.TabIndex = 8
+            Me.BtnMul.TabStop = False
+            Me.BtnMul.Text = "*"
+            Me.BtnMul.UseVisualStyleBackColor = False
             '
-            'btnCalc
+            'BtnCalc
             '
-            Me.btnCalc.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnCalc.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnCalc.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnCalc.FlatAppearance.BorderSize = 0
-            Me.btnCalc.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.btnCalc.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnCalc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCalc.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.btnCalc.ForeColor = System.Drawing.Color.White
-            Me.btnCalc.Location = New System.Drawing.Point(624, 237)
-            Me.btnCalc.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnCalc.Name = "btnCalc"
-            Me.btnCalc.Size = New System.Drawing.Size(84, 40)
-            Me.btnCalc.TabIndex = 11
-            Me.btnCalc.TabStop = False
-            Me.btnCalc.Text = "Enter"
-            Me.tt.SetToolTip(Me.btnCalc, "Force an evaluation")
-            Me.btnCalc.UseVisualStyleBackColor = False
+            Me.BtnCalc.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnCalc.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnCalc.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnCalc.FlatAppearance.BorderSize = 0
+            Me.BtnCalc.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BtnCalc.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnCalc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnCalc.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.BtnCalc.ForeColor = System.Drawing.Color.White
+            Me.BtnCalc.Location = New System.Drawing.Point(624, 237)
+            Me.BtnCalc.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnCalc.Name = "BtnCalc"
+            Me.BtnCalc.Size = New System.Drawing.Size(84, 40)
+            Me.BtnCalc.TabIndex = 11
+            Me.BtnCalc.TabStop = False
+            Me.BtnCalc.Text = "Enter"
+            Me.tt.SetToolTip(Me.BtnCalc, "Force an evaluation")
+            Me.BtnCalc.UseVisualStyleBackColor = False
             '
-            'btnPrev
+            'BtnPrev
             '
-            Me.btnPrev.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnPrev.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPrev.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnPrev.FlatAppearance.BorderSize = 0
-            Me.btnPrev.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnPrev.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPrev.ForeColor = System.Drawing.Color.White
-            Me.btnPrev.Location = New System.Drawing.Point(251, 238)
-            Me.btnPrev.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnPrev.Name = "btnPrev"
-            Me.btnPrev.Size = New System.Drawing.Size(40, 40)
-            Me.btnPrev.TabIndex = 12
-            Me.btnPrev.TabStop = False
-            Me.btnPrev.Text = "↢"
-            Me.tt.SetToolTip(Me.btnPrev, "Move caret left")
-            Me.btnPrev.UseVisualStyleBackColor = False
+            Me.BtnPrev.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnPrev.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPrev.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnPrev.FlatAppearance.BorderSize = 0
+            Me.BtnPrev.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnPrev.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnPrev.ForeColor = System.Drawing.Color.White
+            Me.BtnPrev.Location = New System.Drawing.Point(251, 238)
+            Me.BtnPrev.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnPrev.Name = "BtnPrev"
+            Me.BtnPrev.Size = New System.Drawing.Size(40, 40)
+            Me.BtnPrev.TabIndex = 12
+            Me.BtnPrev.TabStop = False
+            Me.BtnPrev.Text = "↢"
+            Me.tt.SetToolTip(Me.BtnPrev, "Move caret left")
+            Me.BtnPrev.UseVisualStyleBackColor = False
             '
-            'btnNext
+            'BtnNext
             '
-            Me.btnNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnNext.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnNext.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnNext.FlatAppearance.BorderSize = 0
-            Me.btnNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnNext.ForeColor = System.Drawing.Color.White
-            Me.btnNext.Location = New System.Drawing.Point(295, 238)
-            Me.btnNext.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnNext.Name = "btnNext"
-            Me.btnNext.Size = New System.Drawing.Size(40, 40)
-            Me.btnNext.TabIndex = 13
-            Me.btnNext.TabStop = False
-            Me.btnNext.Text = "↣"
-            Me.tt.SetToolTip(Me.btnNext, "Move caret right")
-            Me.btnNext.UseVisualStyleBackColor = False
+            Me.BtnNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnNext.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnNext.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnNext.FlatAppearance.BorderSize = 0
+            Me.BtnNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnNext.ForeColor = System.Drawing.Color.White
+            Me.BtnNext.Location = New System.Drawing.Point(295, 238)
+            Me.BtnNext.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnNext.Name = "BtnNext"
+            Me.BtnNext.Size = New System.Drawing.Size(40, 40)
+            Me.BtnNext.TabIndex = 13
+            Me.BtnNext.TabStop = False
+            Me.BtnNext.Text = "↣"
+            Me.tt.SetToolTip(Me.BtnNext, "Move caret right")
+            Me.BtnNext.UseVisualStyleBackColor = False
             '
-            'btnBrLft
+            'BtnBrLft
             '
-            Me.btnBrLft.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnBrLft.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnBrLft.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnBrLft.FlatAppearance.BorderSize = 0
-            Me.btnBrLft.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnBrLft.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnBrLft.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnBrLft.ForeColor = System.Drawing.Color.White
-            Me.btnBrLft.Location = New System.Drawing.Point(624, 61)
-            Me.btnBrLft.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnBrLft.Name = "btnBrLft"
-            Me.btnBrLft.Size = New System.Drawing.Size(40, 40)
-            Me.btnBrLft.TabIndex = 14
-            Me.btnBrLft.TabStop = False
-            Me.btnBrLft.Text = "("
-            Me.tt.SetToolTip(Me.btnBrLft, "Regular brackets/tuple")
-            Me.btnBrLft.UseCompatibleTextRendering = True
-            Me.btnBrLft.UseVisualStyleBackColor = False
+            Me.BtnBrLft.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnBrLft.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnBrLft.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnBrLft.FlatAppearance.BorderSize = 0
+            Me.BtnBrLft.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnBrLft.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnBrLft.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnBrLft.ForeColor = System.Drawing.Color.White
+            Me.BtnBrLft.Location = New System.Drawing.Point(624, 61)
+            Me.BtnBrLft.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnBrLft.Name = "BtnBrLft"
+            Me.BtnBrLft.Size = New System.Drawing.Size(40, 40)
+            Me.BtnBrLft.TabIndex = 14
+            Me.BtnBrLft.TabStop = False
+            Me.BtnBrLft.Text = "("
+            Me.tt.SetToolTip(Me.BtnBrLft, "Regular brackets/tuple")
+            Me.BtnBrLft.UseCompatibleTextRendering = True
+            Me.BtnBrLft.UseVisualStyleBackColor = False
             '
-            'btnBrRt
+            'BtnBrRt
             '
-            Me.btnBrRt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnBrRt.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnBrRt.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnBrRt.FlatAppearance.BorderSize = 0
-            Me.btnBrRt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnBrRt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnBrRt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnBrRt.ForeColor = System.Drawing.Color.White
-            Me.btnBrRt.Location = New System.Drawing.Point(668, 61)
-            Me.btnBrRt.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnBrRt.Name = "btnBrRt"
-            Me.btnBrRt.Size = New System.Drawing.Size(40, 40)
-            Me.btnBrRt.TabIndex = 15
-            Me.btnBrRt.TabStop = False
-            Me.btnBrRt.Text = ")"
-            Me.btnBrRt.UseVisualStyleBackColor = False
+            Me.BtnBrRt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnBrRt.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnBrRt.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnBrRt.FlatAppearance.BorderSize = 0
+            Me.BtnBrRt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnBrRt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnBrRt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnBrRt.ForeColor = System.Drawing.Color.White
+            Me.BtnBrRt.Location = New System.Drawing.Point(668, 61)
+            Me.BtnBrRt.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnBrRt.Name = "BtnBrRt"
+            Me.BtnBrRt.Size = New System.Drawing.Size(40, 40)
+            Me.BtnBrRt.TabIndex = 15
+            Me.BtnBrRt.TabStop = False
+            Me.BtnBrRt.Text = ")"
+            Me.BtnBrRt.UseVisualStyleBackColor = False
             '
-            'btnEnd
+            'BtnEnd
             '
-            Me.btnEnd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnEnd.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnEnd.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnEnd.FlatAppearance.BorderSize = 0
-            Me.btnEnd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnEnd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnEnd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnEnd.ForeColor = System.Drawing.Color.White
-            Me.btnEnd.Location = New System.Drawing.Point(207, 238)
-            Me.btnEnd.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnEnd.Name = "btnEnd"
-            Me.btnEnd.Size = New System.Drawing.Size(40, 40)
-            Me.btnEnd.TabIndex = 16
-            Me.btnEnd.TabStop = False
-            Me.btnEnd.Text = "↠"
-            Me.tt.SetToolTip(Me.btnEnd, "Move caret to right end")
-            Me.btnEnd.UseVisualStyleBackColor = False
+            Me.BtnEnd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnEnd.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnEnd.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnEnd.FlatAppearance.BorderSize = 0
+            Me.BtnEnd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnEnd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnEnd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnEnd.ForeColor = System.Drawing.Color.White
+            Me.BtnEnd.Location = New System.Drawing.Point(207, 238)
+            Me.BtnEnd.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnEnd.Name = "BtnEnd"
+            Me.BtnEnd.Size = New System.Drawing.Size(40, 40)
+            Me.BtnEnd.TabIndex = 16
+            Me.BtnEnd.TabStop = False
+            Me.BtnEnd.Text = "↠"
+            Me.tt.SetToolTip(Me.BtnEnd, "Move caret to right end")
+            Me.BtnEnd.UseVisualStyleBackColor = False
             '
-            'btnAbs
+            'BtnAbs
             '
-            Me.btnAbs.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAbs.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAbs.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAbs.FlatAppearance.BorderSize = 0
-            Me.btnAbs.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnAbs.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAbs.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAbs.ForeColor = System.Drawing.Color.White
-            Me.btnAbs.Location = New System.Drawing.Point(394, 150)
-            Me.btnAbs.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAbs.Name = "btnAbs"
-            Me.btnAbs.Size = New System.Drawing.Size(40, 40)
-            Me.btnAbs.TabIndex = 17
-            Me.btnAbs.TabStop = False
-            Me.btnAbs.Text = "|"
-            Me.tt.SetToolTip(Me.btnAbs, "Absolute value / Bitwise or")
-            Me.btnAbs.UseVisualStyleBackColor = False
+            Me.BtnAbs.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAbs.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAbs.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAbs.FlatAppearance.BorderSize = 0
+            Me.BtnAbs.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnAbs.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAbs.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAbs.ForeColor = System.Drawing.Color.White
+            Me.BtnAbs.Location = New System.Drawing.Point(394, 150)
+            Me.BtnAbs.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAbs.Name = "BtnAbs"
+            Me.BtnAbs.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAbs.TabIndex = 17
+            Me.BtnAbs.TabStop = False
+            Me.BtnAbs.Text = "|"
+            Me.tt.SetToolTip(Me.BtnAbs, "Absolute value / Bitwise or")
+            Me.BtnAbs.UseVisualStyleBackColor = False
             '
-            'btnFact
+            'BtnFact
             '
-            Me.btnFact.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnFact.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnFact.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnFact.FlatAppearance.BorderSize = 0
-            Me.btnFact.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnFact.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnFact.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFact.ForeColor = System.Drawing.Color.White
-            Me.btnFact.Location = New System.Drawing.Point(350, 150)
-            Me.btnFact.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnFact.Name = "btnFact"
-            Me.btnFact.Size = New System.Drawing.Size(40, 40)
-            Me.btnFact.TabIndex = 19
-            Me.btnFact.TabStop = False
-            Me.btnFact.Text = "!"
-            Me.tt.SetToolTip(Me.btnFact, "Factorial")
-            Me.btnFact.UseVisualStyleBackColor = False
+            Me.BtnFact.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnFact.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnFact.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnFact.FlatAppearance.BorderSize = 0
+            Me.BtnFact.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnFact.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnFact.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnFact.ForeColor = System.Drawing.Color.White
+            Me.BtnFact.Location = New System.Drawing.Point(350, 150)
+            Me.BtnFact.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnFact.Name = "BtnFact"
+            Me.BtnFact.Size = New System.Drawing.Size(40, 40)
+            Me.BtnFact.TabIndex = 19
+            Me.BtnFact.TabStop = False
+            Me.BtnFact.Text = "!"
+            Me.tt.SetToolTip(Me.BtnFact, "Factorial")
+            Me.BtnFact.UseVisualStyleBackColor = False
             '
-            'btnEquals
+            'BtnEquals
             '
-            Me.btnEquals.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnEquals.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnEquals.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnEquals.FlatAppearance.BorderSize = 0
-            Me.btnEquals.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnEquals.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnEquals.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnEquals.ForeColor = System.Drawing.Color.White
-            Me.btnEquals.Location = New System.Drawing.Point(536, 193)
-            Me.btnEquals.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnEquals.Name = "btnEquals"
-            Me.btnEquals.Size = New System.Drawing.Size(40, 40)
-            Me.btnEquals.TabIndex = 20
-            Me.btnEquals.TabStop = False
-            Me.btnEquals.Text = "="
-            Me.tt.SetToolTip(Me.btnEquals, "Equal to / Assignment")
-            Me.btnEquals.UseVisualStyleBackColor = False
+            Me.BtnEquals.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnEquals.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnEquals.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnEquals.FlatAppearance.BorderSize = 0
+            Me.BtnEquals.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnEquals.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnEquals.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnEquals.ForeColor = System.Drawing.Color.White
+            Me.BtnEquals.Location = New System.Drawing.Point(536, 193)
+            Me.BtnEquals.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnEquals.Name = "BtnEquals"
+            Me.BtnEquals.Size = New System.Drawing.Size(40, 40)
+            Me.BtnEquals.TabIndex = 20
+            Me.BtnEquals.TabStop = False
+            Me.BtnEquals.Text = "="
+            Me.tt.SetToolTip(Me.BtnEquals, "Equal to / Assignment")
+            Me.BtnEquals.UseVisualStyleBackColor = False
             '
-            'btnLessThan
+            'BtnLessThan
             '
-            Me.btnLessThan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnLessThan.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnLessThan.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnLessThan.FlatAppearance.BorderSize = 0
-            Me.btnLessThan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnLessThan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnLessThan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnLessThan.ForeColor = System.Drawing.Color.White
-            Me.btnLessThan.Location = New System.Drawing.Point(438, 150)
-            Me.btnLessThan.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnLessThan.Name = "btnLessThan"
-            Me.btnLessThan.Size = New System.Drawing.Size(40, 40)
-            Me.btnLessThan.TabIndex = 21
-            Me.btnLessThan.TabStop = False
-            Me.btnLessThan.Text = "<"
-            Me.tt.SetToolTip(Me.btnLessThan, "Less than")
-            Me.btnLessThan.UseVisualStyleBackColor = False
+            Me.BtnLessThan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnLessThan.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnLessThan.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnLessThan.FlatAppearance.BorderSize = 0
+            Me.BtnLessThan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnLessThan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnLessThan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnLessThan.ForeColor = System.Drawing.Color.White
+            Me.BtnLessThan.Location = New System.Drawing.Point(438, 150)
+            Me.BtnLessThan.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnLessThan.Name = "BtnLessThan"
+            Me.BtnLessThan.Size = New System.Drawing.Size(40, 40)
+            Me.BtnLessThan.TabIndex = 21
+            Me.BtnLessThan.TabStop = False
+            Me.BtnLessThan.Text = "<"
+            Me.tt.SetToolTip(Me.BtnLessThan, "Less than")
+            Me.BtnLessThan.UseVisualStyleBackColor = False
             '
-            'btnMoreThan
+            'BtnMoreThan
             '
-            Me.btnMoreThan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnMoreThan.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnMoreThan.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnMoreThan.FlatAppearance.BorderSize = 0
-            Me.btnMoreThan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnMoreThan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnMoreThan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMoreThan.ForeColor = System.Drawing.Color.White
-            Me.btnMoreThan.Location = New System.Drawing.Point(482, 150)
-            Me.btnMoreThan.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnMoreThan.Name = "btnMoreThan"
-            Me.btnMoreThan.Size = New System.Drawing.Size(40, 40)
-            Me.btnMoreThan.TabIndex = 22
-            Me.btnMoreThan.TabStop = False
-            Me.btnMoreThan.Text = ">"
-            Me.tt.SetToolTip(Me.btnMoreThan, "More than")
-            Me.btnMoreThan.UseVisualStyleBackColor = False
+            Me.BtnMoreThan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnMoreThan.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMoreThan.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnMoreThan.FlatAppearance.BorderSize = 0
+            Me.BtnMoreThan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnMoreThan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMoreThan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnMoreThan.ForeColor = System.Drawing.Color.White
+            Me.BtnMoreThan.Location = New System.Drawing.Point(482, 150)
+            Me.BtnMoreThan.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnMoreThan.Name = "BtnMoreThan"
+            Me.BtnMoreThan.Size = New System.Drawing.Size(40, 40)
+            Me.BtnMoreThan.TabIndex = 22
+            Me.BtnMoreThan.TabStop = False
+            Me.BtnMoreThan.Text = ">"
+            Me.tt.SetToolTip(Me.BtnMoreThan, "More than")
+            Me.BtnMoreThan.UseVisualStyleBackColor = False
             '
-            'pnl
+            'Pnl
             '
-            Me.pnl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.Pnl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnl.Controls.Add(Me.btnComment)
-            Me.pnl.Controls.Add(Me.btnTripleQuote)
-            Me.pnl.Controls.Add(Me.btnClose)
-            Me.pnl.Controls.Add(Me.btnNot)
-            Me.pnl.Controls.Add(Me.btnQuote)
-            Me.pnl.Controls.Add(Me.btnOr)
-            Me.pnl.Controls.Add(Me.btnAnd)
-            Me.pnl.Controls.Add(Me.btnE)
-            Me.pnl.Controls.Add(Me.btnPi)
-            Me.pnl.Controls.Add(Me.btnZ)
-            Me.pnl.Controls.Add(Me.btnDecimal)
-            Me.pnl.Controls.Add(Me.btn9)
-            Me.pnl.Controls.Add(Me.btnImagUnit)
-            Me.pnl.Controls.Add(Me.btn0)
-            Me.pnl.Controls.Add(Me.btn4)
-            Me.pnl.Controls.Add(Me.btn5)
-            Me.pnl.Controls.Add(Me.BtnY2)
-            Me.pnl.Controls.Add(Me.btn6)
-            Me.pnl.Controls.Add(Me.BtnX2)
-            Me.pnl.Controls.Add(Me.btn7)
-            Me.pnl.Controls.Add(Me.btn8)
-            Me.pnl.Controls.Add(Me.btn1)
-            Me.pnl.Controls.Add(Me.btn2)
-            Me.pnl.Controls.Add(Me.btn3)
-            Me.pnl.Controls.Add(Me.btnRand)
-            Me.pnl.Controls.Add(Me.btnSigma)
-            Me.pnl.Controls.Add(Me.btnDyDx)
-            Me.pnl.Controls.Add(Me.btnTick)
-            Me.pnl.Controls.Add(Me.btnIntegral)
-            Me.pnl.Controls.Add(Me.btnIf)
-            Me.pnl.Controls.Add(Me.btnWhile)
-            Me.pnl.Controls.Add(Me.btnPt)
-            Me.pnl.Controls.Add(Me.btnLn)
-            Me.pnl.Controls.Add(Me.btnCBR)
-            Me.pnl.Controls.Add(Me.btnCBL)
-            Me.pnl.Controls.Add(Me.btnSqBrR)
-            Me.pnl.Controls.Add(Me.btnSqBrL)
-            Me.pnl.Controls.Add(Me.btnY)
-            Me.pnl.Controls.Add(Me.btnX)
-            Me.pnl.Controls.Add(Me.btnMedian)
-            Me.pnl.Controls.Add(Me.btnAvg)
-            Me.pnl.Controls.Add(Me.btnYesNo)
-            Me.pnl.Controls.Add(Me.btnT)
-            Me.pnl.Controls.Add(Me.btnN)
-            Me.pnl.Controls.Add(Me.btnC)
-            Me.pnl.Controls.Add(Me.btnM)
-            Me.pnl.Controls.Add(Me.btnB)
-            Me.pnl.Controls.Add(Me.btnA)
-            Me.pnl.Controls.Add(Me.btnPerm)
-            Me.pnl.Controls.Add(Me.btnChoose)
-            Me.pnl.Controls.Add(Me.btnRead)
-            Me.pnl.Controls.Add(Me.btnConfirm)
-            Me.pnl.Controls.Add(Me.btnPrint)
-            Me.pnl.Controls.Add(Me.btnPow10)
-            Me.pnl.Controls.Add(Me.btnQdtc)
-            Me.pnl.Controls.Add(Me.btnAtan)
-            Me.pnl.Controls.Add(Me.btnAcos)
-            Me.pnl.Controls.Add(Me.btnAsin)
-            Me.pnl.Controls.Add(Me.btnTan)
-            Me.pnl.Controls.Add(Me.btnCos)
-            Me.pnl.Controls.Add(Me.btnSin)
-            Me.pnl.Controls.Add(Me.btnMod)
-            Me.pnl.Controls.Add(Me.btnRet)
-            Me.pnl.Controls.Add(Me.btnFunctions)
-            Me.pnl.Controls.Add(Me.btnAns)
-            Me.pnl.Controls.Add(Me.btnMoreThan)
-            Me.pnl.Controls.Add(Me.btnCalc)
-            Me.pnl.Controls.Add(Me.btnLessThan)
-            Me.pnl.Controls.Add(Me.btnSqrt)
-            Me.pnl.Controls.Add(Me.btnEquals)
-            Me.pnl.Controls.Add(Me.btnlog)
-            Me.pnl.Controls.Add(Me.btnFact)
-            Me.pnl.Controls.Add(Me.btnMin)
-            Me.pnl.Controls.Add(Me.btnAdd)
-            Me.pnl.Controls.Add(Me.btnExp)
-            Me.pnl.Controls.Add(Me.btnEnd)
-            Me.pnl.Controls.Add(Me.btnDiv)
-            Me.pnl.Controls.Add(Me.btnMul)
-            Me.pnl.Controls.Add(Me.btnNext)
-            Me.pnl.Controls.Add(Me.btnPrev)
-            Me.pnl.Controls.Add(Me.btnAC)
-            Me.pnl.Controls.Add(Me.btnDel)
-            Me.pnl.Controls.Add(Me.btnComma)
-            Me.pnl.Controls.Add(Me.btnAbs)
-            Me.pnl.Controls.Add(Me.btnBrRt)
-            Me.pnl.Controls.Add(Me.btnBrLft)
-            Me.pnl.Cursor = System.Windows.Forms.Cursors.Arrow
-            Me.pnl.Location = New System.Drawing.Point(-1, 0)
-            Me.pnl.Name = "pnl"
-            Me.pnl.Size = New System.Drawing.Size(728, 300)
-            Me.pnl.TabIndex = 23
+            Me.Pnl.Controls.Add(Me.BtnComment)
+            Me.Pnl.Controls.Add(Me.BtnTripleQuote)
+            Me.Pnl.Controls.Add(Me.BtnClose)
+            Me.Pnl.Controls.Add(Me.BtnNot)
+            Me.Pnl.Controls.Add(Me.BtnQuote)
+            Me.Pnl.Controls.Add(Me.BtnOr)
+            Me.Pnl.Controls.Add(Me.BtnAnd)
+            Me.Pnl.Controls.Add(Me.BtnE)
+            Me.Pnl.Controls.Add(Me.BtnPi)
+            Me.Pnl.Controls.Add(Me.BtnZ)
+            Me.Pnl.Controls.Add(Me.BtnDecimal)
+            Me.Pnl.Controls.Add(Me.Btn9)
+            Me.Pnl.Controls.Add(Me.BtnImagUnit)
+            Me.Pnl.Controls.Add(Me.Btn0)
+            Me.Pnl.Controls.Add(Me.Btn4)
+            Me.Pnl.Controls.Add(Me.Btn5)
+            Me.Pnl.Controls.Add(Me.BtnY2)
+            Me.Pnl.Controls.Add(Me.Btn6)
+            Me.Pnl.Controls.Add(Me.BtnX2)
+            Me.Pnl.Controls.Add(Me.Btn7)
+            Me.Pnl.Controls.Add(Me.Btn8)
+            Me.Pnl.Controls.Add(Me.Btn1)
+            Me.Pnl.Controls.Add(Me.Btn2)
+            Me.Pnl.Controls.Add(Me.Btn3)
+            Me.Pnl.Controls.Add(Me.BtnRand)
+            Me.Pnl.Controls.Add(Me.BtnSigma)
+            Me.Pnl.Controls.Add(Me.BtnDyDx)
+            Me.Pnl.Controls.Add(Me.BtnTick)
+            Me.Pnl.Controls.Add(Me.BtnIntegral)
+            Me.Pnl.Controls.Add(Me.BtnIf)
+            Me.Pnl.Controls.Add(Me.BtnWhile)
+            Me.Pnl.Controls.Add(Me.BtnPt)
+            Me.Pnl.Controls.Add(Me.BtnLn)
+            Me.Pnl.Controls.Add(Me.BtnCBR)
+            Me.Pnl.Controls.Add(Me.BtnCBL)
+            Me.Pnl.Controls.Add(Me.BtnSqBrR)
+            Me.Pnl.Controls.Add(Me.BtnSqBrL)
+            Me.Pnl.Controls.Add(Me.BtnY)
+            Me.Pnl.Controls.Add(Me.BtnX)
+            Me.Pnl.Controls.Add(Me.BtnMedian)
+            Me.Pnl.Controls.Add(Me.BtnAvg)
+            Me.Pnl.Controls.Add(Me.BtnYesNo)
+            Me.Pnl.Controls.Add(Me.BtnT)
+            Me.Pnl.Controls.Add(Me.BtnN)
+            Me.Pnl.Controls.Add(Me.BtnC)
+            Me.Pnl.Controls.Add(Me.BtnM)
+            Me.Pnl.Controls.Add(Me.BtnB)
+            Me.Pnl.Controls.Add(Me.BtnA)
+            Me.Pnl.Controls.Add(Me.BtnPerm)
+            Me.Pnl.Controls.Add(Me.BtnChoose)
+            Me.Pnl.Controls.Add(Me.BtnRead)
+            Me.Pnl.Controls.Add(Me.BtnConfirm)
+            Me.Pnl.Controls.Add(Me.BtnPrint)
+            Me.Pnl.Controls.Add(Me.BtnPow10)
+            Me.Pnl.Controls.Add(Me.BtnQdtc)
+            Me.Pnl.Controls.Add(Me.BtnAtan)
+            Me.Pnl.Controls.Add(Me.BtnAcos)
+            Me.Pnl.Controls.Add(Me.BtnAsin)
+            Me.Pnl.Controls.Add(Me.BtnTan)
+            Me.Pnl.Controls.Add(Me.BtnCos)
+            Me.Pnl.Controls.Add(Me.BtnSin)
+            Me.Pnl.Controls.Add(Me.BtnMod)
+            Me.Pnl.Controls.Add(Me.BtnRet)
+            Me.Pnl.Controls.Add(Me.BtnFunctions)
+            Me.Pnl.Controls.Add(Me.BtnAns)
+            Me.Pnl.Controls.Add(Me.BtnMoreThan)
+            Me.Pnl.Controls.Add(Me.BtnCalc)
+            Me.Pnl.Controls.Add(Me.BtnLessThan)
+            Me.Pnl.Controls.Add(Me.BtnSqrt)
+            Me.Pnl.Controls.Add(Me.BtnEquals)
+            Me.Pnl.Controls.Add(Me.Btnlog)
+            Me.Pnl.Controls.Add(Me.BtnFact)
+            Me.Pnl.Controls.Add(Me.BtnMinus)
+            Me.Pnl.Controls.Add(Me.BtnAdd)
+            Me.Pnl.Controls.Add(Me.BtnExp)
+            Me.Pnl.Controls.Add(Me.BtnEnd)
+            Me.Pnl.Controls.Add(Me.BtnDiv)
+            Me.Pnl.Controls.Add(Me.BtnMul)
+            Me.Pnl.Controls.Add(Me.BtnNext)
+            Me.Pnl.Controls.Add(Me.BtnPrev)
+            Me.Pnl.Controls.Add(Me.BtnAC)
+            Me.Pnl.Controls.Add(Me.BtnDel)
+            Me.Pnl.Controls.Add(Me.BtnComma)
+            Me.Pnl.Controls.Add(Me.BtnAbs)
+            Me.Pnl.Controls.Add(Me.BtnBrRt)
+            Me.Pnl.Controls.Add(Me.BtnBrLft)
+            Me.Pnl.Cursor = System.Windows.Forms.Cursors.Arrow
+            Me.Pnl.Location = New System.Drawing.Point(-1, 0)
+            Me.Pnl.Name = "Pnl"
+            Me.Pnl.Size = New System.Drawing.Size(728, 300)
+            Me.Pnl.TabIndex = 23
             '
-            'btnComment
+            'BtnComment
             '
-            Me.btnComment.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnComment.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnComment.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnComment.FlatAppearance.BorderSize = 0
-            Me.btnComment.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnComment.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnComment.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnComment.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnComment.ForeColor = System.Drawing.Color.White
-            Me.btnComment.Location = New System.Drawing.Point(580, 18)
-            Me.btnComment.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnComment.Name = "btnComment"
-            Me.btnComment.Size = New System.Drawing.Size(40, 40)
-            Me.btnComment.TabIndex = 94
-            Me.btnComment.TabStop = False
-            Me.btnComment.Text = "#"
-            Me.tt.SetToolTip(Me.btnComment, "Comment")
-            Me.btnComment.UseVisualStyleBackColor = False
+            Me.BtnComment.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnComment.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnComment.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnComment.FlatAppearance.BorderSize = 0
+            Me.BtnComment.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnComment.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnComment.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnComment.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnComment.ForeColor = System.Drawing.Color.White
+            Me.BtnComment.Location = New System.Drawing.Point(580, 18)
+            Me.BtnComment.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnComment.Name = "BtnComment"
+            Me.BtnComment.Size = New System.Drawing.Size(40, 40)
+            Me.BtnComment.TabIndex = 94
+            Me.BtnComment.TabStop = False
+            Me.BtnComment.Text = "#"
+            Me.tt.SetToolTip(Me.BtnComment, "Comment")
+            Me.BtnComment.UseVisualStyleBackColor = False
             '
-            'btnTripleQuote
+            'BtnTripleQuote
             '
-            Me.btnTripleQuote.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnTripleQuote.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnTripleQuote.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnTripleQuote.FlatAppearance.BorderSize = 0
-            Me.btnTripleQuote.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnTripleQuote.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnTripleQuote.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTripleQuote.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
-            Me.btnTripleQuote.ForeColor = System.Drawing.Color.White
-            Me.btnTripleQuote.Location = New System.Drawing.Point(536, 18)
-            Me.btnTripleQuote.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnTripleQuote.Name = "btnTripleQuote"
-            Me.btnTripleQuote.Size = New System.Drawing.Size(40, 40)
-            Me.btnTripleQuote.TabIndex = 93
-            Me.btnTripleQuote.TabStop = False
-            Me.tt.SetToolTip(Me.btnTripleQuote, "Multi-Line Text")
-            Me.btnTripleQuote.UseVisualStyleBackColor = False
+            Me.BtnTripleQuote.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnTripleQuote.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnTripleQuote.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnTripleQuote.FlatAppearance.BorderSize = 0
+            Me.BtnTripleQuote.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnTripleQuote.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnTripleQuote.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnTripleQuote.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.BtnTripleQuote.ForeColor = System.Drawing.Color.White
+            Me.BtnTripleQuote.Location = New System.Drawing.Point(536, 18)
+            Me.BtnTripleQuote.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnTripleQuote.Name = "BtnTripleQuote"
+            Me.BtnTripleQuote.Size = New System.Drawing.Size(40, 40)
+            Me.BtnTripleQuote.TabIndex = 93
+            Me.BtnTripleQuote.TabStop = False
+            Me.tt.SetToolTip(Me.BtnTripleQuote, "Multi-Line Text")
+            Me.BtnTripleQuote.UseVisualStyleBackColor = False
             '
-            'btnClose
+            'BtnClose
             '
-            Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnClose.BackColor = System.Drawing.Color.Brown
-            Me.btnClose.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnClose.FlatAppearance.BorderSize = 0
-            Me.btnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Brown
-            Me.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnClose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnClose.ForeColor = System.Drawing.Color.White
-            Me.btnClose.Image = CType(resources.GetObject("btnClose.Image"), System.Drawing.Image)
-            Me.btnClose.Location = New System.Drawing.Point(624, 18)
-            Me.btnClose.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnClose.Name = "btnClose"
-            Me.btnClose.Size = New System.Drawing.Size(84, 39)
-            Me.btnClose.TabIndex = 92
-            Me.btnClose.TabStop = False
-            Me.tt.SetToolTip(Me.btnClose, "Minimize Keyboard")
-            Me.btnClose.UseVisualStyleBackColor = False
+            Me.BtnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnClose.BackColor = System.Drawing.Color.Brown
+            Me.BtnClose.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnClose.FlatAppearance.BorderSize = 0
+            Me.BtnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(170, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.BtnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Brown
+            Me.BtnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnClose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnClose.ForeColor = System.Drawing.Color.White
+            Me.BtnClose.Image = CType(resources.GetObject("BtnClose.Image"), System.Drawing.Image)
+            Me.BtnClose.Location = New System.Drawing.Point(624, 18)
+            Me.BtnClose.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnClose.Name = "BtnClose"
+            Me.BtnClose.Size = New System.Drawing.Size(84, 39)
+            Me.BtnClose.TabIndex = 92
+            Me.BtnClose.TabStop = False
+            Me.tt.SetToolTip(Me.BtnClose, "Minimize Keyboard")
+            Me.BtnClose.UseVisualStyleBackColor = False
             '
-            'btnNot
+            'BtnNot
             '
-            Me.btnNot.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnNot.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnNot.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnNot.FlatAppearance.BorderSize = 0
-            Me.btnNot.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnNot.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnNot.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnNot.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
-            Me.btnNot.ForeColor = System.Drawing.Color.White
-            Me.btnNot.Location = New System.Drawing.Point(438, 18)
-            Me.btnNot.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnNot.Name = "btnNot"
-            Me.btnNot.Size = New System.Drawing.Size(40, 40)
-            Me.btnNot.TabIndex = 90
-            Me.btnNot.TabStop = False
-            Me.btnNot.Text = "not"
-            Me.tt.SetToolTip(Me.btnNot, "not")
-            Me.btnNot.UseVisualStyleBackColor = False
+            Me.BtnNot.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnNot.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnNot.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnNot.FlatAppearance.BorderSize = 0
+            Me.BtnNot.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnNot.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnNot.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnNot.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.BtnNot.ForeColor = System.Drawing.Color.White
+            Me.BtnNot.Location = New System.Drawing.Point(438, 18)
+            Me.BtnNot.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnNot.Name = "BtnNot"
+            Me.BtnNot.Size = New System.Drawing.Size(40, 40)
+            Me.BtnNot.TabIndex = 90
+            Me.BtnNot.TabStop = False
+            Me.BtnNot.Text = "not"
+            Me.tt.SetToolTip(Me.BtnNot, "not")
+            Me.BtnNot.UseVisualStyleBackColor = False
             '
-            'btnQuote
+            'BtnQuote
             '
-            Me.btnQuote.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnQuote.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnQuote.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnQuote.FlatAppearance.BorderSize = 0
-            Me.btnQuote.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnQuote.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnQuote.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnQuote.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
-            Me.btnQuote.ForeColor = System.Drawing.Color.White
-            Me.btnQuote.Location = New System.Drawing.Point(482, 18)
-            Me.btnQuote.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnQuote.Name = "btnQuote"
-            Me.btnQuote.Size = New System.Drawing.Size(40, 40)
-            Me.btnQuote.TabIndex = 89
-            Me.btnQuote.TabStop = False
-            Me.btnQuote.Text = """"
-            Me.tt.SetToolTip(Me.btnQuote, "Text")
-            Me.btnQuote.UseVisualStyleBackColor = False
+            Me.BtnQuote.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnQuote.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnQuote.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnQuote.FlatAppearance.BorderSize = 0
+            Me.BtnQuote.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnQuote.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnQuote.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnQuote.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.BtnQuote.ForeColor = System.Drawing.Color.White
+            Me.BtnQuote.Location = New System.Drawing.Point(482, 18)
+            Me.BtnQuote.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnQuote.Name = "BtnQuote"
+            Me.BtnQuote.Size = New System.Drawing.Size(40, 40)
+            Me.BtnQuote.TabIndex = 89
+            Me.BtnQuote.TabStop = False
+            Me.BtnQuote.Text = """"
+            Me.tt.SetToolTip(Me.BtnQuote, "Text")
+            Me.BtnQuote.UseVisualStyleBackColor = False
             '
-            'btnOr
+            'BtnOr
             '
-            Me.btnOr.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnOr.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnOr.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnOr.FlatAppearance.BorderSize = 0
-            Me.btnOr.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnOr.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnOr.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnOr.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
-            Me.btnOr.ForeColor = System.Drawing.Color.White
-            Me.btnOr.Location = New System.Drawing.Point(394, 18)
-            Me.btnOr.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnOr.Name = "btnOr"
-            Me.btnOr.Size = New System.Drawing.Size(40, 40)
-            Me.btnOr.TabIndex = 88
-            Me.btnOr.TabStop = False
-            Me.btnOr.Text = "or"
-            Me.tt.SetToolTip(Me.btnOr, "or")
-            Me.btnOr.UseVisualStyleBackColor = False
+            Me.BtnOr.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnOr.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnOr.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnOr.FlatAppearance.BorderSize = 0
+            Me.BtnOr.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnOr.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnOr.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnOr.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.BtnOr.ForeColor = System.Drawing.Color.White
+            Me.BtnOr.Location = New System.Drawing.Point(394, 18)
+            Me.BtnOr.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnOr.Name = "BtnOr"
+            Me.BtnOr.Size = New System.Drawing.Size(40, 40)
+            Me.BtnOr.TabIndex = 88
+            Me.BtnOr.TabStop = False
+            Me.BtnOr.Text = "or"
+            Me.tt.SetToolTip(Me.BtnOr, "or")
+            Me.BtnOr.UseVisualStyleBackColor = False
             '
-            'btnAnd
+            'BtnAnd
             '
-            Me.btnAnd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAnd.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAnd.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAnd.FlatAppearance.BorderSize = 0
-            Me.btnAnd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnAnd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAnd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAnd.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnAnd.ForeColor = System.Drawing.Color.White
-            Me.btnAnd.Location = New System.Drawing.Point(350, 18)
-            Me.btnAnd.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAnd.Name = "btnAnd"
-            Me.btnAnd.Size = New System.Drawing.Size(40, 40)
-            Me.btnAnd.TabIndex = 87
-            Me.btnAnd.TabStop = False
-            Me.btnAnd.Text = "and"
-            Me.tt.SetToolTip(Me.btnAnd, "and")
-            Me.btnAnd.UseVisualStyleBackColor = False
+            Me.BtnAnd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAnd.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAnd.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAnd.FlatAppearance.BorderSize = 0
+            Me.BtnAnd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnAnd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAnd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAnd.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnAnd.ForeColor = System.Drawing.Color.White
+            Me.BtnAnd.Location = New System.Drawing.Point(350, 18)
+            Me.BtnAnd.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAnd.Name = "BtnAnd"
+            Me.BtnAnd.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAnd.TabIndex = 87
+            Me.BtnAnd.TabStop = False
+            Me.BtnAnd.Text = "and"
+            Me.tt.SetToolTip(Me.BtnAnd, "and")
+            Me.BtnAnd.UseVisualStyleBackColor = False
             '
-            'btnE
+            'BtnE
             '
-            Me.btnE.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnE.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnE.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnE.FlatAppearance.BorderSize = 0
-            Me.btnE.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnE.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnE.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnE.ForeColor = System.Drawing.Color.White
-            Me.btnE.Location = New System.Drawing.Point(18, 238)
-            Me.btnE.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnE.Name = "btnE"
-            Me.btnE.Size = New System.Drawing.Size(40, 40)
-            Me.btnE.TabIndex = 85
-            Me.btnE.TabStop = False
-            Me.btnE.Text = "e"
-            Me.btnE.UseVisualStyleBackColor = False
+            Me.BtnE.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnE.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnE.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnE.FlatAppearance.BorderSize = 0
+            Me.BtnE.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnE.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnE.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnE.ForeColor = System.Drawing.Color.White
+            Me.BtnE.Location = New System.Drawing.Point(18, 238)
+            Me.BtnE.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnE.Name = "BtnE"
+            Me.BtnE.Size = New System.Drawing.Size(40, 40)
+            Me.BtnE.TabIndex = 85
+            Me.BtnE.TabStop = False
+            Me.BtnE.Text = "e"
+            Me.BtnE.UseVisualStyleBackColor = False
             '
-            'btnPi
+            'BtnPi
             '
-            Me.btnPi.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnPi.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnPi.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnPi.FlatAppearance.BorderSize = 0
-            Me.btnPi.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnPi.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnPi.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPi.ForeColor = System.Drawing.Color.White
-            Me.btnPi.Location = New System.Drawing.Point(61, 238)
-            Me.btnPi.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnPi.Name = "btnPi"
-            Me.btnPi.Size = New System.Drawing.Size(40, 40)
-            Me.btnPi.TabIndex = 84
-            Me.btnPi.TabStop = False
-            Me.btnPi.Text = "π"
-            Me.btnPi.UseVisualStyleBackColor = False
+            Me.BtnPi.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnPi.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnPi.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnPi.FlatAppearance.BorderSize = 0
+            Me.BtnPi.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnPi.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnPi.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnPi.ForeColor = System.Drawing.Color.White
+            Me.BtnPi.Location = New System.Drawing.Point(61, 238)
+            Me.BtnPi.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnPi.Name = "BtnPi"
+            Me.BtnPi.Size = New System.Drawing.Size(40, 40)
+            Me.BtnPi.TabIndex = 84
+            Me.BtnPi.TabStop = False
+            Me.BtnPi.Text = "π"
+            Me.BtnPi.UseVisualStyleBackColor = False
             '
-            'btnZ
+            'BtnZ
             '
-            Me.btnZ.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnZ.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnZ.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnZ.FlatAppearance.BorderSize = 0
-            Me.btnZ.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnZ.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnZ.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnZ.ForeColor = System.Drawing.Color.White
-            Me.btnZ.Location = New System.Drawing.Point(105, 18)
-            Me.btnZ.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnZ.Name = "btnZ"
-            Me.btnZ.Size = New System.Drawing.Size(40, 40)
-            Me.btnZ.TabIndex = 83
-            Me.btnZ.TabStop = False
-            Me.btnZ.Text = "z"
-            Me.btnZ.UseVisualStyleBackColor = False
+            Me.BtnZ.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnZ.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnZ.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnZ.FlatAppearance.BorderSize = 0
+            Me.BtnZ.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnZ.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnZ.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnZ.ForeColor = System.Drawing.Color.White
+            Me.BtnZ.Location = New System.Drawing.Point(105, 18)
+            Me.BtnZ.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnZ.Name = "BtnZ"
+            Me.BtnZ.Size = New System.Drawing.Size(40, 40)
+            Me.BtnZ.TabIndex = 83
+            Me.BtnZ.TabStop = False
+            Me.BtnZ.Text = "z"
+            Me.BtnZ.UseVisualStyleBackColor = False
             '
-            'btnDecimal
+            'BtnDecimal
             '
-            Me.btnDecimal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnDecimal.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnDecimal.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnDecimal.FlatAppearance.BorderSize = 0
-            Me.btnDecimal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.btnDecimal.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnDecimal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnDecimal.ForeColor = System.Drawing.Color.White
-            Me.btnDecimal.Location = New System.Drawing.Point(105, 194)
-            Me.btnDecimal.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnDecimal.Name = "btnDecimal"
-            Me.btnDecimal.Size = New System.Drawing.Size(40, 40)
-            Me.btnDecimal.TabIndex = 82
-            Me.btnDecimal.TabStop = False
-            Me.btnDecimal.Text = "."
-            Me.btnDecimal.UseVisualStyleBackColor = False
+            Me.BtnDecimal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnDecimal.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnDecimal.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnDecimal.FlatAppearance.BorderSize = 0
+            Me.BtnDecimal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BtnDecimal.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnDecimal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnDecimal.ForeColor = System.Drawing.Color.White
+            Me.BtnDecimal.Location = New System.Drawing.Point(105, 194)
+            Me.BtnDecimal.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnDecimal.Name = "BtnDecimal"
+            Me.BtnDecimal.Size = New System.Drawing.Size(40, 40)
+            Me.BtnDecimal.TabIndex = 82
+            Me.BtnDecimal.TabStop = False
+            Me.BtnDecimal.Text = "."
+            Me.BtnDecimal.UseVisualStyleBackColor = False
             '
-            'btn9
+            'Btn9
             '
-            Me.btn9.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn9.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn9.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn9.FlatAppearance.BorderSize = 0
-            Me.btn9.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn9.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn9.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn9.ForeColor = System.Drawing.Color.White
-            Me.btn9.Location = New System.Drawing.Point(105, 62)
-            Me.btn9.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn9.Name = "btn9"
-            Me.btn9.Size = New System.Drawing.Size(40, 40)
-            Me.btn9.TabIndex = 78
-            Me.btn9.TabStop = False
-            Me.btn9.Text = "9"
-            Me.btn9.UseVisualStyleBackColor = False
+            Me.Btn9.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn9.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn9.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn9.FlatAppearance.BorderSize = 0
+            Me.Btn9.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn9.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn9.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn9.ForeColor = System.Drawing.Color.White
+            Me.Btn9.Location = New System.Drawing.Point(105, 62)
+            Me.Btn9.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn9.Name = "Btn9"
+            Me.Btn9.Size = New System.Drawing.Size(40, 40)
+            Me.Btn9.TabIndex = 78
+            Me.Btn9.TabStop = False
+            Me.Btn9.Text = "9"
+            Me.Btn9.UseVisualStyleBackColor = False
             '
-            'btnImagUnit
+            'BtnImagUnit
             '
-            Me.btnImagUnit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnImagUnit.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnImagUnit.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnImagUnit.FlatAppearance.BorderSize = 0
-            Me.btnImagUnit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnImagUnit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnImagUnit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnImagUnit.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
-            Me.btnImagUnit.ForeColor = System.Drawing.Color.White
-            Me.btnImagUnit.Location = New System.Drawing.Point(105, 238)
-            Me.btnImagUnit.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnImagUnit.Name = "btnImagUnit"
-            Me.btnImagUnit.Size = New System.Drawing.Size(40, 40)
-            Me.btnImagUnit.TabIndex = 81
-            Me.btnImagUnit.TabStop = False
-            Me.btnImagUnit.Text = "i"
-            Me.btnImagUnit.UseVisualStyleBackColor = False
+            Me.BtnImagUnit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnImagUnit.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnImagUnit.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnImagUnit.FlatAppearance.BorderSize = 0
+            Me.BtnImagUnit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnImagUnit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnImagUnit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnImagUnit.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
+            Me.BtnImagUnit.ForeColor = System.Drawing.Color.White
+            Me.BtnImagUnit.Location = New System.Drawing.Point(105, 238)
+            Me.BtnImagUnit.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnImagUnit.Name = "BtnImagUnit"
+            Me.BtnImagUnit.Size = New System.Drawing.Size(40, 40)
+            Me.BtnImagUnit.TabIndex = 81
+            Me.BtnImagUnit.TabStop = False
+            Me.BtnImagUnit.Text = "i"
+            Me.BtnImagUnit.UseVisualStyleBackColor = False
             '
-            'btn0
+            'Btn0
             '
-            Me.btn0.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn0.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn0.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn0.FlatAppearance.BorderSize = 0
-            Me.btn0.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn0.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn0.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn0.ForeColor = System.Drawing.Color.White
-            Me.btn0.Location = New System.Drawing.Point(17, 194)
-            Me.btn0.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn0.Name = "btn0"
-            Me.btn0.Size = New System.Drawing.Size(84, 40)
-            Me.btn0.TabIndex = 70
-            Me.btn0.TabStop = False
-            Me.btn0.Text = "0"
-            Me.btn0.UseVisualStyleBackColor = False
+            Me.Btn0.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn0.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn0.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn0.FlatAppearance.BorderSize = 0
+            Me.Btn0.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn0.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn0.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn0.ForeColor = System.Drawing.Color.White
+            Me.Btn0.Location = New System.Drawing.Point(17, 194)
+            Me.Btn0.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn0.Name = "Btn0"
+            Me.Btn0.Size = New System.Drawing.Size(84, 40)
+            Me.Btn0.TabIndex = 70
+            Me.Btn0.TabStop = False
+            Me.Btn0.Text = "0"
+            Me.Btn0.UseVisualStyleBackColor = False
             '
-            'btn4
+            'Btn4
             '
-            Me.btn4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn4.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn4.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn4.FlatAppearance.BorderSize = 0
-            Me.btn4.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn4.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn4.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn4.ForeColor = System.Drawing.Color.White
-            Me.btn4.Location = New System.Drawing.Point(17, 106)
-            Me.btn4.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn4.Name = "btn4"
-            Me.btn4.Size = New System.Drawing.Size(40, 40)
-            Me.btn4.TabIndex = 73
-            Me.btn4.TabStop = False
-            Me.btn4.Text = "4"
-            Me.btn4.UseVisualStyleBackColor = False
+            Me.Btn4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn4.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn4.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn4.FlatAppearance.BorderSize = 0
+            Me.Btn4.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn4.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn4.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn4.ForeColor = System.Drawing.Color.White
+            Me.Btn4.Location = New System.Drawing.Point(17, 106)
+            Me.Btn4.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn4.Name = "Btn4"
+            Me.Btn4.Size = New System.Drawing.Size(40, 40)
+            Me.Btn4.TabIndex = 73
+            Me.Btn4.TabStop = False
+            Me.Btn4.Text = "4"
+            Me.Btn4.UseVisualStyleBackColor = False
             '
-            'btn5
+            'Btn5
             '
-            Me.btn5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn5.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn5.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn5.FlatAppearance.BorderSize = 0
-            Me.btn5.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn5.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn5.ForeColor = System.Drawing.Color.White
-            Me.btn5.Location = New System.Drawing.Point(61, 106)
-            Me.btn5.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn5.Name = "btn5"
-            Me.btn5.Size = New System.Drawing.Size(40, 40)
-            Me.btn5.TabIndex = 74
-            Me.btn5.TabStop = False
-            Me.btn5.Text = "5"
-            Me.btn5.UseVisualStyleBackColor = False
+            Me.Btn5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn5.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn5.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn5.FlatAppearance.BorderSize = 0
+            Me.Btn5.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn5.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn5.ForeColor = System.Drawing.Color.White
+            Me.Btn5.Location = New System.Drawing.Point(61, 106)
+            Me.Btn5.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn5.Name = "Btn5"
+            Me.Btn5.Size = New System.Drawing.Size(40, 40)
+            Me.Btn5.TabIndex = 74
+            Me.Btn5.TabStop = False
+            Me.Btn5.Text = "5"
+            Me.Btn5.UseVisualStyleBackColor = False
             '
             'BtnY2
             '
@@ -907,24 +907,24 @@
             Me.BtnY2.Text = "y"
             Me.BtnY2.UseVisualStyleBackColor = False
             '
-            'btn6
+            'Btn6
             '
-            Me.btn6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn6.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn6.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn6.FlatAppearance.BorderSize = 0
-            Me.btn6.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn6.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn6.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn6.ForeColor = System.Drawing.Color.White
-            Me.btn6.Location = New System.Drawing.Point(105, 106)
-            Me.btn6.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn6.Name = "btn6"
-            Me.btn6.Size = New System.Drawing.Size(40, 40)
-            Me.btn6.TabIndex = 75
-            Me.btn6.TabStop = False
-            Me.btn6.Text = "6"
-            Me.btn6.UseVisualStyleBackColor = False
+            Me.Btn6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn6.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn6.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn6.FlatAppearance.BorderSize = 0
+            Me.Btn6.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn6.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn6.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn6.ForeColor = System.Drawing.Color.White
+            Me.Btn6.Location = New System.Drawing.Point(105, 106)
+            Me.Btn6.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn6.Name = "Btn6"
+            Me.Btn6.Size = New System.Drawing.Size(40, 40)
+            Me.Btn6.TabIndex = 75
+            Me.Btn6.TabStop = False
+            Me.Btn6.Text = "6"
+            Me.Btn6.UseVisualStyleBackColor = False
             '
             'BtnX2
             '
@@ -945,986 +945,986 @@
             Me.BtnX2.Text = "x"
             Me.BtnX2.UseVisualStyleBackColor = False
             '
-            'btn7
-            '
-            Me.btn7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn7.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn7.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn7.FlatAppearance.BorderSize = 0
-            Me.btn7.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn7.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn7.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn7.ForeColor = System.Drawing.Color.White
-            Me.btn7.Location = New System.Drawing.Point(17, 62)
-            Me.btn7.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn7.Name = "btn7"
-            Me.btn7.Size = New System.Drawing.Size(40, 40)
-            Me.btn7.TabIndex = 76
-            Me.btn7.TabStop = False
-            Me.btn7.Text = "7"
-            Me.btn7.UseVisualStyleBackColor = False
-            '
-            'btn8
-            '
-            Me.btn8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn8.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn8.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn8.FlatAppearance.BorderSize = 0
-            Me.btn8.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn8.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn8.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn8.ForeColor = System.Drawing.Color.White
-            Me.btn8.Location = New System.Drawing.Point(61, 62)
-            Me.btn8.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn8.Name = "btn8"
-            Me.btn8.Size = New System.Drawing.Size(40, 40)
-            Me.btn8.TabIndex = 77
-            Me.btn8.TabStop = False
-            Me.btn8.Text = "8"
-            Me.btn8.UseVisualStyleBackColor = False
-            '
-            'btn1
-            '
-            Me.btn1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn1.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn1.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn1.FlatAppearance.BorderSize = 0
-            Me.btn1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn1.ForeColor = System.Drawing.Color.White
-            Me.btn1.Location = New System.Drawing.Point(17, 150)
-            Me.btn1.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn1.Name = "btn1"
-            Me.btn1.Size = New System.Drawing.Size(40, 40)
-            Me.btn1.TabIndex = 69
-            Me.btn1.TabStop = False
-            Me.btn1.Text = "1"
-            Me.btn1.UseVisualStyleBackColor = False
-            '
-            'btn2
-            '
-            Me.btn2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn2.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn2.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn2.FlatAppearance.BorderSize = 0
-            Me.btn2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn2.ForeColor = System.Drawing.Color.White
-            Me.btn2.Location = New System.Drawing.Point(61, 150)
-            Me.btn2.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn2.Name = "btn2"
-            Me.btn2.Size = New System.Drawing.Size(40, 40)
-            Me.btn2.TabIndex = 71
-            Me.btn2.TabStop = False
-            Me.btn2.Text = "2"
-            Me.btn2.UseVisualStyleBackColor = False
-            '
-            'btn3
-            '
-            Me.btn3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btn3.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn3.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btn3.FlatAppearance.BorderSize = 0
-            Me.btn3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btn3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btn3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btn3.ForeColor = System.Drawing.Color.White
-            Me.btn3.Location = New System.Drawing.Point(105, 150)
-            Me.btn3.Margin = New System.Windows.Forms.Padding(2)
-            Me.btn3.Name = "btn3"
-            Me.btn3.Size = New System.Drawing.Size(40, 40)
-            Me.btn3.TabIndex = 72
-            Me.btn3.TabStop = False
-            Me.btn3.Text = "3"
-            Me.btn3.UseVisualStyleBackColor = False
-            '
-            'btnRand
-            '
-            Me.btnRand.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnRand.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnRand.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnRand.FlatAppearance.BorderSize = 0
-            Me.btnRand.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnRand.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnRand.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnRand.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
-            Me.btnRand.ForeColor = System.Drawing.Color.White
-            Me.btnRand.Location = New System.Drawing.Point(207, 106)
-            Me.btnRand.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnRand.Name = "btnRand"
-            Me.btnRand.Size = New System.Drawing.Size(40, 40)
-            Me.btnRand.TabIndex = 68
-            Me.btnRand.TabStop = False
-            Me.btnRand.Text = "rand"
-            Me.tt.SetToolTip(Me.btnRand, "Random")
-            Me.btnRand.UseVisualStyleBackColor = False
-            '
-            'btnSigma
-            '
-            Me.btnSigma.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnSigma.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSigma.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnSigma.FlatAppearance.BorderSize = 0
-            Me.btnSigma.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnSigma.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSigma.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSigma.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
-            Me.btnSigma.ForeColor = System.Drawing.Color.White
-            Me.btnSigma.Location = New System.Drawing.Point(163, 106)
-            Me.btnSigma.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnSigma.Name = "btnSigma"
-            Me.btnSigma.Size = New System.Drawing.Size(40, 40)
-            Me.btnSigma.TabIndex = 67
-            Me.btnSigma.TabStop = False
-            Me.btnSigma.Text = "Σ"
-            Me.tt.SetToolTip(Me.btnSigma, "Summation")
-            Me.btnSigma.UseVisualStyleBackColor = False
-            '
-            'btnDyDx
-            '
-            Me.btnDyDx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnDyDx.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnDyDx.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnDyDx.FlatAppearance.BorderSize = 0
-            Me.btnDyDx.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnDyDx.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnDyDx.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnDyDx.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnDyDx.ForeColor = System.Drawing.Color.White
-            Me.btnDyDx.Location = New System.Drawing.Point(251, 106)
-            Me.btnDyDx.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnDyDx.Name = "btnDyDx"
-            Me.btnDyDx.Size = New System.Drawing.Size(40, 40)
-            Me.btnDyDx.TabIndex = 66
-            Me.btnDyDx.TabStop = False
-            Me.btnDyDx.Text = "dydx"
-            Me.btnDyDx.UseVisualStyleBackColor = False
-            '
-            'btnTick
-            '
-            Me.btnTick.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnTick.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnTick.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnTick.FlatAppearance.BorderSize = 0
-            Me.btnTick.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnTick.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnTick.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTick.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnTick.ForeColor = System.Drawing.Color.White
-            Me.btnTick.Location = New System.Drawing.Point(482, 62)
-            Me.btnTick.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnTick.Name = "btnTick"
-            Me.btnTick.Size = New System.Drawing.Size(40, 40)
-            Me.btnTick.TabIndex = 65
-            Me.btnTick.TabStop = False
-            Me.btnTick.Text = "`"
-            Me.tt.SetToolTip(Me.btnTick, "Linked List")
-            Me.btnTick.UseVisualStyleBackColor = False
-            '
-            'btnIntegral
-            '
-            Me.btnIntegral.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnIntegral.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnIntegral.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnIntegral.FlatAppearance.BorderSize = 0
-            Me.btnIntegral.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnIntegral.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnIntegral.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnIntegral.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnIntegral.ForeColor = System.Drawing.Color.White
-            Me.btnIntegral.Location = New System.Drawing.Point(295, 106)
-            Me.btnIntegral.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnIntegral.Name = "btnIntegral"
-            Me.btnIntegral.Size = New System.Drawing.Size(40, 40)
-            Me.btnIntegral.TabIndex = 64
-            Me.btnIntegral.TabStop = False
-            Me.btnIntegral.Text = "integral"
-            Me.btnIntegral.UseVisualStyleBackColor = False
-            '
-            'btnIf
-            '
-            Me.btnIf.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnIf.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnIf.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnIf.FlatAppearance.BorderSize = 0
-            Me.btnIf.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnIf.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnIf.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnIf.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
-            Me.btnIf.ForeColor = System.Drawing.Color.White
-            Me.btnIf.Location = New System.Drawing.Point(350, 106)
-            Me.btnIf.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnIf.Name = "btnIf"
-            Me.btnIf.Size = New System.Drawing.Size(40, 40)
-            Me.btnIf.TabIndex = 63
-            Me.btnIf.TabStop = False
-            Me.btnIf.Text = "if"
-            Me.tt.SetToolTip(Me.btnIf, "if")
-            Me.btnIf.UseVisualStyleBackColor = False
-            '
-            'btnWhile
-            '
-            Me.btnWhile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnWhile.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnWhile.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnWhile.FlatAppearance.BorderSize = 0
-            Me.btnWhile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnWhile.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnWhile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWhile.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnWhile.ForeColor = System.Drawing.Color.White
-            Me.btnWhile.Location = New System.Drawing.Point(350, 62)
-            Me.btnWhile.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnWhile.Name = "btnWhile"
-            Me.btnWhile.Size = New System.Drawing.Size(40, 40)
-            Me.btnWhile.TabIndex = 62
-            Me.btnWhile.TabStop = False
-            Me.btnWhile.Text = "while"
-            Me.tt.SetToolTip(Me.btnWhile, "while")
-            Me.btnWhile.UseVisualStyleBackColor = False
-            '
-            'btnPt
-            '
-            Me.btnPt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnPt.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPt.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnPt.FlatAppearance.BorderSize = 0
-            Me.btnPt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnPt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPt.ForeColor = System.Drawing.Color.White
-            Me.btnPt.Location = New System.Drawing.Point(580, 61)
-            Me.btnPt.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnPt.Name = "btnPt"
-            Me.btnPt.Size = New System.Drawing.Size(40, 40)
-            Me.btnPt.TabIndex = 61
-            Me.btnPt.TabStop = False
-            Me.btnPt.Text = "."
-            Me.btnPt.UseVisualStyleBackColor = False
-            '
-            'btnLn
-            '
-            Me.btnLn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnLn.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnLn.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnLn.FlatAppearance.BorderSize = 0
-            Me.btnLn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnLn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnLn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnLn.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
-            Me.btnLn.ForeColor = System.Drawing.Color.White
-            Me.btnLn.Location = New System.Drawing.Point(536, 61)
-            Me.btnLn.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnLn.Name = "btnLn"
-            Me.btnLn.Size = New System.Drawing.Size(40, 40)
-            Me.btnLn.TabIndex = 60
-            Me.btnLn.TabStop = False
-            Me.btnLn.Text = "ln"
-            Me.btnLn.UseVisualStyleBackColor = False
-            '
-            'btnCBR
-            '
-            Me.btnCBR.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnCBR.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCBR.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnCBR.FlatAppearance.BorderSize = 0
-            Me.btnCBR.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnCBR.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCBR.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCBR.ForeColor = System.Drawing.Color.White
-            Me.btnCBR.Location = New System.Drawing.Point(438, 106)
-            Me.btnCBR.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnCBR.Name = "btnCBR"
-            Me.btnCBR.Size = New System.Drawing.Size(40, 40)
-            Me.btnCBR.TabIndex = 59
-            Me.btnCBR.TabStop = False
-            Me.btnCBR.Text = "}"
-            Me.btnCBR.UseVisualStyleBackColor = False
-            '
-            'btnCBL
-            '
-            Me.btnCBL.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnCBL.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCBL.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnCBL.FlatAppearance.BorderSize = 0
-            Me.btnCBL.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnCBL.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCBL.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCBL.ForeColor = System.Drawing.Color.White
-            Me.btnCBL.Location = New System.Drawing.Point(394, 106)
-            Me.btnCBL.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnCBL.Name = "btnCBL"
-            Me.btnCBL.Size = New System.Drawing.Size(40, 40)
-            Me.btnCBL.TabIndex = 58
-            Me.btnCBL.TabStop = False
-            Me.btnCBL.Text = "{"
-            Me.tt.SetToolTip(Me.btnCBL, "Set")
-            Me.btnCBL.UseVisualStyleBackColor = False
-            '
-            'btnSqBrR
-            '
-            Me.btnSqBrR.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnSqBrR.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSqBrR.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnSqBrR.FlatAppearance.BorderSize = 0
-            Me.btnSqBrR.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnSqBrR.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSqBrR.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSqBrR.ForeColor = System.Drawing.Color.White
-            Me.btnSqBrR.Location = New System.Drawing.Point(438, 62)
-            Me.btnSqBrR.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnSqBrR.Name = "btnSqBrR"
-            Me.btnSqBrR.Size = New System.Drawing.Size(40, 40)
-            Me.btnSqBrR.TabIndex = 57
-            Me.btnSqBrR.TabStop = False
-            Me.btnSqBrR.Text = "]"
-            Me.btnSqBrR.UseVisualStyleBackColor = False
-            '
-            'btnSqBrL
-            '
-            Me.btnSqBrL.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnSqBrL.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSqBrL.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnSqBrL.FlatAppearance.BorderSize = 0
-            Me.btnSqBrL.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnSqBrL.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnSqBrL.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSqBrL.ForeColor = System.Drawing.Color.White
-            Me.btnSqBrL.Location = New System.Drawing.Point(394, 62)
-            Me.btnSqBrL.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnSqBrL.Name = "btnSqBrL"
-            Me.btnSqBrL.Size = New System.Drawing.Size(40, 40)
-            Me.btnSqBrL.TabIndex = 56
-            Me.btnSqBrL.TabStop = False
-            Me.btnSqBrL.Text = "["
-            Me.tt.SetToolTip(Me.btnSqBrL, "Matrix")
-            Me.btnSqBrL.UseVisualStyleBackColor = False
-            '
-            'btnY
-            '
-            Me.btnY.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnY.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnY.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnY.FlatAppearance.BorderSize = 0
-            Me.btnY.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnY.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnY.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnY.ForeColor = System.Drawing.Color.White
-            Me.btnY.Location = New System.Drawing.Point(295, 195)
-            Me.btnY.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnY.Name = "btnY"
-            Me.btnY.Size = New System.Drawing.Size(40, 40)
-            Me.btnY.TabIndex = 55
-            Me.btnY.TabStop = False
-            Me.btnY.Text = "y"
-            Me.btnY.UseVisualStyleBackColor = False
-            '
-            'btnX
-            '
-            Me.btnX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnX.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnX.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnX.FlatAppearance.BorderSize = 0
-            Me.btnX.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnX.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnX.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnX.ForeColor = System.Drawing.Color.White
-            Me.btnX.Location = New System.Drawing.Point(295, 150)
-            Me.btnX.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnX.Name = "btnX"
-            Me.btnX.Size = New System.Drawing.Size(40, 40)
-            Me.btnX.TabIndex = 54
-            Me.btnX.TabStop = False
-            Me.btnX.Text = "x"
-            Me.btnX.UseVisualStyleBackColor = False
-            '
-            'btnMedian
-            '
-            Me.btnMedian.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnMedian.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnMedian.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnMedian.FlatAppearance.BorderSize = 0
-            Me.btnMedian.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnMedian.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnMedian.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMedian.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnMedian.ForeColor = System.Drawing.Color.White
-            Me.btnMedian.Location = New System.Drawing.Point(295, 62)
-            Me.btnMedian.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnMedian.Name = "btnMedian"
-            Me.btnMedian.Size = New System.Drawing.Size(40, 40)
-            Me.btnMedian.TabIndex = 53
-            Me.btnMedian.TabStop = False
-            Me.btnMedian.Text = "median"
-            Me.tt.SetToolTip(Me.btnMedian, "Median")
-            Me.btnMedian.UseVisualStyleBackColor = False
-            '
-            'btnAvg
-            '
-            Me.btnAvg.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAvg.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAvg.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAvg.FlatAppearance.BorderSize = 0
-            Me.btnAvg.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnAvg.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAvg.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAvg.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnAvg.ForeColor = System.Drawing.Color.White
-            Me.btnAvg.Location = New System.Drawing.Point(251, 62)
-            Me.btnAvg.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAvg.Name = "btnAvg"
-            Me.btnAvg.Size = New System.Drawing.Size(40, 40)
-            Me.btnAvg.TabIndex = 52
-            Me.btnAvg.TabStop = False
-            Me.btnAvg.Text = "average"
-            Me.tt.SetToolTip(Me.btnAvg, "Average/Mean")
-            Me.btnAvg.UseVisualStyleBackColor = False
-            '
-            'btnYesNo
-            '
-            Me.btnYesNo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnYesNo.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnYesNo.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnYesNo.FlatAppearance.BorderSize = 0
-            Me.btnYesNo.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnYesNo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnYesNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnYesNo.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnYesNo.ForeColor = System.Drawing.Color.White
-            Me.btnYesNo.Location = New System.Drawing.Point(295, 18)
-            Me.btnYesNo.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnYesNo.Name = "btnYesNo"
-            Me.btnYesNo.Size = New System.Drawing.Size(40, 40)
-            Me.btnYesNo.TabIndex = 51
-            Me.btnYesNo.TabStop = False
-            Me.btnYesNo.Text = "yes no"
-            Me.tt.SetToolTip(Me.btnYesNo, "Ask user for confirmation (Yes/No)")
-            Me.btnYesNo.UseVisualStyleBackColor = False
-            '
-            'btnT
-            '
-            Me.btnT.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnT.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnT.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnT.FlatAppearance.BorderSize = 0
-            Me.btnT.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnT.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnT.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnT.ForeColor = System.Drawing.Color.White
-            Me.btnT.Location = New System.Drawing.Point(163, 194)
-            Me.btnT.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnT.Name = "btnT"
-            Me.btnT.Size = New System.Drawing.Size(40, 40)
-            Me.btnT.TabIndex = 50
-            Me.btnT.TabStop = False
-            Me.btnT.Text = "t"
-            Me.btnT.UseVisualStyleBackColor = False
-            '
-            'btnN
-            '
-            Me.btnN.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnN.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnN.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnN.FlatAppearance.BorderSize = 0
-            Me.btnN.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnN.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnN.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnN.ForeColor = System.Drawing.Color.White
-            Me.btnN.Location = New System.Drawing.Point(207, 194)
-            Me.btnN.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnN.Name = "btnN"
-            Me.btnN.Size = New System.Drawing.Size(40, 40)
-            Me.btnN.TabIndex = 49
-            Me.btnN.TabStop = False
-            Me.btnN.Text = "n"
-            Me.btnN.UseVisualStyleBackColor = False
-            '
-            'btnC
-            '
-            Me.btnC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnC.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnC.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnC.FlatAppearance.BorderSize = 0
-            Me.btnC.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnC.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnC.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnC.ForeColor = System.Drawing.Color.White
-            Me.btnC.Location = New System.Drawing.Point(251, 150)
-            Me.btnC.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnC.Name = "btnC"
-            Me.btnC.Size = New System.Drawing.Size(40, 40)
-            Me.btnC.TabIndex = 48
-            Me.btnC.TabStop = False
-            Me.btnC.Text = "c"
-            Me.btnC.UseVisualStyleBackColor = False
-            '
-            'btnM
-            '
-            Me.btnM.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnM.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnM.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnM.FlatAppearance.BorderSize = 0
-            Me.btnM.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnM.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnM.ForeColor = System.Drawing.Color.White
-            Me.btnM.Location = New System.Drawing.Point(251, 195)
-            Me.btnM.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnM.Name = "btnM"
-            Me.btnM.Size = New System.Drawing.Size(40, 40)
-            Me.btnM.TabIndex = 47
-            Me.btnM.TabStop = False
-            Me.btnM.Text = "m"
-            Me.btnM.UseVisualStyleBackColor = False
-            '
-            'btnB
-            '
-            Me.btnB.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnB.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnB.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnB.FlatAppearance.BorderSize = 0
-            Me.btnB.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnB.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnB.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnB.ForeColor = System.Drawing.Color.White
-            Me.btnB.Location = New System.Drawing.Point(207, 150)
-            Me.btnB.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnB.Name = "btnB"
-            Me.btnB.Size = New System.Drawing.Size(40, 40)
-            Me.btnB.TabIndex = 46
-            Me.btnB.TabStop = False
-            Me.btnB.Text = "b"
-            Me.btnB.UseVisualStyleBackColor = False
-            '
-            'btnA
-            '
-            Me.btnA.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnA.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnA.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnA.FlatAppearance.BorderSize = 0
-            Me.btnA.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnA.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-            Me.btnA.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnA.ForeColor = System.Drawing.Color.White
-            Me.btnA.Location = New System.Drawing.Point(163, 150)
-            Me.btnA.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnA.Name = "btnA"
-            Me.btnA.Size = New System.Drawing.Size(40, 40)
-            Me.btnA.TabIndex = 45
-            Me.btnA.TabStop = False
-            Me.btnA.Text = "a"
-            Me.btnA.UseVisualStyleBackColor = False
-            '
-            'btnPerm
-            '
-            Me.btnPerm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnPerm.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPerm.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnPerm.FlatAppearance.BorderSize = 0
-            Me.btnPerm.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnPerm.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPerm.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPerm.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnPerm.ForeColor = System.Drawing.Color.White
-            Me.btnPerm.Location = New System.Drawing.Point(207, 62)
-            Me.btnPerm.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnPerm.Name = "btnPerm"
-            Me.btnPerm.Size = New System.Drawing.Size(40, 40)
-            Me.btnPerm.TabIndex = 44
-            Me.btnPerm.TabStop = False
-            Me.btnPerm.Text = "nPr"
-            Me.tt.SetToolTip(Me.btnPerm, "Permutations")
-            Me.btnPerm.UseVisualStyleBackColor = False
-            '
-            'btnChoose
-            '
-            Me.btnChoose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnChoose.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnChoose.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnChoose.FlatAppearance.BorderSize = 0
-            Me.btnChoose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnChoose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnChoose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnChoose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnChoose.ForeColor = System.Drawing.Color.White
-            Me.btnChoose.Location = New System.Drawing.Point(163, 62)
-            Me.btnChoose.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnChoose.Name = "btnChoose"
-            Me.btnChoose.Size = New System.Drawing.Size(40, 40)
-            Me.btnChoose.TabIndex = 43
-            Me.btnChoose.TabStop = False
-            Me.btnChoose.Text = "nCr"
-            Me.tt.SetToolTip(Me.btnChoose, "Binomial Coefficient/Combinations")
-            Me.btnChoose.UseVisualStyleBackColor = False
-            '
-            'btnRead
-            '
-            Me.btnRead.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnRead.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnRead.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnRead.FlatAppearance.BorderSize = 0
-            Me.btnRead.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnRead.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnRead.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnRead.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnRead.ForeColor = System.Drawing.Color.White
-            Me.btnRead.Location = New System.Drawing.Point(207, 18)
-            Me.btnRead.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnRead.Name = "btnRead"
-            Me.btnRead.Size = New System.Drawing.Size(40, 40)
-            Me.btnRead.TabIndex = 41
-            Me.btnRead.TabStop = False
-            Me.btnRead.Text = "read"
-            Me.tt.SetToolTip(Me.btnRead, "Get input from user")
-            Me.btnRead.UseVisualStyleBackColor = False
-            '
-            'btnConfirm
-            '
-            Me.btnConfirm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnConfirm.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnConfirm.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnConfirm.FlatAppearance.BorderSize = 0
-            Me.btnConfirm.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnConfirm.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnConfirm.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnConfirm.ForeColor = System.Drawing.Color.White
-            Me.btnConfirm.Location = New System.Drawing.Point(251, 18)
-            Me.btnConfirm.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnConfirm.Name = "btnConfirm"
-            Me.btnConfirm.Size = New System.Drawing.Size(40, 40)
-            Me.btnConfirm.TabIndex = 40
-            Me.btnConfirm.TabStop = False
-            Me.btnConfirm.Text = "conf" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "irm"
-            Me.tt.SetToolTip(Me.btnConfirm, "Ask user for confirmation (OK/Cancel)")
-            Me.btnConfirm.UseVisualStyleBackColor = False
-            '
-            'btnPrint
-            '
-            Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnPrint.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnPrint.FlatAppearance.BorderSize = 0
-            Me.btnPrint.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnPrint.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPrint.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnPrint.ForeColor = System.Drawing.Color.White
-            Me.btnPrint.Location = New System.Drawing.Point(163, 18)
-            Me.btnPrint.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnPrint.Name = "btnPrint"
-            Me.btnPrint.Size = New System.Drawing.Size(40, 40)
-            Me.btnPrint.TabIndex = 39
-            Me.btnPrint.TabStop = False
-            Me.btnPrint.Text = "print"
-            Me.tt.SetToolTip(Me.btnPrint, "Print to console")
-            Me.btnPrint.UseVisualStyleBackColor = False
-            '
-            'btnPow10
-            '
-            Me.btnPow10.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnPow10.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnPow10.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnPow10.FlatAppearance.BorderSize = 0
-            Me.btnPow10.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnPow10.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnPow10.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPow10.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnPow10.ForeColor = System.Drawing.Color.White
-            Me.btnPow10.Location = New System.Drawing.Point(350, 238)
-            Me.btnPow10.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnPow10.Name = "btnPow10"
-            Me.btnPow10.Size = New System.Drawing.Size(40, 40)
-            Me.btnPow10.TabIndex = 37
-            Me.btnPow10.TabStop = False
-            Me.btnPow10.Text = "x10^"
-            Me.btnPow10.UseVisualStyleBackColor = False
-            '
-            'btnQdtc
-            '
-            Me.btnQdtc.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnQdtc.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnQdtc.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnQdtc.FlatAppearance.BorderSize = 0
-            Me.btnQdtc.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnQdtc.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnQdtc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnQdtc.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnQdtc.ForeColor = System.Drawing.Color.White
-            Me.btnQdtc.Location = New System.Drawing.Point(350, 194)
-            Me.btnQdtc.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnQdtc.Name = "btnQdtc"
-            Me.btnQdtc.Size = New System.Drawing.Size(40, 40)
-            Me.btnQdtc.TabIndex = 36
-            Me.btnQdtc.TabStop = False
-            Me.btnQdtc.Text = "qdtc"
-            Me.tt.SetToolTip(Me.btnQdtc, "Quadratic solver")
-            Me.btnQdtc.UseVisualStyleBackColor = False
-            '
-            'btnAtan
-            '
-            Me.btnAtan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAtan.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAtan.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAtan.FlatAppearance.BorderSize = 0
-            Me.btnAtan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnAtan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAtan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAtan.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnAtan.ForeColor = System.Drawing.Color.White
-            Me.btnAtan.Location = New System.Drawing.Point(482, 238)
-            Me.btnAtan.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAtan.Name = "btnAtan"
-            Me.btnAtan.Size = New System.Drawing.Size(40, 40)
-            Me.btnAtan.TabIndex = 35
-            Me.btnAtan.TabStop = False
-            Me.btnAtan.Text = "atan"
-            Me.btnAtan.UseVisualStyleBackColor = False
-            '
-            'btnAcos
-            '
-            Me.btnAcos.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAcos.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAcos.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAcos.FlatAppearance.BorderSize = 0
-            Me.btnAcos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnAcos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAcos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAcos.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
-            Me.btnAcos.ForeColor = System.Drawing.Color.White
-            Me.btnAcos.Location = New System.Drawing.Point(438, 238)
-            Me.btnAcos.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAcos.Name = "btnAcos"
-            Me.btnAcos.Size = New System.Drawing.Size(40, 40)
-            Me.btnAcos.TabIndex = 34
-            Me.btnAcos.TabStop = False
-            Me.btnAcos.Text = "acos"
-            Me.btnAcos.UseVisualStyleBackColor = False
-            '
-            'btnAsin
-            '
-            Me.btnAsin.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAsin.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAsin.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAsin.FlatAppearance.BorderSize = 0
-            Me.btnAsin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnAsin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAsin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAsin.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnAsin.ForeColor = System.Drawing.Color.White
-            Me.btnAsin.Location = New System.Drawing.Point(394, 238)
-            Me.btnAsin.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAsin.Name = "btnAsin"
-            Me.btnAsin.Size = New System.Drawing.Size(40, 40)
-            Me.btnAsin.TabIndex = 33
-            Me.btnAsin.TabStop = False
-            Me.btnAsin.Text = "asin"
-            Me.btnAsin.UseVisualStyleBackColor = False
-            '
-            'btnTan
-            '
-            Me.btnTan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnTan.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnTan.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnTan.FlatAppearance.BorderSize = 0
-            Me.btnTan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnTan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnTan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTan.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnTan.ForeColor = System.Drawing.Color.White
-            Me.btnTan.Location = New System.Drawing.Point(482, 194)
-            Me.btnTan.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnTan.Name = "btnTan"
-            Me.btnTan.Size = New System.Drawing.Size(40, 40)
-            Me.btnTan.TabIndex = 32
-            Me.btnTan.TabStop = False
-            Me.btnTan.Text = "tan"
-            Me.btnTan.UseVisualStyleBackColor = False
-            '
-            'btnCos
-            '
-            Me.btnCos.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnCos.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnCos.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnCos.FlatAppearance.BorderSize = 0
-            Me.btnCos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnCos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnCos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCos.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnCos.ForeColor = System.Drawing.Color.White
-            Me.btnCos.Location = New System.Drawing.Point(438, 194)
-            Me.btnCos.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnCos.Name = "btnCos"
-            Me.btnCos.Size = New System.Drawing.Size(40, 40)
-            Me.btnCos.TabIndex = 31
-            Me.btnCos.TabStop = False
-            Me.btnCos.Text = "cos"
-            Me.btnCos.UseVisualStyleBackColor = False
-            '
-            'btnSin
-            '
-            Me.btnSin.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnSin.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnSin.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnSin.FlatAppearance.BorderSize = 0
-            Me.btnSin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnSin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnSin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnSin.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnSin.ForeColor = System.Drawing.Color.White
-            Me.btnSin.Location = New System.Drawing.Point(394, 194)
-            Me.btnSin.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnSin.Name = "btnSin"
-            Me.btnSin.Size = New System.Drawing.Size(40, 40)
-            Me.btnSin.TabIndex = 30
-            Me.btnSin.TabStop = False
-            Me.btnSin.Text = "sin"
-            Me.btnSin.UseVisualStyleBackColor = False
-            '
-            'btnMod
-            '
-            Me.btnMod.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnMod.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnMod.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnMod.FlatAppearance.BorderSize = 0
-            Me.btnMod.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnMod.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnMod.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnMod.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
-            Me.btnMod.ForeColor = System.Drawing.Color.White
-            Me.btnMod.Location = New System.Drawing.Point(536, 149)
-            Me.btnMod.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnMod.Name = "btnMod"
-            Me.btnMod.Size = New System.Drawing.Size(40, 40)
-            Me.btnMod.TabIndex = 29
-            Me.btnMod.TabStop = False
-            Me.btnMod.Text = "mod"
-            Me.btnMod.UseVisualStyleBackColor = False
-            '
-            'btnRet
-            '
-            Me.btnRet.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnRet.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnRet.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnRet.FlatAppearance.BorderSize = 0
-            Me.btnRet.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnRet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnRet.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnRet.ForeColor = System.Drawing.Color.White
-            Me.btnRet.Location = New System.Drawing.Point(163, 238)
-            Me.btnRet.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnRet.Name = "btnRet"
-            Me.btnRet.Size = New System.Drawing.Size(40, 40)
-            Me.btnRet.TabIndex = 27
-            Me.btnRet.TabStop = False
-            Me.btnRet.Text = "↞"
-            Me.tt.SetToolTip(Me.btnRet, "Move caret to left end")
-            Me.btnRet.UseVisualStyleBackColor = False
-            '
-            'btnFunctions
-            '
-            Me.btnFunctions.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnFunctions.BackColor = System.Drawing.Color.DarkOliveGreen
-            Me.btnFunctions.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnFunctions.FlatAppearance.BorderSize = 0
-            Me.btnFunctions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(160, Byte), Integer), CType(CType(110, Byte), Integer))
-            Me.btnFunctions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkOliveGreen
-            Me.btnFunctions.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFunctions.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnFunctions.ForeColor = System.Drawing.Color.White
-            Me.btnFunctions.Location = New System.Drawing.Point(536, 237)
-            Me.btnFunctions.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnFunctions.Name = "btnFunctions"
-            Me.btnFunctions.Size = New System.Drawing.Size(40, 40)
-            Me.btnFunctions.TabIndex = 26
-            Me.btnFunctions.TabStop = False
-            Me.btnFunctions.Text = "f(x)"
-            Me.tt.SetToolTip(Me.btnFunctions, "Insert function" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Alt + F)")
-            Me.btnFunctions.UseVisualStyleBackColor = False
-            '
-            'btnAns
-            '
-            Me.btnAns.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAns.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAns.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAns.FlatAppearance.BorderSize = 0
-            Me.btnAns.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
-            Me.btnAns.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAns.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAns.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
-            Me.btnAns.ForeColor = System.Drawing.Color.White
-            Me.btnAns.Location = New System.Drawing.Point(580, 237)
-            Me.btnAns.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAns.Name = "btnAns"
-            Me.btnAns.Size = New System.Drawing.Size(40, 40)
-            Me.btnAns.TabIndex = 24
-            Me.btnAns.TabStop = False
-            Me.btnAns.Text = "ans"
-            Me.tt.SetToolTip(Me.btnAns, "Reuse the last answer")
-            Me.btnAns.UseVisualStyleBackColor = False
-            '
-            'btnAC
-            '
-            Me.btnAC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAC.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAC.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAC.FlatAppearance.BorderSize = 0
-            Me.btnAC.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnAC.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnAC.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAC.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
-            Me.btnAC.ForeColor = System.Drawing.Color.White
-            Me.btnAC.Location = New System.Drawing.Point(580, 193)
-            Me.btnAC.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAC.Name = "btnAC"
-            Me.btnAC.Size = New System.Drawing.Size(40, 40)
-            Me.btnAC.TabIndex = 28
-            Me.btnAC.TabStop = False
-            Me.btnAC.Text = "AC"
-            Me.tt.SetToolTip(Me.btnAC, "Clear the editor")
-            Me.btnAC.UseVisualStyleBackColor = False
-            '
-            'btnDel
-            '
-            Me.btnDel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnDel.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnDel.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnDel.FlatAppearance.BorderSize = 0
-            Me.btnDel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnDel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnDel.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
-            Me.btnDel.ForeColor = System.Drawing.Color.White
-            Me.btnDel.Location = New System.Drawing.Point(624, 193)
-            Me.btnDel.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnDel.Name = "btnDel"
-            Me.btnDel.Size = New System.Drawing.Size(84, 40)
-            Me.btnDel.TabIndex = 25
-            Me.btnDel.TabStop = False
-            Me.btnDel.Text = "Delete"
-            Me.tt.SetToolTip(Me.btnDel, "Delete the preceding character")
-            Me.btnDel.UseVisualStyleBackColor = False
-            '
-            'btnComma
-            '
-            Me.btnComma.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnComma.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnComma.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnComma.FlatAppearance.BorderSize = 0
-            Me.btnComma.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
-            Me.btnComma.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnComma.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnComma.ForeColor = System.Drawing.Color.White
-            Me.btnComma.Location = New System.Drawing.Point(482, 106)
-            Me.btnComma.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnComma.Name = "btnComma"
-            Me.btnComma.Size = New System.Drawing.Size(40, 40)
-            Me.btnComma.TabIndex = 18
-            Me.btnComma.TabStop = False
-            Me.btnComma.Text = ","
-            Me.btnComma.UseVisualStyleBackColor = False
+            'Btn7
+            '
+            Me.Btn7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn7.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn7.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn7.FlatAppearance.BorderSize = 0
+            Me.Btn7.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn7.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn7.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn7.ForeColor = System.Drawing.Color.White
+            Me.Btn7.Location = New System.Drawing.Point(17, 62)
+            Me.Btn7.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn7.Name = "Btn7"
+            Me.Btn7.Size = New System.Drawing.Size(40, 40)
+            Me.Btn7.TabIndex = 76
+            Me.Btn7.TabStop = False
+            Me.Btn7.Text = "7"
+            Me.Btn7.UseVisualStyleBackColor = False
+            '
+            'Btn8
+            '
+            Me.Btn8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn8.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn8.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn8.FlatAppearance.BorderSize = 0
+            Me.Btn8.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn8.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn8.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn8.ForeColor = System.Drawing.Color.White
+            Me.Btn8.Location = New System.Drawing.Point(61, 62)
+            Me.Btn8.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn8.Name = "Btn8"
+            Me.Btn8.Size = New System.Drawing.Size(40, 40)
+            Me.Btn8.TabIndex = 77
+            Me.Btn8.TabStop = False
+            Me.Btn8.Text = "8"
+            Me.Btn8.UseVisualStyleBackColor = False
+            '
+            'Btn1
+            '
+            Me.Btn1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn1.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn1.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn1.FlatAppearance.BorderSize = 0
+            Me.Btn1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn1.ForeColor = System.Drawing.Color.White
+            Me.Btn1.Location = New System.Drawing.Point(17, 150)
+            Me.Btn1.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn1.Name = "Btn1"
+            Me.Btn1.Size = New System.Drawing.Size(40, 40)
+            Me.Btn1.TabIndex = 69
+            Me.Btn1.TabStop = False
+            Me.Btn1.Text = "1"
+            Me.Btn1.UseVisualStyleBackColor = False
+            '
+            'Btn2
+            '
+            Me.Btn2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn2.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn2.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn2.FlatAppearance.BorderSize = 0
+            Me.Btn2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn2.ForeColor = System.Drawing.Color.White
+            Me.Btn2.Location = New System.Drawing.Point(61, 150)
+            Me.Btn2.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn2.Name = "Btn2"
+            Me.Btn2.Size = New System.Drawing.Size(40, 40)
+            Me.Btn2.TabIndex = 71
+            Me.Btn2.TabStop = False
+            Me.Btn2.Text = "2"
+            Me.Btn2.UseVisualStyleBackColor = False
+            '
+            'Btn3
+            '
+            Me.Btn3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.Btn3.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn3.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.Btn3.FlatAppearance.BorderSize = 0
+            Me.Btn3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.Btn3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.Btn3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.Btn3.ForeColor = System.Drawing.Color.White
+            Me.Btn3.Location = New System.Drawing.Point(105, 150)
+            Me.Btn3.Margin = New System.Windows.Forms.Padding(2)
+            Me.Btn3.Name = "Btn3"
+            Me.Btn3.Size = New System.Drawing.Size(40, 40)
+            Me.Btn3.TabIndex = 72
+            Me.Btn3.TabStop = False
+            Me.Btn3.Text = "3"
+            Me.Btn3.UseVisualStyleBackColor = False
+            '
+            'BtnRand
+            '
+            Me.BtnRand.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnRand.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnRand.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnRand.FlatAppearance.BorderSize = 0
+            Me.BtnRand.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnRand.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnRand.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnRand.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
+            Me.BtnRand.ForeColor = System.Drawing.Color.White
+            Me.BtnRand.Location = New System.Drawing.Point(207, 106)
+            Me.BtnRand.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnRand.Name = "BtnRand"
+            Me.BtnRand.Size = New System.Drawing.Size(40, 40)
+            Me.BtnRand.TabIndex = 68
+            Me.BtnRand.TabStop = False
+            Me.BtnRand.Text = "rand"
+            Me.tt.SetToolTip(Me.BtnRand, "Random")
+            Me.BtnRand.UseVisualStyleBackColor = False
+            '
+            'BtnSigma
+            '
+            Me.BtnSigma.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnSigma.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSigma.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnSigma.FlatAppearance.BorderSize = 0
+            Me.BtnSigma.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnSigma.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSigma.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnSigma.Font = New System.Drawing.Font(OpenSansLight, 13.0!)
+            Me.BtnSigma.ForeColor = System.Drawing.Color.White
+            Me.BtnSigma.Location = New System.Drawing.Point(163, 106)
+            Me.BtnSigma.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnSigma.Name = "BtnSigma"
+            Me.BtnSigma.Size = New System.Drawing.Size(40, 40)
+            Me.BtnSigma.TabIndex = 67
+            Me.BtnSigma.TabStop = False
+            Me.BtnSigma.Text = "Σ"
+            Me.tt.SetToolTip(Me.BtnSigma, "Summation")
+            Me.BtnSigma.UseVisualStyleBackColor = False
+            '
+            'BtnDyDx
+            '
+            Me.BtnDyDx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnDyDx.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnDyDx.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnDyDx.FlatAppearance.BorderSize = 0
+            Me.BtnDyDx.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnDyDx.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnDyDx.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnDyDx.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnDyDx.ForeColor = System.Drawing.Color.White
+            Me.BtnDyDx.Location = New System.Drawing.Point(251, 106)
+            Me.BtnDyDx.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnDyDx.Name = "BtnDyDx"
+            Me.BtnDyDx.Size = New System.Drawing.Size(40, 40)
+            Me.BtnDyDx.TabIndex = 66
+            Me.BtnDyDx.TabStop = False
+            Me.BtnDyDx.Text = "dydx"
+            Me.BtnDyDx.UseVisualStyleBackColor = False
+            '
+            'BtnTick
+            '
+            Me.BtnTick.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnTick.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnTick.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnTick.FlatAppearance.BorderSize = 0
+            Me.BtnTick.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnTick.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnTick.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnTick.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnTick.ForeColor = System.Drawing.Color.White
+            Me.BtnTick.Location = New System.Drawing.Point(482, 62)
+            Me.BtnTick.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnTick.Name = "BtnTick"
+            Me.BtnTick.Size = New System.Drawing.Size(40, 40)
+            Me.BtnTick.TabIndex = 65
+            Me.BtnTick.TabStop = False
+            Me.BtnTick.Text = "`"
+            Me.tt.SetToolTip(Me.BtnTick, "Linked List")
+            Me.BtnTick.UseVisualStyleBackColor = False
+            '
+            'BtnIntegral
+            '
+            Me.BtnIntegral.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnIntegral.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnIntegral.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnIntegral.FlatAppearance.BorderSize = 0
+            Me.BtnIntegral.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnIntegral.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnIntegral.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnIntegral.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnIntegral.ForeColor = System.Drawing.Color.White
+            Me.BtnIntegral.Location = New System.Drawing.Point(295, 106)
+            Me.BtnIntegral.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnIntegral.Name = "BtnIntegral"
+            Me.BtnIntegral.Size = New System.Drawing.Size(40, 40)
+            Me.BtnIntegral.TabIndex = 64
+            Me.BtnIntegral.TabStop = False
+            Me.BtnIntegral.Text = "integral"
+            Me.BtnIntegral.UseVisualStyleBackColor = False
+            '
+            'BtnIf
+            '
+            Me.BtnIf.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnIf.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnIf.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnIf.FlatAppearance.BorderSize = 0
+            Me.BtnIf.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnIf.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnIf.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnIf.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.BtnIf.ForeColor = System.Drawing.Color.White
+            Me.BtnIf.Location = New System.Drawing.Point(350, 106)
+            Me.BtnIf.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnIf.Name = "BtnIf"
+            Me.BtnIf.Size = New System.Drawing.Size(40, 40)
+            Me.BtnIf.TabIndex = 63
+            Me.BtnIf.TabStop = False
+            Me.BtnIf.Text = "if"
+            Me.tt.SetToolTip(Me.BtnIf, "if")
+            Me.BtnIf.UseVisualStyleBackColor = False
+            '
+            'BtnWhile
+            '
+            Me.BtnWhile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnWhile.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnWhile.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnWhile.FlatAppearance.BorderSize = 0
+            Me.BtnWhile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnWhile.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnWhile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnWhile.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnWhile.ForeColor = System.Drawing.Color.White
+            Me.BtnWhile.Location = New System.Drawing.Point(350, 62)
+            Me.BtnWhile.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnWhile.Name = "BtnWhile"
+            Me.BtnWhile.Size = New System.Drawing.Size(40, 40)
+            Me.BtnWhile.TabIndex = 62
+            Me.BtnWhile.TabStop = False
+            Me.BtnWhile.Text = "while"
+            Me.tt.SetToolTip(Me.BtnWhile, "while")
+            Me.BtnWhile.UseVisualStyleBackColor = False
+            '
+            'BtnPt
+            '
+            Me.BtnPt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnPt.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPt.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnPt.FlatAppearance.BorderSize = 0
+            Me.BtnPt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnPt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnPt.ForeColor = System.Drawing.Color.White
+            Me.BtnPt.Location = New System.Drawing.Point(580, 61)
+            Me.BtnPt.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnPt.Name = "BtnPt"
+            Me.BtnPt.Size = New System.Drawing.Size(40, 40)
+            Me.BtnPt.TabIndex = 61
+            Me.BtnPt.TabStop = False
+            Me.BtnPt.Text = "."
+            Me.BtnPt.UseVisualStyleBackColor = False
+            '
+            'BtnLn
+            '
+            Me.BtnLn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnLn.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnLn.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnLn.FlatAppearance.BorderSize = 0
+            Me.BtnLn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnLn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnLn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnLn.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
+            Me.BtnLn.ForeColor = System.Drawing.Color.White
+            Me.BtnLn.Location = New System.Drawing.Point(536, 61)
+            Me.BtnLn.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnLn.Name = "BtnLn"
+            Me.BtnLn.Size = New System.Drawing.Size(40, 40)
+            Me.BtnLn.TabIndex = 60
+            Me.BtnLn.TabStop = False
+            Me.BtnLn.Text = "ln"
+            Me.BtnLn.UseVisualStyleBackColor = False
+            '
+            'BtnCBR
+            '
+            Me.BtnCBR.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnCBR.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCBR.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnCBR.FlatAppearance.BorderSize = 0
+            Me.BtnCBR.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnCBR.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCBR.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnCBR.ForeColor = System.Drawing.Color.White
+            Me.BtnCBR.Location = New System.Drawing.Point(438, 106)
+            Me.BtnCBR.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnCBR.Name = "BtnCBR"
+            Me.BtnCBR.Size = New System.Drawing.Size(40, 40)
+            Me.BtnCBR.TabIndex = 59
+            Me.BtnCBR.TabStop = False
+            Me.BtnCBR.Text = "}"
+            Me.BtnCBR.UseVisualStyleBackColor = False
+            '
+            'BtnCBL
+            '
+            Me.BtnCBL.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnCBL.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCBL.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnCBL.FlatAppearance.BorderSize = 0
+            Me.BtnCBL.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnCBL.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCBL.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnCBL.ForeColor = System.Drawing.Color.White
+            Me.BtnCBL.Location = New System.Drawing.Point(394, 106)
+            Me.BtnCBL.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnCBL.Name = "BtnCBL"
+            Me.BtnCBL.Size = New System.Drawing.Size(40, 40)
+            Me.BtnCBL.TabIndex = 58
+            Me.BtnCBL.TabStop = False
+            Me.BtnCBL.Text = "{"
+            Me.tt.SetToolTip(Me.BtnCBL, "Set")
+            Me.BtnCBL.UseVisualStyleBackColor = False
+            '
+            'BtnSqBrR
+            '
+            Me.BtnSqBrR.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnSqBrR.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSqBrR.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnSqBrR.FlatAppearance.BorderSize = 0
+            Me.BtnSqBrR.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnSqBrR.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSqBrR.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnSqBrR.ForeColor = System.Drawing.Color.White
+            Me.BtnSqBrR.Location = New System.Drawing.Point(438, 62)
+            Me.BtnSqBrR.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnSqBrR.Name = "BtnSqBrR"
+            Me.BtnSqBrR.Size = New System.Drawing.Size(40, 40)
+            Me.BtnSqBrR.TabIndex = 57
+            Me.BtnSqBrR.TabStop = False
+            Me.BtnSqBrR.Text = "]"
+            Me.BtnSqBrR.UseVisualStyleBackColor = False
+            '
+            'BtnSqBrL
+            '
+            Me.BtnSqBrL.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnSqBrL.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSqBrL.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnSqBrL.FlatAppearance.BorderSize = 0
+            Me.BtnSqBrL.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnSqBrL.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnSqBrL.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnSqBrL.ForeColor = System.Drawing.Color.White
+            Me.BtnSqBrL.Location = New System.Drawing.Point(394, 62)
+            Me.BtnSqBrL.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnSqBrL.Name = "BtnSqBrL"
+            Me.BtnSqBrL.Size = New System.Drawing.Size(40, 40)
+            Me.BtnSqBrL.TabIndex = 56
+            Me.BtnSqBrL.TabStop = False
+            Me.BtnSqBrL.Text = "["
+            Me.tt.SetToolTip(Me.BtnSqBrL, "Matrix")
+            Me.BtnSqBrL.UseVisualStyleBackColor = False
+            '
+            'BtnY
+            '
+            Me.BtnY.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnY.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnY.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnY.FlatAppearance.BorderSize = 0
+            Me.BtnY.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnY.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnY.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnY.ForeColor = System.Drawing.Color.White
+            Me.BtnY.Location = New System.Drawing.Point(295, 195)
+            Me.BtnY.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnY.Name = "BtnY"
+            Me.BtnY.Size = New System.Drawing.Size(40, 40)
+            Me.BtnY.TabIndex = 55
+            Me.BtnY.TabStop = False
+            Me.BtnY.Text = "y"
+            Me.BtnY.UseVisualStyleBackColor = False
+            '
+            'BtnX
+            '
+            Me.BtnX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnX.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnX.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnX.FlatAppearance.BorderSize = 0
+            Me.BtnX.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnX.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnX.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnX.ForeColor = System.Drawing.Color.White
+            Me.BtnX.Location = New System.Drawing.Point(295, 150)
+            Me.BtnX.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnX.Name = "BtnX"
+            Me.BtnX.Size = New System.Drawing.Size(40, 40)
+            Me.BtnX.TabIndex = 54
+            Me.BtnX.TabStop = False
+            Me.BtnX.Text = "x"
+            Me.BtnX.UseVisualStyleBackColor = False
+            '
+            'BtnMedian
+            '
+            Me.BtnMedian.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnMedian.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMedian.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnMedian.FlatAppearance.BorderSize = 0
+            Me.BtnMedian.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnMedian.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnMedian.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnMedian.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnMedian.ForeColor = System.Drawing.Color.White
+            Me.BtnMedian.Location = New System.Drawing.Point(295, 62)
+            Me.BtnMedian.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnMedian.Name = "BtnMedian"
+            Me.BtnMedian.Size = New System.Drawing.Size(40, 40)
+            Me.BtnMedian.TabIndex = 53
+            Me.BtnMedian.TabStop = False
+            Me.BtnMedian.Text = "median"
+            Me.tt.SetToolTip(Me.BtnMedian, "Median")
+            Me.BtnMedian.UseVisualStyleBackColor = False
+            '
+            'BtnAvg
+            '
+            Me.BtnAvg.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAvg.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAvg.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAvg.FlatAppearance.BorderSize = 0
+            Me.BtnAvg.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnAvg.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAvg.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAvg.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnAvg.ForeColor = System.Drawing.Color.White
+            Me.BtnAvg.Location = New System.Drawing.Point(251, 62)
+            Me.BtnAvg.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAvg.Name = "BtnAvg"
+            Me.BtnAvg.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAvg.TabIndex = 52
+            Me.BtnAvg.TabStop = False
+            Me.BtnAvg.Text = "average"
+            Me.tt.SetToolTip(Me.BtnAvg, "Average/Mean")
+            Me.BtnAvg.UseVisualStyleBackColor = False
+            '
+            'BtnYesNo
+            '
+            Me.BtnYesNo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnYesNo.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnYesNo.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnYesNo.FlatAppearance.BorderSize = 0
+            Me.BtnYesNo.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnYesNo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnYesNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnYesNo.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnYesNo.ForeColor = System.Drawing.Color.White
+            Me.BtnYesNo.Location = New System.Drawing.Point(295, 18)
+            Me.BtnYesNo.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnYesNo.Name = "BtnYesNo"
+            Me.BtnYesNo.Size = New System.Drawing.Size(40, 40)
+            Me.BtnYesNo.TabIndex = 51
+            Me.BtnYesNo.TabStop = False
+            Me.BtnYesNo.Text = "yes no"
+            Me.tt.SetToolTip(Me.BtnYesNo, "Ask user for confirmation (Yes/No)")
+            Me.BtnYesNo.UseVisualStyleBackColor = False
+            '
+            'BtnT
+            '
+            Me.BtnT.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnT.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnT.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnT.FlatAppearance.BorderSize = 0
+            Me.BtnT.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnT.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnT.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnT.ForeColor = System.Drawing.Color.White
+            Me.BtnT.Location = New System.Drawing.Point(163, 194)
+            Me.BtnT.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnT.Name = "BtnT"
+            Me.BtnT.Size = New System.Drawing.Size(40, 40)
+            Me.BtnT.TabIndex = 50
+            Me.BtnT.TabStop = False
+            Me.BtnT.Text = "t"
+            Me.BtnT.UseVisualStyleBackColor = False
+            '
+            'BtnN
+            '
+            Me.BtnN.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnN.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnN.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnN.FlatAppearance.BorderSize = 0
+            Me.BtnN.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnN.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnN.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnN.ForeColor = System.Drawing.Color.White
+            Me.BtnN.Location = New System.Drawing.Point(207, 194)
+            Me.BtnN.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnN.Name = "BtnN"
+            Me.BtnN.Size = New System.Drawing.Size(40, 40)
+            Me.BtnN.TabIndex = 49
+            Me.BtnN.TabStop = False
+            Me.BtnN.Text = "n"
+            Me.BtnN.UseVisualStyleBackColor = False
+            '
+            'BtnC
+            '
+            Me.BtnC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnC.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnC.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnC.FlatAppearance.BorderSize = 0
+            Me.BtnC.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnC.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnC.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnC.ForeColor = System.Drawing.Color.White
+            Me.BtnC.Location = New System.Drawing.Point(251, 150)
+            Me.BtnC.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnC.Name = "BtnC"
+            Me.BtnC.Size = New System.Drawing.Size(40, 40)
+            Me.BtnC.TabIndex = 48
+            Me.BtnC.TabStop = False
+            Me.BtnC.Text = "c"
+            Me.BtnC.UseVisualStyleBackColor = False
+            '
+            'BtnM
+            '
+            Me.BtnM.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnM.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnM.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnM.FlatAppearance.BorderSize = 0
+            Me.BtnM.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnM.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnM.ForeColor = System.Drawing.Color.White
+            Me.BtnM.Location = New System.Drawing.Point(251, 195)
+            Me.BtnM.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnM.Name = "BtnM"
+            Me.BtnM.Size = New System.Drawing.Size(40, 40)
+            Me.BtnM.TabIndex = 47
+            Me.BtnM.TabStop = False
+            Me.BtnM.Text = "m"
+            Me.BtnM.UseVisualStyleBackColor = False
+            '
+            'BtnB
+            '
+            Me.BtnB.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnB.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnB.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnB.FlatAppearance.BorderSize = 0
+            Me.BtnB.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnB.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnB.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnB.ForeColor = System.Drawing.Color.White
+            Me.BtnB.Location = New System.Drawing.Point(207, 150)
+            Me.BtnB.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnB.Name = "BtnB"
+            Me.BtnB.Size = New System.Drawing.Size(40, 40)
+            Me.BtnB.TabIndex = 46
+            Me.BtnB.TabStop = False
+            Me.BtnB.Text = "b"
+            Me.BtnB.UseVisualStyleBackColor = False
+            '
+            'BtnA
+            '
+            Me.BtnA.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnA.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnA.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnA.FlatAppearance.BorderSize = 0
+            Me.BtnA.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnA.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+            Me.BtnA.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnA.ForeColor = System.Drawing.Color.White
+            Me.BtnA.Location = New System.Drawing.Point(163, 150)
+            Me.BtnA.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnA.Name = "BtnA"
+            Me.BtnA.Size = New System.Drawing.Size(40, 40)
+            Me.BtnA.TabIndex = 45
+            Me.BtnA.TabStop = False
+            Me.BtnA.Text = "a"
+            Me.BtnA.UseVisualStyleBackColor = False
+            '
+            'BtnPerm
+            '
+            Me.BtnPerm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnPerm.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPerm.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnPerm.FlatAppearance.BorderSize = 0
+            Me.BtnPerm.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnPerm.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPerm.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnPerm.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnPerm.ForeColor = System.Drawing.Color.White
+            Me.BtnPerm.Location = New System.Drawing.Point(207, 62)
+            Me.BtnPerm.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnPerm.Name = "BtnPerm"
+            Me.BtnPerm.Size = New System.Drawing.Size(40, 40)
+            Me.BtnPerm.TabIndex = 44
+            Me.BtnPerm.TabStop = False
+            Me.BtnPerm.Text = "nPr"
+            Me.tt.SetToolTip(Me.BtnPerm, "Permutations")
+            Me.BtnPerm.UseVisualStyleBackColor = False
+            '
+            'BtnChoose
+            '
+            Me.BtnChoose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnChoose.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnChoose.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnChoose.FlatAppearance.BorderSize = 0
+            Me.BtnChoose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnChoose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnChoose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnChoose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnChoose.ForeColor = System.Drawing.Color.White
+            Me.BtnChoose.Location = New System.Drawing.Point(163, 62)
+            Me.BtnChoose.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnChoose.Name = "BtnChoose"
+            Me.BtnChoose.Size = New System.Drawing.Size(40, 40)
+            Me.BtnChoose.TabIndex = 43
+            Me.BtnChoose.TabStop = False
+            Me.BtnChoose.Text = "nCr"
+            Me.tt.SetToolTip(Me.BtnChoose, "Binomial Coefficient/Combinations")
+            Me.BtnChoose.UseVisualStyleBackColor = False
+            '
+            'BtnRead
+            '
+            Me.BtnRead.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnRead.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnRead.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnRead.FlatAppearance.BorderSize = 0
+            Me.BtnRead.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnRead.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnRead.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnRead.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnRead.ForeColor = System.Drawing.Color.White
+            Me.BtnRead.Location = New System.Drawing.Point(207, 18)
+            Me.BtnRead.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnRead.Name = "BtnRead"
+            Me.BtnRead.Size = New System.Drawing.Size(40, 40)
+            Me.BtnRead.TabIndex = 41
+            Me.BtnRead.TabStop = False
+            Me.BtnRead.Text = "read"
+            Me.tt.SetToolTip(Me.BtnRead, "Get input from user")
+            Me.BtnRead.UseVisualStyleBackColor = False
+            '
+            'BtnConfirm
+            '
+            Me.BtnConfirm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnConfirm.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnConfirm.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnConfirm.FlatAppearance.BorderSize = 0
+            Me.BtnConfirm.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnConfirm.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnConfirm.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnConfirm.ForeColor = System.Drawing.Color.White
+            Me.BtnConfirm.Location = New System.Drawing.Point(251, 18)
+            Me.BtnConfirm.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnConfirm.Name = "BtnConfirm"
+            Me.BtnConfirm.Size = New System.Drawing.Size(40, 40)
+            Me.BtnConfirm.TabIndex = 40
+            Me.BtnConfirm.TabStop = False
+            Me.BtnConfirm.Text = "conf" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "irm"
+            Me.tt.SetToolTip(Me.BtnConfirm, "Ask user for confirmation (OK/Cancel)")
+            Me.BtnConfirm.UseVisualStyleBackColor = False
+            '
+            'BtnPrint
+            '
+            Me.BtnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnPrint.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPrint.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnPrint.FlatAppearance.BorderSize = 0
+            Me.BtnPrint.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnPrint.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnPrint.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnPrint.ForeColor = System.Drawing.Color.White
+            Me.BtnPrint.Location = New System.Drawing.Point(163, 18)
+            Me.BtnPrint.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnPrint.Name = "BtnPrint"
+            Me.BtnPrint.Size = New System.Drawing.Size(40, 40)
+            Me.BtnPrint.TabIndex = 39
+            Me.BtnPrint.TabStop = False
+            Me.BtnPrint.Text = "print"
+            Me.tt.SetToolTip(Me.BtnPrint, "Print to console")
+            Me.BtnPrint.UseVisualStyleBackColor = False
+            '
+            'BtnPow10
+            '
+            Me.BtnPow10.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnPow10.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnPow10.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnPow10.FlatAppearance.BorderSize = 0
+            Me.BtnPow10.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnPow10.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnPow10.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnPow10.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnPow10.ForeColor = System.Drawing.Color.White
+            Me.BtnPow10.Location = New System.Drawing.Point(350, 238)
+            Me.BtnPow10.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnPow10.Name = "BtnPow10"
+            Me.BtnPow10.Size = New System.Drawing.Size(40, 40)
+            Me.BtnPow10.TabIndex = 37
+            Me.BtnPow10.TabStop = False
+            Me.BtnPow10.Text = "x10^"
+            Me.BtnPow10.UseVisualStyleBackColor = False
+            '
+            'BtnQdtc
+            '
+            Me.BtnQdtc.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnQdtc.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnQdtc.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnQdtc.FlatAppearance.BorderSize = 0
+            Me.BtnQdtc.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnQdtc.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnQdtc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnQdtc.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnQdtc.ForeColor = System.Drawing.Color.White
+            Me.BtnQdtc.Location = New System.Drawing.Point(350, 194)
+            Me.BtnQdtc.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnQdtc.Name = "BtnQdtc"
+            Me.BtnQdtc.Size = New System.Drawing.Size(40, 40)
+            Me.BtnQdtc.TabIndex = 36
+            Me.BtnQdtc.TabStop = False
+            Me.BtnQdtc.Text = "qdtc"
+            Me.tt.SetToolTip(Me.BtnQdtc, "Quadratic solver")
+            Me.BtnQdtc.UseVisualStyleBackColor = False
+            '
+            'BtnAtan
+            '
+            Me.BtnAtan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAtan.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAtan.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAtan.FlatAppearance.BorderSize = 0
+            Me.BtnAtan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnAtan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAtan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAtan.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnAtan.ForeColor = System.Drawing.Color.White
+            Me.BtnAtan.Location = New System.Drawing.Point(482, 238)
+            Me.BtnAtan.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAtan.Name = "BtnAtan"
+            Me.BtnAtan.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAtan.TabIndex = 35
+            Me.BtnAtan.TabStop = False
+            Me.BtnAtan.Text = "atan"
+            Me.BtnAtan.UseVisualStyleBackColor = False
+            '
+            'BtnAcos
+            '
+            Me.BtnAcos.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAcos.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAcos.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAcos.FlatAppearance.BorderSize = 0
+            Me.BtnAcos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnAcos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAcos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAcos.Font = New System.Drawing.Font(OpenSansLight, 8.0!)
+            Me.BtnAcos.ForeColor = System.Drawing.Color.White
+            Me.BtnAcos.Location = New System.Drawing.Point(438, 238)
+            Me.BtnAcos.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAcos.Name = "BtnAcos"
+            Me.BtnAcos.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAcos.TabIndex = 34
+            Me.BtnAcos.TabStop = False
+            Me.BtnAcos.Text = "acos"
+            Me.BtnAcos.UseVisualStyleBackColor = False
+            '
+            'BtnAsin
+            '
+            Me.BtnAsin.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAsin.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAsin.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAsin.FlatAppearance.BorderSize = 0
+            Me.BtnAsin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnAsin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAsin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAsin.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnAsin.ForeColor = System.Drawing.Color.White
+            Me.BtnAsin.Location = New System.Drawing.Point(394, 238)
+            Me.BtnAsin.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAsin.Name = "BtnAsin"
+            Me.BtnAsin.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAsin.TabIndex = 33
+            Me.BtnAsin.TabStop = False
+            Me.BtnAsin.Text = "asin"
+            Me.BtnAsin.UseVisualStyleBackColor = False
+            '
+            'BtnTan
+            '
+            Me.BtnTan.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnTan.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnTan.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnTan.FlatAppearance.BorderSize = 0
+            Me.BtnTan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnTan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnTan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnTan.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnTan.ForeColor = System.Drawing.Color.White
+            Me.BtnTan.Location = New System.Drawing.Point(482, 194)
+            Me.BtnTan.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnTan.Name = "BtnTan"
+            Me.BtnTan.Size = New System.Drawing.Size(40, 40)
+            Me.BtnTan.TabIndex = 32
+            Me.BtnTan.TabStop = False
+            Me.BtnTan.Text = "tan"
+            Me.BtnTan.UseVisualStyleBackColor = False
+            '
+            'BtnCos
+            '
+            Me.BtnCos.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnCos.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnCos.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnCos.FlatAppearance.BorderSize = 0
+            Me.BtnCos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnCos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnCos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnCos.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnCos.ForeColor = System.Drawing.Color.White
+            Me.BtnCos.Location = New System.Drawing.Point(438, 194)
+            Me.BtnCos.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnCos.Name = "BtnCos"
+            Me.BtnCos.Size = New System.Drawing.Size(40, 40)
+            Me.BtnCos.TabIndex = 31
+            Me.BtnCos.TabStop = False
+            Me.BtnCos.Text = "cos"
+            Me.BtnCos.UseVisualStyleBackColor = False
+            '
+            'BtnSin
+            '
+            Me.BtnSin.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnSin.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnSin.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnSin.FlatAppearance.BorderSize = 0
+            Me.BtnSin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnSin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnSin.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnSin.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnSin.ForeColor = System.Drawing.Color.White
+            Me.BtnSin.Location = New System.Drawing.Point(394, 194)
+            Me.BtnSin.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnSin.Name = "BtnSin"
+            Me.BtnSin.Size = New System.Drawing.Size(40, 40)
+            Me.BtnSin.TabIndex = 30
+            Me.BtnSin.TabStop = False
+            Me.BtnSin.Text = "sin"
+            Me.BtnSin.UseVisualStyleBackColor = False
+            '
+            'BtnMod
+            '
+            Me.BtnMod.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnMod.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnMod.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnMod.FlatAppearance.BorderSize = 0
+            Me.BtnMod.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnMod.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnMod.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnMod.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
+            Me.BtnMod.ForeColor = System.Drawing.Color.White
+            Me.BtnMod.Location = New System.Drawing.Point(536, 149)
+            Me.BtnMod.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnMod.Name = "BtnMod"
+            Me.BtnMod.Size = New System.Drawing.Size(40, 40)
+            Me.BtnMod.TabIndex = 29
+            Me.BtnMod.TabStop = False
+            Me.BtnMod.Text = "mod"
+            Me.BtnMod.UseVisualStyleBackColor = False
+            '
+            'BtnRet
+            '
+            Me.BtnRet.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnRet.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnRet.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnRet.FlatAppearance.BorderSize = 0
+            Me.BtnRet.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnRet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnRet.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnRet.ForeColor = System.Drawing.Color.White
+            Me.BtnRet.Location = New System.Drawing.Point(163, 238)
+            Me.BtnRet.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnRet.Name = "BtnRet"
+            Me.BtnRet.Size = New System.Drawing.Size(40, 40)
+            Me.BtnRet.TabIndex = 27
+            Me.BtnRet.TabStop = False
+            Me.BtnRet.Text = "↞"
+            Me.tt.SetToolTip(Me.BtnRet, "Move caret to left end")
+            Me.BtnRet.UseVisualStyleBackColor = False
+            '
+            'BtnFunctions
+            '
+            Me.BtnFunctions.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnFunctions.BackColor = System.Drawing.Color.DarkOliveGreen
+            Me.BtnFunctions.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnFunctions.FlatAppearance.BorderSize = 0
+            Me.BtnFunctions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(160, Byte), Integer), CType(CType(110, Byte), Integer))
+            Me.BtnFunctions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkOliveGreen
+            Me.BtnFunctions.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnFunctions.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnFunctions.ForeColor = System.Drawing.Color.White
+            Me.BtnFunctions.Location = New System.Drawing.Point(536, 237)
+            Me.BtnFunctions.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnFunctions.Name = "BtnFunctions"
+            Me.BtnFunctions.Size = New System.Drawing.Size(40, 40)
+            Me.BtnFunctions.TabIndex = 26
+            Me.BtnFunctions.TabStop = False
+            Me.BtnFunctions.Text = "f(x)"
+            Me.tt.SetToolTip(Me.BtnFunctions, "Insert function" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Alt + F)")
+            Me.BtnFunctions.UseVisualStyleBackColor = False
+            '
+            'BtnAns
+            '
+            Me.BtnAns.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAns.BackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAns.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAns.FlatAppearance.BorderSize = 0
+            Me.BtnAns.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(90, Byte), Integer))
+            Me.BtnAns.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAns.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAns.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.BtnAns.ForeColor = System.Drawing.Color.White
+            Me.BtnAns.Location = New System.Drawing.Point(580, 237)
+            Me.BtnAns.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAns.Name = "BtnAns"
+            Me.BtnAns.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAns.TabIndex = 24
+            Me.BtnAns.TabStop = False
+            Me.BtnAns.Text = "ans"
+            Me.tt.SetToolTip(Me.BtnAns, "Reuse the last answer")
+            Me.BtnAns.UseVisualStyleBackColor = False
+            '
+            'BtnAC
+            '
+            Me.BtnAC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnAC.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAC.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAC.FlatAppearance.BorderSize = 0
+            Me.BtnAC.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnAC.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnAC.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAC.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
+            Me.BtnAC.ForeColor = System.Drawing.Color.White
+            Me.BtnAC.Location = New System.Drawing.Point(580, 193)
+            Me.BtnAC.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAC.Name = "BtnAC"
+            Me.BtnAC.Size = New System.Drawing.Size(40, 40)
+            Me.BtnAC.TabIndex = 28
+            Me.BtnAC.TabStop = False
+            Me.BtnAC.Text = "AC"
+            Me.tt.SetToolTip(Me.BtnAC, "Clear the editor")
+            Me.BtnAC.UseVisualStyleBackColor = False
+            '
+            'BtnDel
+            '
+            Me.BtnDel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnDel.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnDel.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnDel.FlatAppearance.BorderSize = 0
+            Me.BtnDel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnDel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnDel.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
+            Me.BtnDel.ForeColor = System.Drawing.Color.White
+            Me.BtnDel.Location = New System.Drawing.Point(624, 193)
+            Me.BtnDel.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnDel.Name = "BtnDel"
+            Me.BtnDel.Size = New System.Drawing.Size(84, 40)
+            Me.BtnDel.TabIndex = 25
+            Me.BtnDel.TabStop = False
+            Me.BtnDel.Text = "Delete"
+            Me.tt.SetToolTip(Me.BtnDel, "Delete the preceding character")
+            Me.BtnDel.UseVisualStyleBackColor = False
+            '
+            'BtnComma
+            '
+            Me.BtnComma.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnComma.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnComma.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnComma.FlatAppearance.BorderSize = 0
+            Me.BtnComma.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+            Me.BtnComma.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnComma.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnComma.ForeColor = System.Drawing.Color.White
+            Me.BtnComma.Location = New System.Drawing.Point(482, 106)
+            Me.BtnComma.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnComma.Name = "BtnComma"
+            Me.BtnComma.Size = New System.Drawing.Size(40, 40)
+            Me.BtnComma.TabIndex = 18
+            Me.BtnComma.TabStop = False
+            Me.BtnComma.Text = ","
+            Me.BtnComma.UseVisualStyleBackColor = False
             '
             'tt
             '
@@ -1937,105 +1937,105 @@
             Me.AutoSize = True
             Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-            Me.Controls.Add(Me.pnl)
+            Me.Controls.Add(Me.Pnl)
             Me.Cursor = System.Windows.Forms.Cursors.Hand
             Me.Font = New System.Drawing.Font(OpenSansLight, 12.25!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximumSize = New System.Drawing.Size(728, 300)
             Me.Name = "Keyboard"
             Me.Size = New System.Drawing.Size(728, 300)
-            Me.pnl.ResumeLayout(False)
+            Me.Pnl.ResumeLayout(False)
             Me.ResumeLayout(False)
 
         End Sub
 
-        Friend WithEvents btnSqrt As Button
-        Friend WithEvents btnlog As Button
-        Friend WithEvents btnMin As Button
-        Friend WithEvents btnAdd As Button
-        Friend WithEvents btnExp As Button
-        Friend WithEvents btnDiv As Button
-        Friend WithEvents btnMul As Button
-        Friend WithEvents btnCalc As Button
-        Friend WithEvents btnPrev As Button
-        Friend WithEvents btnNext As Button
-        Friend WithEvents btnBrLft As Button
-        Friend WithEvents btnBrRt As Button
-        Friend WithEvents btnEnd As Button
-        Friend WithEvents btnAbs As Button
-        Friend WithEvents btnFact As Button
-        Friend WithEvents btnEquals As Button
-        Friend WithEvents btnLessThan As Button
-        Friend WithEvents btnMoreThan As Button
-        Friend WithEvents btnAns As Button
-        Friend WithEvents btnDel As Button
-        Friend WithEvents btnFunctions As Button
-        Friend WithEvents btnRet As Button
-        Friend WithEvents btnAC As Button
-        Friend WithEvents btnMod As Button
-        Friend WithEvents btnAtan As Button
-        Friend WithEvents btnAcos As Button
-        Friend WithEvents btnAsin As Button
-        Friend WithEvents btnTan As Button
-        Friend WithEvents btnCos As Button
-        Friend WithEvents btnSin As Button
-        Friend WithEvents btnQdtc As Button
-        Friend WithEvents btnPow10 As Button
+        Friend WithEvents BtnSqrt As Button
+        Friend WithEvents Btnlog As Button
+        Friend WithEvents BtnMinus As Button
+        Friend WithEvents BtnAdd As Button
+        Friend WithEvents BtnExp As Button
+        Friend WithEvents BtnDiv As Button
+        Friend WithEvents BtnMul As Button
+        Friend WithEvents BtnCalc As Button
+        Friend WithEvents BtnPrev As Button
+        Friend WithEvents BtnNext As Button
+        Friend WithEvents BtnBrLft As Button
+        Friend WithEvents BtnBrRt As Button
+        Friend WithEvents BtnEnd As Button
+        Friend WithEvents BtnAbs As Button
+        Friend WithEvents BtnFact As Button
+        Friend WithEvents BtnEquals As Button
+        Friend WithEvents BtnLessThan As Button
+        Friend WithEvents BtnMoreThan As Button
+        Friend WithEvents BtnAns As Button
+        Friend WithEvents BtnDel As Button
+        Friend WithEvents BtnFunctions As Button
+        Friend WithEvents BtnRet As Button
+        Friend WithEvents BtnAC As Button
+        Friend WithEvents BtnMod As Button
+        Friend WithEvents BtnAtan As Button
+        Friend WithEvents BtnAcos As Button
+        Friend WithEvents BtnAsin As Button
+        Friend WithEvents BtnTan As Button
+        Friend WithEvents BtnCos As Button
+        Friend WithEvents BtnSin As Button
+        Friend WithEvents BtnQdtc As Button
+        Friend WithEvents BtnPow10 As Button
         Friend WithEvents tt As ToolTip
-        Friend WithEvents btnPerm As Button
-        Friend WithEvents btnChoose As Button
-        Friend WithEvents btnRead As Button
-        Friend WithEvents btnConfirm As Button
-        Friend WithEvents btnPrint As Button
-        Friend WithEvents btnYesNo As Button
-        Friend WithEvents btnT As Button
-        Friend WithEvents btnN As Button
-        Friend WithEvents btnC As Button
-        Friend WithEvents btnM As Button
-        Friend WithEvents btnB As Button
-        Friend WithEvents btnA As Button
-        Friend WithEvents btnMedian As Button
-        Friend WithEvents btnAvg As Button
-        Friend WithEvents btnLn As Button
-        Friend WithEvents btnCBR As Button
-        Friend WithEvents btnCBL As Button
-        Friend WithEvents btnSqBrR As Button
-        Friend WithEvents btnSqBrL As Button
-        Friend WithEvents btnY As Button
-        Friend WithEvents btnX As Button
-        Friend WithEvents btnIf As Button
-        Friend WithEvents btnWhile As Button
-        Friend WithEvents btnPt As Button
-        Friend WithEvents btnComma As Button
-        Friend WithEvents btnIntegral As Button
-        Friend WithEvents btnTick As Button
-        Friend WithEvents btnDyDx As Button
-        Friend WithEvents btnSigma As Button
-        Friend WithEvents btnRand As Button
-        Friend WithEvents btnE As Button
-        Friend WithEvents btnPi As Button
-        Friend WithEvents btnZ As Button
-        Friend WithEvents btnDecimal As Button
-        Friend WithEvents btn9 As Button
-        Friend WithEvents btnImagUnit As Button
-        Friend WithEvents btn0 As Button
-        Friend WithEvents btn4 As Button
-        Friend WithEvents btn5 As Button
+        Friend WithEvents BtnPerm As Button
+        Friend WithEvents BtnChoose As Button
+        Friend WithEvents BtnRead As Button
+        Friend WithEvents BtnConfirm As Button
+        Friend WithEvents BtnPrint As Button
+        Friend WithEvents BtnYesNo As Button
+        Friend WithEvents BtnT As Button
+        Friend WithEvents BtnN As Button
+        Friend WithEvents BtnC As Button
+        Friend WithEvents BtnM As Button
+        Friend WithEvents BtnB As Button
+        Friend WithEvents BtnA As Button
+        Friend WithEvents BtnMedian As Button
+        Friend WithEvents BtnAvg As Button
+        Friend WithEvents BtnLn As Button
+        Friend WithEvents BtnCBR As Button
+        Friend WithEvents BtnCBL As Button
+        Friend WithEvents BtnSqBrR As Button
+        Friend WithEvents BtnSqBrL As Button
+        Friend WithEvents BtnY As Button
+        Friend WithEvents BtnX As Button
+        Friend WithEvents BtnIf As Button
+        Friend WithEvents BtnWhile As Button
+        Friend WithEvents BtnPt As Button
+        Friend WithEvents BtnComma As Button
+        Friend WithEvents BtnIntegral As Button
+        Friend WithEvents BtnTick As Button
+        Friend WithEvents BtnDyDx As Button
+        Friend WithEvents BtnSigma As Button
+        Friend WithEvents BtnRand As Button
+        Friend WithEvents BtnE As Button
+        Friend WithEvents BtnPi As Button
+        Friend WithEvents BtnZ As Button
+        Friend WithEvents BtnDecimal As Button
+        Friend WithEvents Btn9 As Button
+        Friend WithEvents BtnImagUnit As Button
+        Friend WithEvents Btn0 As Button
+        Friend WithEvents Btn4 As Button
+        Friend WithEvents Btn5 As Button
         Friend WithEvents BtnY2 As Button
-        Friend WithEvents btn6 As Button
+        Friend WithEvents Btn6 As Button
         Friend WithEvents BtnX2 As Button
-        Friend WithEvents btn7 As Button
-        Friend WithEvents btn8 As Button
-        Friend WithEvents btn1 As Button
-        Friend WithEvents btn2 As Button
-        Friend WithEvents btn3 As Button
-        Friend WithEvents btnQuote As Button
-        Friend WithEvents btnOr As Button
-        Friend WithEvents btnAnd As Button
-        Friend WithEvents btnNot As Button
-        Friend WithEvents pnl As Panel
-        Friend WithEvents btnClose As Button
-        Friend WithEvents btnTripleQuote As Button
-        Friend WithEvents btnComment As Button
+        Friend WithEvents Btn7 As Button
+        Friend WithEvents Btn8 As Button
+        Friend WithEvents Btn1 As Button
+        Friend WithEvents Btn2 As Button
+        Friend WithEvents Btn3 As Button
+        Friend WithEvents BtnQuote As Button
+        Friend WithEvents BtnOr As Button
+        Friend WithEvents BtnAnd As Button
+        Friend WithEvents BtnNot As Button
+        Friend WithEvents Pnl As Panel
+        Friend WithEvents BtnClose As Button
+        Friend WithEvents BtnTripleQuote As Button
+        Friend WithEvents BtnComment As Button
     End Class
 End Namespace

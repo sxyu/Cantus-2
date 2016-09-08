@@ -7,19 +7,19 @@
         Dim _minimized As Boolean = False
         Dim _init As Boolean = True
 
-        Private Sub GenericButtonClick(sender As Object, e As EventArgs) Handles btnFact.Click, btnMul.Click,
-            btnDiv.Click, btnAdd.Click, btnMin.Click,
-            btnEquals.Click, btnLessThan.Click, btnMoreThan.Click, btnAns.Click, btnExp.Click, btnPt.Click,
-           btnA.Click, btnB.Click, btnC.Click,
-            btnT.Click, btnM.Click, btnX.Click, btnY.Click, btnComma.Click, btnN.Click,
-            btnY.Click, btnX.Click, btn9.Click, btn8.Click, btn7.Click,
-            btn6.Click, btn5.Click, btn4.Click, btn3.Click, btn2.Click, btn1.Click, btn0.Click, btnPt.Click,
-            btnZ.Click, btnPi.Click, btnE.Click, btnImagUnit.Click, btnTripleQuote.Click, btnComment.Click
+        Private Sub GenericButtonClick(sender As Object, e As EventArgs) Handles BtnFact.Click, BtnMul.Click,
+            BtnDiv.Click, BtnAdd.Click, BtnMinus.Click,
+            BtnEquals.Click, BtnLessThan.Click, BtnMoreThan.Click, BtnAns.Click, BtnExp.Click, BtnPt.Click,
+           BtnA.Click, BtnB.Click, BtnC.Click,
+            BtnT.Click, BtnM.Click, BtnX.Click, BtnY.Click, BtnComma.Click, BtnN.Click,
+            Btn9.Click, Btn8.Click, Btn7.Click,
+            Btn6.Click, Btn5.Click, Btn4.Click, Btn3.Click, Btn2.Click, Btn1.Click, Btn0.Click, BtnPt.Click,
+            BtnZ.Click, BtnPi.Click, BtnE.Click, BtnImagUnit.Click, BtnTripleQuote.Click, BtnComment.Click
 
-            Dim btn As Button = DirectCast(sender, Button)
+            Dim Btn As Button = DirectCast(sender, Button)
             FrmEditor.Tb.Focus()
             FrmEditor.Tb.DeleteRange(FrmEditor.Tb.SelectionStart, FrmEditor.Tb.SelectionEnd - FrmEditor.Tb.SelectionStart)
-            FrmEditor.Tb.AddText(btn.Text)
+            FrmEditor.Tb.AddText(Btn.Text)
         End Sub
 
         '' <summary>
@@ -41,12 +41,12 @@
             FrmEditor.Tb.Focus()
         End Sub
 
-        Private Sub btnCalc_Click(sender As Object, e As EventArgs) Handles btnCalc.Click
+        Private Sub BtnCalc_Click(sender As Object, e As EventArgs) Handles BtnCalc.Click
             FrmEditor.Tb.Focus()
             WriteFunction(vbNewLine)
         End Sub
 
-        Private Sub btnNext_Click(sender As Object, e As EventArgs) Handles btnNext.Click
+        Private Sub BtnNext_Click(sender As Object, e As EventArgs) Handles BtnNext.Click
             FrmEditor.Tb.Focus()
             If FrmEditor.Tb.SelectionStart < FrmEditor.Tb.Text.Length Then
                 FrmEditor.Tb.SelectionStart += 1
@@ -54,7 +54,7 @@
             End If
         End Sub
 
-        Private Sub btnPrev_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
+        Private Sub BtnPrev_Click(sender As Object, e As EventArgs) Handles BtnPrev.Click
             FrmEditor.Tb.Focus()
             If (FrmEditor.Tb.SelectionStart > 0) Then
                 FrmEditor.Tb.SelectionStart -= 1
@@ -62,20 +62,20 @@
             End If
         End Sub
 
-        Private Sub btnEnd_Click(sender As Object, e As EventArgs) Handles btnEnd.Click
+        Private Sub BtnEnd_Click(sender As Object, e As EventArgs) Handles BtnEnd.Click
             FrmEditor.Tb.Focus()
             FrmEditor.Tb.SelectionEnd = FrmEditor.Tb.TextLength
             FrmEditor.Tb.SelectionStart = FrmEditor.Tb.TextLength
             FrmEditor.Tb.ScrollCaret()
         End Sub
-        Private Sub btnRet_Click(sender As Object, e As EventArgs) Handles btnRet.Click
+        Private Sub BtnRet_Click(sender As Object, e As EventArgs) Handles BtnRet.Click
             FrmEditor.Tb.Focus()
             FrmEditor.Tb.SelectionStart = 0
             FrmEditor.Tb.SelectionEnd = 0
             FrmEditor.Tb.ScrollCaret()
         End Sub
 
-        Private Sub btnSqrt_MouseUp(sender As Object, e As MouseEventArgs) Handles btnSqrt.MouseUp
+        Private Sub BtnSqrt_MouseUp(sender As Object, e As MouseEventArgs) Handles BtnSqrt.MouseUp
             If e.Button = MouseButtons.Left Then
                 WriteFunction("sqrt()")
             ElseIf e.Button = MouseButtons.Middle Then
@@ -85,7 +85,7 @@
             End If
         End Sub
 
-        Private Sub btnDel_Click(sender As Object, e As EventArgs) Handles btnDel.Click
+        Private Sub BtnDel_Click(sender As Object, e As EventArgs) Handles BtnDel.Click
             FrmEditor.Tb.Focus()
             If FrmEditor.Tb.Text.Length > 0 Then
                 Dim start As Integer = FrmEditor.Tb.SelectionStart
@@ -102,7 +102,7 @@
             End If
         End Sub
 
-        Private Sub btnPans_Click(sender As Object, e As EventArgs) Handles btnFunctions.Click
+        Private Sub BtnPans_Click(sender As Object, e As EventArgs) Handles BtnFunctions.Click
             Using diag As New Dialogs.DiagFunctions
                 If diag.ShowDialog() = DialogResult.OK Then
                     WriteFunction(diag.Result)
@@ -110,34 +110,34 @@
             End Using
         End Sub
 
-        Private Sub btnAC_Click(sender As Object, e As EventArgs) Handles btnAC.Click
-            pnl.Focus()
+        Private Sub BtnAC_Click(sender As Object, e As EventArgs) Handles BtnAC.Click
+            Pnl.Focus()
             'FrmEditor.BringToFront()
             FrmEditor.Tb.Text = ""
             FrmEditor.LbResult.Text = "= "
         End Sub
 
-        Private Sub btnFn_Click(sender As Object, e As EventArgs) Handles btnAsin.Click, btnAcos.Click,
-            btnSin.Click, btnCos.Click, btnTan.Click, btnAtan.Click, btnLn.Click, btnRand.Click,
-            btnPrint.Click, btnRead.Click, btnAvg.Click, btnMedian.Click
+        Private Sub BtnFn_Click(sender As Object, e As EventArgs) Handles BtnAsin.Click, BtnAcos.Click,
+            BtnSin.Click, BtnCos.Click, BtnTan.Click, BtnAtan.Click, BtnLn.Click, BtnRand.Click,
+            BtnPrint.Click, BtnRead.Click, BtnAvg.Click, BtnMedian.Click
 
             WriteFunction(DirectCast(sender, Button).Text & "()")
         End Sub
 
-        Private Sub btnRt_Click(sender As Object, e As EventArgs) Handles btnQdtc.Click
+        Private Sub BtnRt_Click(sender As Object, e As EventArgs) Handles BtnQdtc.Click
             WriteFunction("quadratic(,,)")
         End Sub
 
-        Private Sub btnGcd_Click(sender As Object, e As EventArgs) Handles btnPow10.Click
+        Private Sub BtnGcd_Click(sender As Object, e As EventArgs) Handles BtnPow10.Click
             WriteFunction(" E ")
         End Sub
 
-        Private Sub btnMod_Click(sender As Object, e As EventArgs) Handles btnMod.Click
+        Private Sub BtnMod_Click(sender As Object, e As EventArgs) Handles BtnMod.Click
             WriteFunction(" mod ")
         End Sub
 
         Private Sub osk_Enter(sender As Object, e As EventArgs)
-            pnl.Focus()
+            Pnl.Focus()
             'FrmEditor.Tb.Focus()
         End Sub
 
@@ -233,9 +233,9 @@
             End If
         End Sub
 
-        Private Sub btnBrLft_MouseUp(sender As Object, e As MouseEventArgs) Handles btnBrLft.MouseUp,
-            btnSqBrL.MouseUp, btnCBL.MouseUp, btnCBR.MouseUp, btnBrRt.MouseUp, btnSqBrR.MouseUp, btnAbs.MouseUp, btnQuote.MouseUp,
-            btnTick.MouseUp
+        Private Sub BtnBrLft_MouseUp(sender As Object, e As MouseEventArgs) Handles BtnBrLft.MouseUp,
+            BtnSqBrL.MouseUp, BtnCBL.MouseUp, BtnCBR.MouseUp, BtnBrRt.MouseUp, BtnSqBrR.MouseUp, BtnAbs.MouseUp, BtnQuote.MouseUp,
+            BtnTick.MouseUp
 
             FrmEditor.Tb.DeleteRange(FrmEditor.Tb.SelectionStart, FrmEditor.Tb.SelectionEnd - FrmEditor.Tb.SelectionStart)
             Dim startSign As Char = DirectCast(sender, Button).Text(0)
@@ -244,7 +244,7 @@
             CompleteBrace(startSign)
         End Sub
 
-        Private Sub btnln_MouseUp(sender As Object, e As MouseEventArgs) Handles btnlog.MouseUp
+        Private Sub Btnln_MouseUp(sender As Object, e As MouseEventArgs) Handles Btnlog.MouseUp
             If e.Button = MouseButtons.Left Then
                 WriteFunction("log(,)")
             ElseIf e.Button = MouseButtons.Middle
@@ -254,7 +254,7 @@
             End If
         End Sub
 
-        Private Sub btnExp_MouseUp(sender As Object, e As MouseEventArgs) Handles btnExp.MouseUp
+        Private Sub BtnExp_MouseUp(sender As Object, e As MouseEventArgs) Handles BtnExp.MouseUp
             If e.Button = MouseButtons.Right Then
                 WriteFunction(" E ")
             ElseIf e.Button = MouseButtons.Middle
@@ -262,61 +262,61 @@
             End If
         End Sub
 
-        Private Sub btnIntegral_Click(sender As Object, e As EventArgs) Handles btnIntegral.Click
+        Private Sub BtnIntegral_Click(sender As Object, e As EventArgs) Handles BtnIntegral.Click
             WriteFunction("integral(,,)")
         End Sub
 
-        Private Sub btnDyDx_Click(sender As Object, e As EventArgs) Handles btnDyDx.Click
+        Private Sub BtnDyDx_Click(sender As Object, e As EventArgs) Handles BtnDyDx.Click
             WriteFunction("dydx(,)")
         End Sub
 
-        Private Sub btnUnaryRight_Click(sender As Object, e As EventArgs) Handles btnIf.Click, btnWhile.Click, btnNot.Click
+        Private Sub BtnUnaryRight_Click(sender As Object, e As EventArgs) Handles BtnIf.Click, BtnWhile.Click, BtnNot.Click
             WriteFunction(DirectCast(sender, Button).Text & " ")
         End Sub
 
-        Private Sub btnBinary_Click(sender As Object, e As EventArgs) Handles btnOr.Click, btnAnd.Click
+        Private Sub BtnBinary_Click(sender As Object, e As EventArgs) Handles BtnOr.Click, BtnAnd.Click
             WriteFunction(" " & DirectCast(sender, Button).Text & " ")
         End Sub
 
-        Private Sub btnSigma_Click(sender As Object, e As EventArgs) Handles btnSigma.Click
+        Private Sub BtnSigma_Click(sender As Object, e As EventArgs) Handles BtnSigma.Click
             WriteFunction("sigma(,,)")
         End Sub
 
-        Private Sub btnPerm_Click(sender As Object, e As EventArgs) Handles btnPerm.Click
+        Private Sub BtnPerm_Click(sender As Object, e As EventArgs) Handles BtnPerm.Click
             WriteFunction("perm(,)")
         End Sub
 
-        Private Sub btnChoose_Click(sender As Object, e As EventArgs) Handles btnChoose.Click
+        Private Sub BtnChoose_Click(sender As Object, e As EventArgs) Handles BtnChoose.Click
             WriteFunction(" choose ")
         End Sub
 
-        Private Sub btnConfirm_Click(sender As Object, e As EventArgs) Handles btnConfirm.Click
+        Private Sub BtnConfirm_Click(sender As Object, e As EventArgs) Handles BtnConfirm.Click
             WriteFunction("confirm()")
         End Sub
 
-        Private Sub btnYesNo_Click(sender As Object, e As EventArgs) Handles btnYesNo.Click
+        Private Sub BtnYesNo_Click(sender As Object, e As EventArgs) Handles BtnYesNo.Click
             WriteFunction("yesno()")
         End Sub
 
         Private Sub KeyboardRight_Load(sender As Object, e As EventArgs) Handles Me.Load
             Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.OptimizedDoubleBuffer, True)
 
-            For Each c As Control In Me.pnl.Controls
+            For Each c As Control In Me.Pnl.Controls
                 AddHandler c.Enter, AddressOf osk_Enter
             Next
         End Sub
 
-        Private Sub pnl_MouseDown(sender As Object, e As MouseEventArgs) Handles pnl.MouseDown
+        Private Sub Pnl_MouseDown(sender As Object, e As MouseEventArgs) Handles Pnl.MouseDown
             Me.OnMouseDown(e)
         End Sub
-        Private Sub pnl_MouseMove(sender As Object, e As MouseEventArgs) Handles pnl.MouseMove
+        Private Sub Pnl_MouseMove(sender As Object, e As MouseEventArgs) Handles Pnl.MouseMove
             Me.OnMouseMove(e)
         End Sub
-        Private Sub pnl_MouseUp(sender As Object, e As MouseEventArgs) Handles pnl.MouseUp
+        Private Sub Pnl_MouseUp(sender As Object, e As MouseEventArgs) Handles Pnl.MouseUp
             Me.OnMouseUp(e)
         End Sub
 
-        Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+        Private Sub BtnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
             If Not CloseKeyboardEvent Is Nothing Then RaiseEvent CloseKeyboard(Me, e)
         End Sub
     End Class
