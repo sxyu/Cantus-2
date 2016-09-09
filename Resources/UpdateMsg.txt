@@ -25,14 +25,25 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.7.129
+What's new in 2.4.8.130
+*********************************************************************************************
+-Fixed a design problem in sig figs mode where results from addition and subtraction 
+  were rounded off after each operation. Rounding is now done after all operations
+  have been completed.
+  Example: 1 + 0.6 + 0.6 = 2 (was 3 previously)
+-Fixed a bug where the graphing system worked very slowly when the evaluator 
+  is in sig figs mode
+-Fixed a bug where boolean types are sometimes displayed as Nullable in error messages
+
+*********************************************************************************************
+New from 2.4.7.129
 *********************************************************************************************
 -Keyboard no longer visible by default
 -x, y keys on keyboard no longer insert the letter twice
 -Minor fixes in console
 
 *********************************************************************************************
-What's new in 2.4.7.128
+New from 2.4.7.128
 *********************************************************************************************
 -Fixed plugin member autocompletion in the editor
 

@@ -313,9 +313,15 @@ Namespace UI.Graphing
         Private Sub DrawFunc(fnid As Integer, g As Graphics, image As Bitmap, center As Coord, Optional ByVal preview As Boolean = False)
             Try
                 Dim prevt As Object
+                Dim prevsf As Boolean
+                prevsf = _eval.SignificantMode
+                _eval.SignificantMode = False
+
                 g.SmoothingMode = SmoothingMode.HighQuality
+
                 Dim fn As String = _functions(fnid)
                 Dim ofn As String = ""
+
                 If fn = "" Then Exit Sub ' ignore if empty
                 prevt = GetT()
 
@@ -410,9 +416,18 @@ Namespace UI.Graphing
                         SetX(prevy)
 
                     Case FunctionType.Parametric
-                        If Not fn.Contains("<"c) OrElse Not fn.Contains(">"c) OrElse fn.IndexOf(","c) > fn.LastIndexOf(">"c) OrElse fn.IndexOf(","c) < fn.IndexOf("<"c) Then Return ' no range specified or invalid format
+                        If Not fn.Contains("<"c) OrElse Not fn.Contains(">"c) OrElse
+                            fn.IndexOf(","c) > fn.LastIndexOf(">"c) OrElse
+                            fn.IndexOf(","c) < fn.IndexOf("<"c) Then
+                            _eval.SignificantMode = prevsf
+                            ' no range specified or invalid format
+                            Return
+                        End If
 
-                        If Not fn.Contains("["c) OrElse Not fn.Contains("]"c) Then Return ' no range specified
+                        If Not fn.Contains("["c) OrElse Not fn.Contains("]"c) Then
+                            _eval.SignificantMode = prevsf
+                            Return ' no range specified
+                        End If
                         Dim range As String = fn.Remove(fn.LastIndexOf("]"c)).Substring(fn.LastIndexOf("["c) + 1)
                         ' convert >= to > and <= to < then split for parsing
                         Dim spl As String() = range.Replace("<=", "<").Replace("<", " < ").Replace(">=", ">") _
@@ -422,6 +437,7 @@ Namespace UI.Graphing
                         ' 0 1 2 3 4
                         ' a < t < b
                         If spl.Count <> 5 OrElse (spl(2).Trim().Length() <> 1) Then
+                            _eval.SignificantMode = prevsf
                             Return ' invalid variable (only t and theta are allowed) or range format
                         ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" ' normal range a < t < b
                             tstart = Eval(spl(0).Trim())
@@ -430,6 +446,7 @@ Namespace UI.Graphing
                             tstart = Eval(spl(4).Trim())
                             tend = Eval(spl(0).Trim()) + 0.0001
                         Else
+                            _eval.SignificantMode = prevsf
                             Return ' invalid range format
                         End If
 
@@ -460,7 +477,10 @@ Namespace UI.Graphing
                             g.DrawLines(p, pts.ToArray())
                         End If
                     Case FunctionType.Polar
-                        If Not fn.Contains("["c) OrElse Not fn.Contains("]"c) Then Return ' no range specified
+                        If Not fn.Contains("["c) OrElse Not fn.Contains("]"c) Then
+                            _eval.SignificantMode = prevsf
+                            Return ' no range specified
+                        End If
                         Dim range As String = fn.Remove(fn.LastIndexOf("]"c)).Substring(fn.LastIndexOf("["c) + 1)
                         ' convert >= to > and <= to < then split for parsing
                         Dim spl As String() = range.Replace("<=", "<").Replace("<", " < ").Replace(">=", ">") _
@@ -470,6 +490,7 @@ Namespace UI.Graphing
                         ' 0 1 2 3 4
                         ' a < t < b
                         If spl.Count <> 5 OrElse (spl(2).Trim().Length() <> 1) Then
+                            _eval.SignificantMode = prevsf
                             Return ' invalid variable or range format
                         ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" ' normal range a < t < b
                             tstart = Eval(spl(0).Trim())
@@ -478,6 +499,7 @@ Namespace UI.Graphing
                             tstart = Eval(spl(4).Trim())
                             tend = Eval(spl(0).Trim()) + 0.0001
                         Else
+                            _eval.SignificantMode = prevsf
                             Return ' invalid range format
                         End If
                         Dim i As Double = tstart
@@ -540,6 +562,7 @@ Namespace UI.Graphing
                 If pts.Count > 1 Then g.DrawLines(p, pts.ToArray())
                 p.Dispose()
                 SetT(prevt)
+                _eval.SignificantMode = prevsf
             Catch 'ex As Exception
                 'MsgBox(ex.ToString())
             End Try
@@ -798,18 +821,11 @@ Namespace UI.Graphing
 
         Private Function Eval(str As String, Optional useEval2 As Boolean = False) As Double
             Try
-                Dim prevsf As Boolean
                 Dim ret As Double
                 If useEval2 Then
-                    prevsf = _eval2.SignificantMode
-                    _eval2.SignificantMode = False
                     ret = CDbl(CType(_eval2.EvalExprRaw(str, True), Core.CommonTypes.BigDecimal))
-                    _eval2.SignificantMode = prevsf
                 Else
-                    prevsf = _eval.SignificantMode
-                    _eval.SignificantMode = False
                     ret = CDbl(CType(_eval.EvalExprRaw(str, True), Core.CommonTypes.BigDecimal))
-                    _eval.SignificantMode = prevsf
                 End If
                 Return ret
             Catch 'ex As Exception
@@ -1347,7 +1363,8 @@ Namespace UI.Graphing
                 Dim y As Double = Eval(tuple(1), True)
                 SetX(x, True)
                 SetY(y, True)
-                lbTVal.Text = NameFromFuncId(_curfn) & vbCrLf & " [" & x & "," & y & "]" & vbCrLf & " = " &                  Math.Round(CDbl(Eval(_functions(_curfn), True)), 5).ToString().Replace("NaN", "Undefined")
+                lbTVal.Text = NameFromFuncId(_curfn) & vbCrLf & " [" & x & "," & y & "]" & vbCrLf & " = " &
+                    Math.Round(CDbl(Eval(_functions(_curfn), True)), 5).ToString().Replace("NaN", "Undefined")
                 SetX(prevx, True)
                 SetY(prevy, True)
             Catch
@@ -1356,6 +1373,7 @@ Namespace UI.Graphing
 
         Private Sub Trace()
             _eval2 = _eval.DeepCopy()
+            _eval2.SignificantMode = False
             Select Case _functiontype(_curfn)
                 Case FunctionType.Cartesian
                     TraceCartesian()
@@ -1672,6 +1690,7 @@ Namespace UI.Graphing
 
         Private Sub TraceSpecial(Optional primary_range As Integer = 26)
             _eval2 = _eval.DeepCopy()
+            _eval2.SignificantMode = False
             Select Case _functiontype(_curfn)
                 Case FunctionType.Cartesian, FunctionType.Inverse
                     TraceSpecialCartesian(primary_range)

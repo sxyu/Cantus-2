@@ -752,7 +752,9 @@ Namespace UI
                         If Not nsMode Then
                             autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
                                            "let static global ref undefined null " &
-                                           "switch case run try catch finally while until with in step to choose and or xor not").Split(" "c))
+                                           "switch case run try catch finally while until " &
+                                           "with in step to choose and or xor not " &
+                                           "true false").Split(" "c))
 
                             autoCList.Add(ROOT_NAMESPACE)
                         End If
