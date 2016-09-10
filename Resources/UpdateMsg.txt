@@ -25,7 +25,12 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.8.130
+What's new in 2.4.8.131
+*********************************************************************************************
+-Slightly improved stability of sig figs tracking system across operations
+
+*********************************************************************************************
+New from 2.4.8.130
 *********************************************************************************************
 -Fixed a design problem in sig figs mode where results from addition and subtraction 
   were rounded off after each operation. Rounding is now done after all operations
