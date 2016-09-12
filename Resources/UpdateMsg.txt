@@ -25,13 +25,21 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.9.132
+What's new in 2.4.9.133
+*********************************************************************************************
+-Fixed oct() (octal conversion) function
+
+*********************************************************************************************
+New from 2.4.9.132
 *********************************************************************************************
 -Class instance functions and constructors now support optional and named parameters 
   (though lambdas and function pointers do not yet)
 -Select() no longer passes a reference to the object as the first argument to the
   function specified as input. It now simply passes the object itself.
 -Fixed reference assignment
+
+-Added various reflection-related functions prefixed with _ (_functionexec(), _variableref(), etc.)
+-Added factbigint() function for calculating factorials of larger integers
 
 -Virtual console buffer is now limited to 150 lines in length to avoid lag when many lines are
   available
