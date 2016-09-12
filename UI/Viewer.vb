@@ -12,9 +12,9 @@ Imports ScintillaNET
 Namespace UI
     Public Class Viewer
         '' <summary>
-        '' Max number of lines to display in log
+        '' Max number of lines to display in console
         '' </summary>
-        Private Const MAX_LINES As Integer = 500
+        Private Const MAX_LINES As Integer = 150
         Dim _defaultPromptText As String = String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName)
         Dim _promptText As String = String.Format("{0}@{1}> ", Environment.UserName, Application.ProductName)
         Dim _prevPrompt As New List(Of String)
@@ -178,7 +178,9 @@ Namespace UI
             End If
 
             ConsoleControl.AppendText(text & vbLf)
-            If ConsoleControl.Lines.Count >= MAX_LINES Then ConsoleControl.DeleteRange(0, ConsoleControl.Lines(MAX_LINES).EndPosition)
+            If ConsoleControl.Lines.Count > MAX_LINES Then
+                ConsoleControl.DeleteRange(0, ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
+            End If
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
             ConsoleControl.ScrollCaret()
 
@@ -197,7 +199,9 @@ Namespace UI
             End If
 
             ConsoleControl.AppendText(text & vbLf)
-            If ConsoleControl.Lines.Count > MAX_LINES Then ConsoleControl.DeleteRange(0, ConsoleControl.Lines(MAX_LINES).Position)
+            If ConsoleControl.Lines.Count > MAX_LINES Then
+                ConsoleControl.DeleteRange(0, ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
+            End If
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
             ConsoleControl.ScrollCaret()
 
@@ -212,7 +216,9 @@ Namespace UI
             DeletePromptLine()
 
             ConsoleControl.AppendText(text)
-            If ConsoleControl.Lines.Count > MAX_LINES Then ConsoleControl.DeleteRange(0, ConsoleControl.Lines(MAX_LINES).Position)
+            If ConsoleControl.Lines.Count > MAX_LINES Then
+                ConsoleControl.DeleteRange(0, ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
+            End If
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
             ConsoleControl.ScrollCaret()
 
@@ -373,7 +379,7 @@ Namespace UI
                 Return True
             End If
             If ConsoleControl.SelectionStart > lastLineStart AndAlso ConsoleControl.SelectionEnd > lastLineStart Then
-                If keyData = Keys.Up Then
+                If keyData = Keys.Up AndAlso Not ConsoleControl.AutoCActive Then
                     Return True
                 End If
                 If keyData = (Keys.Control Or Keys.A) Then
@@ -390,7 +396,7 @@ Namespace UI
                     Return True
                 End If
                 If ConsoleControl.SelectionStart = lastLineStart Then
-                    If keyData = Keys.Up Then
+                    If keyData = Keys.Up AndAlso Not ConsoleControl.AutoCActive Then
                         Return True
                     End If
                     If keyData = (Keys.Control Or Keys.A) Then
@@ -581,7 +587,7 @@ Namespace UI
                 If Not e.Shift OrElse e.Control Then
                     ConsoleControl.SelectionEnd = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1).Position + _promptText.Length
                 End If
-            ElseIf e.KeyCode = Keys.Up Then
+            ElseIf e.KeyCode = Keys.Up AndAlso Not ConsoleControl.AutoCActive Then
                 Dim lastline As Line = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1)
                 If ConsoleControl.SelectionStart < lastline.Position Then Exit Sub
                 If _idx > 0 Then
@@ -590,7 +596,7 @@ Namespace UI
                     _idx -= 1
                 End If
                 ConsoleControl.SelectionStart = ConsoleControl.TextLength
-            ElseIf e.KeyCode = Keys.Down Then
+            ElseIf e.KeyCode = Keys.Down AndAlso Not ConsoleControl.AutoCActive Then
                 Dim lastline As Line = ConsoleControl.Lines(ConsoleControl.Lines.Count - 1)
                 If ConsoleControl.SelectionStart < lastline.Position Then Exit Sub
                 If _idx < _prevPrompt.Count Then

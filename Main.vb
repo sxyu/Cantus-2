@@ -85,7 +85,9 @@ Namespace UI
             Try
                 RootEvaluator = New CantusEvaluator()
             Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.ApplicationModal, "Initialization Error")
+                MsgBox(ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.ApplicationModal,
+                       "Initialization Error")
+                RootEvaluator = New CantusEvaluator(reloadDefault:=False)
             End Try
 
             RootEvaluator.ThreadController.MaxThreads = 5

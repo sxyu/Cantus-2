@@ -25,7 +25,24 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.8.131
+What's new in 2.4.9.132
+*********************************************************************************************
+-Class instance functions and constructors now support optional and named parameters 
+  (though lambdas and function pointers do not yet)
+-Select() no longer passes a reference to the object as the first argument to the
+  function specified as input. It now simply passes the object itself.
+-Fixed reference assignment
+
+-Virtual console buffer is now limited to 150 lines in length to avoid lag when many lines are
+  available
+-'ref' and 'deref' keywords are now highlighted
+-Fixed a bug where pressing up/down arrow keys in the virtual console while the autocompleter
+  is visible will send the keystroke to the console itself.
+
+-Other minor fixes
+
+*********************************************************************************************
+New from 2.4.8.131
 *********************************************************************************************
 -Slightly improved stability of sig figs tracking system across operations
 

@@ -84,7 +84,7 @@ Namespace UI.ScintillaForCantus
         '' A hashset of inline keywords
         '' </summary>
         Private _inlineKeywords As New HashSet(Of String)(("import load static let public private static global" &
-                                                " continue return break or and xor not this").Split(" "c))
+                                                " continue return break or and xor not this ref deref").Split(" "c))
 
         Public Sub Style(scintilla As Scintilla, startPos As Integer, endPos As Integer)
             Try

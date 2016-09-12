@@ -118,7 +118,7 @@
             Me.pnl.BackColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(37, Byte), Integer))
             Me.pnl.Location = New System.Drawing.Point(1, 48)
             Me.pnl.Name = "pnl"
-            Me.pnl.Size = New System.Drawing.Size(620, 650)
+            Me.pnl.Size = New System.Drawing.Size(621, 651)
             Me.pnl.TabIndex = 0
             '
             'PbLogo
@@ -144,7 +144,7 @@
             Me.Controls.Add(Me.btnMin)
             Me.Controls.Add(Me.lbTitle)
             Me.Controls.Add(Me.PbLogo)
-            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.Name = "Viewer"
             Me.Size = New System.Drawing.Size(621, 700)
