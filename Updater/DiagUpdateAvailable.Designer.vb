@@ -30,7 +30,7 @@
             Me.Label3 = New System.Windows.Forms.Label()
             Me.LbNewVer = New System.Windows.Forms.Label()
             Me.BtnCancel = New System.Windows.Forms.Button()
-            Me.btnOK = New System.Windows.Forms.Button()
+            Me.BtnOK = New System.Windows.Forms.Button()
             Me.LbOldVer = New System.Windows.Forms.Label()
             Me.Label5 = New System.Windows.Forms.Label()
             Me.Tmr = New System.Windows.Forms.Timer(Me.components)
@@ -114,23 +114,23 @@
             Me.BtnCancel.Text = "Maybe Later"
             Me.BtnCancel.UseVisualStyleBackColor = False
             '
-            'btnOK
+            'BtnOK
             '
-            Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnOK.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnOK.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnOK.FlatAppearance.BorderSize = 0
-            Me.btnOK.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.btnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnOK.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
-            Me.btnOK.ForeColor = System.Drawing.Color.White
-            Me.btnOK.Location = New System.Drawing.Point(381, 197)
-            Me.btnOK.Name = "btnOK"
-            Me.btnOK.Size = New System.Drawing.Size(100, 52)
-            Me.btnOK.TabIndex = 0
-            Me.btnOK.Text = "Update"
-            Me.btnOK.UseVisualStyleBackColor = False
+            Me.BtnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnOK.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnOK.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnOK.FlatAppearance.BorderSize = 0
+            Me.BtnOK.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BtnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnOK.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
+            Me.BtnOK.ForeColor = System.Drawing.Color.White
+            Me.BtnOK.Location = New System.Drawing.Point(381, 197)
+            Me.BtnOK.Name = "BtnOK"
+            Me.BtnOK.Size = New System.Drawing.Size(100, 52)
+            Me.BtnOK.TabIndex = 0
+            Me.BtnOK.Text = "Update"
+            Me.BtnOK.UseVisualStyleBackColor = False
             '
             'LbOldVer
             '
@@ -170,7 +170,7 @@
             Me.ClientSize = New System.Drawing.Size(479, 247)
             Me.Controls.Add(Me.LbOldVer)
             Me.Controls.Add(Me.Label5)
-            Me.Controls.Add(Me.btnOK)
+            Me.Controls.Add(Me.BtnOK)
             Me.Controls.Add(Me.BtnCancel)
             Me.Controls.Add(Me.LbNewVer)
             Me.Controls.Add(Me.Label3)
@@ -201,7 +201,7 @@
         Friend WithEvents Label3 As Label
         Friend WithEvents LbNewVer As Label
         Friend WithEvents BtnCancel As Button
-        Friend WithEvents btnOK As Button
+        Friend WithEvents BtnOK As Button
         Friend WithEvents LbOldVer As Label
         Friend WithEvents Label5 As Label
         Friend WithEvents Tmr As Timer

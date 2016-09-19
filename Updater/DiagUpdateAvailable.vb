@@ -14,7 +14,7 @@
             Me.LbOldVer.Text = Version.ToString()
         End Sub
 
-        Private Sub BtnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
+        Private Sub BtnOK_Click(sender As Object, e As EventArgs) Handles BtnOK.Click
             Me.DialogResult = DialogResult.OK
             Me.Close()
         End Sub
@@ -33,9 +33,9 @@
             End If
         End Sub
 
-        Private Sub DiagUpdateAvailable_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, btnOK.KeyUp, BtnCancel.KeyUp
+        Private Sub DiagUpdateAvailable_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp, BtnOK.KeyUp, BtnCancel.KeyUp
             If e.KeyCode = Keys.Enter Then
-                btnOK.PerformClick()
+                BtnOK.PerformClick()
             End If
         End Sub
 

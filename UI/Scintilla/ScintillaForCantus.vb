@@ -78,13 +78,17 @@ Namespace UI.ScintillaForCantus
         '' <summary>
         '' A hashset of block keywords
         '' </summary>
-        Private _keywords As New HashSet(Of String)(("class function namespace if else elif for in to step repeat " & "switch case run try catch finally while until with").Split(" "c))
+        Private _keywords As New HashSet(Of String)(("class function namespace if else elif for" &
+                                                    " in to step repeat " &
+                                                    "switch case run try catch finally" &
+                                                    " while until with").Split(" "c))
 
         '' <summary>
         '' A hashset of inline keywords
         '' </summary>
-        Private _inlineKeywords As New HashSet(Of String)(("import load static let public private static global" &
-                                                " continue return break or and xor not this ref deref").Split(" "c))
+        Private _inlineKeywords As New HashSet(Of String)((
+                          "import load static let public private static global" &
+                        " continue return break or and xor not this ref deref ans prevans").Split(" "c))
 
         Public Sub Style(scintilla As Scintilla, startPos As Integer, endPos As Integer)
             Try

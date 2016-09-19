@@ -157,7 +157,7 @@
             Me.tt.SetToolTip(Me.Btnlog, "Left Click: log(,)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right Click: ln()" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle Click: lg()")
             Me.Btnlog.UseVisualStyleBackColor = False
             '
-            'BtnMin
+            'BtnMinus
             '
             Me.BtnMinus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.BtnMinus.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
@@ -169,7 +169,7 @@
             Me.BtnMinus.ForeColor = System.Drawing.Color.White
             Me.BtnMinus.Location = New System.Drawing.Point(624, 105)
             Me.BtnMinus.Margin = New System.Windows.Forms.Padding(2)
-            Me.BtnMinus.Name = "BtnMin"
+            Me.BtnMinus.Name = "BtnMinus"
             Me.BtnMinus.Size = New System.Drawing.Size(40, 40)
             Me.BtnMinus.TabIndex = 4
             Me.BtnMinus.TabStop = False

@@ -23,7 +23,7 @@
         End Sub
 
         '' <summary>
-        '' Write a string in function notation to the evaluator textbox
+        '' Write a string in function notation to the evaluator texTbox
         '' </summary>
         '' <param name="s"></param>
         '' <param name="sep"></param>
@@ -97,7 +97,7 @@
                     FrmEditor.Tb.SelectionStart = start - 1
                 Else
                     FrmEditor.Tb.Text = FrmEditor.Tb.Text.Substring(1)
-                    'FrmEditor.tb.SelectionStart = start
+                    'FrmEditor.Tb.SelectionStart = start
                 End If
             End If
         End Sub

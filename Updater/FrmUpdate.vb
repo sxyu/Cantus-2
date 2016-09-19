@@ -21,20 +21,20 @@ Namespace UI.Updater
         Dim _reRun As Boolean = True
 
         Public Sub DownloadComplete(ByVal cancelled As Boolean)
-            Me.btnCancel.Enabled = False
+            Me.BtnCancel.Enabled = False
             If cancelled Then
                 Application.Exit()
             End If
 
             Me.pb.Value = 0
-            Me.lbTSize.Text = ""
-            Me.lbSpeed.Text = ""
+            Me.LbTSize.Text = ""
+            Me.LbSpeed.Text = ""
 
             _downloadCount += 1
             If _downloadCount >= _manifestFile.Length Then
-                lbStep.Text = "Preparing to start installer..."
-                Me.lbDlSize.Text = "Finishing Up..."
-                lbFile.Text = ""
+                LbStep.Text = "Preparing to start installer..."
+                Me.LbDlSize.Text = "Finishing Up..."
+                LbFile.Text = ""
 
                 _reRun = False
                 Try
@@ -45,30 +45,30 @@ Namespace UI.Updater
                 Application.Exit()
 
             Else
-                Me.lbDlSize.Text = "Sending Request..."
+                Me.LbDlSize.Text = "Sending Request..."
                 _toDownload = _manifestFile(_downloadCount).Trim.Replace("%20", " ")
                 Dim filename As String = IO.Path.GetFileName(_toDownload)
-                lbFile.Text = filename
-                lbStep.Text = _downloadCount + 1 & " of " & _manifestFile.Length
+                LbFile.Text = filename
+                LbStep.Text = _downloadCount + 1 & " of " & _manifestFile.Length
                 _saveLocation = IO.Path.GetTempFileName() + ".exe"
                 _reRun = True
             End If
         End Sub
 
         Public Sub UpdateMessages(ByVal length As Long, ByVal position As Integer, ByVal percent As Integer, ByVal speed As Double)
-            Me.lbTSize.Text = "File Size: " & Math.Round((length / 1024), 2) & " KB"
+            Me.LbTSize.Text = "File Size: " & Math.Round((length / 1024), 2) & " KB"
 
-            Me.lbDlSize.Text = "Downloaded " & Math.Round((position / 1024), 2) & " KB (" & Me.pb.Value & "%)"
+            Me.LbDlSize.Text = "Downloaded " & Math.Round((position / 1024), 2) & " KB (" & Me.pb.Value & "%)"
 
             If speed = -1 Then
-                Me.lbSpeed.Text = "Speed: calculating..."
+                Me.LbSpeed.Text = "Speed: calculating..."
             Else
                 If speed < 750 Then
-                    Me.lbSpeed.Text = "Speed: " & speed & " B/s"
+                    Me.LbSpeed.Text = "Speed: " & speed & " B/s"
                 ElseIf speed < 750000 Then
-                    Me.lbSpeed.Text = "Speed: " & Math.Round((speed / 1024), 1) & " KB/s"
+                    Me.LbSpeed.Text = "Speed: " & Math.Round((speed / 1024), 1) & " KB/s"
                 Else
-                    Me.lbSpeed.Text = "Speed: " & Math.Round((speed / 1048576), 1) & " MB/s"
+                    Me.LbSpeed.Text = "Speed: " & Math.Round((speed / 1048576), 1) & " MB/s"
                 End If
             End If
             Me.pb.Value = percent
@@ -84,15 +84,15 @@ Namespace UI.Updater
                 Else
                     Using wc As New System.Net.WebClient()
                         _newVersion = wc.DownloadString(VERSION_URL)
-                        lbVer.Text = "Installing Update " & _newVersion
+                        LbVer.Text = "Installing Update " & _newVersion
                         _manifestFile = wc.DownloadString(MANIFEST_URL).Split(ControlChars.Lf)
                     End Using
 
                     If _manifestFile.Length > 0 Then
                         _toDownload = _manifestFile(0).Trim.Replace("%20", " ").Trim()
                         Dim filename As String = IO.Path.GetFileName(_toDownload)
-                        lbFile.Text = filename
-                        lbStep.Text = "1 of " & _manifestFile.Length
+                        LbFile.Text = filename
+                        LbStep.Text = "1 of " & _manifestFile.Length
                         _saveLocation = IO.Path.GetTempFileName() + ".exe"
                         bw.RunWorkerAsync()
                     Else
@@ -203,7 +203,7 @@ Namespace UI.Updater
             Me.Invoke(completeDelegate, False)
         End Sub
 
-        Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
             bw.CancelAsync()
         End Sub
 
@@ -215,22 +215,22 @@ Namespace UI.Updater
 
         Dim moving As Boolean = False
         Dim prevPt As New Point
-        Private Sub lbTSize_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown, pb.MouseDown, logo.MouseDown,
-        lbVer.MouseDown, lbTSize.MouseDown, lbTitle.MouseDown, lbStep.MouseDown, lbSpeed.MouseDown, lbFile.MouseDown, lbDlSize.MouseDown
+        Private Sub LbTSize_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown, pb.MouseDown, logo.MouseDown,
+        LbVer.MouseDown, LbTSize.MouseDown, LbTitle.MouseDown, LbStep.MouseDown, LbSpeed.MouseDown, LbFile.MouseDown, LbDlSize.MouseDown
             moving = True
             prevPt = e.Location
         End Sub
 
-        Private Sub lbTSize_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove, pb.MouseMove, logo.MouseMove,
-        lbVer.MouseMove, lbTSize.MouseMove, lbTitle.MouseMove, lbStep.MouseMove, lbSpeed.MouseMove, lbFile.MouseMove, lbDlSize.MouseMove
+        Private Sub LbTSize_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove, pb.MouseMove, logo.MouseMove,
+        LbVer.MouseMove, LbTSize.MouseMove, LbTitle.MouseMove, LbStep.MouseMove, LbSpeed.MouseMove, LbFile.MouseMove, LbDlSize.MouseMove
             If moving Then
                 Me.Location = New Point(Me.Left + e.X - prevPt.X, Me.Top + e.Y - prevPt.Y)
                 Me.Invalidate()
             End If
         End Sub
 
-        Private Sub lbTSize_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, pb.MouseUp, logo.MouseUp,
-        lbVer.MouseUp, lbTSize.MouseUp, lbTitle.MouseUp, lbStep.MouseUp, lbSpeed.MouseUp, lbFile.MouseUp, lbDlSize.MouseUp
+        Private Sub LbTSize_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, pb.MouseUp, logo.MouseUp,
+        LbVer.MouseUp, LbTSize.MouseUp, LbTitle.MouseUp, LbStep.MouseUp, LbSpeed.MouseUp, LbFile.MouseUp, LbDlSize.MouseUp
             moving = False
         End Sub
     End Class

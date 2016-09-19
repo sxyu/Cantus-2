@@ -36,7 +36,7 @@ Just run the installer and follow the steps.
 
 ### Basic Usage
 
-Run the downloaded program, and type in the expression in the main textbox to see the result. Play around as much as you like.  
+Run the downloaded program, and type in the expression in the main texTbox to see the result. Play around as much as you like.  
 *Side note: The valuation is done asynchronously, so you can keep working while it evaluates*
 
 * To change settings, click the gear button the on the right

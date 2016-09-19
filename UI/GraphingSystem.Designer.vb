@@ -7,7 +7,7 @@
         <System.Diagnostics.DebuggerNonUserCode()>
         Protected Overrides Sub Dispose(ByVal disposing As Boolean)
             Try
-                My.Settings.GraphSplitter = Me.Height - split.SplitterDistance
+                My.Settings.GraphSplitter = Me.Height - Split.SplitterDistance
                 My.Settings.Save()
 
                 _buffer.Dispose()
@@ -31,865 +31,864 @@
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container()
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(GraphingSystem))
-            Me.split = New System.Windows.Forms.SplitContainer()
-            Me.btnScale = New System.Windows.Forms.Button()
-            Me.pnlWindow = New System.Windows.Forms.Panel()
-            Me.tbWBot = New System.Windows.Forms.TextBox()
-            Me.tbWLft = New System.Windows.Forms.TextBox()
-            Me.tbWTop = New System.Windows.Forms.TextBox()
-            Me.tbWRht = New System.Windows.Forms.TextBox()
-            Me.btnWOK = New System.Windows.Forms.Button()
-            Me.btnWCancel = New System.Windows.Forms.Button()
-            Me.lbWLft = New System.Windows.Forms.Label()
-            Me.lbWRht = New System.Windows.Forms.Label()
-            Me.lbWBot = New System.Windows.Forms.Label()
-            Me.lbWTop = New System.Windows.Forms.Label()
-            Me.pnlWHeader = New System.Windows.Forms.Panel()
-            Me.lbWLogo = New System.Windows.Forms.Label()
-            Me.btnWClose = New System.Windows.Forms.Button()
-            Me.lbWindow = New System.Windows.Forms.Label()
-            Me.pnlTrace = New System.Windows.Forms.Panel()
-            Me.lbTrace = New System.Windows.Forms.Label()
-            Me.lbTVal = New System.Windows.Forms.Label()
-            Me.npdTVal = New System.Windows.Forms.TextBox()
-            Me.btnTNext = New System.Windows.Forms.Button()
-            Me.btnTrace = New System.Windows.Forms.Button()
-            Me.canvas = New System.Windows.Forms.PictureBox()
-            Me.btnGraph = New System.Windows.Forms.Button()
-            Me.btnNextFn = New System.Windows.Forms.Button()
-            Me.btnPrevFn = New System.Windows.Forms.Button()
-            Me.btnAdd = New System.Windows.Forms.Button()
-            Me.pnlInput = New System.Windows.Forms.Panel()
-            Me.tb = New System.Windows.Forms.TextBox()
-            Me.lbFx = New System.Windows.Forms.Label()
-            Me.tmrTraceUpdate = New System.Windows.Forms.Timer(Me.components)
-            Me.tmrDrag = New System.Windows.Forms.Timer(Me.components)
+            Me.Split = New System.Windows.Forms.SplitContainer()
+            Me.BtnScale = New System.Windows.Forms.Button()
+            Me.PnlWindow = New System.Windows.Forms.Panel()
+            Me.TbWBot = New System.Windows.Forms.TextBox()
+            Me.TbWLft = New System.Windows.Forms.TextBox()
+            Me.TbWTop = New System.Windows.Forms.TextBox()
+            Me.TbWRht = New System.Windows.Forms.TextBox()
+            Me.BtnWOK = New System.Windows.Forms.Button()
+            Me.BtnWCancel = New System.Windows.Forms.Button()
+            Me.LbWLft = New System.Windows.Forms.Label()
+            Me.LbWRht = New System.Windows.Forms.Label()
+            Me.LbWBot = New System.Windows.Forms.Label()
+            Me.LbWTop = New System.Windows.Forms.Label()
+            Me.PnlWHeader = New System.Windows.Forms.Panel()
+            Me.LbWLogo = New System.Windows.Forms.Label()
+            Me.BtnWClose = New System.Windows.Forms.Button()
+            Me.LbWindow = New System.Windows.Forms.Label()
+            Me.PnlTrace = New System.Windows.Forms.Panel()
+            Me.LbTrace = New System.Windows.Forms.Label()
+            Me.LbTVal = New System.Windows.Forms.Label()
+            Me.NpdTVal = New System.Windows.Forms.TextBox()
+            Me.BtnTNext = New System.Windows.Forms.Button()
+            Me.BtnTrace = New System.Windows.Forms.Button()
+            Me.Canvas = New System.Windows.Forms.PictureBox()
+            Me.BtnGraph = New System.Windows.Forms.Button()
+            Me.BtnNextFn = New System.Windows.Forms.Button()
+            Me.BtnPrevFn = New System.Windows.Forms.Button()
+            Me.BtnAdd = New System.Windows.Forms.Button()
+            Me.PnlInput = New System.Windows.Forms.Panel()
+            Me.Tb = New System.Windows.Forms.TextBox()
+            Me.LbFx = New System.Windows.Forms.Label()
+            Me.TmrTraceUpdate = New System.Windows.Forms.Timer(Me.components)
+            Me.TmrDrag = New System.Windows.Forms.Timer(Me.components)
             Me.tt = New System.Windows.Forms.ToolTip(Me.components)
-            Me.btnFnDel = New System.Windows.Forms.Button()
-            Me.pnlFnType = New System.Windows.Forms.Panel()
-            Me.pnlFnTypeSelector = New System.Windows.Forms.Panel()
-            Me.pnlOptInverse = New System.Windows.Forms.Panel()
-            Me.lbOptInverseR = New System.Windows.Forms.Label()
-            Me.lbOptInverseL = New System.Windows.Forms.Label()
-            Me.pnlOptOriginRay = New System.Windows.Forms.Panel()
-            Me.lbOptOriginRayR = New System.Windows.Forms.Label()
-            Me.lbOptOriginRayL = New System.Windows.Forms.Label()
-            Me.pnlOptPolar = New System.Windows.Forms.Panel()
-            Me.lbOptPolarR = New System.Windows.Forms.Label()
-            Me.lbOptPolarL = New System.Windows.Forms.Label()
-            Me.pnlOptParametric = New System.Windows.Forms.Panel()
-            Me.lbOptParametricR = New System.Windows.Forms.Label()
-            Me.lbOptParametricL = New System.Windows.Forms.Label()
-            Me.pnlOptCartesian = New System.Windows.Forms.Panel()
-            Me.lbOptCartesianR = New System.Windows.Forms.Label()
-            Me.lbOptCartesianL = New System.Windows.Forms.Label()
-            Me.pnlOptDifferential = New System.Windows.Forms.Panel()
-            Me.lbOptDifferentialR = New System.Windows.Forms.Label()
-            Me.lbOptDifferentialL = New System.Windows.Forms.Label()
-            Me.lbFnType = New System.Windows.Forms.Label()
+            Me.BtnFnDel = New System.Windows.Forms.Button()
+            Me.PnlFnType = New System.Windows.Forms.Panel()
+            Me.PnlFnTypeSelector = New System.Windows.Forms.Panel()
+            Me.PnlOptInverse = New System.Windows.Forms.Panel()
+            Me.LbOptInverseR = New System.Windows.Forms.Label()
+            Me.LbOptInverseL = New System.Windows.Forms.Label()
+            Me.PnlOptOriginRay = New System.Windows.Forms.Panel()
+            Me.LbOptOriginRayR = New System.Windows.Forms.Label()
+            Me.LbOptOriginRayL = New System.Windows.Forms.Label()
+            Me.PnlOptPolar = New System.Windows.Forms.Panel()
+            Me.LbOptPolarR = New System.Windows.Forms.Label()
+            Me.LbOptPolarL = New System.Windows.Forms.Label()
+            Me.PnlOptParametric = New System.Windows.Forms.Panel()
+            Me.LbOptParametricR = New System.Windows.Forms.Label()
+            Me.LbOptParametricL = New System.Windows.Forms.Label()
+            Me.PnlOptCartesian = New System.Windows.Forms.Panel()
+            Me.LbOptCartesianR = New System.Windows.Forms.Label()
+            Me.LbOptCartesianL = New System.Windows.Forms.Label()
+            Me.PnlOptDifferential = New System.Windows.Forms.Panel()
+            Me.LbOptDifferentialR = New System.Windows.Forms.Label()
+            Me.LbOptDifferentialL = New System.Windows.Forms.Label()
+            Me.LbFnType = New System.Windows.Forms.Label()
             Me.tmrDelayRedraw = New System.Windows.Forms.Timer(Me.components)
             Me.DrawWorker = New System.ComponentModel.BackgroundWorker()
             Me.TmrStart = New System.Windows.Forms.Timer(Me.components)
             Me.TmrHighQuality = New System.Windows.Forms.Timer(Me.components)
-            CType(Me.split, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.split.Panel1.SuspendLayout()
-            Me.split.Panel2.SuspendLayout()
-            Me.split.SuspendLayout()
-            Me.pnlWindow.SuspendLayout()
-            Me.pnlWHeader.SuspendLayout()
-            Me.pnlTrace.SuspendLayout()
-            CType(Me.canvas, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.pnlInput.SuspendLayout()
-            Me.pnlFnType.SuspendLayout()
-            Me.pnlFnTypeSelector.SuspendLayout()
-            Me.pnlOptInverse.SuspendLayout()
-            Me.pnlOptOriginRay.SuspendLayout()
-            Me.pnlOptPolar.SuspendLayout()
-            Me.pnlOptParametric.SuspendLayout()
-            Me.pnlOptCartesian.SuspendLayout()
-            Me.pnlOptDifferential.SuspendLayout()
+            CType(Me.Split, System.ComponentModel.ISupportInitialize).BeginInit()
+            Me.Split.Panel1.SuspendLayout()
+            Me.Split.Panel2.SuspendLayout()
+            Me.Split.SuspendLayout()
+            Me.PnlWindow.SuspendLayout()
+            Me.PnlWHeader.SuspendLayout()
+            Me.PnlTrace.SuspendLayout()
+            CType(Me.Canvas, System.ComponentModel.ISupportInitialize).BeginInit()
+            Me.PnlInput.SuspendLayout()
+            Me.PnlFnType.SuspendLayout()
+            Me.PnlFnTypeSelector.SuspendLayout()
+            Me.PnlOptInverse.SuspendLayout()
+            Me.PnlOptOriginRay.SuspendLayout()
+            Me.PnlOptPolar.SuspendLayout()
+            Me.PnlOptParametric.SuspendLayout()
+            Me.PnlOptCartesian.SuspendLayout()
+            Me.PnlOptDifferential.SuspendLayout()
             Me.SuspendLayout()
             '
-            'split
+            'Split
             '
-            Me.split.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-            Me.split.Dock = System.Windows.Forms.DockStyle.Fill
-            Me.split.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
-            Me.split.Location = New System.Drawing.Point(0, 0)
-            Me.split.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-            Me.split.Name = "split"
-            Me.split.Orientation = System.Windows.Forms.Orientation.Horizontal
+            Me.Split.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+            Me.Split.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.Split.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+            Me.Split.Location = New System.Drawing.Point(0, 0)
+            Me.Split.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+            Me.Split.Name = "Split"
+            Me.Split.Orientation = System.Windows.Forms.Orientation.Horizontal
             '
-            'split.Panel1
+            'Split.Panel1
             '
-            Me.split.Panel1.Controls.Add(Me.btnScale)
-            Me.split.Panel1.Controls.Add(Me.pnlWindow)
-            Me.split.Panel1.Controls.Add(Me.pnlTrace)
-            Me.split.Panel1.Controls.Add(Me.btnTrace)
-            Me.split.Panel1.Controls.Add(Me.canvas)
+            Me.Split.Panel1.Controls.Add(Me.BtnScale)
+            Me.Split.Panel1.Controls.Add(Me.PnlWindow)
+            Me.Split.Panel1.Controls.Add(Me.PnlTrace)
+            Me.Split.Panel1.Controls.Add(Me.BtnTrace)
+            Me.Split.Panel1.Controls.Add(Me.Canvas)
             '
-            'split.Panel2
+            'Split.Panel2
             '
-            Me.split.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-            Me.split.Panel2.Controls.Add(Me.btnGraph)
-            Me.split.Panel2.Controls.Add(Me.btnNextFn)
-            Me.split.Panel2.Controls.Add(Me.btnPrevFn)
-            Me.split.Panel2.Controls.Add(Me.btnAdd)
-            Me.split.Panel2.Controls.Add(Me.pnlInput)
-            Me.split.Panel2.Controls.Add(Me.lbFx)
-            Me.split.Size = New System.Drawing.Size(984, 661)
-            Me.split.SplitterDistance = 600
-            Me.split.SplitterWidth = 3
-            Me.split.TabIndex = 0
+            Me.Split.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.Split.Panel2.Controls.Add(Me.BtnGraph)
+            Me.Split.Panel2.Controls.Add(Me.BtnNextFn)
+            Me.Split.Panel2.Controls.Add(Me.BtnPrevFn)
+            Me.Split.Panel2.Controls.Add(Me.BtnAdd)
+            Me.Split.Panel2.Controls.Add(Me.PnlInput)
+            Me.Split.Panel2.Controls.Add(Me.LbFx)
+            Me.Split.Size = New System.Drawing.Size(984, 661)
+            Me.Split.SplitterDistance = 601
+            Me.Split.SplitterWidth = 3
+            Me.Split.TabIndex = 0
             '
-            'btnScale
+            'BtnScale
             '
-            Me.btnScale.BackColor = System.Drawing.Color.DarkSlateBlue
-            Me.btnScale.BackgroundImage = CType(resources.GetObject("btnScale.BackgroundImage"), System.Drawing.Image)
-            Me.btnScale.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-            Me.btnScale.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnScale.FlatAppearance.BorderSize = 0
-            Me.btnScale.FlatAppearance.MouseDownBackColor = System.Drawing.Color.SlateBlue
-            Me.btnScale.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateBlue
-            Me.btnScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnScale.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.btnScale.ForeColor = System.Drawing.Color.White
-            Me.btnScale.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-            Me.btnScale.Location = New System.Drawing.Point(11, 11)
-            Me.btnScale.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnScale.Name = "btnScale"
-            Me.btnScale.Size = New System.Drawing.Size(115, 40)
-            Me.btnScale.TabIndex = 4
-            Me.btnScale.TabStop = False
-            Me.btnScale.Text = "Window"
-            Me.btnScale.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            Me.tt.SetToolTip(Me.btnScale, "Left click to adjust the range graphed on the window" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right click to reset to def" &         "ault (centered) view" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle click to go to first quadrant view")
-            Me.btnScale.UseVisualStyleBackColor = False
+            Me.BtnScale.BackColor = System.Drawing.Color.DarkSlateBlue
+            Me.BtnScale.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+            Me.BtnScale.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnScale.FlatAppearance.BorderSize = 0
+            Me.BtnScale.FlatAppearance.MouseDownBackColor = System.Drawing.Color.SlateBlue
+            Me.BtnScale.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateBlue
+            Me.BtnScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnScale.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.BtnScale.ForeColor = System.Drawing.Color.White
+            Me.BtnScale.Image = CType(resources.GetObject("BtnScale.Image"), System.Drawing.Image)
+            Me.BtnScale.Location = New System.Drawing.Point(11, 11)
+            Me.BtnScale.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnScale.Name = "BtnScale"
+            Me.BtnScale.Size = New System.Drawing.Size(115, 40)
+            Me.BtnScale.TabIndex = 4
+            Me.BtnScale.TabStop = False
+            Me.BtnScale.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.tt.SetToolTip(Me.BtnScale, "Left click to adjust the range graphed on the window" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right click to reset to def" &
+        "ault (centered) view" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle click to go to first quadrant view")
+            Me.BtnScale.UseVisualStyleBackColor = False
             '
-            'pnlWindow
+            'PnlWindow
             '
-            Me.pnlWindow.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-            Me.pnlWindow.Controls.Add(Me.tbWBot)
-            Me.pnlWindow.Controls.Add(Me.tbWLft)
-            Me.pnlWindow.Controls.Add(Me.tbWTop)
-            Me.pnlWindow.Controls.Add(Me.tbWRht)
-            Me.pnlWindow.Controls.Add(Me.btnWOK)
-            Me.pnlWindow.Controls.Add(Me.btnWCancel)
-            Me.pnlWindow.Controls.Add(Me.lbWLft)
-            Me.pnlWindow.Controls.Add(Me.lbWRht)
-            Me.pnlWindow.Controls.Add(Me.lbWBot)
-            Me.pnlWindow.Controls.Add(Me.lbWTop)
-            Me.pnlWindow.Controls.Add(Me.pnlWHeader)
-            Me.pnlWindow.Location = New System.Drawing.Point(280, 160)
-            Me.pnlWindow.Name = "pnlWindow"
-            Me.pnlWindow.Size = New System.Drawing.Size(469, 305)
-            Me.pnlWindow.TabIndex = 9
-            Me.pnlWindow.Visible = False
+            Me.PnlWindow.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.PnlWindow.Controls.Add(Me.TbWBot)
+            Me.PnlWindow.Controls.Add(Me.TbWLft)
+            Me.PnlWindow.Controls.Add(Me.TbWTop)
+            Me.PnlWindow.Controls.Add(Me.TbWRht)
+            Me.PnlWindow.Controls.Add(Me.BtnWOK)
+            Me.PnlWindow.Controls.Add(Me.BtnWCancel)
+            Me.PnlWindow.Controls.Add(Me.LbWLft)
+            Me.PnlWindow.Controls.Add(Me.LbWRht)
+            Me.PnlWindow.Controls.Add(Me.LbWBot)
+            Me.PnlWindow.Controls.Add(Me.LbWTop)
+            Me.PnlWindow.Controls.Add(Me.PnlWHeader)
+            Me.PnlWindow.Location = New System.Drawing.Point(280, 160)
+            Me.PnlWindow.Name = "PnlWindow"
+            Me.PnlWindow.Size = New System.Drawing.Size(469, 305)
+            Me.PnlWindow.TabIndex = 9
+            Me.PnlWindow.Visible = False
             '
-            'tbWBot
+            'TbWBot
             '
-            Me.tbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-            Me.tbWBot.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
-            Me.tbWBot.Location = New System.Drawing.Point(156, 212)
-            Me.tbWBot.Name = "tbWBot"
-            Me.tbWBot.Size = New System.Drawing.Size(156, 35)
-            Me.tbWBot.TabIndex = 12
-            Me.tt.SetToolTip(Me.tbWBot, "Minimum Y (Expression)")
+            Me.TbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+            Me.TbWBot.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWBot.Location = New System.Drawing.Point(156, 212)
+            Me.TbWBot.Name = "TbWBot"
+            Me.TbWBot.Size = New System.Drawing.Size(156, 35)
+            Me.TbWBot.TabIndex = 12
+            Me.tt.SetToolTip(Me.TbWBot, "Minimum Y (Expression)")
             '
-            'tbWLft
+            'TbWLft
             '
-            Me.tbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
-            Me.tbWLft.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
-            Me.tbWLft.Location = New System.Drawing.Point(25, 147)
-            Me.tbWLft.Name = "tbWLft"
-            Me.tbWLft.Size = New System.Drawing.Size(156, 35)
-            Me.tbWLft.TabIndex = 14
-            Me.tt.SetToolTip(Me.tbWLft, "Minimum X (Expression)")
+            Me.TbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.TbWLft.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWLft.Location = New System.Drawing.Point(25, 147)
+            Me.TbWLft.Name = "TbWLft"
+            Me.TbWLft.Size = New System.Drawing.Size(156, 35)
+            Me.TbWLft.TabIndex = 14
+            Me.tt.SetToolTip(Me.TbWLft, "Minimum X (Expression)")
             '
-            'tbWTop
+            'TbWTop
             '
-            Me.tbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
-            Me.tbWTop.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
-            Me.tbWTop.Location = New System.Drawing.Point(156, 85)
-            Me.tbWTop.Name = "tbWTop"
-            Me.tbWTop.Size = New System.Drawing.Size(156, 35)
-            Me.tbWTop.TabIndex = 10
-            Me.tt.SetToolTip(Me.tbWTop, "Maximum Y (Expression)")
+            Me.TbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
+            Me.TbWTop.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWTop.Location = New System.Drawing.Point(156, 85)
+            Me.TbWTop.Name = "TbWTop"
+            Me.TbWTop.Size = New System.Drawing.Size(156, 35)
+            Me.TbWTop.TabIndex = 10
+            Me.tt.SetToolTip(Me.TbWTop, "Maximum Y (Expression)")
             '
-            'tbWRht
+            'TbWRht
             '
-            Me.tbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
-            Me.tbWRht.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
-            Me.tbWRht.Location = New System.Drawing.Point(289, 147)
-            Me.tbWRht.Name = "tbWRht"
-            Me.tbWRht.Size = New System.Drawing.Size(156, 35)
-            Me.tbWRht.TabIndex = 16
-            Me.tt.SetToolTip(Me.tbWRht, "Maximum X (Expression)")
+            Me.TbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.TbWRht.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWRht.Location = New System.Drawing.Point(289, 147)
+            Me.TbWRht.Name = "TbWRht"
+            Me.TbWRht.Size = New System.Drawing.Size(156, 35)
+            Me.TbWRht.TabIndex = 16
+            Me.tt.SetToolTip(Me.TbWRht, "Maximum X (Expression)")
             '
-            'btnWOK
+            'BtnWOK
             '
-            Me.btnWOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnWOK.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnWOK.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnWOK.FlatAppearance.BorderSize = 0
-            Me.btnWOK.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.btnWOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnWOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWOK.Font = New System.Drawing.Font(OpenSans, 11.0!)
-            Me.btnWOK.ForeColor = System.Drawing.Color.White
-            Me.btnWOK.Location = New System.Drawing.Point(368, 256)
-            Me.btnWOK.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnWOK.Name = "btnWOK"
-            Me.btnWOK.Size = New System.Drawing.Size(99, 47)
-            Me.btnWOK.TabIndex = 20
-            Me.btnWOK.TabStop = False
-            Me.btnWOK.Text = "Update"
-            Me.tt.SetToolTip(Me.btnWOK, "Update the Window Bounds (Enter)")
-            Me.btnWOK.UseVisualStyleBackColor = False
+            Me.BtnWOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnWOK.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnWOK.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnWOK.FlatAppearance.BorderSize = 0
+            Me.BtnWOK.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BtnWOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnWOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnWOK.Font = New System.Drawing.Font(OpenSans, 11.0!)
+            Me.BtnWOK.ForeColor = System.Drawing.Color.White
+            Me.BtnWOK.Location = New System.Drawing.Point(368, 256)
+            Me.BtnWOK.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnWOK.Name = "BtnWOK"
+            Me.BtnWOK.Size = New System.Drawing.Size(99, 47)
+            Me.BtnWOK.TabIndex = 20
+            Me.BtnWOK.TabStop = False
+            Me.BtnWOK.Text = "Update"
+            Me.tt.SetToolTip(Me.BtnWOK, "Update the Window Bounds (Enter)")
+            Me.BtnWOK.UseVisualStyleBackColor = False
             '
-            'btnWCancel
+            'BtnWCancel
             '
-            Me.btnWCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnWCancel.BackColor = System.Drawing.Color.Transparent
-            Me.btnWCancel.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnWCancel.FlatAppearance.BorderSize = 0
-            Me.btnWCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
-            Me.btnWCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
-            Me.btnWCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
-            Me.btnWCancel.ForeColor = System.Drawing.Color.White
-            Me.btnWCancel.Location = New System.Drawing.Point(272, 253)
-            Me.btnWCancel.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnWCancel.Name = "btnWCancel"
-            Me.btnWCancel.Size = New System.Drawing.Size(92, 47)
-            Me.btnWCancel.TabIndex = 18
-            Me.btnWCancel.TabStop = False
-            Me.btnWCancel.Text = "Cancel"
-            Me.tt.SetToolTip(Me.btnWCancel, "Cancel Changes (Esc)")
-            Me.btnWCancel.UseVisualStyleBackColor = False
+            Me.BtnWCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnWCancel.BackColor = System.Drawing.Color.Transparent
+            Me.BtnWCancel.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnWCancel.FlatAppearance.BorderSize = 0
+            Me.BtnWCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
+            Me.BtnWCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
+            Me.BtnWCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnWCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnWCancel.ForeColor = System.Drawing.Color.White
+            Me.BtnWCancel.Location = New System.Drawing.Point(272, 253)
+            Me.BtnWCancel.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnWCancel.Name = "BtnWCancel"
+            Me.BtnWCancel.Size = New System.Drawing.Size(92, 47)
+            Me.BtnWCancel.TabIndex = 18
+            Me.BtnWCancel.TabStop = False
+            Me.BtnWCancel.Text = "Cancel"
+            Me.tt.SetToolTip(Me.BtnWCancel, "Cancel Changes (Esc)")
+            Me.BtnWCancel.UseVisualStyleBackColor = False
             '
-            'lbWLft
+            'LbWLft
             '
-            Me.lbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
-            Me.lbWLft.AutoSize = True
-            Me.lbWLft.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbWLft.Location = New System.Drawing.Point(80, 117)
-            Me.lbWLft.Name = "lbWLft"
-            Me.lbWLft.Size = New System.Drawing.Size(49, 22)
-            Me.lbWLft.TabIndex = 17
-            Me.lbWLft.Text = "Min x"
+            Me.LbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
+            Me.LbWLft.AutoSize = True
+            Me.LbWLft.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWLft.Location = New System.Drawing.Point(80, 117)
+            Me.LbWLft.Name = "LbWLft"
+            Me.LbWLft.Size = New System.Drawing.Size(49, 22)
+            Me.LbWLft.TabIndex = 17
+            Me.LbWLft.Text = "Min x"
             '
-            'lbWRht
+            'LbWRht
             '
-            Me.lbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
-            Me.lbWRht.AutoSize = True
-            Me.lbWRht.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbWRht.Location = New System.Drawing.Point(341, 119)
-            Me.lbWRht.Name = "lbWRht"
-            Me.lbWRht.Size = New System.Drawing.Size(52, 22)
-            Me.lbWRht.TabIndex = 15
-            Me.lbWRht.Text = "Max x"
+            Me.LbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
+            Me.LbWRht.AutoSize = True
+            Me.LbWRht.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWRht.Location = New System.Drawing.Point(341, 119)
+            Me.LbWRht.Name = "LbWRht"
+            Me.LbWRht.Size = New System.Drawing.Size(52, 22)
+            Me.LbWRht.TabIndex = 15
+            Me.LbWRht.Text = "Max x"
             '
-            'lbWBot
+            'LbWBot
             '
-            Me.lbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-            Me.lbWBot.AutoSize = True
-            Me.lbWBot.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbWBot.Location = New System.Drawing.Point(211, 182)
-            Me.lbWBot.Name = "lbWBot"
-            Me.lbWBot.Size = New System.Drawing.Size(48, 22)
-            Me.lbWBot.TabIndex = 13
-            Me.lbWBot.Text = "Min y"
+            Me.LbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+            Me.LbWBot.AutoSize = True
+            Me.LbWBot.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWBot.Location = New System.Drawing.Point(211, 182)
+            Me.LbWBot.Name = "LbWBot"
+            Me.LbWBot.Size = New System.Drawing.Size(48, 22)
+            Me.LbWBot.TabIndex = 13
+            Me.LbWBot.Text = "Min y"
             '
-            'lbWTop
+            'LbWTop
             '
-            Me.lbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
-            Me.lbWTop.AutoSize = True
-            Me.lbWTop.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbWTop.Location = New System.Drawing.Point(211, 56)
-            Me.lbWTop.Name = "lbWTop"
-            Me.lbWTop.Size = New System.Drawing.Size(51, 22)
-            Me.lbWTop.TabIndex = 11
-            Me.lbWTop.Text = "Max y"
+            Me.LbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
+            Me.LbWTop.AutoSize = True
+            Me.LbWTop.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWTop.Location = New System.Drawing.Point(211, 56)
+            Me.LbWTop.Name = "LbWTop"
+            Me.LbWTop.Size = New System.Drawing.Size(51, 22)
+            Me.LbWTop.TabIndex = 11
+            Me.LbWTop.Text = "Max y"
             '
-            'pnlWHeader
+            'PnlWHeader
             '
-            Me.pnlWHeader.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlWHeader.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlWHeader.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
-            Me.pnlWHeader.Controls.Add(Me.lbWLogo)
-            Me.pnlWHeader.Controls.Add(Me.btnWClose)
-            Me.pnlWHeader.Controls.Add(Me.lbWindow)
-            Me.pnlWHeader.Location = New System.Drawing.Point(0, 0)
-            Me.pnlWHeader.Name = "pnlWHeader"
-            Me.pnlWHeader.Size = New System.Drawing.Size(469, 47)
-            Me.pnlWHeader.TabIndex = 19
+            Me.PnlWHeader.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
+            Me.PnlWHeader.Controls.Add(Me.LbWLogo)
+            Me.PnlWHeader.Controls.Add(Me.BtnWClose)
+            Me.PnlWHeader.Controls.Add(Me.LbWindow)
+            Me.PnlWHeader.Location = New System.Drawing.Point(0, 0)
+            Me.PnlWHeader.Name = "PnlWHeader"
+            Me.PnlWHeader.Size = New System.Drawing.Size(469, 47)
+            Me.PnlWHeader.TabIndex = 19
             '
-            'lbWLogo
+            'LbWLogo
             '
-            Me.lbWLogo.Font = New System.Drawing.Font(OpenSansLight, 16.0!)
-            Me.lbWLogo.Image = CType(resources.GetObject("lbWLogo.Image"), System.Drawing.Image)
-            Me.lbWLogo.Location = New System.Drawing.Point(16, 7)
-            Me.lbWLogo.Name = "lbWLogo"
-            Me.lbWLogo.Size = New System.Drawing.Size(32, 30)
-            Me.lbWLogo.TabIndex = 22
-            Me.lbWLogo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+            Me.LbWLogo.Font = New System.Drawing.Font(OpenSansLight, 16.0!)
+            Me.LbWLogo.Image = CType(resources.GetObject("LbWLogo.Image"), System.Drawing.Image)
+            Me.LbWLogo.Location = New System.Drawing.Point(16, 7)
+            Me.LbWLogo.Name = "LbWLogo"
+            Me.LbWLogo.Size = New System.Drawing.Size(32, 30)
+            Me.LbWLogo.TabIndex = 22
+            Me.LbWLogo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
             '
-            'btnWClose
+            'BtnWClose
             '
-            Me.btnWClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnWClose.BackColor = System.Drawing.Color.Transparent
-            Me.btnWClose.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnWClose.FlatAppearance.BorderSize = 0
-            Me.btnWClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
-            Me.btnWClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
-            Me.btnWClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnWClose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
-            Me.btnWClose.ForeColor = System.Drawing.Color.White
-            Me.btnWClose.Location = New System.Drawing.Point(423, 2)
-            Me.btnWClose.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnWClose.Name = "btnWClose"
-            Me.btnWClose.Size = New System.Drawing.Size(44, 43)
-            Me.btnWClose.TabIndex = 21
-            Me.btnWClose.TabStop = False
-            Me.btnWClose.Text = "X"
-            Me.tt.SetToolTip(Me.btnWClose, "Close (Esc)")
-            Me.btnWClose.UseVisualStyleBackColor = False
+            Me.BtnWClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnWClose.BackColor = System.Drawing.Color.Transparent
+            Me.BtnWClose.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnWClose.FlatAppearance.BorderSize = 0
+            Me.BtnWClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
+            Me.BtnWClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
+            Me.BtnWClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnWClose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnWClose.ForeColor = System.Drawing.Color.White
+            Me.BtnWClose.Location = New System.Drawing.Point(423, 2)
+            Me.BtnWClose.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnWClose.Name = "BtnWClose"
+            Me.BtnWClose.Size = New System.Drawing.Size(44, 43)
+            Me.BtnWClose.TabIndex = 21
+            Me.BtnWClose.TabStop = False
+            Me.BtnWClose.Text = "X"
+            Me.tt.SetToolTip(Me.BtnWClose, "Close (Esc)")
+            Me.BtnWClose.UseVisualStyleBackColor = False
             '
-            'lbWindow
+            'LbWindow
             '
-            Me.lbWindow.AutoSize = True
-            Me.lbWindow.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbWindow.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-            Me.lbWindow.Location = New System.Drawing.Point(48, 12)
-            Me.lbWindow.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
-            Me.lbWindow.Name = "lbWindow"
-            Me.lbWindow.Size = New System.Drawing.Size(193, 22)
-            Me.lbWindow.TabIndex = 9
-            Me.lbWindow.Text = "Window Bounds + Scaling"
+            Me.LbWindow.AutoSize = True
+            Me.LbWindow.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWindow.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+            Me.LbWindow.Location = New System.Drawing.Point(48, 12)
+            Me.LbWindow.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
+            Me.LbWindow.Name = "LbWindow"
+            Me.LbWindow.Size = New System.Drawing.Size(193, 22)
+            Me.LbWindow.TabIndex = 9
+            Me.LbWindow.Text = "Window Bounds + Scaling"
             '
-            'pnlTrace
+            'PnlTrace
             '
-            Me.pnlTrace.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlTrace.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.pnlTrace.Controls.Add(Me.lbTrace)
-            Me.pnlTrace.Controls.Add(Me.lbTVal)
-            Me.pnlTrace.Controls.Add(Me.npdTVal)
-            Me.pnlTrace.Controls.Add(Me.btnTNext)
-            Me.pnlTrace.Location = New System.Drawing.Point(676, 11)
-            Me.pnlTrace.Name = "pnlTrace"
-            Me.pnlTrace.Size = New System.Drawing.Size(228, 136)
-            Me.pnlTrace.TabIndex = 10
-            Me.pnlTrace.Visible = False
+            Me.PnlTrace.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.PnlTrace.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.PnlTrace.Controls.Add(Me.LbTrace)
+            Me.PnlTrace.Controls.Add(Me.LbTVal)
+            Me.PnlTrace.Controls.Add(Me.NpdTVal)
+            Me.PnlTrace.Controls.Add(Me.BtnTNext)
+            Me.PnlTrace.Location = New System.Drawing.Point(676, 11)
+            Me.PnlTrace.Name = "PnlTrace"
+            Me.PnlTrace.Size = New System.Drawing.Size(228, 136)
+            Me.PnlTrace.TabIndex = 10
+            Me.PnlTrace.Visible = False
             '
-            'lbTrace
+            'LbTrace
             '
-            Me.lbTrace.AutoSize = True
-            Me.lbTrace.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbTrace.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-            Me.lbTrace.Location = New System.Drawing.Point(10, 9)
-            Me.lbTrace.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
-            Me.lbTrace.Name = "lbTrace"
-            Me.lbTrace.Size = New System.Drawing.Size(114, 22)
-            Me.lbTrace.TabIndex = 10
-            Me.lbTrace.Text = "Trace Function"
+            Me.LbTrace.AutoSize = True
+            Me.LbTrace.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbTrace.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+            Me.LbTrace.Location = New System.Drawing.Point(10, 9)
+            Me.LbTrace.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
+            Me.LbTrace.Name = "LbTrace"
+            Me.LbTrace.Size = New System.Drawing.Size(114, 22)
+            Me.LbTrace.TabIndex = 10
+            Me.LbTrace.Text = "Trace Function"
             '
-            'lbTVal
+            'LbTVal
             '
-            Me.lbTVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.LbTVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.lbTVal.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.lbTVal.Location = New System.Drawing.Point(-1, 74)
-            Me.lbTVal.Name = "lbTVal"
-            Me.lbTVal.Padding = New System.Windows.Forms.Padding(0, 3, 0, 0)
-            Me.lbTVal.Size = New System.Drawing.Size(230, 62)
-            Me.lbTVal.TabIndex = 3
-            Me.lbTVal.Text = "f(x) = 0"
-            Me.lbTVal.TextAlign = System.Drawing.ContentAlignment.TopRight
+            Me.LbTVal.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.LbTVal.Location = New System.Drawing.Point(-1, 74)
+            Me.LbTVal.Name = "LbTVal"
+            Me.LbTVal.Padding = New System.Windows.Forms.Padding(0, 3, 0, 0)
+            Me.LbTVal.Size = New System.Drawing.Size(230, 62)
+            Me.LbTVal.TabIndex = 3
+            Me.LbTVal.Text = "f(x) = 0"
+            Me.LbTVal.TextAlign = System.Drawing.ContentAlignment.TopRight
             '
-            'npdTVal
+            'NpdTVal
             '
-            Me.npdTVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.NpdTVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.npdTVal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-            Me.npdTVal.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
-            Me.npdTVal.Location = New System.Drawing.Point(0, 41)
-            Me.npdTVal.Multiline = True
-            Me.npdTVal.Name = "npdTVal"
-            Me.npdTVal.Size = New System.Drawing.Size(156, 46)
-            Me.npdTVal.TabIndex = 4
-            Me.tt.SetToolTip(Me.npdTVal, "Value to Trace At (Expression)")
+            Me.NpdTVal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+            Me.NpdTVal.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.NpdTVal.Location = New System.Drawing.Point(0, 41)
+            Me.NpdTVal.Multiline = True
+            Me.NpdTVal.Name = "NpdTVal"
+            Me.NpdTVal.Size = New System.Drawing.Size(156, 46)
+            Me.NpdTVal.TabIndex = 4
+            Me.tt.SetToolTip(Me.NpdTVal, "Value to Trace At (Expression)")
             '
-            'btnTNext
+            'BtnTNext
             '
-            Me.btnTNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnTNext.BackColor = System.Drawing.Color.DimGray
-            Me.btnTNext.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnTNext.FlatAppearance.BorderSize = 0
-            Me.btnTNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DimGray
-            Me.btnTNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray
-            Me.btnTNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTNext.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
-            Me.btnTNext.ForeColor = System.Drawing.Color.White
-            Me.btnTNext.Location = New System.Drawing.Point(156, 41)
-            Me.btnTNext.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnTNext.Name = "btnTNext"
-            Me.btnTNext.Size = New System.Drawing.Size(75, 34)
-            Me.btnTNext.TabIndex = 5
-            Me.btnTNext.TabStop = False
-            Me.btnTNext.Text = "Find Crit Pts"
-            Me.tt.SetToolTip(Me.btnTNext, "Find zeros, maxima, minima, and intercepts" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Enter)")
-            Me.btnTNext.UseVisualStyleBackColor = False
+            Me.BtnTNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnTNext.BackColor = System.Drawing.Color.DimGray
+            Me.BtnTNext.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnTNext.FlatAppearance.BorderSize = 0
+            Me.BtnTNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DimGray
+            Me.BtnTNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray
+            Me.BtnTNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnTNext.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
+            Me.BtnTNext.ForeColor = System.Drawing.Color.White
+            Me.BtnTNext.Location = New System.Drawing.Point(156, 41)
+            Me.BtnTNext.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnTNext.Name = "BtnTNext"
+            Me.BtnTNext.Size = New System.Drawing.Size(75, 34)
+            Me.BtnTNext.TabIndex = 5
+            Me.BtnTNext.TabStop = False
+            Me.BtnTNext.Text = "Find Crit Pts"
+            Me.tt.SetToolTip(Me.BtnTNext, "Find zeros, maxima, minima, and intercepts" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Enter)")
+            Me.BtnTNext.UseVisualStyleBackColor = False
             '
-            'btnTrace
+            'BtnTrace
             '
-            Me.btnTrace.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnTrace.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnTrace.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnTrace.FlatAppearance.BorderSize = 0
-            Me.btnTrace.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.btnTrace.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnTrace.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnTrace.ForeColor = System.Drawing.Color.White
-            Me.btnTrace.Location = New System.Drawing.Point(904, 11)
-            Me.btnTrace.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnTrace.Name = "btnTrace"
-            Me.btnTrace.Size = New System.Drawing.Size(68, 40)
-            Me.btnTrace.TabIndex = 1
-            Me.btnTrace.TabStop = False
-            Me.btnTrace.Text = "Trace"
-            Me.tt.SetToolTip(Me.btnTrace, "Trace this graph (Alt+T)")
-            Me.btnTrace.UseVisualStyleBackColor = False
+            Me.BtnTrace.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnTrace.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnTrace.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnTrace.FlatAppearance.BorderSize = 0
+            Me.BtnTrace.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BtnTrace.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnTrace.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnTrace.ForeColor = System.Drawing.Color.White
+            Me.BtnTrace.Location = New System.Drawing.Point(904, 11)
+            Me.BtnTrace.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnTrace.Name = "BtnTrace"
+            Me.BtnTrace.Size = New System.Drawing.Size(68, 40)
+            Me.BtnTrace.TabIndex = 1
+            Me.BtnTrace.TabStop = False
+            Me.BtnTrace.Text = "Trace"
+            Me.tt.SetToolTip(Me.BtnTrace, "Trace this graph (Alt+T)")
+            Me.BtnTrace.UseVisualStyleBackColor = False
             '
-            'canvas
+            'Canvas
             '
-            Me.canvas.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-            Me.canvas.Dock = System.Windows.Forms.DockStyle.Fill
-            Me.canvas.Location = New System.Drawing.Point(0, 0)
-            Me.canvas.Name = "canvas"
-            Me.canvas.Size = New System.Drawing.Size(984, 600)
-            Me.canvas.TabIndex = 0
-            Me.canvas.TabStop = False
+            Me.Canvas.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+            Me.Canvas.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.Canvas.Location = New System.Drawing.Point(0, 0)
+            Me.Canvas.Name = "Canvas"
+            Me.Canvas.Size = New System.Drawing.Size(984, 601)
+            Me.Canvas.TabIndex = 0
+            Me.Canvas.TabStop = False
             '
-            'btnGraph
+            'BtnGraph
             '
-            Me.btnGraph.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.BtnGraph.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnGraph.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnGraph.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnGraph.FlatAppearance.BorderSize = 0
-            Me.btnGraph.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.btnGraph.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.btnGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnGraph.ForeColor = System.Drawing.Color.White
-            Me.btnGraph.Location = New System.Drawing.Point(837, -1)
-            Me.btnGraph.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnGraph.Name = "btnGraph"
-            Me.btnGraph.Size = New System.Drawing.Size(105, 61)
-            Me.btnGraph.TabIndex = 0
-            Me.btnGraph.TabStop = False
-            Me.btnGraph.Text = "Graph"
-            Me.tt.SetToolTip(Me.btnGraph, "Update the graph of this function (Alt+Enter)")
-            Me.btnGraph.UseVisualStyleBackColor = False
+            Me.BtnGraph.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnGraph.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnGraph.FlatAppearance.BorderSize = 0
+            Me.BtnGraph.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.BtnGraph.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.BtnGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnGraph.ForeColor = System.Drawing.Color.White
+            Me.BtnGraph.Location = New System.Drawing.Point(837, -1)
+            Me.BtnGraph.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnGraph.Name = "BtnGraph"
+            Me.BtnGraph.Size = New System.Drawing.Size(105, 61)
+            Me.BtnGraph.TabIndex = 0
+            Me.BtnGraph.TabStop = False
+            Me.BtnGraph.Text = "Graph"
+            Me.tt.SetToolTip(Me.BtnGraph, "Update the graph of this function (Alt+Enter)")
+            Me.BtnGraph.UseVisualStyleBackColor = False
             '
-            'btnNextFn
+            'BtnNextFn
             '
-            Me.btnNextFn.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.btnNextFn.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnNextFn.Enabled = False
-            Me.btnNextFn.FlatAppearance.BorderSize = 0
-            Me.btnNextFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
-            Me.btnNextFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
-            Me.btnNextFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnNextFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
-            Me.btnNextFn.ForeColor = System.Drawing.Color.Silver
-            Me.btnNextFn.Location = New System.Drawing.Point(0, 30)
-            Me.btnNextFn.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnNextFn.Name = "btnNextFn"
-            Me.btnNextFn.Size = New System.Drawing.Size(30, 30)
-            Me.btnNextFn.TabIndex = 9
-            Me.btnNextFn.TabStop = False
-            Me.btnNextFn.Text = "▼"
-            Me.tt.SetToolTip(Me.btnNextFn, "Go to next function (Alt+Down)")
-            Me.btnNextFn.UseVisualStyleBackColor = False
+            Me.BtnNextFn.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.BtnNextFn.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnNextFn.Enabled = False
+            Me.BtnNextFn.FlatAppearance.BorderSize = 0
+            Me.BtnNextFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
+            Me.BtnNextFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
+            Me.BtnNextFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnNextFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnNextFn.ForeColor = System.Drawing.Color.Silver
+            Me.BtnNextFn.Location = New System.Drawing.Point(0, 30)
+            Me.BtnNextFn.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnNextFn.Name = "BtnNextFn"
+            Me.BtnNextFn.Size = New System.Drawing.Size(30, 30)
+            Me.BtnNextFn.TabIndex = 9
+            Me.BtnNextFn.TabStop = False
+            Me.BtnNextFn.Text = "▼"
+            Me.tt.SetToolTip(Me.BtnNextFn, "Go to next function (Alt+Down)")
+            Me.BtnNextFn.UseVisualStyleBackColor = False
             '
-            'btnPrevFn
+            'BtnPrevFn
             '
-            Me.btnPrevFn.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.btnPrevFn.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnPrevFn.Enabled = False
-            Me.btnPrevFn.FlatAppearance.BorderSize = 0
-            Me.btnPrevFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
-            Me.btnPrevFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
-            Me.btnPrevFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnPrevFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
-            Me.btnPrevFn.ForeColor = System.Drawing.Color.Silver
-            Me.btnPrevFn.Location = New System.Drawing.Point(0, 0)
-            Me.btnPrevFn.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnPrevFn.Name = "btnPrevFn"
-            Me.btnPrevFn.Size = New System.Drawing.Size(30, 30)
-            Me.btnPrevFn.TabIndex = 8
-            Me.btnPrevFn.TabStop = False
-            Me.btnPrevFn.Text = "▲"
-            Me.tt.SetToolTip(Me.btnPrevFn, "Go to previous function (Alt+Up)")
-            Me.btnPrevFn.UseVisualStyleBackColor = False
+            Me.BtnPrevFn.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.BtnPrevFn.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnPrevFn.Enabled = False
+            Me.BtnPrevFn.FlatAppearance.BorderSize = 0
+            Me.BtnPrevFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
+            Me.BtnPrevFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
+            Me.BtnPrevFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnPrevFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnPrevFn.ForeColor = System.Drawing.Color.Silver
+            Me.BtnPrevFn.Location = New System.Drawing.Point(0, 0)
+            Me.BtnPrevFn.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnPrevFn.Name = "BtnPrevFn"
+            Me.BtnPrevFn.Size = New System.Drawing.Size(30, 30)
+            Me.BtnPrevFn.TabIndex = 8
+            Me.BtnPrevFn.TabStop = False
+            Me.BtnPrevFn.Text = "▲"
+            Me.tt.SetToolTip(Me.BtnPrevFn, "Go to previous function (Alt+Up)")
+            Me.BtnPrevFn.UseVisualStyleBackColor = False
             '
-            'btnAdd
+            'BtnAdd
             '
-            Me.btnAdd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.BtnAdd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnAdd.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-            Me.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnAdd.FlatAppearance.BorderSize = 0
-            Me.btnAdd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnAdd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-            Me.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnAdd.ForeColor = System.Drawing.Color.White
-            Me.btnAdd.Location = New System.Drawing.Point(941, 1)
-            Me.btnAdd.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnAdd.Name = "btnAdd"
-            Me.btnAdd.Size = New System.Drawing.Size(43, 57)
-            Me.btnAdd.TabIndex = 2
-            Me.btnAdd.TabStop = False
-            Me.btnAdd.Text = "+"
-            Me.tt.SetToolTip(Me.btnAdd, "Add a new function (Alt+A or Alt++)")
-            Me.btnAdd.UseVisualStyleBackColor = False
+            Me.BtnAdd.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.BtnAdd.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnAdd.FlatAppearance.BorderSize = 0
+            Me.BtnAdd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnAdd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.BtnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnAdd.ForeColor = System.Drawing.Color.White
+            Me.BtnAdd.Location = New System.Drawing.Point(941, 1)
+            Me.BtnAdd.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnAdd.Name = "BtnAdd"
+            Me.BtnAdd.Size = New System.Drawing.Size(43, 57)
+            Me.BtnAdd.TabIndex = 2
+            Me.BtnAdd.TabStop = False
+            Me.BtnAdd.Text = "+"
+            Me.tt.SetToolTip(Me.BtnAdd, "Add a new function (Alt+A or Alt++)")
+            Me.BtnAdd.UseVisualStyleBackColor = False
             '
-            'pnlInput
+            'PnlInput
             '
-            Me.pnlInput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.PnlInput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlInput.BackColor = System.Drawing.Color.Gainsboro
-            Me.pnlInput.Controls.Add(Me.tb)
-            Me.pnlInput.Location = New System.Drawing.Point(159, -3)
-            Me.pnlInput.Name = "pnlInput"
-            Me.pnlInput.Size = New System.Drawing.Size(682, 84)
-            Me.pnlInput.TabIndex = 1
+            Me.PnlInput.BackColor = System.Drawing.Color.Gainsboro
+            Me.PnlInput.Controls.Add(Me.Tb)
+            Me.PnlInput.Location = New System.Drawing.Point(159, -3)
+            Me.PnlInput.Name = "PnlInput"
+            Me.PnlInput.Size = New System.Drawing.Size(682, 84)
+            Me.PnlInput.TabIndex = 1
             '
-            'tb
+            'Tb
             '
-            Me.tb.AcceptsTab = True
-            Me.tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.Tb.AcceptsTab = True
+            Me.Tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.tb.BackColor = System.Drawing.Color.Gainsboro
-            Me.tb.BorderStyle = System.Windows.Forms.BorderStyle.None
-            Me.tb.Cursor = System.Windows.Forms.Cursors.Arrow
-            Me.tb.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.tb.ForeColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.tb.HideSelection = False
-            Me.tb.Location = New System.Drawing.Point(7, 8)
-            Me.tb.Multiline = True
-            Me.tb.Name = "tb"
-            Me.tb.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal
-            Me.tb.Size = New System.Drawing.Size(673, 53)
-            Me.tb.TabIndex = 0
+            Me.Tb.BackColor = System.Drawing.Color.Gainsboro
+            Me.Tb.BorderStyle = System.Windows.Forms.BorderStyle.None
+            Me.Tb.Cursor = System.Windows.Forms.Cursors.Arrow
+            Me.Tb.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.Tb.ForeColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer))
+            Me.Tb.HideSelection = False
+            Me.Tb.Location = New System.Drawing.Point(7, 8)
+            Me.Tb.Multiline = True
+            Me.Tb.Name = "Tb"
+            Me.Tb.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal
+            Me.Tb.Size = New System.Drawing.Size(673, 53)
+            Me.Tb.TabIndex = 0
             '
-            'lbFx
+            'LbFx
             '
-            Me.lbFx.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Me.LbFx.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-            Me.lbFx.AutoEllipsis = True
-            Me.lbFx.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-            Me.lbFx.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.lbFx.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.lbFx.Location = New System.Drawing.Point(32, 0)
-            Me.lbFx.Name = "lbFx"
-            Me.lbFx.Size = New System.Drawing.Size(123, 60)
-            Me.lbFx.TabIndex = 3
-            Me.lbFx.Text = "f(x) = "
-            Me.lbFx.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            Me.tt.SetToolTip(Me.lbFx, "Click to change function type")
+            Me.LbFx.AutoEllipsis = True
+            Me.LbFx.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+            Me.LbFx.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.LbFx.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbFx.Location = New System.Drawing.Point(32, 0)
+            Me.LbFx.Name = "LbFx"
+            Me.LbFx.Size = New System.Drawing.Size(123, 60)
+            Me.LbFx.TabIndex = 3
+            Me.LbFx.Text = "f(x) = "
+            Me.LbFx.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.tt.SetToolTip(Me.LbFx, "Click to change function type")
             '
-            'tmrTraceUpdate
+            'TmrTraceUpdate
             '
-            Me.tmrTraceUpdate.Interval = 80
+            Me.TmrTraceUpdate.Interval = 80
             '
-            'tmrDrag
+            'TmrDrag
             '
-            Me.tmrDrag.Interval = 80
+            Me.TmrDrag.Interval = 80
             '
-            'btnFnDel
+            'BtnFnDel
             '
-            Me.btnFnDel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnFnDel.BackColor = System.Drawing.Color.Transparent
-            Me.btnFnDel.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnFnDel.FlatAppearance.BorderSize = 0
-            Me.btnFnDel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
-            Me.btnFnDel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
-            Me.btnFnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnFnDel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
-            Me.btnFnDel.ForeColor = System.Drawing.Color.Salmon
-            Me.btnFnDel.Location = New System.Drawing.Point(171, 270)
-            Me.btnFnDel.Margin = New System.Windows.Forms.Padding(2)
-            Me.btnFnDel.Name = "btnFnDel"
-            Me.btnFnDel.Size = New System.Drawing.Size(55, 47)
-            Me.btnFnDel.TabIndex = 11
-            Me.btnFnDel.TabStop = False
-            Me.btnFnDel.Text = "✗"
-            Me.tt.SetToolTip(Me.btnFnDel, "Delete Function")
-            Me.btnFnDel.UseVisualStyleBackColor = False
+            Me.BtnFnDel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnFnDel.BackColor = System.Drawing.Color.Transparent
+            Me.BtnFnDel.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnFnDel.FlatAppearance.BorderSize = 0
+            Me.BtnFnDel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
+            Me.BtnFnDel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
+            Me.BtnFnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnFnDel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnFnDel.ForeColor = System.Drawing.Color.Salmon
+            Me.BtnFnDel.Location = New System.Drawing.Point(171, 270)
+            Me.BtnFnDel.Margin = New System.Windows.Forms.Padding(2)
+            Me.BtnFnDel.Name = "BtnFnDel"
+            Me.BtnFnDel.Size = New System.Drawing.Size(55, 47)
+            Me.BtnFnDel.TabIndex = 11
+            Me.BtnFnDel.TabStop = False
+            Me.BtnFnDel.Text = "✗"
+            Me.tt.SetToolTip(Me.BtnFnDel, "Delete Function")
+            Me.BtnFnDel.UseVisualStyleBackColor = False
             '
-            'pnlFnType
+            'PnlFnType
             '
-            Me.pnlFnType.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-            Me.pnlFnType.Controls.Add(Me.pnlFnTypeSelector)
-            Me.pnlFnType.Controls.Add(Me.lbFnType)
-            Me.pnlFnType.Controls.Add(Me.btnFnDel)
-            Me.pnlFnType.Location = New System.Drawing.Point(30, 232)
-            Me.pnlFnType.Name = "pnlFnType"
-            Me.pnlFnType.Size = New System.Drawing.Size(226, 315)
-            Me.pnlFnType.TabIndex = 8
-            Me.pnlFnType.Visible = False
+            Me.PnlFnType.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+            Me.PnlFnType.Controls.Add(Me.PnlFnTypeSelector)
+            Me.PnlFnType.Controls.Add(Me.LbFnType)
+            Me.PnlFnType.Controls.Add(Me.BtnFnDel)
+            Me.PnlFnType.Location = New System.Drawing.Point(30, 232)
+            Me.PnlFnType.Name = "PnlFnType"
+            Me.PnlFnType.Size = New System.Drawing.Size(226, 315)
+            Me.PnlFnType.TabIndex = 8
+            Me.PnlFnType.Visible = False
             '
-            'pnlFnTypeSelector
+            'PnlFnTypeSelector
             '
-            Me.pnlFnTypeSelector.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-            Me.pnlFnTypeSelector.Controls.Add(Me.pnlOptInverse)
-            Me.pnlFnTypeSelector.Controls.Add(Me.pnlOptOriginRay)
-            Me.pnlFnTypeSelector.Controls.Add(Me.pnlOptPolar)
-            Me.pnlFnTypeSelector.Controls.Add(Me.pnlOptParametric)
-            Me.pnlFnTypeSelector.Controls.Add(Me.pnlOptCartesian)
-            Me.pnlFnTypeSelector.Controls.Add(Me.pnlOptDifferential)
-            Me.pnlFnTypeSelector.Dock = System.Windows.Forms.DockStyle.Top
-            Me.pnlFnTypeSelector.Location = New System.Drawing.Point(0, 0)
-            Me.pnlFnTypeSelector.Name = "pnlFnTypeSelector"
-            Me.pnlFnTypeSelector.Size = New System.Drawing.Size(226, 270)
-            Me.pnlFnTypeSelector.TabIndex = 8
+            Me.PnlFnTypeSelector.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+            Me.PnlFnTypeSelector.Controls.Add(Me.PnlOptInverse)
+            Me.PnlFnTypeSelector.Controls.Add(Me.PnlOptOriginRay)
+            Me.PnlFnTypeSelector.Controls.Add(Me.PnlOptPolar)
+            Me.PnlFnTypeSelector.Controls.Add(Me.PnlOptParametric)
+            Me.PnlFnTypeSelector.Controls.Add(Me.PnlOptCartesian)
+            Me.PnlFnTypeSelector.Controls.Add(Me.PnlOptDifferential)
+            Me.PnlFnTypeSelector.Dock = System.Windows.Forms.DockStyle.Top
+            Me.PnlFnTypeSelector.Location = New System.Drawing.Point(0, 0)
+            Me.PnlFnTypeSelector.Name = "PnlFnTypeSelector"
+            Me.PnlFnTypeSelector.Size = New System.Drawing.Size(226, 270)
+            Me.PnlFnTypeSelector.TabIndex = 8
             '
-            'pnlOptInverse
+            'PnlOptInverse
             '
-            Me.pnlOptInverse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlOptInverse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlOptInverse.Controls.Add(Me.lbOptInverseR)
-            Me.pnlOptInverse.Controls.Add(Me.lbOptInverseL)
-            Me.pnlOptInverse.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.pnlOptInverse.Location = New System.Drawing.Point(0, 45)
-            Me.pnlOptInverse.Name = "pnlOptInverse"
-            Me.pnlOptInverse.Size = New System.Drawing.Size(226, 45)
-            Me.pnlOptInverse.TabIndex = 15
-            Me.pnlOptInverse.Tag = "2"
+            Me.PnlOptInverse.Controls.Add(Me.LbOptInverseR)
+            Me.PnlOptInverse.Controls.Add(Me.LbOptInverseL)
+            Me.PnlOptInverse.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.PnlOptInverse.Location = New System.Drawing.Point(0, 45)
+            Me.PnlOptInverse.Name = "PnlOptInverse"
+            Me.PnlOptInverse.Size = New System.Drawing.Size(226, 45)
+            Me.PnlOptInverse.TabIndex = 15
+            Me.PnlOptInverse.Tag = "2"
             '
-            'lbOptInverseR
+            'LbOptInverseR
             '
-            Me.lbOptInverseR.AutoSize = True
-            Me.lbOptInverseR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptInverseR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.lbOptInverseR.Location = New System.Drawing.Point(98, 9)
-            Me.lbOptInverseR.Name = "lbOptInverseR"
-            Me.lbOptInverseR.Size = New System.Drawing.Size(118, 26)
-            Me.lbOptInverseR.TabIndex = 11
-            Me.lbOptInverseR.Tag = "2"
-            Me.lbOptInverseR.Text = "Inverse Cart."
+            Me.LbOptInverseR.AutoSize = True
+            Me.LbOptInverseR.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptInverseR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptInverseR.Location = New System.Drawing.Point(98, 9)
+            Me.LbOptInverseR.Name = "LbOptInverseR"
+            Me.LbOptInverseR.Size = New System.Drawing.Size(118, 26)
+            Me.LbOptInverseR.TabIndex = 11
+            Me.LbOptInverseR.Tag = "2"
+            Me.LbOptInverseR.Text = "Inverse Cart."
             '
-            'lbOptInverseL
+            'LbOptInverseL
             '
-            Me.lbOptInverseL.AutoSize = True
-            Me.lbOptInverseL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptInverseL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-            Me.lbOptInverseL.Location = New System.Drawing.Point(7, 7)
-            Me.lbOptInverseL.Name = "lbOptInverseL"
-            Me.lbOptInverseL.Size = New System.Drawing.Size(75, 28)
-            Me.lbOptInverseL.TabIndex = 10
-            Me.lbOptInverseL.Tag = "2"
-            Me.lbOptInverseL.Text = "x = f(y)"
+            Me.LbOptInverseL.AutoSize = True
+            Me.LbOptInverseL.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptInverseL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptInverseL.Location = New System.Drawing.Point(7, 7)
+            Me.LbOptInverseL.Name = "LbOptInverseL"
+            Me.LbOptInverseL.Size = New System.Drawing.Size(75, 28)
+            Me.LbOptInverseL.TabIndex = 10
+            Me.LbOptInverseL.Tag = "2"
+            Me.LbOptInverseL.Text = "x = f(y)"
             '
-            'pnlOptOriginRay
+            'PnlOptOriginRay
             '
-            Me.pnlOptOriginRay.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlOptOriginRay.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlOptOriginRay.Controls.Add(Me.lbOptOriginRayR)
-            Me.pnlOptOriginRay.Controls.Add(Me.lbOptOriginRayL)
-            Me.pnlOptOriginRay.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.pnlOptOriginRay.Location = New System.Drawing.Point(0, 225)
-            Me.pnlOptOriginRay.Name = "pnlOptOriginRay"
-            Me.pnlOptOriginRay.Size = New System.Drawing.Size(226, 45)
-            Me.pnlOptOriginRay.TabIndex = 14
-            Me.pnlOptOriginRay.Tag = "6"
+            Me.PnlOptOriginRay.Controls.Add(Me.LbOptOriginRayR)
+            Me.PnlOptOriginRay.Controls.Add(Me.LbOptOriginRayL)
+            Me.PnlOptOriginRay.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.PnlOptOriginRay.Location = New System.Drawing.Point(0, 225)
+            Me.PnlOptOriginRay.Name = "PnlOptOriginRay"
+            Me.PnlOptOriginRay.Size = New System.Drawing.Size(226, 45)
+            Me.PnlOptOriginRay.TabIndex = 14
+            Me.PnlOptOriginRay.Tag = "6"
             '
-            'lbOptOriginRayR
+            'LbOptOriginRayR
             '
-            Me.lbOptOriginRayR.AutoSize = True
-            Me.lbOptOriginRayR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptOriginRayR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.lbOptOriginRayR.Location = New System.Drawing.Point(107, 9)
-            Me.lbOptOriginRayR.Name = "lbOptOriginRayR"
-            Me.lbOptOriginRayR.Size = New System.Drawing.Size(104, 26)
-            Me.lbOptOriginRayR.TabIndex = 14
-            Me.lbOptOriginRayR.Tag = "6"
-            Me.lbOptOriginRayR.Text = "Ray / Angle"
+            Me.LbOptOriginRayR.AutoSize = True
+            Me.LbOptOriginRayR.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptOriginRayR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptOriginRayR.Location = New System.Drawing.Point(107, 9)
+            Me.LbOptOriginRayR.Name = "LbOptOriginRayR"
+            Me.LbOptOriginRayR.Size = New System.Drawing.Size(104, 26)
+            Me.LbOptOriginRayR.TabIndex = 14
+            Me.LbOptOriginRayR.Tag = "6"
+            Me.LbOptOriginRayR.Text = "Ray / Angle"
             '
-            'lbOptOriginRayL
+            'LbOptOriginRayL
             '
-            Me.lbOptOriginRayL.AutoSize = True
-            Me.lbOptOriginRayL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptOriginRayL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-            Me.lbOptOriginRayL.Location = New System.Drawing.Point(6, 7)
-            Me.lbOptOriginRayL.Name = "lbOptOriginRayL"
-            Me.lbOptOriginRayL.Size = New System.Drawing.Size(28, 28)
-            Me.lbOptOriginRayL.TabIndex = 11
-            Me.lbOptOriginRayL.Tag = "6"
-            Me.lbOptOriginRayL.Text = "ϴ"
+            Me.LbOptOriginRayL.AutoSize = True
+            Me.LbOptOriginRayL.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptOriginRayL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptOriginRayL.Location = New System.Drawing.Point(6, 7)
+            Me.LbOptOriginRayL.Name = "LbOptOriginRayL"
+            Me.LbOptOriginRayL.Size = New System.Drawing.Size(28, 28)
+            Me.LbOptOriginRayL.TabIndex = 11
+            Me.LbOptOriginRayL.Tag = "6"
+            Me.LbOptOriginRayL.Text = "ϴ"
             '
-            'pnlOptPolar
+            'PnlOptPolar
             '
-            Me.pnlOptPolar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlOptPolar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlOptPolar.Controls.Add(Me.lbOptPolarR)
-            Me.pnlOptPolar.Controls.Add(Me.lbOptPolarL)
-            Me.pnlOptPolar.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.pnlOptPolar.Location = New System.Drawing.Point(0, 135)
-            Me.pnlOptPolar.Name = "pnlOptPolar"
-            Me.pnlOptPolar.Size = New System.Drawing.Size(226, 45)
-            Me.pnlOptPolar.TabIndex = 10
-            Me.pnlOptPolar.Tag = "4"
+            Me.PnlOptPolar.Controls.Add(Me.LbOptPolarR)
+            Me.PnlOptPolar.Controls.Add(Me.LbOptPolarL)
+            Me.PnlOptPolar.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.PnlOptPolar.Location = New System.Drawing.Point(0, 135)
+            Me.PnlOptPolar.Name = "PnlOptPolar"
+            Me.PnlOptPolar.Size = New System.Drawing.Size(226, 45)
+            Me.PnlOptPolar.TabIndex = 10
+            Me.PnlOptPolar.Tag = "4"
             '
-            'lbOptPolarR
+            'LbOptPolarR
             '
-            Me.lbOptPolarR.AutoSize = True
-            Me.lbOptPolarR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptPolarR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.lbOptPolarR.Location = New System.Drawing.Point(164, 9)
-            Me.lbOptPolarR.Name = "lbOptPolarR"
-            Me.lbOptPolarR.Size = New System.Drawing.Size(55, 26)
-            Me.lbOptPolarR.TabIndex = 11
-            Me.lbOptPolarR.Tag = "4"
-            Me.lbOptPolarR.Text = "Polar"
+            Me.LbOptPolarR.AutoSize = True
+            Me.LbOptPolarR.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptPolarR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptPolarR.Location = New System.Drawing.Point(164, 9)
+            Me.LbOptPolarR.Name = "LbOptPolarR"
+            Me.LbOptPolarR.Size = New System.Drawing.Size(55, 26)
+            Me.LbOptPolarR.TabIndex = 11
+            Me.LbOptPolarR.Tag = "4"
+            Me.LbOptPolarR.Text = "Polar"
             '
-            'lbOptPolarL
+            'LbOptPolarL
             '
-            Me.lbOptPolarL.AutoSize = True
-            Me.lbOptPolarL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptPolarL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-            Me.lbOptPolarL.Location = New System.Drawing.Point(7, 7)
-            Me.lbOptPolarL.Name = "lbOptPolarL"
-            Me.lbOptPolarL.Size = New System.Drawing.Size(40, 28)
-            Me.lbOptPolarL.TabIndex = 10
-            Me.lbOptPolarL.Tag = "4"
-            Me.lbOptPolarL.Text = "r(t)"
+            Me.LbOptPolarL.AutoSize = True
+            Me.LbOptPolarL.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptPolarL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptPolarL.Location = New System.Drawing.Point(7, 7)
+            Me.LbOptPolarL.Name = "LbOptPolarL"
+            Me.LbOptPolarL.Size = New System.Drawing.Size(40, 28)
+            Me.LbOptPolarL.TabIndex = 10
+            Me.LbOptPolarL.Tag = "4"
+            Me.LbOptPolarL.Text = "r(t)"
             '
-            'pnlOptParametric
+            'PnlOptParametric
             '
-            Me.pnlOptParametric.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlOptParametric.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlOptParametric.Controls.Add(Me.lbOptParametricR)
-            Me.pnlOptParametric.Controls.Add(Me.lbOptParametricL)
-            Me.pnlOptParametric.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.pnlOptParametric.Location = New System.Drawing.Point(0, 90)
-            Me.pnlOptParametric.Name = "pnlOptParametric"
-            Me.pnlOptParametric.Size = New System.Drawing.Size(226, 45)
-            Me.pnlOptParametric.TabIndex = 9
-            Me.pnlOptParametric.Tag = "3"
+            Me.PnlOptParametric.Controls.Add(Me.LbOptParametricR)
+            Me.PnlOptParametric.Controls.Add(Me.LbOptParametricL)
+            Me.PnlOptParametric.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.PnlOptParametric.Location = New System.Drawing.Point(0, 90)
+            Me.PnlOptParametric.Name = "PnlOptParametric"
+            Me.PnlOptParametric.Size = New System.Drawing.Size(226, 45)
+            Me.PnlOptParametric.TabIndex = 9
+            Me.PnlOptParametric.Tag = "3"
             '
-            'lbOptParametricR
+            'LbOptParametricR
             '
-            Me.lbOptParametricR.AutoSize = True
-            Me.lbOptParametricR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptParametricR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.lbOptParametricR.Location = New System.Drawing.Point(113, 9)
-            Me.lbOptParametricR.Name = "lbOptParametricR"
-            Me.lbOptParametricR.Size = New System.Drawing.Size(103, 26)
-            Me.lbOptParametricR.TabIndex = 10
-            Me.lbOptParametricR.Tag = "3"
-            Me.lbOptParametricR.Text = "Parametric"
+            Me.LbOptParametricR.AutoSize = True
+            Me.LbOptParametricR.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptParametricR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptParametricR.Location = New System.Drawing.Point(113, 9)
+            Me.LbOptParametricR.Name = "LbOptParametricR"
+            Me.LbOptParametricR.Size = New System.Drawing.Size(103, 26)
+            Me.LbOptParametricR.TabIndex = 10
+            Me.LbOptParametricR.Tag = "3"
+            Me.LbOptParametricR.Text = "Parametric"
             '
-            'lbOptParametricL
+            'LbOptParametricL
             '
-            Me.lbOptParametricL.AutoSize = True
-            Me.lbOptParametricL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptParametricL.Font = New System.Drawing.Font(OpenSans, 13.75!)
-            Me.lbOptParametricL.Location = New System.Drawing.Point(5, 10)
-            Me.lbOptParametricL.Name = "lbOptParametricL"
-            Me.lbOptParametricL.Size = New System.Drawing.Size(102, 26)
-            Me.lbOptParametricL.TabIndex = 9
-            Me.lbOptParametricL.Tag = "3"
-            Me.lbOptParametricL.Text = "<x(t), y(t)>"
+            Me.LbOptParametricL.AutoSize = True
+            Me.LbOptParametricL.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptParametricL.Font = New System.Drawing.Font(OpenSans, 13.75!)
+            Me.LbOptParametricL.Location = New System.Drawing.Point(5, 10)
+            Me.LbOptParametricL.Name = "LbOptParametricL"
+            Me.LbOptParametricL.Size = New System.Drawing.Size(102, 26)
+            Me.LbOptParametricL.TabIndex = 9
+            Me.LbOptParametricL.Tag = "3"
+            Me.LbOptParametricL.Text = "<x(t), y(t)>"
             '
-            'pnlOptCartesian
+            'PnlOptCartesian
             '
-            Me.pnlOptCartesian.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlOptCartesian.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlOptCartesian.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
-            Me.pnlOptCartesian.Controls.Add(Me.lbOptCartesianR)
-            Me.pnlOptCartesian.Controls.Add(Me.lbOptCartesianL)
-            Me.pnlOptCartesian.Cursor = System.Windows.Forms.Cursors.Arrow
-            Me.pnlOptCartesian.Location = New System.Drawing.Point(0, 0)
-            Me.pnlOptCartesian.Name = "pnlOptCartesian"
-            Me.pnlOptCartesian.Size = New System.Drawing.Size(226, 45)
-            Me.pnlOptCartesian.TabIndex = 8
-            Me.pnlOptCartesian.Tag = "1"
+            Me.PnlOptCartesian.BackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
+            Me.PnlOptCartesian.Controls.Add(Me.LbOptCartesianR)
+            Me.PnlOptCartesian.Controls.Add(Me.LbOptCartesianL)
+            Me.PnlOptCartesian.Cursor = System.Windows.Forms.Cursors.Arrow
+            Me.PnlOptCartesian.Location = New System.Drawing.Point(0, 0)
+            Me.PnlOptCartesian.Name = "PnlOptCartesian"
+            Me.PnlOptCartesian.Size = New System.Drawing.Size(226, 45)
+            Me.PnlOptCartesian.TabIndex = 8
+            Me.PnlOptCartesian.Tag = "1"
             '
-            'lbOptCartesianR
+            'LbOptCartesianR
             '
-            Me.lbOptCartesianR.AutoSize = True
-            Me.lbOptCartesianR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptCartesianR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.lbOptCartesianR.Location = New System.Drawing.Point(124, 9)
-            Me.lbOptCartesianR.Name = "lbOptCartesianR"
-            Me.lbOptCartesianR.Size = New System.Drawing.Size(91, 26)
-            Me.lbOptCartesianR.TabIndex = 9
-            Me.lbOptCartesianR.Tag = "1"
-            Me.lbOptCartesianR.Text = "Cartesian"
+            Me.LbOptCartesianR.AutoSize = True
+            Me.LbOptCartesianR.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptCartesianR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptCartesianR.Location = New System.Drawing.Point(124, 9)
+            Me.LbOptCartesianR.Name = "LbOptCartesianR"
+            Me.LbOptCartesianR.Size = New System.Drawing.Size(91, 26)
+            Me.LbOptCartesianR.TabIndex = 9
+            Me.LbOptCartesianR.Tag = "1"
+            Me.LbOptCartesianR.Text = "Cartesian"
             '
-            'lbOptCartesianL
+            'LbOptCartesianL
             '
-            Me.lbOptCartesianL.AutoSize = True
-            Me.lbOptCartesianL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptCartesianL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-            Me.lbOptCartesianL.Location = New System.Drawing.Point(7, 7)
-            Me.lbOptCartesianL.Name = "lbOptCartesianL"
-            Me.lbOptCartesianL.Size = New System.Drawing.Size(75, 28)
-            Me.lbOptCartesianL.TabIndex = 8
-            Me.lbOptCartesianL.Tag = "1"
-            Me.lbOptCartesianL.Text = "y = f(x)"
+            Me.LbOptCartesianL.AutoSize = True
+            Me.LbOptCartesianL.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptCartesianL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptCartesianL.Location = New System.Drawing.Point(7, 7)
+            Me.LbOptCartesianL.Name = "LbOptCartesianL"
+            Me.LbOptCartesianL.Size = New System.Drawing.Size(75, 28)
+            Me.LbOptCartesianL.TabIndex = 8
+            Me.LbOptCartesianL.Tag = "1"
+            Me.LbOptCartesianL.Text = "y = f(x)"
             '
-            'pnlOptDifferential
+            'PnlOptDifferential
             '
-            Me.pnlOptDifferential.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Me.PnlOptDifferential.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.pnlOptDifferential.Controls.Add(Me.lbOptDifferentialR)
-            Me.pnlOptDifferential.Controls.Add(Me.lbOptDifferentialL)
-            Me.pnlOptDifferential.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.pnlOptDifferential.Location = New System.Drawing.Point(0, 180)
-            Me.pnlOptDifferential.Name = "pnlOptDifferential"
-            Me.pnlOptDifferential.Size = New System.Drawing.Size(226, 45)
-            Me.pnlOptDifferential.TabIndex = 11
-            Me.pnlOptDifferential.Tag = "5"
+            Me.PnlOptDifferential.Controls.Add(Me.LbOptDifferentialR)
+            Me.PnlOptDifferential.Controls.Add(Me.LbOptDifferentialL)
+            Me.PnlOptDifferential.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.PnlOptDifferential.Location = New System.Drawing.Point(0, 180)
+            Me.PnlOptDifferential.Name = "PnlOptDifferential"
+            Me.PnlOptDifferential.Size = New System.Drawing.Size(226, 45)
+            Me.PnlOptDifferential.TabIndex = 11
+            Me.PnlOptDifferential.Tag = "5"
             '
-            'lbOptDifferentialR
+            'LbOptDifferentialR
             '
-            Me.lbOptDifferentialR.AutoSize = True
-            Me.lbOptDifferentialR.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptDifferentialR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.lbOptDifferentialR.Location = New System.Drawing.Point(113, 10)
-            Me.lbOptDifferentialR.Name = "lbOptDifferentialR"
-            Me.lbOptDifferentialR.Size = New System.Drawing.Size(102, 26)
-            Me.lbOptDifferentialR.TabIndex = 12
-            Me.lbOptDifferentialR.Tag = "5"
-            Me.lbOptDifferentialR.Text = "Differential"
+            Me.LbOptDifferentialR.AutoSize = True
+            Me.LbOptDifferentialR.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptDifferentialR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptDifferentialR.Location = New System.Drawing.Point(113, 10)
+            Me.LbOptDifferentialR.Name = "LbOptDifferentialR"
+            Me.LbOptDifferentialR.Size = New System.Drawing.Size(102, 26)
+            Me.LbOptDifferentialR.TabIndex = 12
+            Me.LbOptDifferentialR.Tag = "5"
+            Me.LbOptDifferentialR.Text = "Differential"
             '
-            'lbOptDifferentialL
+            'LbOptDifferentialL
             '
-            Me.lbOptDifferentialL.AutoSize = True
-            Me.lbOptDifferentialL.BackColor = System.Drawing.Color.Transparent
-            Me.lbOptDifferentialL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-            Me.lbOptDifferentialL.Location = New System.Drawing.Point(6, 8)
-            Me.lbOptDifferentialL.Name = "lbOptDifferentialL"
-            Me.lbOptDifferentialL.Size = New System.Drawing.Size(73, 28)
-            Me.lbOptDifferentialL.TabIndex = 11
-            Me.lbOptDifferentialL.Tag = "5"
-            Me.lbOptDifferentialL.Text = "dy/dx "
+            Me.LbOptDifferentialL.AutoSize = True
+            Me.LbOptDifferentialL.BackColor = System.Drawing.Color.Transparent
+            Me.LbOptDifferentialL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptDifferentialL.Location = New System.Drawing.Point(6, 8)
+            Me.LbOptDifferentialL.Name = "LbOptDifferentialL"
+            Me.LbOptDifferentialL.Size = New System.Drawing.Size(73, 28)
+            Me.LbOptDifferentialL.TabIndex = 11
+            Me.LbOptDifferentialL.Tag = "5"
+            Me.LbOptDifferentialL.Text = "dy/dx "
             '
-            'lbFnType
+            'LbFnType
             '
-            Me.lbFnType.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-            Me.lbFnType.AutoSize = True
-            Me.lbFnType.Location = New System.Drawing.Point(8, 284)
-            Me.lbFnType.Name = "lbFnType"
-            Me.lbFnType.Size = New System.Drawing.Size(117, 19)
-            Me.lbFnType.TabIndex = 8
-            Me.lbFnType.Text = "Function Options"
+            Me.LbFnType.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+            Me.LbFnType.AutoSize = True
+            Me.LbFnType.Location = New System.Drawing.Point(8, 284)
+            Me.LbFnType.Name = "LbFnType"
+            Me.LbFnType.Size = New System.Drawing.Size(117, 19)
+            Me.LbFnType.TabIndex = 8
+            Me.LbFnType.Text = "Function Options"
             '
             'tmrDelayRedraw
             '
@@ -912,101 +911,101 @@
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.AutoSize = True
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-            Me.Controls.Add(Me.pnlFnType)
-            Me.Controls.Add(Me.split)
+            Me.Controls.Add(Me.PnlFnType)
+            Me.Controls.Add(Me.Split)
             Me.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
             Me.ForeColor = System.Drawing.Color.White
             Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
             Me.Name = "GraphingSystem"
             Me.Size = New System.Drawing.Size(984, 661)
-            Me.split.Panel1.ResumeLayout(False)
-            Me.split.Panel2.ResumeLayout(False)
-            CType(Me.split, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.split.ResumeLayout(False)
-            Me.pnlWindow.ResumeLayout(False)
-            Me.pnlWindow.PerformLayout()
-            Me.pnlWHeader.ResumeLayout(False)
-            Me.pnlWHeader.PerformLayout()
-            Me.pnlTrace.ResumeLayout(False)
-            Me.pnlTrace.PerformLayout()
-            CType(Me.canvas, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlInput.ResumeLayout(False)
-            Me.pnlInput.PerformLayout()
-            Me.pnlFnType.ResumeLayout(False)
-            Me.pnlFnType.PerformLayout()
-            Me.pnlFnTypeSelector.ResumeLayout(False)
-            Me.pnlOptInverse.ResumeLayout(False)
-            Me.pnlOptInverse.PerformLayout()
-            Me.pnlOptOriginRay.ResumeLayout(False)
-            Me.pnlOptOriginRay.PerformLayout()
-            Me.pnlOptPolar.ResumeLayout(False)
-            Me.pnlOptPolar.PerformLayout()
-            Me.pnlOptParametric.ResumeLayout(False)
-            Me.pnlOptParametric.PerformLayout()
-            Me.pnlOptCartesian.ResumeLayout(False)
-            Me.pnlOptCartesian.PerformLayout()
-            Me.pnlOptDifferential.ResumeLayout(False)
-            Me.pnlOptDifferential.PerformLayout()
+            Me.Split.Panel1.ResumeLayout(False)
+            Me.Split.Panel2.ResumeLayout(False)
+            CType(Me.Split, System.ComponentModel.ISupportInitialize).EndInit()
+            Me.Split.ResumeLayout(False)
+            Me.PnlWindow.ResumeLayout(False)
+            Me.PnlWindow.PerformLayout()
+            Me.PnlWHeader.ResumeLayout(False)
+            Me.PnlWHeader.PerformLayout()
+            Me.PnlTrace.ResumeLayout(False)
+            Me.PnlTrace.PerformLayout()
+            CType(Me.Canvas, System.ComponentModel.ISupportInitialize).EndInit()
+            Me.PnlInput.ResumeLayout(False)
+            Me.PnlInput.PerformLayout()
+            Me.PnlFnType.ResumeLayout(False)
+            Me.PnlFnType.PerformLayout()
+            Me.PnlFnTypeSelector.ResumeLayout(False)
+            Me.PnlOptInverse.ResumeLayout(False)
+            Me.PnlOptInverse.PerformLayout()
+            Me.PnlOptOriginRay.ResumeLayout(False)
+            Me.PnlOptOriginRay.PerformLayout()
+            Me.PnlOptPolar.ResumeLayout(False)
+            Me.PnlOptPolar.PerformLayout()
+            Me.PnlOptParametric.ResumeLayout(False)
+            Me.PnlOptParametric.PerformLayout()
+            Me.PnlOptCartesian.ResumeLayout(False)
+            Me.PnlOptCartesian.PerformLayout()
+            Me.PnlOptDifferential.ResumeLayout(False)
+            Me.PnlOptDifferential.PerformLayout()
             Me.ResumeLayout(False)
 
         End Sub
 
-        Friend WithEvents split As SplitContainer
-        Friend WithEvents btnAdd As Button
-        Friend WithEvents btnGraph As Button
-        Friend WithEvents tb As TextBox
-        Friend WithEvents pnlInput As Panel
-        Friend WithEvents lbFx As Label
-        Friend WithEvents canvas As PictureBox
-        Friend WithEvents btnTrace As Button
-        Friend WithEvents lbTVal As Label
-        Friend WithEvents npdTVal As TextBox
-        Friend WithEvents tmrTraceUpdate As Timer
-        Friend WithEvents btnTNext As Button
-        Friend WithEvents btnScale As Button
-        Friend WithEvents tmrDrag As Timer
+        Friend WithEvents Split As SplitContainer
+        Friend WithEvents BtnAdd As Button
+        Friend WithEvents BtnGraph As Button
+        Friend WithEvents Tb As TextBox
+        Friend WithEvents PnlInput As Panel
+        Friend WithEvents LbFx As Label
+        Friend WithEvents Canvas As PictureBox
+        Friend WithEvents BtnTrace As Button
+        Friend WithEvents LbTVal As Label
+        Friend WithEvents NpdTVal As TextBox
+        Friend WithEvents TmrTraceUpdate As Timer
+        Friend WithEvents BtnTNext As Button
+        Friend WithEvents BtnScale As Button
+        Friend WithEvents TmrDrag As Timer
         Friend WithEvents tt As ToolTip
-        Friend WithEvents btnNextFn As Button
-        Friend WithEvents btnPrevFn As Button
-        Friend WithEvents pnlFnType As Panel
-        Friend WithEvents pnlFnTypeSelector As Panel
-        Friend WithEvents lbFnType As Label
-        Friend WithEvents btnFnDel As Button
-        Friend WithEvents pnlOptPolar As Panel
-        Friend WithEvents pnlOptParametric As Panel
-        Friend WithEvents pnlOptCartesian As Panel
-        Friend WithEvents lbOptPolarR As Label
-        Friend WithEvents lbOptPolarL As Label
-        Friend WithEvents lbOptParametricR As Label
-        Friend WithEvents lbOptParametricL As Label
-        Friend WithEvents lbOptCartesianR As Label
-        Friend WithEvents lbOptCartesianL As Label
-        Friend WithEvents pnlOptDifferential As Panel
-        Friend WithEvents lbOptDifferentialR As Label
-        Friend WithEvents lbOptDifferentialL As Label
-        Friend WithEvents pnlWindow As Panel
-        Friend WithEvents lbWLft As Label
-        Friend WithEvents tbWLft As TextBox
-        Friend WithEvents lbWRht As Label
-        Friend WithEvents tbWRht As TextBox
-        Friend WithEvents lbWBot As Label
-        Friend WithEvents tbWBot As TextBox
-        Friend WithEvents lbWTop As Label
-        Friend WithEvents tbWTop As TextBox
-        Friend WithEvents lbWindow As Label
-        Friend WithEvents btnWOK As Button
-        Friend WithEvents btnWCancel As Button
-        Friend WithEvents pnlWHeader As Panel
-        Friend WithEvents btnWClose As Button
-        Friend WithEvents lbWLogo As Label
-        Friend WithEvents pnlTrace As Panel
-        Friend WithEvents pnlOptOriginRay As Panel
-        Friend WithEvents lbOptOriginRayL As Label
-        Friend WithEvents lbOptOriginRayR As Label
-        Friend WithEvents pnlOptInverse As Panel
-        Friend WithEvents lbOptInverseR As Label
-        Friend WithEvents lbOptInverseL As Label
-        Friend WithEvents lbTrace As Label
+        Friend WithEvents BtnNextFn As Button
+        Friend WithEvents BtnPrevFn As Button
+        Friend WithEvents PnlFnType As Panel
+        Friend WithEvents PnlFnTypeSelector As Panel
+        Friend WithEvents LbFnType As Label
+        Friend WithEvents BtnFnDel As Button
+        Friend WithEvents PnlOptPolar As Panel
+        Friend WithEvents PnlOptParametric As Panel
+        Friend WithEvents PnlOptCartesian As Panel
+        Friend WithEvents LbOptPolarR As Label
+        Friend WithEvents LbOptPolarL As Label
+        Friend WithEvents LbOptParametricR As Label
+        Friend WithEvents LbOptParametricL As Label
+        Friend WithEvents LbOptCartesianR As Label
+        Friend WithEvents LbOptCartesianL As Label
+        Friend WithEvents PnlOptDifferential As Panel
+        Friend WithEvents LbOptDifferentialR As Label
+        Friend WithEvents LbOptDifferentialL As Label
+        Friend WithEvents PnlWindow As Panel
+        Friend WithEvents LbWLft As Label
+        Friend WithEvents TbWLft As TextBox
+        Friend WithEvents LbWRht As Label
+        Friend WithEvents TbWRht As TextBox
+        Friend WithEvents LbWBot As Label
+        Friend WithEvents TbWBot As TextBox
+        Friend WithEvents LbWTop As Label
+        Friend WithEvents TbWTop As TextBox
+        Friend WithEvents LbWindow As Label
+        Friend WithEvents BtnWOK As Button
+        Friend WithEvents BtnWCancel As Button
+        Friend WithEvents PnlWHeader As Panel
+        Friend WithEvents BtnWClose As Button
+        Friend WithEvents LbWLogo As Label
+        Friend WithEvents PnlTrace As Panel
+        Friend WithEvents PnlOptOriginRay As Panel
+        Friend WithEvents LbOptOriginRayL As Label
+        Friend WithEvents LbOptOriginRayR As Label
+        Friend WithEvents PnlOptInverse As Panel
+        Friend WithEvents LbOptInverseR As Label
+        Friend WithEvents LbOptInverseL As Label
+        Friend WithEvents LbTrace As Label
         Friend WithEvents tmrDelayRedraw As Timer
         Friend WithEvents DrawWorker As System.ComponentModel.BackgroundWorker
         Friend WithEvents TmrStart As Timer

@@ -24,15 +24,15 @@
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.bw = New System.ComponentModel.BackgroundWorker()
-            Me.btnCancel = New System.Windows.Forms.Button()
-            Me.lbStep = New System.Windows.Forms.Label()
-            Me.lbTitle = New System.Windows.Forms.Label()
-            Me.lbFile = New System.Windows.Forms.Label()
+            Me.BtnCancel = New System.Windows.Forms.Button()
+            Me.LbStep = New System.Windows.Forms.Label()
+            Me.LbTitle = New System.Windows.Forms.Label()
+            Me.LbFile = New System.Windows.Forms.Label()
             Me.logo = New System.Windows.Forms.PictureBox()
-            Me.lbVer = New System.Windows.Forms.Label()
-            Me.lbDlSize = New System.Windows.Forms.Label()
-            Me.lbSpeed = New System.Windows.Forms.Label()
-            Me.lbTSize = New System.Windows.Forms.Label()
+            Me.LbVer = New System.Windows.Forms.Label()
+            Me.LbDlSize = New System.Windows.Forms.Label()
+            Me.LbSpeed = New System.Windows.Forms.Label()
+            Me.LbTSize = New System.Windows.Forms.Label()
             Me.pb = New Cantus.UI.UserControls.FlatProgressBar()
             CType(Me.logo, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SuspendLayout()
@@ -42,58 +42,58 @@
             Me.bw.WorkerReportsProgress = True
             Me.bw.WorkerSupportsCancellation = True
             '
-            'btnCancel
+            'BtnCancel
             '
-            Me.btnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnCancel.FlatAppearance.BorderSize = 0
-            Me.btnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-            Me.btnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCancel.ForeColor = System.Drawing.Color.White
-            Me.btnCancel.Location = New System.Drawing.Point(625, 257)
-            Me.btnCancel.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
-            Me.btnCancel.Name = "btnCancel"
-            Me.btnCancel.Size = New System.Drawing.Size(130, 40)
-            Me.btnCancel.TabIndex = 20
-            Me.btnCancel.Text = "Cancel"
-            Me.btnCancel.UseVisualStyleBackColor = False
+            Me.BtnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCancel.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnCancel.FlatAppearance.BorderSize = 0
+            Me.BtnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+            Me.BtnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnCancel.ForeColor = System.Drawing.Color.White
+            Me.BtnCancel.Location = New System.Drawing.Point(625, 257)
+            Me.BtnCancel.Margin = New System.Windows.Forms.Padding(32, 14, 32, 14)
+            Me.BtnCancel.Name = "BtnCancel"
+            Me.BtnCancel.Size = New System.Drawing.Size(130, 40)
+            Me.BtnCancel.TabIndex = 20
+            Me.BtnCancel.Text = "Cancel"
+            Me.BtnCancel.UseVisualStyleBackColor = False
             '
-            'lbStep
+            'LbStep
             '
-            Me.lbStep.AutoSize = True
-            Me.lbStep.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbStep.ForeColor = System.Drawing.Color.White
-            Me.lbStep.Location = New System.Drawing.Point(447, 142)
-            Me.lbStep.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
-            Me.lbStep.Name = "lbStep"
-            Me.lbStep.Size = New System.Drawing.Size(50, 22)
-            Me.lbStep.TabIndex = 22
-            Me.lbStep.Text = "1 of 1"
+            Me.LbStep.AutoSize = True
+            Me.LbStep.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbStep.ForeColor = System.Drawing.Color.White
+            Me.LbStep.Location = New System.Drawing.Point(447, 142)
+            Me.LbStep.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
+            Me.LbStep.Name = "LbStep"
+            Me.LbStep.Size = New System.Drawing.Size(50, 22)
+            Me.LbStep.TabIndex = 22
+            Me.LbStep.Text = "1 of 1"
             '
-            'lbTitle
+            'LbTitle
             '
-            Me.lbTitle.AutoSize = True
-            Me.lbTitle.Font = New System.Drawing.Font(OpenSans, 14.25!)
-            Me.lbTitle.ForeColor = System.Drawing.Color.White
-            Me.lbTitle.Location = New System.Drawing.Point(99, 30)
-            Me.lbTitle.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
-            Me.lbTitle.Name = "lbTitle"
-            Me.lbTitle.Size = New System.Drawing.Size(155, 26)
-            Me.lbTitle.TabIndex = 14
-            Me.lbTitle.Text = "Cantus Updater"
+            Me.LbTitle.AutoSize = True
+            Me.LbTitle.Font = New System.Drawing.Font(OpenSans, 14.25!)
+            Me.LbTitle.ForeColor = System.Drawing.Color.White
+            Me.LbTitle.Location = New System.Drawing.Point(99, 30)
+            Me.LbTitle.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
+            Me.LbTitle.Name = "LbTitle"
+            Me.LbTitle.Size = New System.Drawing.Size(155, 26)
+            Me.LbTitle.TabIndex = 14
+            Me.LbTitle.Text = "Cantus Updater"
             '
-            'lbFile
+            'LbFile
             '
-            Me.lbFile.AutoSize = True
-            Me.lbFile.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbFile.ForeColor = System.Drawing.Color.White
-            Me.lbFile.Location = New System.Drawing.Point(447, 113)
-            Me.lbFile.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
-            Me.lbFile.Name = "lbFile"
-            Me.lbFile.Size = New System.Drawing.Size(86, 22)
-            Me.lbFile.TabIndex = 21
-            Me.lbFile.Text = "cantus.exe"
+            Me.LbFile.AutoSize = True
+            Me.LbFile.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbFile.ForeColor = System.Drawing.Color.White
+            Me.LbFile.Location = New System.Drawing.Point(447, 113)
+            Me.LbFile.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
+            Me.LbFile.Name = "LbFile"
+            Me.LbFile.Size = New System.Drawing.Size(86, 22)
+            Me.LbFile.TabIndex = 21
+            Me.LbFile.Text = "cantus.exe"
             '
             'logo
             '
@@ -104,53 +104,53 @@
             Me.logo.TabIndex = 15
             Me.logo.TabStop = False
             '
-            'lbVer
+            'LbVer
             '
-            Me.lbVer.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbVer.ForeColor = System.Drawing.Color.White
-            Me.lbVer.Location = New System.Drawing.Point(63, 91)
-            Me.lbVer.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
-            Me.lbVer.Name = "lbVer"
-            Me.lbVer.Size = New System.Drawing.Size(259, 21)
-            Me.lbVer.TabIndex = 16
-            Me.lbVer.Text = "Version"
-            Me.lbVer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.LbVer.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbVer.ForeColor = System.Drawing.Color.White
+            Me.LbVer.Location = New System.Drawing.Point(63, 91)
+            Me.LbVer.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
+            Me.LbVer.Name = "LbVer"
+            Me.LbVer.Size = New System.Drawing.Size(259, 21)
+            Me.LbVer.TabIndex = 16
+            Me.LbVer.Text = "Version"
+            Me.LbVer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
-            'lbDlSize
+            'LbDlSize
             '
-            Me.lbDlSize.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbDlSize.ForeColor = System.Drawing.Color.White
-            Me.lbDlSize.Location = New System.Drawing.Point(63, 138)
-            Me.lbDlSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
-            Me.lbDlSize.Name = "lbDlSize"
-            Me.lbDlSize.Size = New System.Drawing.Size(259, 29)
-            Me.lbDlSize.TabIndex = 19
-            Me.lbDlSize.Text = "Downloaded Size"
-            Me.lbDlSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.LbDlSize.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbDlSize.ForeColor = System.Drawing.Color.White
+            Me.LbDlSize.Location = New System.Drawing.Point(63, 138)
+            Me.LbDlSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
+            Me.LbDlSize.Name = "LbDlSize"
+            Me.LbDlSize.Size = New System.Drawing.Size(259, 29)
+            Me.LbDlSize.TabIndex = 19
+            Me.LbDlSize.Text = "Downloaded Size"
+            Me.LbDlSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
-            'lbSpeed
+            'LbSpeed
             '
-            Me.lbSpeed.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbSpeed.ForeColor = System.Drawing.Color.White
-            Me.lbSpeed.Location = New System.Drawing.Point(67, 113)
-            Me.lbSpeed.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
-            Me.lbSpeed.Name = "lbSpeed"
-            Me.lbSpeed.Size = New System.Drawing.Size(255, 29)
-            Me.lbSpeed.TabIndex = 17
-            Me.lbSpeed.Text = "Speed"
-            Me.lbSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.LbSpeed.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbSpeed.ForeColor = System.Drawing.Color.White
+            Me.LbSpeed.Location = New System.Drawing.Point(67, 113)
+            Me.LbSpeed.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
+            Me.LbSpeed.Name = "LbSpeed"
+            Me.LbSpeed.Size = New System.Drawing.Size(255, 29)
+            Me.LbSpeed.TabIndex = 17
+            Me.LbSpeed.Text = "Speed"
+            Me.LbSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
-            'lbTSize
+            'LbTSize
             '
-            Me.lbTSize.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
-            Me.lbTSize.ForeColor = System.Drawing.Color.White
-            Me.lbTSize.Location = New System.Drawing.Point(59, 163)
-            Me.lbTSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
-            Me.lbTSize.Name = "lbTSize"
-            Me.lbTSize.Size = New System.Drawing.Size(263, 29)
-            Me.lbTSize.TabIndex = 18
-            Me.lbTSize.Text = "Total Size"
-            Me.lbTSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.LbTSize.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbTSize.ForeColor = System.Drawing.Color.White
+            Me.LbTSize.Location = New System.Drawing.Point(59, 163)
+            Me.LbTSize.Margin = New System.Windows.Forms.Padding(32, 0, 32, 0)
+            Me.LbTSize.Name = "LbTSize"
+            Me.LbTSize.Size = New System.Drawing.Size(263, 29)
+            Me.LbTSize.TabIndex = 18
+            Me.LbTSize.Text = "Total Size"
+            Me.LbTSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'pb
             '
@@ -172,15 +172,15 @@
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
             Me.ClientSize = New System.Drawing.Size(770, 309)
             Me.Controls.Add(Me.pb)
-            Me.Controls.Add(Me.btnCancel)
-            Me.Controls.Add(Me.lbStep)
-            Me.Controls.Add(Me.lbTitle)
-            Me.Controls.Add(Me.lbFile)
+            Me.Controls.Add(Me.BtnCancel)
+            Me.Controls.Add(Me.LbStep)
+            Me.Controls.Add(Me.LbTitle)
+            Me.Controls.Add(Me.LbFile)
             Me.Controls.Add(Me.logo)
-            Me.Controls.Add(Me.lbVer)
-            Me.Controls.Add(Me.lbDlSize)
-            Me.Controls.Add(Me.lbSpeed)
-            Me.Controls.Add(Me.lbTSize)
+            Me.Controls.Add(Me.LbVer)
+            Me.Controls.Add(Me.LbDlSize)
+            Me.Controls.Add(Me.LbSpeed)
+            Me.Controls.Add(Me.LbTSize)
             Me.Font = New System.Drawing.Font(OpenSans, 12.0!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
             Me.Margin = New System.Windows.Forms.Padding(43, 23, 43, 23)
@@ -194,15 +194,15 @@
         End Sub
         Friend WithEvents bw As System.ComponentModel.BackgroundWorker
         Friend WithEvents pb As UI.UserControls.FlatProgressBar
-        Friend WithEvents btnCancel As System.Windows.Forms.Button
-        Friend WithEvents lbStep As System.Windows.Forms.Label
-        Friend WithEvents lbTitle As System.Windows.Forms.Label
-        Friend WithEvents lbFile As System.Windows.Forms.Label
+        Friend WithEvents BtnCancel As System.Windows.Forms.Button
+        Friend WithEvents LbStep As System.Windows.Forms.Label
+        Friend WithEvents LbTitle As System.Windows.Forms.Label
+        Friend WithEvents LbFile As System.Windows.Forms.Label
         Friend WithEvents logo As System.Windows.Forms.PictureBox
-        Friend WithEvents lbVer As System.Windows.Forms.Label
-        Friend WithEvents lbDlSize As System.Windows.Forms.Label
-        Friend WithEvents lbSpeed As System.Windows.Forms.Label
-        Friend WithEvents lbTSize As System.Windows.Forms.Label
+        Friend WithEvents LbVer As System.Windows.Forms.Label
+        Friend WithEvents LbDlSize As System.Windows.Forms.Label
+        Friend WithEvents LbSpeed As System.Windows.Forms.Label
+        Friend WithEvents LbTSize As System.Windows.Forms.Label
 
     End Class
 End Namespace

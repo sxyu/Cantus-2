@@ -118,47 +118,57 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnScale.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="BtnScale.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        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
+        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
 </value>
   </data>
   <metadata name="tt.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>440, 16</value>
+    <value>400, 17</value>
   </metadata>
-  <data name="lbWLogo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="LbWLogo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAACYAAAAkCAYAAADl9UilAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EwAACxMBAJqcGAAAAURJREFUWEftltENhCAMht1FBmINF2AZnm8MVnGVHgW9g7sfj4IXfaDJF5NqQv0o
-        1YmIAhzLskzzPN/imhXGybuQBXrgCoKxXd/dgMmrGcakDGNShjEppxjTdvUfDkdGKUL3W4FJCcb5umgl
-        q88rTGws2HGGoqVSeHva+lL7ioVJhFL6YVxS0GpJK/XIngkFbbFygW2FtRnjNa0uLqiU8c44+voOJhGv
-        Bf1Wovspu7mjFzhCZEzFLvd1/bbA2x7kgu2uBSZTXouE+G7ord6vgtMDUvMyKVXGjgpL731uW09hDEwi
-        4lbWj4Bosu0AyHpsHwU1zS84KCVgskTtlK99roTIGJMOUNQ3WT922GJgEvEeAY7SDwAK54KypqZnxMZS
-        8tMao3WgImBSQhwL5/72dBn7NzB5NcOYlGFMyjAmJTN2r+s8PQEVBLyTt95HBwAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAACYAAAAkCAYAAADl9UilAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAACxMAAAsTAQCanBgAAAFESURBVFhH7ZbRDYQgDIbdRQZiDRdgGZ5vDFZxlR4FvYO7
+        H4+CF32gyReTakL9KNWJiAIcy7JM8zzf4poVxsm7kAV64AqCsV3f3YDJqxnGpAxjUoYxKacY03b1Hw5H
+        RilC91uBSQnG+bpoJavPK0xsLNhxhqKlUnh72vpS+4qFSYRS+mFcUtBqSSv1yJ4JBW2xcoFthbUZ4zWt
+        Li6olPHOOPr6DiYRrwX9VqL7Kbu5oxc4QmRMxS73df22wNse5ILtrgUmU16LhPhu6K3er4LTA1LzMilV
+        xo4KS+99bltPYQxMIuJW1o+AaLLtAMh6bB8FNc0vOCglYLJE7ZSvfa6EyBiTDlDUN1k/dthiYBLxHgGO
+        0g8ACueCsqamZ8TGUvLTGqN1oCJgUkIcC+f+9nQZ+zcweTXDmJRhTMowJiUzdq/rPD0BFQS8k7feRwcA
+        AAAASUVORK5CYII=
 </value>
   </data>
-  <metadata name="tmrTraceUpdate.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="TmrTraceUpdate.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="tmrDrag.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>141, 16</value>
+  <metadata name="TmrDrag.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>159, 17</value>
   </metadata>
   <metadata name="tmrDelayRedraw.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>263, 16</value>
+    <value>258, 17</value>
   </metadata>
   <metadata name="DrawWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>500, 16</value>
+    <value>460, 17</value>
   </metadata>
   <metadata name="TmrStart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>620, 16</value>
+    <value>580, 17</value>
   </metadata>
   <metadata name="TmrHighQuality.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>709, 16</value>
+    <value>678, 17</value>
   </metadata>
 </root>

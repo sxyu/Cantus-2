@@ -9,7 +9,7 @@ Credits
 *********************************************************************************************
 This project wouldn't have been possible without the following:
 
-Scintilla: Textbox with syntax matching, etc. by antoniolinares, johnsoonj, kapix93, 
+Scintilla: TexTbox with syntax matching, etc. by antoniolinares, johnsoonj, kapix93, 
 nyamatongwe, other contributors
 http://www.scintilla.org/
 License: http://www.scintilla.org/License.txt
@@ -25,7 +25,29 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.4.9.133
+What's new in 2.5.0.134
+*********************************************************************************************
+-Added OUTPUT, ANGLEREP, SPACESPERTAB, SIGFIGS, EXPLICIT internal variables:
+  SIGFIGS = true
+  OUTPUT = "raw"
+  # to set sigfigs mode with raw output
+
+-Added ans and 
+-_exit() function now renamed to exit(). Old name is deprecated. 
+
+-Fixed sig figs perservation when saving to a variable (bug from last version)
+-Fixed sig figs perservation with E and % operators
+
+-Fixed unary minus precedence 
+-^ (exponent) operator is now evaluated from right to left
+-Lambda functions execution now supports named arguments
+-Fixed lambda function execution precedence
+
+-Removed certain deprecated functions from long ago
+-Many minor fixes
+
+*********************************************************************************************
+New from 2.4.9.133
 *********************************************************************************************
 -Fixed oct() (octal conversion) function
 
@@ -39,7 +61,7 @@ New from 2.4.9.132
 -Fixed reference assignment
 
 -Added various reflection-related functions prefixed with _ (_functionexec(), _variableref(), etc.)
--Added factbigint() function for calculating factorials of larger integers
+-Added facTbigint() function for calculating factorials of larger integers
 
 -Virtual console buffer is now limited to 150 lines in length to avoid lag when many lines are
   available
@@ -225,7 +247,7 @@ New from 2.4.3.109
 *********************************************************************************************
 -Fixed a bug where the path of the cantus executable was incorrectly detected as the
   current console path
--Improved run() function to use a callback lambda function
+-Improved run() function to use a calLback lambda function
 -Hashset and set creation from lists no longer creates extra unnecessary references
 -basedir() function renamed to currentdir()
 -Added execdir() execpath() functions to identify the path/directory of the current script
@@ -263,7 +285,7 @@ New from 2.4.1.105
 -When switching to sig figs mode, automatically detects number of sig figs on existing
   variables. When switching from sig figs mode, automatically sets all variables to 
   infinitely precise.
--Fixed an exception that occurs when rapidly typing in the textbox while modifying options
+-Fixed an exception that occurs when rapidly typing in the texTbox while modifying options
   in the graphing window
 -Fixed crashes that occur sometimes when closing the console window
 
@@ -363,7 +385,7 @@ New from 2.1.2.87
 *********************************************************************************************
 New from 2.1.1.86
 *********************************************************************************************
--Textbox with syntax highlighting, brace pairing, and line numbers using Scintilla.NET
+-TexTbox with syntax highlighting, brace pairing, and line numbers using Scintilla.NET
 -Fixed some broken buttons on the right on-screen keyboard
 
 -'Choose' operator no longer rounds operands to the nearest integer and now

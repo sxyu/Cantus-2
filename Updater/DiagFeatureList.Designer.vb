@@ -100,7 +100,7 @@
             Me.BtnLog.Text = "What's New"
             Me.BtnLog.UseVisualStyleBackColor = False
             '
-            'btnLicense
+            'BtnLicense
             '
             Me.BtnLicense.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.BtnLicense.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
@@ -119,7 +119,7 @@
             Me.BtnLicense.Text = "License"
             Me.BtnLicense.UseVisualStyleBackColor = False
             '
-            'btnDocs
+            'BtnDocs
             '
             Me.BtnDocs.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.BtnDocs.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
@@ -138,7 +138,7 @@
             Me.BtnDocs.Text = "Docs"
             Me.BtnDocs.UseVisualStyleBackColor = False
             '
-            'lbNote
+            'LbNote
             '
             Me.LbNote.Anchor = System.Windows.Forms.AnchorStyles.Left
             Me.LbNote.AutoSize = True
@@ -149,7 +149,7 @@
             Me.LbNote.TabIndex = 0
             Me.LbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" & "is dialog"
             '
-            'btnClose
+            'BtnClose
             '
             Me.BtnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.BtnClose.BackColor = System.Drawing.Color.Brown

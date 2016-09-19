@@ -83,33 +83,33 @@ Namespace UI
                 _view = view
                 ' set tab colors
                 Dim inactiveColor As Color = Me.BackColor
-                Dim activeColor As Color = pnl.BackColor
+                Dim activeColor As Color = Pnl.BackColor
                 For Each c As Control In Me.Controls
                     If TypeOf c Is Button AndAlso Not c.Tag Is Nothing Then
                         c.BackColor = If(c.Tag.ToString() = view.ToString(), activeColor, inactiveColor)
-                        Dim btn As Button = DirectCast(c, Button)
-                        btn.FlatAppearance.MouseOverBackColor = btn.BackColor
+                        Dim Btn As Button = DirectCast(c, Button)
+                        Btn.FlatAppearance.MouseOverBackColor = Btn.BackColor
                         If c.Tag.ToString() = view.ToString() Then
-                            btn.FlatAppearance.MouseDownBackColor = btn.BackColor
-                            btn.Cursor = Cursors.Default
+                            Btn.FlatAppearance.MouseDownBackColor = Btn.BackColor
+                            Btn.Cursor = Cursors.Default
                         Else
-                            btn.FlatAppearance.MouseDownBackColor =
-                                Color.FromArgb(btn.BackColor.R + 15, btn.BackColor.G + 15, btn.BackColor.B + 15)
-                            btn.Cursor = Cursors.Hand
+                            Btn.FlatAppearance.MouseDownBackColor =
+                                Color.FromArgb(Btn.BackColor.R + 15, Btn.BackColor.G + 15, Btn.BackColor.B + 15)
+                            Btn.Cursor = Cursors.Hand
                         End If
                     End If
                 Next
 
-                pnl.Controls.Clear()
+                Pnl.Controls.Clear()
                 Select Case view
                     Case ViewType.console
                         If ConsoleControl Is Nothing Then Exit Property
-                        pnl.Controls.Add(ConsoleControl)
+                        Pnl.Controls.Add(ConsoleControl)
                         ConsoleControl.Select()
                     Case ViewType.graphing
                         If GraphingControl Is Nothing Then Exit Property
-                        pnl.Controls.Add(GraphingControl)
-                        GraphingControl.tb.Select()
+                        Pnl.Controls.Add(GraphingControl)
+                        GraphingControl.Tb.Select()
                 End Select
             End Set
         End Property
@@ -159,8 +159,31 @@ Namespace UI
         Public Sub WriteLogSeparator(Optional appendPrevious As Boolean = True)
             DeletePromptLine()
             AutoAddLine()
-            ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c) & vbLf)
+            ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c))
             WritePromptLine(appendPrevious)
+        End Sub
+
+        Private Sub TruncateConsole()
+            If ConsoleControl.Lines.Count > MAX_LINES Then
+                Dim tc1 As String = "'''"
+                Dim tc2 As String = """"""""
+                Dim txt As String = ConsoleControl.GetTextRange(0,
+                            ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
+
+                ConsoleControl.DeleteRange(0, ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
+
+                Dim tc1o As Boolean = New InternalFunctions(Nothing).Count(txt, tc1) Mod 2 = 1
+                Dim tc2o As Boolean = New InternalFunctions(Nothing).Count(txt, tc2) Mod 2 = 1
+
+                While (tc1o OrElse tc2o) AndAlso ConsoleControl.Lines.Count > 0
+                    txt = ConsoleControl.GetTextRange(0, ConsoleControl.Lines(0).EndPosition)
+                    tc1o = (tc1o Xor (New InternalFunctions(Nothing).Count(txt, tc1) Mod 2 = 1))
+                    tc2o = (tc2o Xor (New InternalFunctions(Nothing).Count(txt, tc2) Mod 2 = 1))
+
+                    ConsoleControl.DeleteRange(0, ConsoleControl.Lines(0).EndPosition)
+                End While
+
+            End If
         End Sub
 
         '' <summary>
@@ -173,14 +196,13 @@ Namespace UI
             If ConsoleControl.TextLength > 0 Then
                 AutoAddLine()
                 If ConsoleControl.Lines(ConsoleControl.Lines.Count - 2).Text.Trim().Replace("-", "") <> "" Then
-                    ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c) & vbLf)
+                    ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c))
                 End If
             End If
+            AutoAddLine()
 
             ConsoleControl.AppendText(text & vbLf)
-            If ConsoleControl.Lines.Count > MAX_LINES Then
-                ConsoleControl.DeleteRange(0, ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
-            End If
+            TruncateConsole()
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
             ConsoleControl.ScrollCaret()
 
@@ -199,9 +221,7 @@ Namespace UI
             End If
 
             ConsoleControl.AppendText(text & vbLf)
-            If ConsoleControl.Lines.Count > MAX_LINES Then
-                ConsoleControl.DeleteRange(0, ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
-            End If
+            TruncateConsole()
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
             ConsoleControl.ScrollCaret()
 
@@ -216,21 +236,27 @@ Namespace UI
             DeletePromptLine()
 
             ConsoleControl.AppendText(text)
-            If ConsoleControl.Lines.Count > MAX_LINES Then
-                ConsoleControl.DeleteRange(0, ConsoleControl.Lines(ConsoleControl.Lines.Count - MAX_LINES).EndPosition)
-            End If
+            TruncateConsole()
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
             ConsoleControl.ScrollCaret()
 
             WritePromptLine(appendPrevious)
         End Sub
 
-        '' <summary>
-        '' Clear this console
-        '' </summary>
+        ''' <summary>
+        ''' Clear this console
+        ''' </summary>
         Public Sub ClearConsole()
             ConsoleControl.Text = ""
             WritePromptLine()
+        End Sub
+
+        ''' <summary>
+        ''' Scroll console to bottom
+        ''' </summary>
+        Public Sub ConsoleScrollToBottom()
+            ConsoleControl.SelectionStart = ConsoleControl.TextLength
+            ConsoleControl.ScrollCaret()
         End Sub
 
         '' <summary>
@@ -346,27 +372,27 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub btnMin_Click(sender As Object, e As EventArgs) Handles btnMin.Click
-            pnl.Focus()
+        Private Sub BtnMin_Click(sender As Object, e As EventArgs) Handles BtnMin.Click
+            Pnl.Focus()
             'Me.WindowState = FormWindowState.Minimized
         End Sub
 
-        Private Sub FrmViewer_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown, lbTitle.MouseDown,
+        Private Sub FrmViewer_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown, LbTitle.MouseDown,
                 PbLogo.MouseDown
             FrmEditor.FrmEditor_MouseDown(FrmEditor, e)
         End Sub
 
-        Private Sub lbTitle_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove, lbTitle.MouseMove,
+        Private Sub LbTitle_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove, LbTitle.MouseMove,
                 PbLogo.MouseMove
             FrmEditor.FrmEditor_MouseMove(FrmEditor, e)
         End Sub
 
-        Private Sub lbTitle_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, lbTitle.MouseUp, PbLogo.MouseUp
+        Private Sub LbTitle_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp, LbTitle.MouseUp, PbLogo.MouseUp
             FrmEditor.FrmEditor_MouseUp(FrmEditor, e)
         End Sub
 
-        Private Sub btnTabs_Click(sender As Object, e As EventArgs)
-            pnl.Focus()
+        Private Sub BtnTabs_Click(sender As Object, e As EventArgs)
+            Pnl.Focus()
             Me.Text = DirectCast(sender, Button).Text & " - Cantus"
             Me.View = DirectCast([Enum].Parse(GetType(ViewType), DirectCast(sender, Button).Tag.ToString()), ViewType)
         End Sub
@@ -409,75 +435,75 @@ Namespace UI
             Return MyBase.ProcessCmdKey(msg, keyData)
         End Function
 
-        Private Sub SetupScintilla(tb As Scintilla)
+        Private Sub SetupScintilla(Tb As Scintilla)
             Dim backColor As Color = Color.FromArgb(37, 37, 37)
-            tb.CaretForeColor = Color.GhostWhite
+            Tb.CaretForeColor = Color.GhostWhite
 
-            With tb.Styles(Style.Default)
+            With Tb.Styles(Style.Default)
                 .BackColor = backColor
                 .Font = "Consolas"
                 .Size = 13
             End With
 
-            tb.SetSelectionBackColor(True, Color.GhostWhite)
-            tb.SetSelectionForeColor(True, Color.Black)
+            Tb.SetSelectionBackColor(True, Color.GhostWhite)
+            Tb.SetSelectionForeColor(True, Color.Black)
 
-            tb.StyleClearAll()
-            tb.WrapMode = WrapMode.Word
+            Tb.StyleClearAll()
+            Tb.WrapMode = WrapMode.Word
 
-            tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
+            Tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
 
-            tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
-            tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
+            Tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
+            Tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
 
-            tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
-            tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
+            Tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
+            Tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
 
-            tb.Styles(CantusLexer.StyleNumberBoolean).ForeColor = Color.FromArgb(255, 205, 34)
-            tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
+            Tb.Styles(CantusLexer.StyleNumberBoolean).ForeColor = Color.FromArgb(255, 205, 34)
+            Tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
 
-            tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
+            Tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
 
-            tb.Lexer = Lexer.Container
+            Tb.Lexer = Lexer.Container
 
-            tb.IndentWidth = 4
+            Tb.IndentWidth = 4
 
-            With tb.Styles(Style.LineNumber)
+            With Tb.Styles(Style.LineNumber)
                 .BackColor = backColor
                 .ForeColor = Color.DarkGray
                 .Size = 13
             End With
 
-            tb.IndentationGuides = IndentView.Real
+            Tb.IndentationGuides = IndentView.Real
 
-            tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
-            tb.Styles(Style.BraceLight).BackColor = Color.LightGray
+            Tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
+            Tb.Styles(Style.BraceLight).BackColor = Color.LightGray
 
-            tb.Styles(Style.BraceBad).ForeColor = Color.White
-            tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
+            Tb.Styles(Style.BraceBad).ForeColor = Color.White
+            Tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
 
-            tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
+            Tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
 
-            tb.TabWidth = 4
+            Tb.TabWidth = 4
 
-            tb.ScrollWidth = tb.Width
+            Tb.ScrollWidth = Tb.Width
 
-            tb.AutoCIgnoreCase = True
+            Tb.AutoCIgnoreCase = True
         End Sub
 
         Private Sub FrmViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             For Each c As Control In Me.Controls
                 If TypeOf c Is Button AndAlso Not c.Tag Is Nothing Then
-                    AddHandler DirectCast(c, Button).Click, AddressOf btnTabs_Click
+                    AddHandler DirectCast(c, Button).Click, AddressOf BtnTabs_Click
                 End If
             Next
             AddHandler Me.KeyDown, AddressOf Control_KeyDown
-            lbTitle.Text = lbTitle.Text.Replace("{VER}", Version.ToString())
+            LbTitle.Text = LbTitle.Text.Replace("{VER}", Version.ToString())
 
             GraphingControl = New Graphing.GraphingSystem
             GraphingControl.Dock = DockStyle.Fill
             AddHandler GraphingControl.KeyDown, AddressOf Control_KeyDown
-            AddHandler GraphingControl.tb.KeyDown, AddressOf Control_KeyDown
+            AddHandler GraphingControl.Tb.KeyDown, AddressOf Control_KeyDown
 
             ConsoleControl = New Scintilla
             ConsoleControl.Dock = DockStyle.Fill
@@ -499,7 +525,7 @@ Namespace UI
                 "Simply enter mathematical expressions to begin." & vbLf & "Note: End the line with an extra ':' character to run blocks. Enter an empty line to end a block." & vbLf & vbLf & "Press Alt + Enter or click the 'Run' button on the" & vbLf & "bottom right " & "of the editor to print out the current result." & vbLf & """""""",
                                    Version.ToString))
 
-            pnl.Select()
+            Pnl.Select()
             _feeder.BeginExecution()
         End Sub
 
@@ -539,9 +565,9 @@ Namespace UI
                     End If
                 Else
                     If e.KeyCode = Keys.G Then
-                        btnGraph.PerformClick()
+                        BtnGraph.PerformClick()
                     ElseIf e.KeyCode = Keys.C Then
-                        btnConsole.PerformClick()
+                        BtnConsole.PerformClick()
                     ElseIf e.KeyCode = Keys.E Then
                         FrmEditor.BringToFront()
                     ElseIf e.KeyCode = Keys.S Then
@@ -648,14 +674,17 @@ Namespace UI
                             Try
                                 Dim th As New Thread(Sub()
                                                          Try
-                                                             Dim res As String = RootEvaluator.Eval(lastLineText)
-                                                             ConsoleControl.BeginInvoke(Sub()
-                                                                                            WriteConsoleLine(res)
-                                                                                        End Sub)
+                                                             Dim res As String =
+                                                                RootEvaluator.Eval(lastLineText)
+                                                             ConsoleControl.BeginInvoke(
+                                                             Sub()
+                                                                 WriteConsoleLine(res)
+                                                             End Sub)
                                                          Catch ex As Exception
-                                                             ConsoleControl.BeginInvoke(Sub()
-                                                                                            WriteConsoleLine(ex.Message)
-                                                                                        End Sub)
+                                                             ConsoleControl.BeginInvoke(
+                                                             Sub()
+                                                                 WriteConsoleLine(ex.Message)
+                                                             End Sub)
                                                          End Try
                                                      End Sub)
                                 th.IsBackground = True
@@ -759,8 +788,8 @@ Namespace UI
                             autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
                                            "let static global ref undefined null " &
                                            "switch case run try catch finally while until " &
-                                           "with in step to choose and or xor not " &
-                                           "true false").Split(" "c))
+                                           "with in step to choose and or xor not ans prevans " &
+                                           "true false OUTPUT ANGLEREPR SPACESPERTAB EXPLICIT SIGFIGS").Split(" "c))
 
                             autoCList.Add(ROOT_NAMESPACE)
                         End If
@@ -816,7 +845,7 @@ Namespace UI
                             varname = enteredWord.Remove(enteredWord.IndexOf("."))
 
                             Dim var As Object = Nothing
-                            var = Globals.RootEvaluator.GetVariable(enteredWord.Remove(enteredWord.IndexOf(".")))
+                            var = Globals.RootEvaluator.GetVariableObj(enteredWord.Remove(enteredWord.IndexOf(".")))
                             If TypeOf var Is Reference AndAlso Not TypeOf DirectCast(var, Reference).GetRefObject() Is Reference Then
                                 type = DirectCast(var, Reference).Resolve().GetType
                             Else

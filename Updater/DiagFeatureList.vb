@@ -5,7 +5,7 @@
             InitializeComponent()
         End Sub
 
-        Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
+        Private Sub BtnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
             Me.Close()
         End Sub
 
@@ -22,11 +22,11 @@
 
         Dim ctrl As Boolean = False
 
-        Private Sub tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Tb.KeyPress
+        Private Sub Tb_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Tb.KeyPress
             If Not ctrl Then e.Handled = True
         End Sub
 
-        Private Sub tb_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb.KeyDown
+        Private Sub Tb_KeyDown(sender As Object, e As KeyEventArgs) Handles Tb.KeyDown
             If e.Control Then
                 If e.KeyCode = Keys.A Then
                     Tb.SelectAll()
@@ -36,30 +36,30 @@
             End If
         End Sub
 
-        Private Sub tb_KeyUp(sender As Object, e As KeyEventArgs) Handles Tb.KeyUp
+        Private Sub Tb_KeyUp(sender As Object, e As KeyEventArgs) Handles Tb.KeyUp
             ctrl = False
         End Sub
 
-        Private Sub SwitchTab(btnName As String)
+        Private Sub SwitchTab(BtnName As String)
             Dim curBtnColor As Color = Color.FromArgb(70, 70, 70)
             Dim backBtnColor As Color = Color.FromArgb(55, 55, 55)
             For Each c As Control In PnlNote.Controls
                 If TypeOf c Is Button AndAlso Not c.Tag Is Nothing Then
-                    Dim btn As Button = DirectCast(c, Button)
-                    If btn.Tag.ToString = btnName Then
-                        btn.BackColor = curBtnColor
-                        btn.FlatAppearance.MouseOverBackColor = curBtnColor
-                        btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(85, 85, 85)
+                    Dim Btn As Button = DirectCast(c, Button)
+                    If Btn.Tag.ToString = BtnName Then
+                        Btn.BackColor = curBtnColor
+                        Btn.FlatAppearance.MouseOverBackColor = curBtnColor
+                        Btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(85, 85, 85)
                     Else
-                        btn.BackColor = backBtnColor
-                        btn.FlatAppearance.MouseOverBackColor = backBtnColor
-                        btn.FlatAppearance.MouseDownBackColor = curBtnColor
+                        Btn.BackColor = backBtnColor
+                        Btn.FlatAppearance.MouseOverBackColor = backBtnColor
+                        Btn.FlatAppearance.MouseDownBackColor = curBtnColor
                     End If
                 End If
             Next
         End Sub
 
-        Private Sub btnDocs_Click(sender As Object, e As EventArgs) Handles BtnDocs.Click
+        Private Sub BtnDocs_Click(sender As Object, e As EventArgs) Handles BtnDocs.Click
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             _allowNavigation = True
             SwitchTab("docs")
@@ -68,7 +68,7 @@
             Wb.Focus()
         End Sub
 
-        Private Sub btnLicense_Click(sender As Object, e As EventArgs) Handles BtnLicense.Click
+        Private Sub BtnLicense_Click(sender As Object, e As EventArgs) Handles BtnLicense.Click
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             _allowNavigation = True
             SwitchTab("license")
@@ -76,7 +76,7 @@
             Tb.Text = My.Resources.LICENSE.Replace(vbLf, vbCrLf)
         End Sub
 
-        Private Sub btnLog_Click(sender As Object, e As EventArgs) Handles BtnLog.Click
+        Private Sub BtnLog_Click(sender As Object, e As EventArgs) Handles BtnLog.Click
             If DirectCast(sender, Button).BackColor.G = 70 Then Return ' if selected, do not reload
             SwitchTab("log")
             Wb.Hide()

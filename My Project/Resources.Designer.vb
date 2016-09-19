@@ -147,7 +147,7 @@ Namespace My.Resources
         ''*********************************************************************************************
         ''This project wouldn&apos;t have been possible without the following:
         ''
-        ''Scintilla: Textbox with syntax match [rest of string was truncated]&quot;;.
+        ''Scintilla: TexTbox with syntax match [rest of string was truncated]&quot;;.
         ''</summary>
         Friend ReadOnly Property UpdateMsg() As String
             Get

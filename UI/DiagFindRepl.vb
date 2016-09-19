@@ -9,7 +9,7 @@ Imports Cantus.Core.CantusEvaluator.ObjectTypes
 Namespace UI
     Public Class DiagFindRepl
         ''' <summary>
-        ''' The textbox to replace in
+        ''' The texTbox to replace in
         ''' </summary>
         Friend Tb As Scintilla
 
@@ -43,25 +43,18 @@ Namespace UI
         ''' </summary>
         Friend CurMatch As Integer = 0
 
-        Public Sub New(tb As Scintilla)
+        Public Sub New(Tb As Scintilla)
             ' This call is required by the designer.
             InitializeComponent()
 
             ' Add any initialization after the InitializeComponent() call.
-            Me.Tb = tb
-        End Sub
-
-        Private Sub DiagFindRepl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+            Me.Tb = Tb
         End Sub
 
         Private Sub ReplaceAll(find As String, repl As String, Optional regexp As Boolean = False)
             Matches.Clear()
 
-            Tb.StartStyling(0)
-            FrmEditor.CantusLexer.Style(Tb, 0, Tb.TextLength)
-
-            If Not regexp Then Regex.Escape(find)
+            If Not regexp Then find = Regex.Escape(find)
 
             Tb.Text = Regex.Replace(Tb.Text, find, repl)
 
@@ -70,13 +63,11 @@ Namespace UI
         End Sub
 
         Private Sub FindAll(find As String, Optional regexp As Boolean = False)
+            Tb.ClearSelections()
             Matches.Clear()
 
-            Tb.StartStyling(0)
-            FrmEditor.CantusLexer.Style(Tb, 0, Tb.TextLength)
-
-            If Not regexp Then Regex.Escape(find)
             Dim escaped As String = CStr(New Text(find).Escape().GetValue())
+            If Not regexp Then find = Regex.Escape(find)
             Dim lines As Integer = CInt(New CantusEvaluator.InternalFunctions(Nothing).Count(escaped, vbLf)) + 1
 
             Dim start As Integer = Tb.CurrentLine
@@ -109,7 +100,7 @@ Namespace UI
             LbMatchCount.Show()
         End Sub
 
-        Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
             Me.Close()
         End Sub
 

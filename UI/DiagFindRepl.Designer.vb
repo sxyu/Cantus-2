@@ -27,7 +27,7 @@
             Me.Label1 = New System.Windows.Forms.Label()
             Me.Label2 = New System.Windows.Forms.Label()
             Me.TbReplace = New System.Windows.Forms.TextBox()
-            Me.btnCancel = New System.Windows.Forms.Button()
+            Me.BtnCancel = New System.Windows.Forms.Button()
             Me.BtnFind = New System.Windows.Forms.Button()
             Me.BtnRepl = New System.Windows.Forms.Button()
             Me.CbRegex = New System.Windows.Forms.CheckBox()
@@ -70,25 +70,25 @@
             Me.TbReplace.Size = New System.Drawing.Size(472, 28)
             Me.TbReplace.TabIndex = 1
             '
-            'btnCancel
+            'BtnCancel
             '
-            Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-            Me.btnCancel.FlatAppearance.BorderSize = 0
-            Me.btnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
-            Me.btnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
-            Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.btnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
-            Me.btnCancel.ForeColor = System.Drawing.Color.White
-            Me.btnCancel.Location = New System.Drawing.Point(202, 205)
-            Me.btnCancel.Name = "btnCancel"
-            Me.btnCancel.Size = New System.Drawing.Size(93, 40)
-            Me.btnCancel.TabIndex = 3
-            Me.btnCancel.Tag = "b"
-            Me.btnCancel.Text = "&Cancel"
-            Me.btnCancel.UseVisualStyleBackColor = False
+            Me.BtnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.BtnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCancel.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+            Me.BtnCancel.FlatAppearance.BorderSize = 0
+            Me.BtnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
+            Me.BtnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+            Me.BtnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnCancel.ForeColor = System.Drawing.Color.White
+            Me.BtnCancel.Location = New System.Drawing.Point(202, 205)
+            Me.BtnCancel.Name = "BtnCancel"
+            Me.BtnCancel.Size = New System.Drawing.Size(93, 40)
+            Me.BtnCancel.TabIndex = 3
+            Me.BtnCancel.Tag = "b"
+            Me.BtnCancel.Text = "&Cancel"
+            Me.BtnCancel.UseVisualStyleBackColor = False
             '
             'BtnFind
             '
@@ -157,18 +157,18 @@
             Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(44, Byte), Integer))
-            Me.CancelButton = Me.btnCancel
+            Me.CancelButton = Me.BtnCancel
             Me.ClientSize = New System.Drawing.Size(509, 257)
             Me.Controls.Add(Me.LbMatchCount)
             Me.Controls.Add(Me.CbRegex)
             Me.Controls.Add(Me.BtnRepl)
             Me.Controls.Add(Me.BtnFind)
-            Me.Controls.Add(Me.btnCancel)
+            Me.Controls.Add(Me.BtnCancel)
             Me.Controls.Add(Me.TbReplace)
             Me.Controls.Add(Me.TbFind)
             Me.Controls.Add(Me.Label2)
             Me.Controls.Add(Me.Label1)
-            Me.Font = New System.Drawing.Font("Open Sans", 11.25!)
+            Me.Font = New System.Drawing.Font(OpenSans, 11.25!)
             Me.ForeColor = System.Drawing.Color.White
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -185,7 +185,7 @@
         Friend WithEvents Label1 As Label
         Friend WithEvents Label2 As Label
         Friend WithEvents TbReplace As TextBox
-        Friend WithEvents btnCancel As Button
+        Friend WithEvents BtnCancel As Button
         Friend WithEvents BtnFind As Button
         Friend WithEvents BtnRepl As Button
         Friend WithEvents CbRegex As CheckBox

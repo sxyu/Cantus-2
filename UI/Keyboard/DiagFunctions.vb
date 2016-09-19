@@ -166,7 +166,7 @@ Namespace UI.Dialogs
             If lv.SelectedIndices.Count > 0 Then lv.EnsureVisible(lv.SelectedIndices(0))
         End Sub
 
-        Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
+        Private Sub BtnOK_Click(sender As Object, e As EventArgs) Handles BtnOK.Click
 
             If lv.SelectedItems.Count > 0 Then
                 Me.DialogResult = DialogResult.OK
@@ -180,44 +180,44 @@ Namespace UI.Dialogs
             Me.Close()
         End Sub
 
-        Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
             Me.DialogResult = DialogResult.Cancel
             Me.Result = ""
             Me.Close()
         End Sub
 
-        Private Sub tbSearch_Enter(sender As Object, e As EventArgs) Handles tbSearch.Enter
-            If tbSearch.ForeColor <> Color.White Then
-                tbSearch.Text = ""
-                tbSearch.ForeColor = Color.White
+        Private Sub TbSearch_Enter(sender As Object, e As EventArgs) Handles TbSearch.Enter
+            If TbSearch.ForeColor <> Color.White Then
+                TbSearch.Text = ""
+                TbSearch.ForeColor = Color.White
             End If
         End Sub
 
-        Private Sub tbSearch_Leave(sender As Object, e As EventArgs) Handles tbSearch.Leave
-            If String.IsNullOrWhiteSpace(tbSearch.Text) Then
-                tbSearch.ForeColor = Color.Gainsboro
-                tbSearch.Text = "Type to Filter Functions (Regex Enabled) ..."
+        Private Sub TbSearch_Leave(sender As Object, e As EventArgs) Handles TbSearch.Leave
+            If String.IsNullOrWhiteSpace(TbSearch.Text) Then
+                TbSearch.ForeColor = Color.Gainsboro
+                TbSearch.Text = "Type to Filter Functions (Regex Enabled) ..."
             End If
         End Sub
 
-        Private Sub tbSearch_TextChanged(sender As Object, e As EventArgs) Handles tbSearch.TextChanged
-            If tbSearch.ForeColor = Color.White Then
-                LoadLv(tbSearch.Text)
+        Private Sub TbSearch_TextChanged(sender As Object, e As EventArgs) Handles TbSearch.TextChanged
+            If TbSearch.ForeColor = Color.White Then
+                LoadLv(TbSearch.Text)
             End If
         End Sub
 
         Private Sub PnlSearch_Click(sender As Object, e As EventArgs) Handles PnlSearch.Click
-            tbSearch.Focus()
+            TbSearch.Focus()
         End Sub
 
         Private Sub lv_KeyPress(sender As Object, e As KeyPressEventArgs) Handles lv.KeyPress
-            tbSearch.Focus()
+            TbSearch.Focus()
             SendKeys.Send(e.KeyChar)
             e.Handled = True
         End Sub
 
         Private Sub lv_ItemActivate(sender As Object, e As EventArgs) Handles lv.ItemActivate
-            btnOK.PerformClick()
+            BtnOK.PerformClick()
         End Sub
     End Class
     Public Class ListViewItemComparer

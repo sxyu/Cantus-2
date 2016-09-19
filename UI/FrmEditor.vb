@@ -108,7 +108,7 @@ Namespace UI
             def = def.Trim().Trim({ControlChars.Quote, "'"c})
             If opengraph Then
                 Viewer.View = Viewer.ViewType.graphing
-                Viewer.GraphingControl.tb.Text = def
+                Viewer.GraphingControl.Tb.Text = def
             ElseIf Not def = "" Then
                 Tb.Text = def
             End If
@@ -204,7 +204,7 @@ Namespace UI
             ElseIf e.Control Then
                 If e.Alt Then
                     If e.KeyCode = Keys.P Then
-                        btnAngleRep_Click(BtnAngleRepr, New EventArgs)
+                        BtnAngleRep_Click(BtnAngleRepr, New EventArgs)
                     ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
                         If e.KeyCode = Keys.D Then
                             _eval.AngleMode = AngleRepresentation.Degree
@@ -216,7 +216,7 @@ Namespace UI
                         BtnAngleRepr.Text = _eval.AngleMode.ToString()
                         EvaluateExpr(True)
                     ElseIf e.KeyCode = Keys.O Then
-                        btnOutputFormat_Click(BtnOutputFormat, New EventArgs)
+                        BtnOutputFormat_Click(BtnOutputFormat, New EventArgs)
                     ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
                         If e.KeyCode = Keys.M Then
                             _eval.OutputMode = OutputFormat.Math
@@ -250,9 +250,12 @@ Namespace UI
         End Sub
 #End Region
 #Region "Shared functions"
-        '' <summary>
-        '' Send the event to asynchronously evaluate the expression
-        '' </summary>
+        ''' <summary>
+        ''' Send the event to asynchronously evaluate the expression
+        ''' </summary>
+        ''' <param name="noSaveAns">If true, does not output result to console and does not save the answer</param>
+        ''' <param name="text">The text to evaluate. If not specified, uses the content of the editor.</param>
+        ''' <param name="file">The file to save to. If not specified, uses the current file.</param>
         Friend Sub EvaluateExpr(Optional noSaveAns As Boolean = False,
                                 Optional text As String = "",
                                 Optional file As String = "")
@@ -283,7 +286,6 @@ Namespace UI
             AddHandler _eval.ReadInput, AddressOf ReadInput
             AddHandler _eval.ClearConsole, AddressOf ClearConsole
 
-
             SaveSettings()
             If Not String.IsNullOrWhiteSpace(Me.File) Then Save(False)
             _eval.EvalAsync(text, noSaveAns) ' evaluate & wait for event
@@ -305,10 +307,11 @@ Namespace UI
                 Dim logText As String = ""
                 If fromTb Then
                     If Tb.Lines.Count > 4 Then
-                        logText = Tb.GetTextRange(0, Tb.Lines(4).Position) & "..."
+                        logText = Tb.GetTextRange(0, Tb.Lines(4).Position).
+                            Trim({ControlChars.Lf, ControlChars.Cr}) & "..."
                     Else
                         If Tb.Lines.Count > 1 Then logText = vbLf
-                        logText += Tb.Text
+                        logText += Tb.Text.Trim({ControlChars.Lf, ControlChars.Cr})
                     End If
                 End If
 
@@ -340,6 +343,7 @@ Namespace UI
                     Viewer.WriteConsoleLine("Result: " & vbLf & e.ResultString)
                     Viewer.WriteLogSeparator()
                     Tb.Focus()
+                    Viewer.ConsoleScrollToBottom()
                 End If
             End If
         End Sub
@@ -665,12 +669,12 @@ Namespace UI
         End Sub
 #End Region
 #Region "main buttons"
-        Private Sub btnCalc_Click(sender As Object, e As System.EventArgs) Handles BtnEval.Click
+        Private Sub BtnCalc_Click(sender As Object, e As System.EventArgs) Handles BtnEval.Click
             Tb.Focus()
             EvaluateExpr()
         End Sub
 
-        Private Sub btnFunctions_Click(sender As Object, e As EventArgs) Handles BtnFunctions.Click
+        Private Sub BtnFunctions_Click(sender As Object, e As EventArgs) Handles BtnFunctions.Click
             Tb.Focus()
             Using diag As New Dialogs.DiagFunctions
                 If diag.ShowDialog() = DialogResult.OK Then
@@ -687,13 +691,13 @@ Namespace UI
             End Using
         End Sub
 
-        Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
+        Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
             Tb.Focus()
             Save()
             SaveSettings()
         End Sub
 
-        Private Sub btnOpen_Click(sender As Object, e As EventArgs) Handles BtnOpen.Click
+        Private Sub BtnOpen_Click(sender As Object, e As EventArgs) Handles BtnOpen.Click
             Tb.Focus()
             Open()
         End Sub
@@ -717,12 +721,12 @@ Namespace UI
             'Viewer.Opacity = Me.Opacity
         End Sub
 
-        Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
+        Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
             Tb.Focus()
             NewScript()
         End Sub
 
-#Region "Textbox & Labels"
+#Region "TexTbox & Labels"
 
         Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
             ' do not allow input of Control + F, Control + H
@@ -759,13 +763,13 @@ Namespace UI
                 ElseIf e.KeyCode = Keys.G Then
                     Viewer.View = Viewer.ViewType.graphing
                     Try
-                        Viewer.pnl.Controls(0).Select()
+                        Viewer.Pnl.Controls(0).Select()
                     Catch
                     End Try
                 ElseIf e.KeyCode = Keys.C Then
                     Viewer.View = Viewer.ViewType.console
                     Try
-                        Viewer.pnl.Controls(0).Select()
+                        Viewer.Pnl.Controls(0).Select()
                     Catch
                     End Try
                 ElseIf e.KeyCode = Keys.T Then
@@ -846,7 +850,7 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles BtnSettings.Click
+        Private Sub BtnSettings_Click(sender As Object, e As EventArgs) Handles BtnSettings.Click
             If PnlSettings.Left > 0 Then
                 PnlTb.Focus()
                 BtnAngleRepr.Text = _eval.AngleMode.ToString()
@@ -874,9 +878,9 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub btnLetters_Click(sender As Object, e As EventArgs) Handles BtnY.Click, BtnX.Click
-            Dim btn As Button = DirectCast(sender, Button)
-            SetVariable(btn.Tag.ToString()(0), _eval.GetLastAns())
+        Private Sub BtnLetters_Click(sender As Object, e As EventArgs) Handles BtnY.Click, BtnX.Click
+            Dim Btn As Button = DirectCast(sender, Button)
+            SetVariable(Btn.Tag.ToString()(0), _eval.GetLastAns())
             UpdateLetterTT()
         End Sub
 
@@ -984,15 +988,15 @@ Namespace UI
         End Sub
 #End Region
 #Region "Command Buttons & Aesthetic"
-        Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
+        Private Sub BtnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
             Me.Close()
         End Sub
 
-        Private Sub btnMin_Click(sender As Object, e As EventArgs) Handles BtnMin.Click
+        Private Sub BtnMin_Click(sender As Object, e As EventArgs) Handles BtnMin.Click
             Me.WindowState = FormWindowState.Minimized
         End Sub
 
-        Private Sub btnMax_Click(sender As Object, e As EventArgs) Handles BtnMax.Click
+        Private Sub BtnMax_Click(sender As Object, e As EventArgs) Handles BtnMax.Click
             If Me.WindowState = FormWindowState.Normal Then
                 Me.WindowState = FormWindowState.Maximized
             Else
@@ -1000,7 +1004,7 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub btnMem_Enter(sender As Object, e As EventArgs) Handles BtnSettings.Enter, BtnEval.Enter, BtnMin.Enter, BtnClose.Enter
+        Private Sub BtnMem_Enter(sender As Object, e As EventArgs) Handles BtnSettings.Enter, BtnEval.Enter, BtnMin.Enter, BtnClose.Enter
             Tb.Focus()
         End Sub
 #End Region
@@ -1083,7 +1087,7 @@ Namespace UI
             My.Settings.Save()
         End Sub
 
-        Private Sub btnOutputFormat_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
+        Private Sub BtnOutputFormat_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
             If _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific Then
                 _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Raw
             Else
@@ -1099,7 +1103,7 @@ Namespace UI
             EvaluateExpr(True)
         End Sub
 
-        Private Sub btnAngleRep_Click(sender As Object, e As EventArgs) Handles BtnAngleRepr.Click
+        Private Sub BtnAngleRep_Click(sender As Object, e As EventArgs) Handles BtnAngleRepr.Click
             If _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Gradian Then
                 _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree
             Else
@@ -1115,11 +1119,11 @@ Namespace UI
             EvaluateExpr(True)
         End Sub
 
-        Private Sub pnlSettings_Click(sender As Object, e As EventArgs) Handles PnlSettings.Click, LbSettings.Click
+        Private Sub PnlSettings_Click(sender As Object, e As EventArgs) Handles PnlSettings.Click, LbSettings.Click
             BtnSettings.PerformClick()
         End Sub
 
-        Private Sub lbAbout_Click(sender As Object, e As EventArgs) Handles LbAbout.Click, BtnLog.Click
+        Private Sub LbAbout_Click(sender As Object, e As EventArgs) Handles LbAbout.Click, BtnLog.Click
             Tb.Focus()
             Using diag As New Dialogs.DiagFeatureList()
                 diag.ShowDialog()
@@ -1131,7 +1135,7 @@ Namespace UI
             My.Settings.Save()
         End Sub
 
-        Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles BtnUpdate.Click
+        Private Sub BtnUpdate_Click(sender As Object, e As EventArgs) Handles BtnUpdate.Click
             _updTh = New Thread(CType(Sub()
                                           CheckUpdate(True)
                                       End Sub, ThreadStart))
@@ -1141,9 +1145,9 @@ Namespace UI
 
         Private Sub BtnOptions_Click(sender As Object, e As EventArgs) Handles BtnExplicit.Click, BtnSigFigs.Click
             Dim mode As Boolean
-            Dim btn As Button = DirectCast(sender, Button)
+            Dim Btn As Button = DirectCast(sender, Button)
 
-            If btn.Tag.ToString().EndsWith("E") Then
+            If Btn.Tag.ToString().EndsWith("E") Then
                 _eval.ExplicitMode = Not _eval.ExplicitMode
                 mode = _eval.ExplicitMode
             Else
@@ -1156,26 +1160,26 @@ Namespace UI
             End If
 
             If mode Then
-                btn.BackColor = BtnEval.BackColor
-                btn.ForeColor = BtnEval.ForeColor
-                btn.FlatAppearance.MouseOverBackColor = BtnEval.FlatAppearance.MouseOverBackColor
-                btn.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
+                Btn.BackColor = BtnEval.BackColor
+                Btn.ForeColor = BtnEval.ForeColor
+                Btn.FlatAppearance.MouseOverBackColor = BtnEval.FlatAppearance.MouseOverBackColor
+                Btn.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
             Else
-                btn.BackColor = BtnX.BackColor
-                btn.ForeColor = BtnX.ForeColor
-                btn.FlatAppearance.MouseOverBackColor = BtnX.FlatAppearance.MouseOverBackColor
-                btn.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
+                Btn.BackColor = BtnX.BackColor
+                Btn.ForeColor = BtnX.ForeColor
+                Btn.FlatAppearance.MouseOverBackColor = BtnX.FlatAppearance.MouseOverBackColor
+                Btn.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
             End If
 
             EvaluateExpr(True)
             SaveSettings()
         End Sub
 
-        Private Sub btnLog_MouseEnter(sender As Object, e As EventArgs) Handles BtnLog.MouseEnter
+        Private Sub BtnLog_MouseEnter(sender As Object, e As EventArgs) Handles BtnLog.MouseEnter
             BtnLog.ForeColor = Color.Lavender
         End Sub
 
-        Private Sub btnLog_MouseLeave(sender As Object, e As EventArgs) Handles BtnLog.MouseLeave
+        Private Sub BtnLog_MouseLeave(sender As Object, e As EventArgs) Handles BtnLog.MouseLeave
             BtnLog.ForeColor = Color.LightSteelBlue
         End Sub
 
@@ -1223,14 +1227,14 @@ Namespace UI
         End Sub
 
         ' syntax highlighting
-        Private Sub tb_StyleNeeded(sender As Object, e As StyleNeededEventArgs) Handles Tb.StyleNeeded
+        Private Sub Tb_StyleNeeded(sender As Object, e As StyleNeededEventArgs) Handles Tb.StyleNeeded
             Dim startPos As Integer = Tb.GetEndStyled()
             Dim endPos As Integer = e.Position
             CantusLexer.Style(Tb, startPos, endPos)
         End Sub
 
         ' autoindent
-        Private Sub tb_InsertCheck(sender As Object, e As InsertCheckEventArgs) Handles Tb.InsertCheck
+        Private Sub Tb_InsertCheck(sender As Object, e As InsertCheckEventArgs) Handles Tb.InsertCheck
             If e.Text.EndsWith(ControlChars.Cr) OrElse e.Text.EndsWith(ControlChars.Lf) Then
                 Dim curLine As Integer = Tb.LineFromPosition(e.Position)
                 Dim curLineText As String = Tb.Lines(curLine).Text
@@ -1248,7 +1252,7 @@ Namespace UI
             End If
         End Sub
 
-        Private Sub tb_CharAdded(sender As Object, e As CharAddedEventArgs) Handles Tb.CharAdded
+        Private Sub Tb_CharAdded(sender As Object, e As CharAddedEventArgs) Handles Tb.CharAdded
             Try
 
                 ' autocomplete
@@ -1303,8 +1307,8 @@ Namespace UI
                             autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
                                            "let static global ref undefined null " &
                                            "switch case run try catch finally while until " &
-                                           "with in step to choose and or xor not " &
-                                           "true false").Split(" "c))
+                                           "with in step to choose and or xor not ans prevans " &
+                                           "true false OUTPUT ANGLEREPR SPACESPERTAB EXPLICIT SIGFIGS").Split(" "c))
 
                             autoCList.Add(ROOT_NAMESPACE)
                         End If
@@ -1357,7 +1361,7 @@ Namespace UI
                             varname = enteredWord.Remove(enteredWord.IndexOf("."))
 
                             Dim var As Object = Nothing
-                            var = _eval.GetVariable(enteredWord.Remove(enteredWord.IndexOf(".")))
+                            var = _eval.GetVariableObj(enteredWord.Remove(enteredWord.IndexOf(".")))
                             If TypeOf var Is Reference AndAlso Not TypeOf DirectCast(var, Reference).GetRefObject() Is Reference Then
                                 type = DirectCast(var, Reference).Resolve().GetType
                             Else
@@ -1537,7 +1541,7 @@ Namespace UI
             End Try
         End Sub
 
-        Private Sub tb_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs) Handles Tb.AutoCCompleted
+        Private Sub Tb_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs) Handles Tb.AutoCCompleted
             Try
                 If e.Text.EndsWith("(_)") Then
                     Tb.DeleteRange(Tb.SelectionStart - 2, 1)
