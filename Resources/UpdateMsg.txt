@@ -32,7 +32,7 @@ What's new in 2.5.0.134
   OUTPUT = "raw"
   # to set sigfigs mode with raw output
 
--Added ans and 
+-Added ans and prevans
 -_exit() function now renamed to exit(). Old name is deprecated. 
 
 -Fixed sig figs perservation when saving to a variable (bug from last version)
