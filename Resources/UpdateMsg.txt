@@ -25,7 +25,16 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.5.0.134
+What's new in 2.5.1.136
+*********************************************************************************************
+-Added new proj() projlen() ortho() parallel() builtin functions
+-* operator now defaults to dot product (rather than inner product) for vectors again
+-Fixed a bug with negative fraction conversion in math output mode
+-Fixed a bug where some numbers close to integer displayed as <x> + 0
+-Minor bug fixes
+
+*********************************************************************************************
+New from in 2.5.0.134
 *********************************************************************************************
 -Added OUTPUT, ANGLEREP, SPACESPERTAB, SIGFIGS, EXPLICIT internal variables:
   SIGFIGS = true
