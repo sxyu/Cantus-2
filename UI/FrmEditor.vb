@@ -1305,7 +1305,7 @@ Namespace UI
 
                         If Not nsMode Then
                             autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
-                                           "let static global ref undefined null " &
+                                           "let static global ref Undefined null " &
                                            "switch case run try catch finally while until " &
                                            "with in step to choose and or xor not ans prevans " &
                                            "true false OUTPUT ANGLEREPR SPACESPERTAB EXPLICIT SIGFIGS").Split(" "c))

@@ -520,7 +520,7 @@ Namespace UI
             Me.View = ViewType.console
 
             WriteConsoleSection(
-                String.Format(vbLf & "# Welcome to Cantus version {0}!" & vbLf & "# Copyright © Alex Yu 2016." & vbLf & "# http://github.com/sxyu/Cantus-GUI" & vbLf & vbLf & """""""" & vbLf &
+                String.Format("# Welcome to Cantus version {0}!" & vbLf & "# Copyright © Alex Yu 2016." & vbLf & "# http://github.com/sxyu/Cantus-GUI" & vbLf & vbLf & """""""" & vbLf &
                 "---Virtual Console Help---" & vbLf & "Basic Input/Output" & vbLf & "Printing: print() or printline()" & vbLf & "Reading: read() readline() or readchar()" & vbLf & vbLf & "You can directly use this console for simple calculations:" & vbLf &
                 "Simply enter mathematical expressions to begin." & vbLf & "Note: End the line with an extra ':' character to run blocks. Enter an empty line to end a block." & vbLf & vbLf & "Press Alt + Enter or click the 'Run' button on the" & vbLf & "bottom right " & "of the editor to print out the current result." & vbLf & """""""",
                                    Version.ToString))
@@ -786,7 +786,7 @@ Namespace UI
 
                         If Not nsMode Then
                             autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
-                                           "let static global ref undefined null " &
+                                           "let static global ref Undefined null " &
                                            "switch case run try catch finally while until " &
                                            "with in step to choose and or xor not ans prevans " &
                                            "true false OUTPUT ANGLEREPR SPACESPERTAB EXPLICIT SIGFIGS").Split(" "c))

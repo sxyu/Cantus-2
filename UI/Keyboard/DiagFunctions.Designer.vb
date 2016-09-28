@@ -42,7 +42,7 @@ Namespace UI.Dialogs
             Me.lv.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.lv.BorderStyle = System.Windows.Forms.BorderStyle.None
             Me.lv.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColName, Me.ColDescription})
-            Me.lv.Font = New System.Drawing.Font(OpenSans, 11.0!)
+            Me.lv.Font = New System.Drawing.Font("Open Sans", 11.0!)
             Me.lv.ForeColor = System.Drawing.Color.White
             Me.lv.FullRowSelect = True
             Me.lv.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
@@ -50,7 +50,7 @@ Namespace UI.Dialogs
             Me.lv.Location = New System.Drawing.Point(11, 9)
             Me.lv.MultiSelect = False
             Me.lv.Name = "lv"
-            Me.lv.Size = New System.Drawing.Size(1150, 530)
+            Me.lv.Size = New System.Drawing.Size(1222, 533)
             Me.lv.TabIndex = 0
             Me.lv.UseCompatibleStateImageBehavior = False
             Me.lv.View = System.Windows.Forms.View.Details
@@ -58,7 +58,7 @@ Namespace UI.Dialogs
             'ColName
             '
             Me.ColName.Text = "Name"
-            Me.ColName.Width = 450
+            Me.ColName.Width = 550
             '
             'ColDescription
             '
@@ -76,7 +76,7 @@ Namespace UI.Dialogs
             Me.BtnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
             Me.BtnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnOK.ForeColor = System.Drawing.Color.White
-            Me.BtnOK.Location = New System.Drawing.Point(1081, -1)
+            Me.BtnOK.Location = New System.Drawing.Point(1153, -1)
             Me.BtnOK.Name = "BtnOK"
             Me.BtnOK.Size = New System.Drawing.Size(80, 49)
             Me.BtnOK.TabIndex = 3
@@ -93,9 +93,9 @@ Namespace UI.Dialogs
             Me.BtnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnCancel.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnCancel.ForeColor = System.Drawing.Color.White
-            Me.BtnCancel.Location = New System.Drawing.Point(999, 0)
+            Me.BtnCancel.Location = New System.Drawing.Point(1071, 0)
             Me.BtnCancel.Name = "BtnCancel"
             Me.BtnCancel.Size = New System.Drawing.Size(83, 49)
             Me.BtnCancel.TabIndex = 4
@@ -109,11 +109,11 @@ Namespace UI.Dialogs
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.TbSearch.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
             Me.TbSearch.BorderStyle = System.Windows.Forms.BorderStyle.None
-            Me.TbSearch.Font = New System.Drawing.Font(OpenSans, 14.0!)
+            Me.TbSearch.Font = New System.Drawing.Font("Open Sans", 14.0!)
             Me.TbSearch.ForeColor = System.Drawing.Color.Gainsboro
             Me.TbSearch.Location = New System.Drawing.Point(11, 9)
             Me.TbSearch.Name = "TbSearch"
-            Me.TbSearch.Size = New System.Drawing.Size(982, 26)
+            Me.TbSearch.Size = New System.Drawing.Size(1054, 26)
             Me.TbSearch.TabIndex = 2
             Me.TbSearch.Text = "Type to Filter Functions (Regex Enabled) ..."
             '
@@ -126,9 +126,9 @@ Namespace UI.Dialogs
             Me.PnlSearch.Controls.Add(Me.BtnCancel)
             Me.PnlSearch.Controls.Add(Me.BtnOK)
             Me.PnlSearch.Cursor = System.Windows.Forms.Cursors.IBeam
-            Me.PnlSearch.Location = New System.Drawing.Point(1, 542)
+            Me.PnlSearch.Location = New System.Drawing.Point(1, 545)
             Me.PnlSearch.Name = "PnlSearch"
-            Me.PnlSearch.Size = New System.Drawing.Size(1159, 52)
+            Me.PnlSearch.Size = New System.Drawing.Size(1231, 52)
             Me.PnlSearch.TabIndex = 5
             '
             'DiagFunctions
@@ -138,10 +138,10 @@ Namespace UI.Dialogs
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.CancelButton = Me.BtnCancel
-            Me.ClientSize = New System.Drawing.Size(1159, 588)
+            Me.ClientSize = New System.Drawing.Size(1231, 591)
             Me.Controls.Add(Me.PnlSearch)
             Me.Controls.Add(Me.lv)
-            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
             Me.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
             Me.MaximizeBox = False

@@ -1,5 +1,6 @@
 ﻿Imports System.Text
 Imports Cantus.Core.CantusEvaluator
+Imports Cantus.Core.CommonTypes
 Imports Cantus.Core.Scoping
 
 Namespace UI.Dialogs
@@ -55,7 +56,6 @@ Namespace UI.Dialogs
 
                     If p.IsOptional Then
                         types.Append("[")
-                        name.Append("[")
                     End If
 
                     types.Append(typeName)
@@ -70,8 +70,16 @@ Namespace UI.Dialogs
                     End If
 
                     If p.IsOptional Then
+                        If p.DefaultValue Is Nothing OrElse
+                            TypeOf p.DefaultValue Is Double AndAlso Double.IsNaN(CDbl(p.DefaultValue)) OrElse
+                            TypeOf p.DefaultValue Is BigDecimal AndAlso CType(p.DefaultValue, BigDecimal).IsUndefined Then
+                            name.Append(" = Undefined")
+                        ElseIf TypeOf p.DefaultValue Is String Then
+                            name.Append(" = '" & p.DefaultValue.ToString() & "'")
+                        Else
+                            name.Append(" = " & p.DefaultValue.ToString())
+                        End If
                         types.Append("]")
-                        name.Append("]")
                     End If
                 Next
 
@@ -101,7 +109,7 @@ Namespace UI.Dialogs
             Next
 
             ' add user functions
-            For Each uf As UserFunction In Globals.RootEvaluator.UserFunctions.Values
+            For Each uf As UserFunction In RootEvaluator.UserFunctions.Values
                 Try
                     If uf.Modifiers.Contains("private") Then Continue For ' ignore private methods
 
@@ -119,6 +127,7 @@ Namespace UI.Dialogs
                 name.Append(" (")
                 tag.Append("(")
 
+                Dim ct = 0
                 For Each p As String In uf.Args
                     If Not init Then
                         tag.Append(",")
@@ -127,8 +136,18 @@ Namespace UI.Dialogs
                         init = False
                     End If
 
-                    types.Append("(Variable) ").Append(p)
+                    If uf.Defaults.Count >= ct AndAlso Not uf.Defaults(ct) Is Nothing Then
+                        types.Append("[")
+                    End If
+
+                    types.Append(p)
                     name.Append(p)
+
+                    If uf.Defaults.Count >= ct AndAlso Not uf.Defaults(ct) Is Nothing Then
+                        types.Append("]")
+                        name.Append(" = " & uf.Defaults(ct).ToString())
+                    End If
+                    ct += 1
                 Next
 
                 name.Append(")")

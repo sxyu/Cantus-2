@@ -9,15 +9,15 @@ Credits
 *********************************************************************************************
 This project wouldn't have been possible without the following:
 
-Scintilla: TexTbox with syntax matching, etc. by antoniolinares, johnsoonj, kapix93, 
-nyamatongwe, other contributors
+Scintilla: Textbox with syntax highlighting, autocompletion, etc. 
+by antoniolinares, johnsoonj, kapix93, nyamatongwe, other contributors
 http://www.scintilla.org/
 License: http://www.scintilla.org/License.txt
 
 Scintilla.NET: .NET control, wrapper & bindings for Scintilla:  by Jacob Slusser (License: MIT)
 https://github.com/jacobslusser/ScintillaNET
 
-BigDecimal Class: .Net arbitrary precison library
+BigDecimal Class: .Net arbitrary precison class
 By Jan Christoph Bernack (contact: jc.bernack at googlemail.com)
 Found: http://stackoverflow.com/a/4524254
 
@@ -25,7 +25,22 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.5.1.136
+What's new in 2.5.2.137
+*********************************************************************************************
+-Added regexreplace() to complement replace()
+-Added regexescape() to escape regex chars
+-Fixed string format() function and supports both single arguments and lists
+-Added split() (for some reason was omitted in earlier releases)
+
+-WebGet() and WebPost() renamed to HTTPGet() and HTTPPost(), respectively
+-Fixed HTTPGet() function
+-Trig functions return values of maximal precision
+
+-Auto-generated init.can now uses the new global settings names (OUTPUT, ANGLEREPR, etc.)
+-Minor fixes
+
+*********************************************************************************************
+New from in 2.5.1.136
 *********************************************************************************************
 -Added new proj() projlen() ortho() parallel() builtin functions
 -* operator now defaults to dot product (rather than inner product) for vectors again

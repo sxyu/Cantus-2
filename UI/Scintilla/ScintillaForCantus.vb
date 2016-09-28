@@ -170,9 +170,10 @@ Namespace UI.ScintillaForCantus
                                 If prevC = "\" Then
                                     Dim endChar As Char = If(state = eState.string, ControlChars.Quote, "'"c)
                                     Dim restOfLine As String = lineText
-                                    If lineText.Length > startPos - initPos + 1 Then restOfLine = lineText.Remove(startPos - initPos + 1)
+                                    If lineText.Length > startPos - initPos + 1 Then _
+                                        restOfLine = lineText.Remove(startPos - initPos + 1)
 
-                                    If _rawString OrElse prevC <> "\" OrElse Not restOfLine.Contains(endChar) Then
+                                    If _rawString Then 'OrElse Not restOfLine.Contains(endChar) Then
                                         state = eState.unknown
                                         _rawString = False
                                     End If
