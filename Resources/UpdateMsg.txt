@@ -25,7 +25,14 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.5.2.137
+What's new in 2.5.2.138
+*********************************************************************************************
+-Fixed order of operations for the unary minus operator
+-Select() function no longer modifies original list
+-Minor fixes
+
+*********************************************************************************************
+New from 2.5.2.137
 *********************************************************************************************
 -Added regexreplace() to complement replace()
 -Added regexescape() to escape regex chars
@@ -40,7 +47,7 @@ What's new in 2.5.2.137
 -Minor fixes
 
 *********************************************************************************************
-New from in 2.5.1.136
+New from 2.5.1.136
 *********************************************************************************************
 -Added new proj() projlen() ortho() parallel() builtin functions
 -* operator now defaults to dot product (rather than inner product) for vectors again
@@ -49,7 +56,7 @@ New from in 2.5.1.136
 -Minor bug fixes
 
 *********************************************************************************************
-New from in 2.5.0.134
+New from 2.5.0.134
 *********************************************************************************************
 -Added OUTPUT, ANGLEREP, SPACESPERTAB, SIGFIGS, EXPLICIT internal variables:
   SIGFIGS = true
