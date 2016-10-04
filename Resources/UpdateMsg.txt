@@ -23,9 +23,17 @@ Found: http://stackoverflow.com/a/4524254
 
 EmbeddedAssembly Class: Class to simplify embedding dlls within the executable by Adriancs
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
+*********************************************************************************************
+What's new in 2.5.2.139
+*********************************************************************************************
+-Fixed bug where sets, matrices, etc. did not show the correct number of sig figs on output
+-You can now assign to set elements that don't yet exist: myset[3]=4 to create them
+  like in other languages
+-Updated chemistry module
+-Minor fixes
 
 *********************************************************************************************
-What's new in 2.5.2.138
+New from 2.5.2.138
 *********************************************************************************************
 -Fixed order of operations for the unary minus operator
 -Select() function no longer modifies original list

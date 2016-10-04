@@ -36,7 +36,7 @@ Namespace UI
         '' <summary>
         '' The main evaluator
         '' </summary>
-        Private _eval As Core.CantusEvaluator
+        Private _eval As CantusEvaluator
 
         '' <summary>
         '' The path to the file currently open in the editor. 
@@ -170,8 +170,12 @@ Namespace UI
             AddHandler RootEvaluator.ReadInput, AddressOf ReadInput
             AddHandler RootEvaluator.ClearConsole, AddressOf ClearConsole
 
+            Me._eval = New CantusEvaluator(scope:=If(String.IsNullOrWhiteSpace(File), "cantus",
+                                           Scoping.GetFileScopeName(File)), reloadDefault:=False)
+            Me._eval.ReloadDefault()
+
             ' set up scintilla
-            SetTheme("dark")
+            SetTheme()
 
             Me.PnlResults.BringToFront()
             My.Settings.Save()
@@ -444,67 +448,67 @@ Namespace UI
             Viewer.ClearConsole()
         End Sub
 
-        Public Sub SetTheme(name As String)
+        Public Sub SetTheme() 'name As String)
             Tb.StyleResetDefault()
 
-            Select Case name
-                Case "dark"
-                    With Tb.Styles(Style.Default)
-                        .BackColor = Color.FromArgb(34, 34, 34)
-                        .Font = "Consolas"
-                        .Size = 13
-                    End With
+            'Select Case name
+            '    Case "dark"
+            With Tb.Styles(Style.Default)
+                .BackColor = Color.FromArgb(34, 34, 34)
+                .Font = "Consolas"
+                .Size = 13
+            End With
 
-                    Tb.SetSelectionBackColor(True, Color.GhostWhite)
-                    Tb.SetSelectionForeColor(True, Color.Black)
+            Tb.SetSelectionBackColor(True, Color.GhostWhite)
+            Tb.SetSelectionForeColor(True, Color.Black)
 
-                    Tb.StyleClearAll()
-                    Tb.WrapMode = WrapMode.Word
+            Tb.StyleClearAll()
+            Tb.WrapMode = WrapMode.Word
 
-                    Tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
+            Tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
 
-                    Tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
-                    Tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
+            Tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
+            Tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
 
-                    Tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
-                    Tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
+            Tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
+            Tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
 
-                    Tb.Styles(CantusLexer.StyleNumberBoolean).ForeColor = Color.FromArgb(255, 205, 34)
-                    Tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
+            Tb.Styles(CantusLexer.StyleNumberBoolean).ForeColor = Color.FromArgb(255, 205, 34)
+            Tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
 
-                    Tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
-                    Tb.Styles(CantusLexer.StyleHighlight).ForeColor = Color.FromArgb(0, 0, 0)
-                    Tb.Styles(CantusLexer.StyleHighlight).BackColor = Color.FromArgb(255, 233, 1)
+            Tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
+            Tb.Styles(CantusLexer.StyleHighlight).ForeColor = Color.FromArgb(0, 0, 0)
+            Tb.Styles(CantusLexer.StyleHighlight).BackColor = Color.FromArgb(255, 233, 1)
 
-                    Tb.Lexer = Lexer.Container
+            Tb.Lexer = Lexer.Container
 
-                    Tb.IndentWidth = 4
+            Tb.IndentWidth = 4
 
-                    With Tb.Styles(Style.LineNumber)
-                        .BackColor = Color.FromArgb(34, 34, 34)
-                        .ForeColor = Color.DarkGray
-                        .Size = 13
-                    End With
+            With Tb.Styles(Style.LineNumber)
+                .BackColor = Color.FromArgb(34, 34, 34)
+                .ForeColor = Color.DarkGray
+                .Size = 13
+            End With
 
-                    Tb.IndentationGuides = IndentView.Real
+            Tb.IndentationGuides = IndentView.Real
 
-                    Tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
-                    Tb.Styles(Style.BraceLight).BackColor = Color.LightGray
+            Tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
+            Tb.Styles(Style.BraceLight).BackColor = Color.LightGray
 
-                    Tb.Styles(Style.BraceBad).ForeColor = Color.White
-                    Tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
+            Tb.Styles(Style.BraceBad).ForeColor = Color.White
+            Tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
 
-                    Tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
+            Tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
 
-                    Dim margin As Margin = Tb.Margins(0)
-                    margin.Width = 45
+            Dim margin As Margin = Tb.Margins(0)
+            margin.Width = 45
 
-                    Tb.TabWidth = 4
+            Tb.TabWidth = 4
 
-                    Tb.ScrollWidth = Tb.Width - 2 * margin.Width - 5
+            Tb.ScrollWidth = Tb.Width - 2 * margin.Width - 5
 
-                    Tb.AutoCIgnoreCase = True
-            End Select
+            Tb.AutoCIgnoreCase = True
+            'End Select
         End Sub
 
         '' <summary>
