@@ -924,8 +924,9 @@ Namespace UI
                         autoCList.Sort(New AutoCompleteComparer())
                     End If
 
-                    If autoCList.Count = 0 Then Return
-                    ConsoleControl.AutoCShow(lenEntered, String.Join(" ", autoCList))
+                    Dim lst As String = String.Join(" ", autoCList)
+                    If String.IsNullOrWhiteSpace(lst) Then Return
+                    ConsoleControl.AutoCShow(lenEntered, lst)
                 End If
 
                 ' brace completion

@@ -1264,13 +1264,14 @@ Namespace UI
                 Dim wordStartPos As Integer = Tb.CurrentPosition
 
                 While wordStartPos - 1 >= 0 AndAlso (
-                  Tb.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse Tb.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse Tb.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW("."c))
+                  Tb.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse Tb.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse Tb.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso Tb.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse Tb.GetCharAt(wordStartPos - 1) = AscW(SCOPE_SEP))
                     wordStartPos -= 1
                 End While
 
-                If Tb.GetCharAt(wordStartPos) = AscW("."c) Then wordStartPos += 1
+                If Tb.GetCharAt(wordStartPos) = AscW(SCOPE_SEP) Then wordStartPos += 1
 
                 Dim enteredWord As String = Tb.GetTextRange(wordStartPos, currentPos)
+                If enteredWord.Length > 0 AndAlso Char.IsDigit(enteredWord(0)) Then Return
 
                 Dim lenEntered As Integer = currentPos - wordStartPos
 
@@ -1305,7 +1306,7 @@ Namespace UI
                     If keywords.Contains(keyword) AndAlso Not curLineText.Contains("=") Then
                         autoCList.AddRange(keywords)
                     Else
-                        Dim nsMode As Boolean = enteredWord.Contains(".")
+                        Dim nsMode As Boolean = enteredWord.Contains(SCOPE_SEP)
 
                         If Not nsMode Then
                             autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
@@ -1360,12 +1361,12 @@ Namespace UI
                         ' internal functions
                         Dim varname As String = ""
                         Dim type As Type = Nothing
-                        If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso _eval.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
+                        If nsMode AndAlso enteredWord.IndexOf(SCOPE_SEP) < enteredWord.Length AndAlso _eval.HasVariable(enteredWord.Remove(enteredWord.IndexOf(SCOPE_SEP))) Then
 
-                            varname = enteredWord.Remove(enteredWord.IndexOf("."))
+                            varname = enteredWord.Remove(enteredWord.IndexOf(SCOPE_SEP))
 
                             Dim var As Object = Nothing
-                            var = _eval.GetVariableObj(enteredWord.Remove(enteredWord.IndexOf(".")))
+                            var = _eval.GetVariableObj(enteredWord.Remove(enteredWord.IndexOf(SCOPE_SEP)))
                             If TypeOf var Is Reference AndAlso Not TypeOf DirectCast(var, Reference).GetRefObject() Is Reference Then
                                 type = DirectCast(var, Reference).Resolve().GetType
                             Else
@@ -1446,12 +1447,14 @@ Namespace UI
                         autoCList.Sort(New AutoCompleteComparer())
                     End If
 
-                    If autoCList.Count = 0 Then Return
-                    Tb.AutoCShow(lenEntered, String.Join(" ", autoCList))
+                    Dim lst As String = String.Join(" ", autoCList)
+                    If String.IsNullOrWhiteSpace(lst) Then Return
+                    Tb.AutoCShow(lenEntered, lst)
                 End If
 
                 ' brace completion
-                If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
+                If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse
+                   e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
 
                     Dim startPos As Integer
                     Dim curLine As Integer = Tb.CurrentLine
