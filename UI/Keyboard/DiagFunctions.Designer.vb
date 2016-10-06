@@ -93,7 +93,7 @@ Namespace UI.Dialogs
             Me.BtnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnCancel.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.BtnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.BtnCancel.ForeColor = System.Drawing.Color.White
             Me.BtnCancel.Location = New System.Drawing.Point(1071, 0)
             Me.BtnCancel.Name = "BtnCancel"
@@ -141,7 +141,7 @@ Namespace UI.Dialogs
             Me.ClientSize = New System.Drawing.Size(1231, 591)
             Me.Controls.Add(Me.PnlSearch)
             Me.Controls.Add(Me.lv)
-            Me.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
             Me.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
             Me.MaximizeBox = False
