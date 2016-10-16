@@ -25,7 +25,66 @@ EmbeddedAssembly Class: Class to simplify embedding dlls within the executable b
 Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
 
 *********************************************************************************************
-What's new in 2.5.2.140
+What's new in 2.6.0.141-143
+*********************************************************************************************
+-Welcome to our first Beta build! 
+  The program is now stable enough to graduate from the Alpha stage.
+-Chemistry: 
+  -implemented balance(,) for balancing equations: 
+    balance("H2+O2", "H2O") 
+    # prints 2 H2 + O2 = 2 H2O 
+    # then returns [2, 1, 2]
+  -charges() now supports polyatomic ions: charges("PO3") # gives [-3]
+
+  -polyionname() is a new function for looking up the names of polyatomic ions:
+    polyionname("PO3") # gives 'phosphate'
+  -soluble() now infers the charge of the ion if not specified:
+    soluble("Na", "Cl") # gives 'soluble'
+    soluble("Ca", "NO3") # gives 'soluble'
+    soluble("Ca", "SO4") # gives 'insoluble'
+  -mass() now outputs each element only once, and gives the number of times
+    that element has been added overall
+
+-Added support for casting: safe a(as b)  coerce a(!as b)
+    e.g. '3234.3'(as number) + 2 gives 3236.3
+  The functions cast(obj, type) and unsafecast(obj, type) may also be used.
+
+-Added support for inline statements:
+    if a=3: return 4; else: return 5
+    while i<3: i++
+    repeat 3: print("hello ")
+    function test(x): return x+1
+  Note that classes may not be inlined.
+
+-New throw statement to throw custom errors that can be catched: 
+    try
+      throw "my error: we have encountered an error"
+    catch ex
+      print(ex)
+    # prints: my error: we have encountered an error
+
+-The $() operator is now used to silent commands (silent() function) so that
+   they produce no output and give the result directly.
+
+-Find and replace dialog upgraded: 
+    The dialog now has a case sensitive/insensitive switch,
+    is able to save settings, searches and replaces only within selected text
+    (or globally if nothing is selected), and jumps to the first selection
+    when searching.
+
+-Fixed a severe bug where methods within classes did not work as expected
+-Fixed a bug where private methods inside other files were globally visible
+-start() startwait() etc. now respect the PATH environment variable and can now
+    be used to start cmd, etc.
+-httppost() download() upload() etc. now default to adding http:// before URLS
+    if no protocol is specified
+
+-Improvements to autocompletion and syntax highlighting in the GUI
+-Moderate evaluation speed enhancements
+-Other minor changes
+
+*********************************************************************************************
+New from 2.5.2.140
 *********************************************************************************************
 -Fixed cycle, cyclereverse, each functions
 -Matricies directly next to each other [1,2,3][4,5,6] now returns the dot product as expected

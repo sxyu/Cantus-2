@@ -45,12 +45,12 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.Tb.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.Tb.BorderStyle = System.Windows.Forms.BorderStyle.None
+            Me.Tb.Font = New System.Drawing.Font("Consolas", 11.0!)
             Me.Tb.ForeColor = System.Drawing.Color.White
             Me.Tb.Location = New System.Drawing.Point(13, 14)
             Me.Tb.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.Tb.Multiline = True
             Me.Tb.Name = "Tb"
-            Me.Tb.Font = New System.Drawing.Font("Consolas", 11.0!)
             Me.Tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
             Me.Tb.Size = New System.Drawing.Size(1186, 624)
             Me.Tb.TabIndex = 0
@@ -145,9 +145,10 @@
             Me.LbNote.ForeColor = System.Drawing.Color.Gainsboro
             Me.LbNote.Location = New System.Drawing.Point(12, 14)
             Me.LbNote.Name = "LbNote"
-            Me.LbNote.Size = New System.Drawing.Size(600, 20)
+            Me.LbNote.Size = New System.Drawing.Size(559, 17)
             Me.LbNote.TabIndex = 0
-            Me.LbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" & "is dialog"
+            Me.LbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" &
+    "is dialog"
             '
             'BtnClose
             '
@@ -192,7 +193,7 @@
             'DiagFeatureList
             '
             Me.AcceptButton = Me.BtnClose
-            Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 17.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.CancelButton = Me.BtnClose
@@ -205,6 +206,7 @@
             Me.MaximizeBox = False
             Me.MinimizeBox = False
             Me.Name = "DiagFeatureList"
+            Me.Opacity = 0R
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "Welcome to Cantus"

@@ -19,9 +19,9 @@ Namespace My.Resources
     'class via a tool like ResGen or Visual Studio.
     'To add or remove a member, edit your .ResX file then rerun ResGen
     'with the /str option, or rebuild your VS project.
-    ''<summary>
-    ''  A strongly-typed resource class, for looking up localized strings, etc.
-    ''</summary>
+    '''<summary>
+    '''  A strongly-typed resource class, for looking up localized strings, etc.
+    '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
@@ -32,9 +32,9 @@ Namespace My.Resources
         
         Private resourceCulture As Global.System.Globalization.CultureInfo
         
-        ''<summary>
-        ''  Returns the cached ResourceManager instance used by this class.
-        ''</summary>
+        '''<summary>
+        '''  Returns the cached ResourceManager instance used by this class.
+        '''</summary>
         <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
         Friend ReadOnly Property ResourceManager() As Global.System.Resources.ResourceManager
             Get
@@ -46,10 +46,10 @@ Namespace My.Resources
             End Get
         End Property
         
-        ''<summary>
-        ''  Overrides the current thread's CurrentUICulture property for all
-        ''  resource lookups using this strongly typed resource class.
-        ''</summary>
+        '''<summary>
+        '''  Overrides the current thread's CurrentUICulture property for all
+        '''  resource lookups using this strongly typed resource class.
+        '''</summary>
         <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
         Friend Property Culture() As Global.System.Globalization.CultureInfo
             Get
@@ -60,9 +60,9 @@ Namespace My.Resources
             End Set
         End Property
         
-        ''<summary>
-        ''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
         Friend ReadOnly Property Cantus() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("Cantus", resourceCulture)
@@ -70,9 +70,9 @@ Namespace My.Resources
             End Get
         End Property
         
-        ''<summary>
-        ''  Looks up a localized resource of type System.Drawing.Bitmap.
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property Cantus_Logo() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Cantus_Logo", resourceCulture)
@@ -80,9 +80,9 @@ Namespace My.Resources
             End Get
         End Property
         
-        ''<summary>
-        ''  Looks up a localized resource of type System.Drawing.Bitmap.
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property Cantus_Logo_Large() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Cantus_Logo_Large", resourceCulture)
@@ -90,24 +90,24 @@ Namespace My.Resources
             End Get
         End Property
         
-        ''<summary>
-        ''  Looks up a localized string similar to The MIT Licnse (MIT)
-        ''
-        ''Copyright (c) 2016 Alex Yu
-        ''
-        ''Prmission is hreby granted, free of charge, to any prson obtaining a copy of this software and associated documntation files (the &quot;Software&quot;), to dal in the Software without rstriction, including without limitation the rights to use, copy, modify, mrge, publish, distribute, sublicnse, and/or sll copies of the Software, and to prmit prsons to whom the Software is furnished to do so, subjct to the following conditions:
-        ''
-        ''The above copyright notice and this prmi [rest of string was truncated]&quot;;.
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized string similar to The MIT Licnse (MIT)
+        '''
+        '''Copyright (c) 2016 Alex Yu
+        '''
+        '''Prmission is hreby granted, free of charge, to any prson obtaining a copy of this software and associated documntation files (the &quot;Software&quot;), to dal in the Software without rstriction, including without limitation the rights to use, copy, modify, mrge, publish, distribute, sublicnse, and/or sll copies of the Software, and to prmit prsons to whom the Software is furnished to do so, subjct to the following conditions:
+        '''
+        '''The above copyright notice and this prmi [rest of string was truncated]&quot;;.
+        '''</summary>
         Friend ReadOnly Property LICENSE() As String
             Get
                 Return ResourceManager.GetString("LICENSE", resourceCulture)
             End Get
         End Property
         
-        ''<summary>
-        ''  Looks up a localized resource of type System.Byte[].
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend ReadOnly Property OpenSans_Light() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("OpenSans_Light", resourceCulture)
@@ -115,9 +115,9 @@ Namespace My.Resources
             End Get
         End Property
         
-        ''<summary>
-        ''  Looks up a localized resource of type System.Byte[].
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend ReadOnly Property OpenSans_Regular() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("OpenSans_Regular", resourceCulture)
@@ -125,9 +125,9 @@ Namespace My.Resources
             End Get
         End Property
         
-        ''<summary>
-        ''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
         Friend ReadOnly Property Update() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("Update", resourceCulture)
@@ -135,20 +135,21 @@ Namespace My.Resources
             End Get
         End Property
         
-        ''<summary>
-        ''  Looks up a localized string similar to Welcome to Cantus (Previously Calculatorˣ) Version {ver} (Alpha)!
-        ''
-        ''Cantus is a powerful yet lightweight mathematical language and expression evaluator 
-        ''created By Alex Yu 2015-16
-        ''https://github.com/sxyu/Cantus-GUI
-        ''
-        ''*********************************************************************************************
-        ''Credits
-        ''*********************************************************************************************
-        ''This project wouldn&apos;t have been possible without the following:
-        ''
-        ''Scintilla: TexTbox with syntax match [rest of string was truncated]&quot;;.
-        ''</summary>
+        '''<summary>
+        '''  Looks up a localized string similar to Welcome to Cantus Version {ver}!
+        '''
+        '''Cantus is a powerful yet lightweight mathematical language and expression evaluator 
+        '''created By Alex Yu 2015-16
+        '''https://github.com/sxyu/Cantus-GUI
+        '''
+        '''*********************************************************************************************
+        '''Credits
+        '''*********************************************************************************************
+        '''This project wouldn&apos;t have been possible without the following:
+        '''
+        '''Scintilla: Textbox with syntax highlighting, autocompletion, etc. 
+        '''by [rest of string was truncated]&quot;;.
+        '''</summary>
         Friend ReadOnly Property UpdateMsg() As String
             Get
                 Return ResourceManager.GetString("UpdateMsg", resourceCulture)

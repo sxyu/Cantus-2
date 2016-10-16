@@ -11,6 +11,7 @@
 
         Private Sub DiagFeatureList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             Me.Opacity = 0
+            Me.BringToFront()
             Me.Icon = My.Resources.Cantus
             Tb.Text = My.Resources.UpdateMsg.Replace("{ver}", Version).Replace(vbLf, vbCrLf)
             Tb.SelectionStart = 0
@@ -89,7 +90,10 @@
         End Sub
 
         Private Sub TmrAnim_Tick(sender As Object, e As EventArgs) Handles TmrAnim.Tick
-            If Me.Opacity >= 1 Then TmrAnim.Stop()
+            If Me.Opacity >= 1 Then
+                TmrAnim.Stop()
+                Me.BringToFront()
+            End If
             Me.Opacity += 0.05
         End Sub
     End Class

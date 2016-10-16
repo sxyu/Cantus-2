@@ -36,7 +36,7 @@ Namespace UI.Dialogs
                 Dim types As New StringBuilder()
 
                 Dim init As Boolean = True
-                name.Append(SCOPE_SEP).Append(i.Name).Append(" (")
+                name.Append(SCOPE_SEP).Append(i.Name.ToLowerInvariant()).Append(" (")
                 tag.Append("(")
 
                 For Each p As Reflection.ParameterInfo In i.GetParameters()
@@ -111,7 +111,8 @@ Namespace UI.Dialogs
             ' add user functions
             For Each uf As UserFunction In RootEvaluator.UserFunctions.Values
                 Try
-                    If uf.Modifiers.Contains("private") Then Continue For ' ignore private methods
+                    If uf.Modifiers.Contains("private") OrElse
+                       uf.Modifiers.Contains("hidden") Then Continue For ' ignore private methods
 
                     ' regex filter
                     If Not New InternalFunctions(Nothing).Contains(uf.FullName.ToLowerInvariant(),
@@ -132,18 +133,24 @@ Namespace UI.Dialogs
                     If Not init Then
                         tag.Append(",")
                         types.Append(", ")
+                        name.Append(", ")
                     Else
                         init = False
                     End If
 
-                    If uf.Defaults.Count >= ct AndAlso Not uf.Defaults(ct) Is Nothing Then
+                    If uf.Defaults.Count >= ct AndAlso Not uf.Defaults(ct) Is Nothing AndAlso
+                        Not (TypeOf uf.Defaults(ct) Is Double AndAlso
+                        Double.IsNaN(DirectCast(uf.Defaults(ct), Double))) Then
                         types.Append("[")
                     End If
 
                     types.Append(p)
                     name.Append(p)
 
-                    If uf.Defaults.Count >= ct AndAlso Not uf.Defaults(ct) Is Nothing Then
+                    If uf.Defaults.Count >= ct AndAlso
+                        Not uf.Defaults(ct) Is Nothing AndAlso
+                        Not (TypeOf uf.Defaults(ct) Is Double AndAlso
+                        Double.IsNaN(DirectCast(uf.Defaults(ct), Double))) Then
                         types.Append("]")
                         name.Append(" = " & uf.Defaults(ct).ToString())
                     End If

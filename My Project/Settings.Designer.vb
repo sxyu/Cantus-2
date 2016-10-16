@@ -116,6 +116,30 @@ Namespace My
                 Me("AutoUpdate") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property FindReplRegex() As Boolean
+            Get
+                Return CType(Me("FindReplRegex"),Boolean)
+            End Get
+            Set
+                Me("FindReplRegex") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property FindReplCase() As Boolean
+            Get
+                Return CType(Me("FindReplCase"),Boolean)
+            End Get
+            Set
+                Me("FindReplCase") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

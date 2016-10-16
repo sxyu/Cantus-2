@@ -68,7 +68,7 @@ Namespace UI
         Friend ConsoleControl As ScintillaNET.Scintilla
 
         Private _view As ViewType = ViewType.none
-        Private _cantusLexer As New CantusLexer()
+        Private _ctl As ScintillaController
         Private _feeder As New ScriptFeeder("", False, Globals.RootEvaluator)
 
         '' <summary>
@@ -159,7 +159,7 @@ Namespace UI
         Public Sub WriteLogSeparator(Optional appendPrevious As Boolean = True)
             DeletePromptLine()
             AutoAddLine()
-            ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c))
+            ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 11, "-"c))
             WritePromptLine(appendPrevious)
         End Sub
 
@@ -196,7 +196,7 @@ Namespace UI
             If ConsoleControl.TextLength > 0 Then
                 AutoAddLine()
                 If ConsoleControl.Lines(ConsoleControl.Lines.Count - 2).Text.Trim().Replace("-", "") <> "" Then
-                    ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 10, "-"c))
+                    ConsoleControl.AppendText("".PadRight(ConsoleControl.Width \ 11, "-"c))
                 End If
             End If
             AutoAddLine()
@@ -240,7 +240,7 @@ Namespace UI
             ConsoleControl.SelectionStart = ConsoleControl.TextLength
             ConsoleControl.ScrollCaret()
 
-            WritePromptLine(appendPrevious)
+            'WritePromptLine(appendPrevious)
         End Sub
 
         ''' <summary>
@@ -437,58 +437,10 @@ Namespace UI
 
         Private Sub SetupScintilla(Tb As Scintilla)
             Dim backColor As Color = Color.FromArgb(37, 37, 37)
+            _ctl = New ScintillaController(Tb, RootEvaluator,
+                                           _defaultPromptText.Length)
             Tb.CaretForeColor = Color.GhostWhite
-
-            With Tb.Styles(Style.Default)
-                .BackColor = backColor
-                .Font = "Consolas"
-                .Size = 13
-            End With
-
-            Tb.SetSelectionBackColor(True, Color.GhostWhite)
-            Tb.SetSelectionForeColor(True, Color.Black)
-
-            Tb.StyleClearAll()
-            Tb.WrapMode = WrapMode.Word
-
-            Tb.Styles(CantusLexer.StyleDefault).ForeColor = Color.LightGray
-
-            Tb.Styles(CantusLexer.StyleKeyword).ForeColor = Color.FromArgb(147, 199, 99)
-            Tb.Styles(CantusLexer.StyleInlineKeyword).ForeColor = Color.FromArgb(103, 140, 177)
-
-            Tb.Styles(CantusLexer.StyleIdentifier).ForeColor = Color.FromArgb(241, 242, 243)
-            Tb.Styles(CantusLexer.StyleError).ForeColor = Color.LightGray
-
-            Tb.Styles(CantusLexer.StyleNumberBoolean).ForeColor = Color.FromArgb(255, 205, 34)
-            Tb.Styles(CantusLexer.StyleString).ForeColor = Color.FromArgb(236, 118, 0)
-
-            Tb.Styles(CantusLexer.StyleComment).ForeColor = Color.FromArgb(153, 163, 138)
-
-            Tb.Lexer = Lexer.Container
-
-            Tb.IndentWidth = 4
-
-            With Tb.Styles(Style.LineNumber)
-                .BackColor = backColor
-                .ForeColor = Color.DarkGray
-                .Size = 13
-            End With
-
-            Tb.IndentationGuides = IndentView.Real
-
-            Tb.Styles(Style.BraceLight).ForeColor = Color.BlueViolet
-            Tb.Styles(Style.BraceLight).BackColor = Color.LightGray
-
-            Tb.Styles(Style.BraceBad).ForeColor = Color.White
-            Tb.Styles(Style.BraceBad).BackColor = Color.IndianRed
-
-            Tb.Styles(Style.IndentGuide).ForeColor = Color.Gray
-
-            Tb.TabWidth = 4
-
-            Tb.ScrollWidth = Tb.Width
-
-            Tb.AutoCIgnoreCase = True
+            Tb.IndentWidth = 0
         End Sub
 
         Private Sub FrmViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -513,9 +465,6 @@ Namespace UI
             AddHandler ConsoleControl.KeyDown, AddressOf Control_KeyDown
             AddHandler ConsoleControl.KeyUp, AddressOf ConsoleControl_KeyUp
             AddHandler ConsoleControl.KeyPress, AddressOf ConsoleControl_KeyPress
-            AddHandler ConsoleControl.CharAdded, AddressOf ConsoleControl_CharAdded
-            AddHandler ConsoleControl.AutoCCompleted, AddressOf ConsoleControl_AutoCCompleted
-            AddHandler ConsoleControl.StyleNeeded, AddressOf ConsoleControl_StyleNeeded
 
             Me.View = ViewType.console
 
@@ -542,7 +491,7 @@ Namespace UI
                     ElseIf e.KeyCode = Keys.D OrElse e.KeyCode = Keys.R OrElse e.KeyCode = Keys.G Then
                         If e.KeyCode = Keys.D Then
                             RootEvaluator.AngleMode = AngleRepresentation.Degree
-                        ElseIf e.KeyCode = Keys.R
+                        ElseIf e.KeyCode = Keys.R Then
                             RootEvaluator.AngleMode = AngleRepresentation.Radian
                         Else
                             RootEvaluator.AngleMode = AngleRepresentation.Gradian
@@ -555,7 +504,7 @@ Namespace UI
                         If e.KeyCode = Keys.M Then
                             RootEvaluator.OutputMode = OutputFormat.Math
                             e.SuppressKeyPress = True
-                        ElseIf e.KeyCode = Keys.W
+                        ElseIf e.KeyCode = Keys.W Then
                             RootEvaluator.OutputMode = OutputFormat.Raw
                         Else
                             RootEvaluator.OutputMode = OutputFormat.Scientific
@@ -725,313 +674,6 @@ Namespace UI
                     e.Handled = True
                 End If
             End If
-        End Sub
-
-        ' syntax highlighting
-        Private Sub ConsoleControl_StyleNeeded(sender As Object, e As StyleNeededEventArgs)
-            Dim startPos As Integer = ConsoleControl.GetEndStyled()
-            Dim endPos As Integer = e.Position
-            _cantusLexer.Style(ConsoleControl, startPos, endPos)
-        End Sub
-
-        Private Sub ConsoleControl_CharAdded(sender As Object, e As CharAddedEventArgs)
-            Try
-                ' autocomplete
-                Dim currentPos As Integer = ConsoleControl.CurrentPosition
-                Dim wordStartPos As Integer = ConsoleControl.CurrentPosition
-
-                While wordStartPos - 1 >= 0 AndAlso (
-                  ConsoleControl.GetCharAt(wordStartPos - 1) >= AscW("0"c) AndAlso ConsoleControl.GetCharAt(wordStartPos - 1) <= AscW("9"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) >= AscW("a"c) AndAlso ConsoleControl.GetCharAt(wordStartPos - 1) <= AscW("z"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) >= AscW("A"c) AndAlso ConsoleControl.GetCharAt(wordStartPos - 1) <= AscW("Z"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) = AscW("_"c) OrElse ConsoleControl.GetCharAt(wordStartPos - 1) = AscW("."c))
-                    wordStartPos -= 1
-                End While
-
-                If ConsoleControl.GetCharAt(wordStartPos) = AscW("."c) Then wordStartPos += 1
-
-                Dim enteredWord As String = ConsoleControl.GetTextRange(wordStartPos, currentPos)
-
-                Dim lenEntered As Integer = currentPos - wordStartPos
-
-                If lenEntered > 0 AndAlso Not _reading Then
-
-                    Dim curLineText As String = ConsoleControl.GetTextRange(ConsoleControl.Lines(ConsoleControl.CurrentLine).Position, ConsoleControl.CurrentPosition)
-
-                    Dim singleQuote As Boolean = False
-                    Dim doubleQuote As Boolean = False
-                    For i As Integer = 0 To curLineText.Count - 1
-                        If curLineText(i) = "'"c Then singleQuote = Not singleQuote
-                        If curLineText(i) = """"c Then doubleQuote = Not doubleQuote
-                    Next
-                    If singleQuote OrElse doubleQuote Then Return ' do not autocomplete string
-
-                    curLineText = ConsoleControl.Lines(ConsoleControl.CurrentLine).Text
-                    Dim keyword As String = curLineText
-
-                    Dim blockKwd As String() = ("class function namespace").Split(" "c)
-                    keyword = keyword.Trim()
-                    If keyword.Contains(" ") Then keyword = keyword.Remove(keyword.IndexOf(" "))
-
-                    If blockKwd.Contains(keyword) Then Return ' do not autocomplete class, function, namespace names 
-
-                    ' do not autocomplete variable declarations unless after keyword
-                    If (keyword = "let" OrElse keyword = "global") AndAlso Not curLineText.Contains("=") Then Return
-
-                    Dim keywords As String() = "function global let private public static".Split(" "c)
-
-                    Dim autoCList As New List(Of String)
-
-                    If keywords.Contains(keyword) AndAlso Not curLineText.Contains("=") Then
-                        autoCList.AddRange(keywords)
-                    Else
-                        Dim nsMode As Boolean = enteredWord.Contains(".")
-
-                        If Not nsMode Then
-                            autoCList.AddRange(("class function namespace if else elif for repeat return continue private public " &
-                                           "let static global ref Undefined null " &
-                                           "switch case run try catch finally while until " &
-                                           "with in step to choose and or xor not ans prevans " &
-                                           "true false OUTPUT ANGLEREPR SPACESPERTAB EXPLICIT SIGFIGS").Split(" "c))
-
-                            autoCList.Add(ROOT_NAMESPACE)
-                        End If
-
-                        ' variables
-                        For Each v As Variable In RootEvaluator.Variables.Values.ToArray()
-                            ' ignore private
-                            If v.Modifiers.Contains("internal") OrElse (v.Modifiers.Contains("private") AndAlso
-                            Not IsParentScopeOf(v.DeclaringScope, RootEvaluator.Scope)) Then Continue For
-
-                            ' ignore null
-                            If v.Value Is Nothing OrElse TypeOf v.Value Is Double AndAlso Double.IsNaN(CDbl(v.Value)) OrElse
-                            TypeOf v.Value Is BigDecimal AndAlso DirectCast(v.Value, BigDecimal).IsUndefined Then Continue For
-
-                            If nsMode Then ' filter namespace
-                                Dim partialName As String = RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope)
-
-                                If v.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(v.FullName)
-
-                                ElseIf partialName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(partialName)
-
-                                ElseIf enteredWord.ToLower().StartsWith(partialName.ToLower()) OrElse enteredWord.ToLower().StartsWith(v.FullName.ToLower())
-                                    If enteredWord.ToLower().StartsWith(v.FullName.ToLower()) Then partialName = v.FullName
-                                    If TypeOf v.Reference.Resolve() Is ClassInstance Then
-                                        Dim ci As ClassInstance = DirectCast(v.Reference.Resolve(), ClassInstance)
-                                        For Each f As String In ci.Fields.Keys.ToArray()
-                                            autoCList.Add(CombineScope(partialName,
-                                                   f & If(TypeOf ci.Fields(f).ResolveObj() Is Lambda, "(" &
-                                                   If(DirectCast(ci.Fields(f).ResolveObj(), Lambda).Args.Count = 0, "", "_") & ")",
-                                              "")))
-                                        Next
-                                    End If
-                                Else
-                                    Continue For
-                                End If
-                            Else
-                                Dim varn As String = RemoveRedundantScope(v.FullName, Globals.RootEvaluator.Scope)
-                                autoCList.Add(varn & If(TypeOf v.Value Is Lambda, "(" &
-                                          If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
-                                If varn.ToLower().StartsWith("plugin") Then
-                                    autoCList.Add(varn.Substring("plugin".Length + 1) & If(TypeOf v.Value Is Lambda, "(" & If(DirectCast(v.Value, Lambda).Args.Count = 0, "", "_") & ")", ""))
-                                End If
-                            End If
-                        Next
-
-                        ' internal functions
-                        Dim varname As String = ""
-                        Dim type As Type = Nothing
-                        If nsMode AndAlso enteredWord.IndexOf(".") < enteredWord.Length AndAlso Globals.RootEvaluator.HasVariable(enteredWord.Remove(enteredWord.IndexOf("."))) Then
-
-                            varname = enteredWord.Remove(enteredWord.IndexOf("."))
-
-                            Dim var As Object = Nothing
-                            var = Globals.RootEvaluator.GetVariableObj(enteredWord.Remove(enteredWord.IndexOf(".")))
-                            If TypeOf var Is Reference AndAlso Not TypeOf DirectCast(var, Reference).GetRefObject() Is Reference Then
-                                type = DirectCast(var, Reference).Resolve().GetType
-                            Else
-                                type = var.GetType()
-                            End If
-                        End If
-
-                        For Each fn As MethodInfo In InternalFunctions.Methods
-                            If nsMode Then
-                                If enteredWord.StartsWith("cantus") Then
-                                    autoCList.Add(ROOT_NAMESPACE & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
-
-                                ElseIf fn.GetParameters().Count > 0 AndAlso Not String.IsNullOrEmpty(varname) AndAlso
-                                Globals.RootEvaluator.HasVariable(varname) Then
-                                    If fn.GetParameters(0).ParameterType.IsAssignableFrom(type) Then
-                                        autoCList.Add(varname & SCOPE_SEP & fn.Name.ToLower() & "(" & If(fn.GetParameters().Count <= 1, "", "_") & ")")
-                                    End If
-                                End If
-                            Else
-                                autoCList.Add(fn.Name.ToLower() & "(" & If(fn.GetParameters().Count = 0, "", "_") & ")")
-                            End If
-                        Next
-
-                        ' user functions
-                        For Each fn As UserFunction In Globals.RootEvaluator.UserFunctions.Values.ToArray()
-                            If nsMode Then
-                                Dim fullName As String = fn.FullName
-                                If fullName.ToLower().StartsWith("plugin.") Then fullName = fullName.Remove("plugin.".Length)
-                                If Not fullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso
-                                Not fullName.ToLower().StartsWith(RemoveRedundantScope(fullName,
-                                                              Globals.RootEvaluator.Scope).ToLower()) Then
-                                    Continue For
-                                End If
-                            End If
-                            ' ignore private
-                            If fn.Modifiers.Contains("internal") OrElse (fn.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(fn.DeclaringScope, Globals.RootEvaluator.Scope)) Then Continue For
-
-                            If nsMode Then ' filter namespace
-                                If fn.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(fn.FullName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                                ElseIf RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                                Else
-                                    Continue For
-                                End If
-                            Else
-                                Dim fnName As String = RemoveRedundantScope(fn.FullName, Globals.RootEvaluator.Scope)
-                                autoCList.Add(fnName & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                                If fnName.ToLower().StartsWith("plugin") Then
-                                    autoCList.Add(fnName.Substring("plugin".Length + 1) & "(" & If(fn.Args.Count = 0, "", "_") & ")")
-                                End If
-                            End If
-                        Next
-
-                        For Each uc As UserClass In Globals.RootEvaluator.UserClasses.Values.ToArray()
-                            If nsMode Then
-                                If Not uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) AndAlso Not uc.FullName.ToLower().StartsWith(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower()) Then
-                                    Continue For
-                                End If
-                            End If
-                            ' ignore private
-                            If uc.Modifiers.Contains("internal") OrElse (uc.Modifiers.Contains("private") AndAlso Not IsParentScopeOf(uc.DeclaringScope, Globals.RootEvaluator.Scope)) Then Continue For
-
-                            If nsMode Then ' filter namespace
-                                If uc.FullName.ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(uc.FullName & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
-                                ElseIf RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope).ToLower().StartsWith(enteredWord.ToLower()) Then
-                                    autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
-                                Else
-                                    Continue For
-                                End If
-                            Else
-                                autoCList.Add(RemoveRedundantScope(uc.FullName, Globals.RootEvaluator.Scope) & "(" & If(uc.Constructor.Args.Count = 0, "", "_") & ")")
-                            End If
-                        Next
-                        autoCList.Sort(New AutoCompleteComparer())
-                    End If
-
-                    Dim lst As String = String.Join(" ", autoCList)
-                    If String.IsNullOrWhiteSpace(lst) Then Return
-                    ConsoleControl.AutoCShow(lenEntered, lst)
-                End If
-
-                ' brace completion
-                If e.Char = AscW("(") OrElse e.Char = AscW("[") OrElse e.Char = AscW("{") OrElse e.Char = AscW(")") OrElse e.Char = AscW("]") OrElse e.Char = AscW("}") Then
-
-                    Dim startPos As Integer
-                    Dim curLine As Integer = ConsoleControl.CurrentLine
-                    Dim curText As String = ConsoleControl.Lines(curLine).Text
-
-                    While curLine > 0 AndAlso ConsoleControl.Lines(curLine - 1).Text.EndsWith("\") ' connect \
-                        curLine -= 1
-                        curText = ConsoleControl.Lines(curLine).Text.Remove(ConsoleControl.Lines(curLine).Text.Length - 1) & curText
-                    End While
-                    startPos = ConsoleControl.Lines(curLine).Position
-
-                    Dim startBr As Char = ChrW(e.Char)
-                    Dim endBr As Char
-                    Dim reverse As Boolean = False
-                    Dim ct As Integer = 0
-
-                    Select Case ChrW(e.Char)
-                        Case "("c
-                            endBr = ")"c
-                        Case "["c
-                            endBr = "]"c
-                        Case "{"c
-                            endBr = "}"c
-                        Case ")"c
-                            endBr = "("c
-                            reverse = True
-                        Case "]"c
-                            endBr = "["c
-                            reverse = True
-                        Case "}"c
-                            endBr = "{"c
-                            reverse = True
-                    End Select
-
-                    For i As Integer = 0 To curText.Length - 1
-                        If curText(i) = startBr Then ct += 1
-                        If curText(i) = endBr Then ct -= 1
-                    Next
-
-                    If ct > 0 Then
-                        If reverse Then
-                            Dim len As Integer = ConsoleControl.CurrentPosition - startPos
-                            If curText.Length > len Then curText = curText.Remove(len)
-
-                            Dim braceList As Char() = {"["c, "("c, "{"c}
-                            Dim endBraceList As Char() = {"]"c, ")"c, "}"c}
-                            Dim lvl As List(Of Integer)() = {New List(Of Integer)({0}),
-                            New List(Of Integer)({0}), New List(Of Integer)({0})}
-                            Dim pos As Integer = _promptText.Length
-
-                            For i As Integer = 0 To curText.Length - 2
-                                For j As Integer = 0 To braceList.Count - 1
-                                    If braceList(j) = curText(i) Then
-                                        lvl(j).Add(i + 1)
-                                    ElseIf endBraceList(j) = curText(i) Then
-                                        If Not lvl(j).Count <= 1 Then lvl(j).RemoveAt(lvl(j).Count - 1)
-                                    End If
-                                Next
-                            Next
-
-                            For j As Integer = 0 To lvl.Count - 1
-                                pos = Math.Max(lvl(j)(lvl(j).Count - 1), pos)
-                            Next
-
-                            ConsoleControl.InsertText(ConsoleControl.Lines(ConsoleControl.CurrentLine).Position + pos, endBr)
-                        Else
-                            ConsoleControl.InsertText(ConsoleControl.CurrentPosition, endBr)
-                        End If
-                    End If
-
-                ElseIf e.Char = AscW("|") OrElse e.Char = AscW(""""c) OrElse e.Char = AscW("'"c) OrElse e.Char = AscW("`"c) Then
-                    If e.Char = AscW(""""c) AndAlso ConsoleControl.CurrentPosition > 1 AndAlso ConsoleControl.GetTextRange(ConsoleControl.CurrentPosition - 2, 2) = """""" OrElse e.Char = AscW("'"c) AndAlso ConsoleControl.CurrentPosition > 1 AndAlso ConsoleControl.GetTextRange(ConsoleControl.CurrentPosition - 2, 2) = "'" & "'" Then
-
-                        ' if there were already two quotes before, do not add another: user probably wanted to type triple quotes
-                        ConsoleControl.SelectionStart += 1
-                        Return
-                    End If
-
-                    Dim curText As String = ConsoleControl.Lines(ConsoleControl.CurrentLine).Text
-                    Dim ct As Boolean = False
-
-                    For i As Integer = 0 To curText.Length - 1
-                        If curText(i) = ChrW(e.Char) Then ct = Not ct
-                    Next
-
-                    If ct Then ConsoleControl.InsertText(ConsoleControl.CurrentPosition, ChrW(e.Char))
-
-                End If
-            Catch
-            End Try
-        End Sub
-
-        Private Sub ConsoleControl_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs)
-            Try
-                If e.Text.EndsWith("(_)") Then
-                    ConsoleControl.DeleteRange(ConsoleControl.SelectionStart - 2, 1)
-                    ConsoleControl.SelectionStart -= 1
-                    ConsoleControl.SelectionEnd -= 1
-                End If
-            Catch
-            End Try
         End Sub
     End Class
 End Namespace

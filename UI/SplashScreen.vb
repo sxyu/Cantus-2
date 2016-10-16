@@ -13,7 +13,7 @@
                 FrmEditor.Show()
             End If
             If Me.Opacity + 0.1 < 1 Then
-                Me.Opacity += 0.1
+                Me.Opacity += 0.06
             Else
                 TmrAnim.Stop()
                 Me.Opacity = 1

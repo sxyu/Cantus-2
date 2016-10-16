@@ -23,7 +23,9 @@
         'Do not modify it using the code editor.
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
+            Me.components = New System.ComponentModel.Container()
             Me.MainKeyboard = New Cantus.UI.Keyboards.Keyboard()
+            Me.TmrAnim = New System.Windows.Forms.Timer(Me.components)
             Me.SuspendLayout()
             '
             'MainKeyboard
@@ -39,6 +41,9 @@
             Me.MainKeyboard.Name = "MainKeyboard"
             Me.MainKeyboard.Size = New System.Drawing.Size(728, 300)
             Me.MainKeyboard.TabIndex = 0
+            '
+            'TmrAnim
+            '
             '
             'FrmKeyboard
             '
@@ -65,5 +70,6 @@
         End Sub
 
         Friend WithEvents MainKeyboard As UI.Keyboards.Keyboard
+        Friend WithEvents TmrAnim As Timer
     End Class
 End Namespace

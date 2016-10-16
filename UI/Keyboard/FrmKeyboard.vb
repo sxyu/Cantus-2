@@ -25,11 +25,38 @@
         Private Sub FrmKeyboard_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
             My.Settings.ShowKeyboard = False
             My.Settings.Save()
+            If Not _animateReverse Then
+                e.Cancel = True
+                _animateReverse = True
+                TmrAnim.Start()
+            End If
         End Sub
 
         Private Sub FrmKeyboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-            Me.Top = FrmEditor.Bottom - Me.Height
+            Me.Top = Screen.PrimaryScreen.Bounds.Height
             Me.Left = FrmEditor.Right - Me.Width - 53
+            TmrAnim.Start()
+        End Sub
+
+        Private _animateReverse As Boolean = False
+
+        Private Sub TmrAnim_Tick(sender As Object, e As EventArgs) Handles TmrAnim.Tick
+            If _animateReverse Then
+                If Me.Top < Screen.PrimaryScreen.Bounds.Height Then
+                    Me.Top += Me.Top \ 4 + 8
+                Else
+                    Me.Top = Screen.PrimaryScreen.Bounds.Height
+                    TmrAnim.Stop()
+                    Me.Close()
+                End If
+            Else
+                If Me.Top > FrmEditor.Bottom - Me.Height Then
+                    Me.Top -= (Me.Top - FrmEditor.Bottom + Me.Height) \ 3 + 2
+                Else
+                    Me.Top = FrmEditor.Bottom - Me.Height
+                    TmrAnim.Stop()
+                End If
+            End If
         End Sub
     End Class
 End Namespace

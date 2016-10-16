@@ -32,6 +32,7 @@
             Me.BtnRepl = New System.Windows.Forms.Button()
             Me.CbRegex = New System.Windows.Forms.CheckBox()
             Me.LbMatchCount = New System.Windows.Forms.Label()
+            Me.CbCase = New System.Windows.Forms.CheckBox()
             Me.SuspendLayout()
             '
             'TbFind
@@ -40,7 +41,7 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.TbFind.Location = New System.Drawing.Point(21, 39)
             Me.TbFind.Name = "TbFind"
-            Me.TbFind.Size = New System.Drawing.Size(472, 28)
+            Me.TbFind.Size = New System.Drawing.Size(536, 24)
             Me.TbFind.TabIndex = 0
             '
             'Label1
@@ -48,7 +49,7 @@
             Me.Label1.AutoSize = True
             Me.Label1.Location = New System.Drawing.Point(17, 13)
             Me.Label1.Name = "Label1"
-            Me.Label1.Size = New System.Drawing.Size(39, 20)
+            Me.Label1.Size = New System.Drawing.Size(36, 18)
             Me.Label1.TabIndex = 1
             Me.Label1.Text = "Find"
             '
@@ -57,7 +58,7 @@
             Me.Label2.AutoSize = True
             Me.Label2.Location = New System.Drawing.Point(17, 83)
             Me.Label2.Name = "Label2"
-            Me.Label2.Size = New System.Drawing.Size(98, 20)
+            Me.Label2.Size = New System.Drawing.Size(96, 18)
             Me.Label2.TabIndex = 3
             Me.Label2.Text = "Replace With"
             '
@@ -67,7 +68,7 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.TbReplace.Location = New System.Drawing.Point(21, 109)
             Me.TbReplace.Name = "TbReplace"
-            Me.TbReplace.Size = New System.Drawing.Size(472, 28)
+            Me.TbReplace.Size = New System.Drawing.Size(536, 24)
             Me.TbReplace.TabIndex = 1
             '
             'BtnCancel
@@ -82,10 +83,10 @@
             Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.BtnCancel.ForeColor = System.Drawing.Color.White
-            Me.BtnCancel.Location = New System.Drawing.Point(202, 205)
+            Me.BtnCancel.Location = New System.Drawing.Point(266, 205)
             Me.BtnCancel.Name = "BtnCancel"
             Me.BtnCancel.Size = New System.Drawing.Size(93, 40)
-            Me.BtnCancel.TabIndex = 3
+            Me.BtnCancel.TabIndex = 4
             Me.BtnCancel.Tag = "b"
             Me.BtnCancel.Text = "&Cancel"
             Me.BtnCancel.UseVisualStyleBackColor = False
@@ -102,10 +103,10 @@
             Me.BtnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnFind.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.BtnFind.ForeColor = System.Drawing.Color.White
-            Me.BtnFind.Location = New System.Drawing.Point(301, 205)
+            Me.BtnFind.Location = New System.Drawing.Point(365, 205)
             Me.BtnFind.Name = "BtnFind"
             Me.BtnFind.Size = New System.Drawing.Size(93, 40)
-            Me.BtnFind.TabIndex = 4
+            Me.BtnFind.TabIndex = 5
             Me.BtnFind.Tag = "b"
             Me.BtnFind.Text = "&Find"
             Me.BtnFind.UseVisualStyleBackColor = False
@@ -122,10 +123,10 @@
             Me.BtnRepl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
             Me.BtnRepl.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
             Me.BtnRepl.ForeColor = System.Drawing.Color.White
-            Me.BtnRepl.Location = New System.Drawing.Point(400, 205)
+            Me.BtnRepl.Location = New System.Drawing.Point(464, 205)
             Me.BtnRepl.Name = "BtnRepl"
             Me.BtnRepl.Size = New System.Drawing.Size(93, 40)
-            Me.BtnRepl.TabIndex = 5
+            Me.BtnRepl.TabIndex = 6
             Me.BtnRepl.Tag = "b"
             Me.BtnRepl.Text = "&Replace"
             Me.BtnRepl.UseVisualStyleBackColor = False
@@ -135,7 +136,7 @@
             Me.CbRegex.AutoSize = True
             Me.CbRegex.Location = New System.Drawing.Point(21, 157)
             Me.CbRegex.Name = "CbRegex"
-            Me.CbRegex.Size = New System.Drawing.Size(216, 24)
+            Me.CbRegex.Size = New System.Drawing.Size(213, 22)
             Me.CbRegex.TabIndex = 2
             Me.CbRegex.Text = "Enable Regular E&xpressions"
             Me.CbRegex.UseVisualStyleBackColor = True
@@ -147,10 +148,20 @@
             Me.LbMatchCount.ForeColor = System.Drawing.Color.Gainsboro
             Me.LbMatchCount.Location = New System.Drawing.Point(17, 215)
             Me.LbMatchCount.Name = "LbMatchCount"
-            Me.LbMatchCount.Size = New System.Drawing.Size(115, 20)
+            Me.LbMatchCount.Size = New System.Drawing.Size(111, 18)
             Me.LbMatchCount.TabIndex = 6
             Me.LbMatchCount.Text = "Matches Found"
             Me.LbMatchCount.Visible = False
+            '
+            'CbCase
+            '
+            Me.CbCase.AutoSize = True
+            Me.CbCase.Location = New System.Drawing.Point(246, 157)
+            Me.CbCase.Name = "CbCase"
+            Me.CbCase.Size = New System.Drawing.Size(125, 22)
+            Me.CbCase.TabIndex = 3
+            Me.CbCase.Text = "Case Sensitive"
+            Me.CbCase.UseVisualStyleBackColor = True
             '
             'DiagFindRepl
             '
@@ -158,7 +169,8 @@
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(44, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(44, Byte), Integer))
             Me.CancelButton = Me.BtnCancel
-            Me.ClientSize = New System.Drawing.Size(509, 257)
+            Me.ClientSize = New System.Drawing.Size(573, 257)
+            Me.Controls.Add(Me.CbCase)
             Me.Controls.Add(Me.LbMatchCount)
             Me.Controls.Add(Me.CbRegex)
             Me.Controls.Add(Me.BtnRepl)
@@ -168,7 +180,7 @@
             Me.Controls.Add(Me.TbFind)
             Me.Controls.Add(Me.Label2)
             Me.Controls.Add(Me.Label1)
-            Me.Font = New System.Drawing.Font(OpenSans, 11.25!)
+            Me.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
             Me.ForeColor = System.Drawing.Color.White
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -190,5 +202,6 @@
         Friend WithEvents BtnRepl As Button
         Friend WithEvents CbRegex As CheckBox
         Friend WithEvents LbMatchCount As Label
+        Friend WithEvents CbCase As CheckBox
     End Class
 End Namespace

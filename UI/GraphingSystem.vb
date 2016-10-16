@@ -2,6 +2,7 @@
 Imports System.Drawing.Drawing2D
 Imports System.Threading
 Imports Cantus.Core.CantusEvaluator
+Imports ScintillaNET
 
 Namespace UI.Graphing
     Public Class GraphingSystem
@@ -13,6 +14,7 @@ Namespace UI.Graphing
         Private Const MAXSCALE As Double = 100000000.0
 
         Private _ended As Boolean = False
+        Private _ctl As ScintillaForCantus.ScintillaController
 
         Public Structure Coord
             Dim X As Double
@@ -92,6 +94,10 @@ Namespace UI.Graphing
                 _functions(0) = Tb.Text
                 UpdateFunc()
             End If
+
+            _ctl = New ScintillaForCantus.ScintillaController(Tb, RootEvaluator)
+            Dim margin As Margin = Tb.Margins(0)
+            margin.Width = 0
 
             TmrStart.Start()
         End Sub
@@ -439,10 +445,10 @@ Namespace UI.Graphing
                         If spl.Count <> 5 OrElse (spl(2).Trim().Length() <> 1) Then
                             _eval.SignificantMode = prevsf
                             Return ' invalid variable (only t and theta are allowed) or range format
-                        ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" ' normal range a < t < b
+                        ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" Then ' normal range a < t < b
                             tstart = Eval(spl(0).Trim())
                             tend = Eval(spl(4).Trim()) + 0.0001
-                        ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" ' reversed range b > t > a
+                        ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" Then ' reversed range b > t > a
                             tstart = Eval(spl(4).Trim())
                             tend = Eval(spl(0).Trim()) + 0.0001
                         Else
@@ -490,10 +496,10 @@ Namespace UI.Graphing
                         If spl.Count <> 5 OrElse (spl(2).Trim().Length() <> 1) Then
                             _eval.SignificantMode = prevsf
                             Return ' invalid variable or range format
-                        ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" ' normal range a < t < b
+                        ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" Then ' normal range a < t < b
                             tstart = Eval(spl(0).Trim())
                             tend = Eval(spl(4).Trim()) + 0.0001
-                        ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" ' reversed range b > t > a
+                        ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" Then ' reversed range b > t > a
                             tstart = Eval(spl(4).Trim())
                             tend = Eval(spl(0).Trim()) + 0.0001
                         Else
@@ -684,7 +690,8 @@ Namespace UI.Graphing
                                 y = lstr(2)
                                 Exit For
                             End If
-                        ElseIf _functiontype(i) = FunctionType.Cartesian
+                        ElseIf _functiontype(i) = FunctionType.Cartesian Then
+
                             If Math.Abs(Eval(_functions(i), True) - lstr(2)) <
                                                 0.005 Then
                                 ptname = "Intersection" & vbCrLf
@@ -735,7 +742,8 @@ Namespace UI.Graphing
                                 x = lstr(2)
                                 Exit For
                             End If
-                        ElseIf _functiontype(i) = FunctionType.Cartesian
+                        ElseIf _functiontype(i) = FunctionType.Cartesian Then
+
                             If Math.Abs(Eval(_functions(i), True) - lstr(2)) <
                                                 0.005 Then
                                 ptname = "Intersection" & vbCrLf
@@ -787,7 +795,8 @@ Namespace UI.Graphing
                                 ptname = "Intersection" & vbCrLf
                                 Exit For
                             End If
-                        ElseIf _functiontype(i) = FunctionType.Polar
+                        ElseIf _functiontype(i) = FunctionType.Polar Then
+
                             If Math.Abs(Eval(_functions(i), True) - mr) <
                                                 0.005 Then
                                 ptname = "Intersection" & vbCrLf
@@ -879,7 +888,7 @@ Namespace UI.Graphing
                             Dim x As Double = 0
                             Dim y As Double = 0
                             Dim d As Double = 0
-                            If _functiontype(_curfn) <> FunctionType.Differential Then x = Eval(npdTVal.Text, True)
+                            If _functiontype(_curfn) <> FunctionType.Differential Then x = Eval(NpdTVal.Text, True)
                             Dim coords As String = ""
                             Dim initd As Double = x
                             Dim oldx As Double = CDbl(GetX(True))
@@ -919,7 +928,7 @@ Namespace UI.Graphing
                                     GetPtPolar(x, y, d, ptname)
                                     coords = "(" & Math.Round(Math.Sqrt(x ^ 2 + y ^ 2), 3) & ", " & Math.Round(d, 3) & ")"
                                 Case FunctionType.Differential
-                                    Dim tuple() As String = npdTVal.Text.Trim({vbCr(0), vbLf(0), " "c, "("c, ")"c, "<"c, ">"c}).Split(","c)
+                                    Dim tuple() As String = NpdTVal.Text.Trim({vbCr(0), vbLf(0), " "c, "("c, ")"c, "<"c, ">"c}).Split(","c)
                                     If tuple.Length <> 2 Then
                                         LbTVal.Text = "Invalid Format"
                                         Return
@@ -936,7 +945,7 @@ Namespace UI.Graphing
                                     Dim cx As Double = ccsx(cfcx(x))
                                     Dim cy As Double = ccsy(cfcy(y))
                                     If Math.Abs(initd - d) > 0.000001 AndAlso _functiontype(_curfn) <> FunctionType.Differential Then
-                                        npdTVal.Text = Math.Round(d, 5).ToString()
+                                        NpdTVal.Text = Math.Round(d, 5).ToString()
                                     End If
                                     If cx > Canvas.Width OrElse cx < 0 Then
                                         Return
@@ -1077,9 +1086,9 @@ Namespace UI.Graphing
         Private Sub TraceUpdateCoords(p As Point)
             Select Case _functiontype(_curfn)
                 Case FunctionType.Cartesian
-                    npdTVal.Text = Math.Round(ccfx(cscx(p.X)), 3).ToString()
+                    NpdTVal.Text = Math.Round(ccfx(cscx(p.X)), 3).ToString()
                 Case FunctionType.Inverse
-                    npdTVal.Text = Math.Round((ccfy(cscy(p.Y))), 3).ToString()
+                    NpdTVal.Text = Math.Round((ccfy(cscy(p.Y))), 3).ToString()
                 Case FunctionType.Polar
                     Dim fx As Double = ccfx(cscx(p.X))
                     Dim fy As Double = ccfy(cscy(p.Y))
@@ -1095,9 +1104,9 @@ Namespace UI.Graphing
                             atan += Math.PI
                         End If
                     End If
-                    npdTVal.Text = Math.Round(atan, 3).ToString()
+                    NpdTVal.Text = Math.Round(atan, 3).ToString()
                 Case FunctionType.Differential
-                    npdTVal.Text = "(" & Math.Round(ccfx(cscx(p.X)), 3).ToString() & "," & Math.Round(ccfy(cscy(p.Y)), 3).ToString() & ")"
+                    NpdTVal.Text = "(" & Math.Round(ccfx(cscx(p.X)), 3).ToString() & "," & Math.Round(ccfy(cscy(p.Y)), 3).ToString() & ")"
             End Select
         End Sub
 
@@ -1107,7 +1116,7 @@ Namespace UI.Graphing
             If _traceOn AndAlso _functiontype(_curfn) <> FunctionType.Parametric AndAlso e.Button = MouseButtons.Left Then
                 TraceUpdateCoords(e.Location)
                 TmrTraceUpdate.Start()
-            ElseIf e.Button <> MouseButtons.Right
+            ElseIf e.Button <> MouseButtons.Right Then
                 ppt.X = Cursor.Position.X
                 ppt.Y = Cursor.Position.Y
                 dragging = True
@@ -1119,8 +1128,8 @@ Namespace UI.Graphing
         Private Sub Canvas_MouseUp(sender As Object, e As MouseEventArgs) Handles Canvas.MouseUp
             If _traceOn AndAlso _functiontype(_curfn) <> FunctionType.Parametric AndAlso e.Button = MouseButtons.Left Then
                 TmrTraceUpdate.Stop()
-                npdTVal.Select(0, npdTVal.Text.Length)
-            ElseIf e.Button = MouseButtons.Right
+                NpdTVal.Select(0, NpdTVal.Text.Length)
+            ElseIf e.Button = MouseButtons.Right Then
                 BtnTrace.PerformClick()
                 TraceUpdateCoords(Canvas.PointToClient(Cursor.Position))
             Else
@@ -1178,7 +1187,7 @@ Namespace UI.Graphing
             prevx = GetX(True)
             Try
                 SetX(Double.NaN, True)
-                SetX(Eval(npdTVal.Text, True), True)
+                SetX(Eval(NpdTVal.Text, True), True)
                 Dim fn As String = _functions(_curfn)
                 Dim o As Object = Eval(fn, True)
                 Try
@@ -1209,7 +1218,7 @@ Namespace UI.Graphing
             prevy = GetY(True)
             Try
                 SetY(Double.NaN, True)
-                SetY(Eval(npdTVal.Text, True), True)
+                SetY(Eval(NpdTVal.Text, True), True)
                 Dim fn As String = _functions(_curfn)
                 Dim o As Object = Eval(fn, True)
                 Try
@@ -1239,7 +1248,7 @@ Namespace UI.Graphing
             Dim prevt As Object
             prevt = GetT(True)
             Try
-                SetT(Eval(npdTVal.Text, True), True)
+                SetT(Eval(NpdTVal.Text, True), True)
                 Dim fn As String = _functions(_curfn)
                 Dim range As String = fn.Remove(fn.LastIndexOf("]"c)).Substring(fn.LastIndexOf("["c) + 1)
                 fn = fn.Remove(fn.LastIndexOf("["c)).Trim()
@@ -1251,10 +1260,10 @@ Namespace UI.Graphing
                 Dim tend As Double = 2
                 If spl.Count <> 5 OrElse (spl(2).Trim().Length() <> 1) Then
                     Return ' invalid variable or range format
-                ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" ' normal range a < t < b
+                ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" Then ' normal range a < t < b
                     tstart = Eval(spl(0).Trim(), True)
                     tend = Eval(spl(4).Trim(), True) + 0.0001
-                ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" ' reversed range b > t > a
+                ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" Then ' reversed range b > t > a
                     tstart = Eval(spl(4).Trim(), True)
                     tend = Eval(spl(0).Trim(), True) + 0.0001
                 Else
@@ -1293,7 +1302,7 @@ Namespace UI.Graphing
             Dim prevt As Object
             prevt = GetT(True)
             Try
-                SetT(Eval(npdTVal.Text, True), True)
+                SetT(Eval(NpdTVal.Text, True), True)
                 Dim fn As String = _functions(_curfn)
                 Dim fnx As String = fn.Remove(fn.IndexOf(","c)).Substring(fn.IndexOf("<"c) + 1).Trim()
                 Dim fny As String = fn.Remove(fn.IndexOf(">"c)).Substring(fn.IndexOf(","c) + 1).Trim()
@@ -1307,10 +1316,10 @@ Namespace UI.Graphing
                 Dim tend As Double = 2
                 If spl.Count <> 5 OrElse (spl(2).Trim().Length() <> 1) Then
                     Return ' invalid variable (only t and theta are allowed) or range format
-                ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" ' normal range a < t < b
+                ElseIf spl(1).Trim() = "<" AndAlso spl(3).Trim() = "<" Then ' normal range a < t < b
                     tstart = Eval(spl(0).Trim(), True)
                     tend = Eval(spl(4).Trim(), True) + 0.0001
-                ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" ' reversed range b > t > a 
+                ElseIf spl(1).Trim() = ">" AndAlso spl(3).Trim() = ">" Then ' reversed range b > t > a 
                     tstart = Eval(spl(4).Trim(), True)
                     tend = Eval(spl(0).Trim(), True) + 0.0001
                 Else
@@ -1352,7 +1361,7 @@ Namespace UI.Graphing
             Try
                 Dim prevx As Object = GetX(True)
                 Dim prevy As Object = GetY(True)
-                Dim tuple() As String = npdTVal.Text.Trim({vbCr(0), vbLf(0), " "c, "("c, ")"c, "<"c, ">"c}).Split(","c)
+                Dim tuple() As String = NpdTVal.Text.Trim({vbCr(0), vbLf(0), " "c, "("c, ")"c, "<"c, ">"c}).Split(","c)
                 If tuple.Length <> 2 Then
                     LbTVal.Text = "Invalid Format"
                     Return
@@ -1432,7 +1441,7 @@ Namespace UI.Graphing
                 End If
                 Dim oldx As Object = gx()
                 Dim oldy As Object = gy()
-                Dim res As Double = Eval(npdTVal.Text.Trim(), True) + scl / 200
+                Dim res As Double = Eval(NpdTVal.Text.Trim(), True) + scl / 200
                 sx(res)
                 Dim mfn As String = _functions(_curfn)
                 Dim count As Integer = 0
@@ -1479,7 +1488,7 @@ Namespace UI.Graphing
                         If Not Double.IsNaN(prevy) Then
                             If o > prevy Then
                                 increase = 1
-                            ElseIf o < prevy
+                            ElseIf o < prevy Then
                                 increase = -1
                             Else
                                 increase = 0
@@ -1493,7 +1502,7 @@ Namespace UI.Graphing
                         If o * prevy <= 0 AndAlso Math.Abs(o - prevy) < 5000 * scl Then
                             startdetail = CDbl(gx()) - scl / 100
                             Exit While
-                        ElseIf Math.Abs(o - prevy) < 0.00001
+                        ElseIf Math.Abs(o - prevy) < 0.00001 Then
                             startdetail = CDbl(gx()) - scl / 100
                             Exit While
                         End If
@@ -1526,7 +1535,7 @@ Namespace UI.Graphing
                                             found = True
                                             Exit For
                                         End If
-                                    ElseIf _functiontype(i) = FunctionType.Cartesian
+                                    ElseIf _functiontype(i) = FunctionType.Cartesian Then
                                         Dim combine As String = "(" + mfn + ")-(" + _functions(i) + ")"
                                         Dim co As Double = Eval(combine, True)
                                         If Not Double.IsNaN(co) AndAlso Not Double.IsInfinity(co) AndAlso Not Double.IsNaN(pco(i)) AndAlso pco(i) * co <= 0 AndAlso Math.Abs(pco(i) - co) < 5000 * _scale.Y Then
@@ -1538,8 +1547,8 @@ Namespace UI.Graphing
                                     End If
                                 Next
                                 If found Then
-                                    npdTVal.Text = Math.Round(CDbl(gx()), 3).ToString()
-                                    LbTVal.Text &= vbCrLf & "Intersection: " & npdTVal.Text
+                                    NpdTVal.Text = Math.Round(CDbl(gx()), 3).ToString()
+                                    LbTVal.Text &= vbCrLf & "Intersection: " & NpdTVal.Text
                                     Exit While
                                 End If
                             End If
@@ -1547,22 +1556,22 @@ Namespace UI.Graphing
                             If Not Double.IsNaN(prevy) Then
                                 If o > prevy Then
                                     increase = 1
-                                ElseIf o < prevy
+                                ElseIf o < prevy Then
                                     increase = -1
                                 Else
                                     increase = 0
                                 End If
                                 If pi <> increase AndAlso pi <> -2 Then
-                                    npdTVal.Text = Math.Round(CDbl(gx()), 3).ToString()
-                                    LbTVal.Text &= vbCrLf & If(Math.Abs(prevy - o) > 5000, "Asymptote: ", If(increase = -1, "Maximum: ", "Minimum: ")) & npdTVal.Text
+                                    NpdTVal.Text = Math.Round(CDbl(gx()), 3).ToString()
+                                    LbTVal.Text &= vbCrLf & If(Math.Abs(prevy - o) > 5000, "Asymptote: ", If(increase = -1, "Maximum: ", "Minimum: ")) & NpdTVal.Text
                                     found = True
                                     Exit While
                                 End If
                             End If
 
                             If o * prevy < 0 Then
-                                npdTVal.Text = Math.Round(CDbl(gx()), 3).ToString()
-                                LbTVal.Text &= vbCrLf & "Zero: " & npdTVal.Text
+                                NpdTVal.Text = Math.Round(CDbl(gx()), 3).ToString()
+                                LbTVal.Text &= vbCrLf & "Zero: " & NpdTVal.Text
                                 found = True
                                 Exit While
                             End If
@@ -1594,7 +1603,7 @@ Namespace UI.Graphing
 
         Private Sub TraceSpecialPolar()
             Dim oldt As Object = GetT(True)
-            Dim x As Double = Eval(npdTVal.Text.Trim(), True) + 0.01
+            Dim x As Double = Eval(NpdTVal.Text.Trim(), True) + 0.01
             Dim ct As Integer = 0
             While ct <= 5
                 ct += 1
@@ -1618,7 +1627,8 @@ Namespace UI.Graphing
                                     startdetail = mid - 0.01
                                     Exit For
                                 End If
-                            ElseIf _functiontype(i) = FunctionType.Polar
+                            ElseIf _functiontype(i) = FunctionType.Polar Then
+
                                 If Math.Abs(Eval(_functions(i), True) - mr) <
                                                 _scale.X / 5 Then
                                     startdetail = mid - 0.01
@@ -1653,16 +1663,17 @@ Namespace UI.Graphing
                             If i = _curfn Then Continue For
                             If _functiontype(i) = FunctionType.OriginRay Then
                                 If Math.Abs(mid - Eval(_functions(i), True)) < _scale.X / 100 Then
-                                    npdTVal.Text = Math.Round(CDbl(GetT()), 3).ToString()
-                                    LbTVal.Text &= vbCrLf & "Intersection: " & npdTVal.Text
+                                    NpdTVal.Text = Math.Round(CDbl(GetT()), 3).ToString()
+                                    LbTVal.Text &= vbCrLf & "Intersection: " & NpdTVal.Text
                                     LbTVal.BackColor = Color.Brown
                                     Exit For
                                 End If
-                            ElseIf _functiontype(i) = FunctionType.Polar
+                            ElseIf _functiontype(i) = FunctionType.Polar Then
+
                                 If Math.Abs(Eval(_functions(i), True) - mr) <
                                                 _scale.X / 50 Then
-                                    npdTVal.Text = Math.Round(CDbl(GetT()), 3).ToString()
-                                    LbTVal.Text &= vbCrLf & "Intersection: " & npdTVal.Text
+                                    NpdTVal.Text = Math.Round(CDbl(GetT()), 3).ToString()
+                                    LbTVal.Text &= vbCrLf & "Intersection: " & NpdTVal.Text
                                     LbTVal.BackColor = Color.Brown
                                     Exit For
                                 End If
@@ -1671,8 +1682,8 @@ Namespace UI.Graphing
                     End If
                     If lstr(3) * lstr(1) < 0 OrElse Math.Abs(lstr(2)) < 0.00005 Then
                         If Math.Abs(x - lstr(1)) <= 5000 Then
-                            npdTVal.Text = Math.Round(CDbl(GetT(True)), 3).ToString()
-                            LbTVal.Text &= vbCrLf & "Zero: " & npdTVal.Text
+                            NpdTVal.Text = Math.Round(CDbl(GetT(True)), 3).ToString()
+                            LbTVal.Text &= vbCrLf & "Zero: " & NpdTVal.Text
                             LbTVal.BackColor = Color.Brown
                             Exit Sub
                         End If
@@ -1704,7 +1715,7 @@ Namespace UI.Graphing
         End Sub
 
         Private Sub BtnTrace_Enter(sender As Object, e As EventArgs) Handles BtnTrace.Enter, BtnTNext.Enter
-            npdTVal.Focus()
+            NpdTVal.Focus()
         End Sub
         Private Sub BtnTrace_Click(sender As Object, e As EventArgs) Handles BtnTrace.Click
             If BtnTrace.Text = "Trace" Then
@@ -1713,15 +1724,15 @@ Namespace UI.Graphing
                 BtnTrace.FlatAppearance.MouseDownBackColor = Color.FromArgb(170, 60, 60)
                 BtnTrace.Text = "✗"
                 If _functiontype(_curfn) = FunctionType.Differential Then
-                    npdTVal.Text = "(0, 0)"
+                    NpdTVal.Text = "(0, 0)"
                 Else
-                    npdTVal.Text = "0"
+                    NpdTVal.Text = "0"
                 End If
                 _traceOn = True
                 Trace()
                 PnlTrace.Show()
-                npdTVal.Select(0, npdTVal.Text.Length)
-                npdTVal.Focus()
+                NpdTVal.Select(0, NpdTVal.Text.Length)
+                NpdTVal.Focus()
             Else
                 BtnTrace.Text = "Trace"
                 BtnTrace.BackColor = Color.FromArgb(160, 70, 10)
@@ -1734,7 +1745,7 @@ Namespace UI.Graphing
             Canvas.Invalidate()
         End Sub
 
-        Private Sub npdTVal_ValueChanged(sender As Object, e As EventArgs) Handles npdTVal.TextChanged
+        Private Sub npdTVal_ValueChanged(sender As Object, e As EventArgs) Handles NpdTVal.TextChanged
             LbTVal.BackColor = Color.FromArgb(60, 60, 60)
             Trace()
         End Sub
@@ -1744,7 +1755,7 @@ Namespace UI.Graphing
             Canvas.Invalidate()
         End Sub
 
-        Private Sub npdTVal_KeyDown(sender As Object, e As KeyEventArgs) Handles npdTVal.KeyDown
+        Private Sub npdTVal_KeyDown(sender As Object, e As KeyEventArgs) Handles NpdTVal.KeyDown
             Try
                 If e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.Down Then
                     SetX(Double.NaN)
@@ -1753,14 +1764,14 @@ Namespace UI.Graphing
                     Else
                         NpdTVal.Text = (Math.Floor(Eval(NpdTVal.Text) * 10) / 10 - 0.1).ToString
                     End If
-                    npdTVal.SelectionStart = npdTVal.Text.Length
+                    NpdTVal.SelectionStart = NpdTVal.Text.Length
                     e.SuppressKeyPress = True
                 ElseIf e.KeyCode = Keys.Enter Then
                     BtnTNext.PerformClick()
-                ElseIf e.KeyCode = Keys.Escape OrElse (e.KeyCode = Keys.T AndAlso e.Alt)
+                ElseIf e.KeyCode = Keys.Escape OrElse (e.KeyCode = Keys.T AndAlso e.Alt) Then
                     BtnTrace.PerformClick()
-                ElseIf e.KeyCode = Keys.A AndAlso e.Control
-                    npdTVal.SelectAll()
+                ElseIf e.KeyCode = Keys.A AndAlso e.Control Then
+                    NpdTVal.SelectAll()
                     e.SuppressKeyPress = True
                 End If
             Catch ex As Exception
@@ -1832,10 +1843,10 @@ Namespace UI.Graphing
         FunctionType.Polar, FunctionType.Differential}
         Private Sub UpdateFunc()
             If _functiontype(_curfn) = FunctionType.Differential Then
-                npdTVal.Text = "(0, 0)"
+                NpdTVal.Text = "(0, 0)"
                 BtnTNext.Enabled = False
             Else
-                npdTVal.Text = "0"
+                NpdTVal.Text = "0"
                 If _functiontype(_curfn) = FunctionType.Parametric Then
                     BtnTNext.Enabled = False
                 Else
@@ -1855,14 +1866,14 @@ Namespace UI.Graphing
             UpdateFnLabelColor()
             SetPnlSelect(_functiontype(_curfn))
             PnlFnType.Hide()
-            npdTVal.Select(0, npdTVal.Text.Length)
+            NpdTVal.Select(0, NpdTVal.Text.Length)
         End Sub
         Private Sub ResetFunc()
             If _functiontype(_curfn) = FunctionType.Differential Then
-                npdTVal.Text = "(0, 0)"
+                NpdTVal.Text = "(0, 0)"
                 BtnTNext.Enabled = False
             Else
-                npdTVal.Text = "0"
+                NpdTVal.Text = "0"
                 If _functiontype(_curfn) = FunctionType.Parametric Then
                     BtnTNext.Enabled = False
                 Else
@@ -1938,12 +1949,12 @@ Namespace UI.Graphing
 
             ' select for easier editing
             If Tb.Text.Contains(" [") Then
-                Tb.Select(0, Tb.Text.LastIndexOf("["c) - 1)
+                Tb.SetSelection(0, Tb.Text.LastIndexOf("["c) - 1)
             Else
                 Tb.SelectAll()
             End If
 
-            npdTVal.Select(0, npdTVal.Text.Length)
+            NpdTVal.Select(0, NpdTVal.Text.Length)
             SetPnlSelect(_functiontype(_curfn))
             UpdateFnLabelColor()
         End Sub
@@ -1958,19 +1969,19 @@ Namespace UI.Graphing
                     _curfn -= 1
                     EnablePrevNextFnBtns(_curfn > 0, True)
                     UpdateFunc()
-                ElseIf e.KeyCode = Keys.Down AndAlso _curfn < _functions.Count - 1
+                ElseIf e.KeyCode = Keys.Down AndAlso _curfn < _functions.Count - 1 Then
                     _curfn += 1
                     EnablePrevNextFnBtns(True, _curfn <> _functions.Count - 1)
                     UpdateFunc()
                 ElseIf e.KeyCode = Keys.Oemplus OrElse e.KeyCode = Keys.A Then
                     BtnAdd.PerformClick()
-                ElseIf e.KeyCode = Keys.T
+                ElseIf e.KeyCode = Keys.T Then
                     BtnTrace.PerformClick()
-                ElseIf e.KeyCode = Keys.O
+                ElseIf e.KeyCode = Keys.O Then
                     LbFx_MouseDown(LbFx, New MouseEventArgs(MouseButtons.Left, 1, 1, 1, 0))
-                ElseIf e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W
+                ElseIf e.KeyCode = Keys.S OrElse e.KeyCode = Keys.W Then
                     BtnScale.PerformClick()
-                ElseIf e.KeyCode = Keys.M And e.Control
+                ElseIf e.KeyCode = Keys.M And e.Control Then
                     e.SuppressKeyPress = True
                 End If
             ElseIf PnlFnType.Visible Then

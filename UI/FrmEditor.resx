@@ -1140,9 +1140,9 @@
         aZt8kpG0qcDgD+7xnGc570UVlIDvrOWGaLdDtK99v9am70UVFtCHuAGTUirg80UVA4khFFFFQSf/2Q==
 </value>
   </data>
-  <metadata name="TTLetters.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="TTLetters.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>117, 17</value>
-  </metadata>
+  </data>
   <data name="BtnSigFigs.ToolTip" xml:space="preserve">
     <value>Toggle sig fig mode (Ctrl+Alt+F)
 
@@ -1217,9 +1217,6 @@ Off (gray): Variables can be used without
         yAuv0p7otEHU2Kokzh+2d0nrfthfDwAAAAAAgBBedOuS0y+VZIgAAAAASUVORK5CYII=
 </value>
   </data>
-  <metadata name="TTLetters.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>117, 17</value>
-  </metadata>
   <data name="BtnSave.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADUAAAAvCAYAAABDq4KNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -1240,16 +1237,21 @@ Off (gray): Variables can be used without
         8xQEAAAAAGAyZjscZpvQnryvfQAAAABJRU5ErkJggg==
 </value>
   </data>
-  <metadata name="TmrReCalc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="TmrReCalc.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>218, 17</value>
-  </metadata>
-  <metadata name="TmrLoad.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  </data>
+  <data name="TmrLoad.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="TmrAnim.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  </data>
+  <data name="TmrAnim.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>307, 17</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.TrayHeight" type="System.Int32, mscorlib">
     <value>37</value>
-  </metadata>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="BtnKeyboard.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Untitled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

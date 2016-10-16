@@ -58,6 +58,7 @@
             Me.Editor = New System.Windows.Forms.Panel()
             Me.Viewer = New Cantus.UI.Viewer()
             Me.TmrAnim = New System.Windows.Forms.Timer(Me.components)
+            Me.TmrFadeIn = New System.Windows.Forms.Timer(Me.components)
             Me.BtnKeyboard = New System.Windows.Forms.Button()
             Me.Split = New System.Windows.Forms.SplitContainer()
             Me.PnlSettings.SuspendLayout()
@@ -602,6 +603,10 @@
             '
             Me.TmrAutoSave.Interval = 60000
             '
+            'TmrFadeIn
+            '
+            Me.TmrFadeIn.Interval = 100
+            '
             'Editor
             '
             Me.Editor.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -632,13 +637,12 @@
             Me.Viewer.TabIndex = 17
             Me.Viewer.View = Cantus.UI.Viewer.ViewType.console
             '
-            'TmrAnim
-            '
-            '
             'BtnKeyboard
             '
             Me.BtnKeyboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.BtnKeyboard.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
+            Me.BtnKeyboard.Image =
+                CType(resources.GetObject("BtnKeyboard.Image"), System.Drawing.Image)
             Me.BtnKeyboard.Cursor = System.Windows.Forms.Cursors.Hand
             Me.BtnKeyboard.FlatAppearance.BorderSize = 0
             Me.BtnKeyboard.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
@@ -650,7 +654,6 @@
             Me.BtnKeyboard.Name = "BtnKeyboard"
             Me.BtnKeyboard.Size = New System.Drawing.Size(53, 47)
             Me.BtnKeyboard.TabIndex = 31
-            Me.BtnKeyboard.Text = "⌨"
             Me.TTLetters.SetToolTip(Me.BtnKeyboard, "Open the on-screen keyboard (Alt+K)")
             Me.BtnKeyboard.UseVisualStyleBackColor = False
             '
@@ -670,6 +673,7 @@
             Me.KeyPreview = True
             Me.MaximizeBox = False
             Me.MinimumSize = New Size(150, 100)
+            Me.Opacity = 0
             Me.Cursor = Cursors.SizeAll
             Me.Name = "FrmEditor"
             Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
@@ -715,6 +719,7 @@
         Friend WithEvents Editor As Panel
         Friend WithEvents Viewer As Viewer
         Friend WithEvents TmrAnim As Timer
+        Friend WithEvents TmrFadeIn As Timer
         Friend WithEvents BtnSigFigs As Button
         Friend WithEvents BtnKeyboard As Button
         Friend WithEvents Split As SplitContainer

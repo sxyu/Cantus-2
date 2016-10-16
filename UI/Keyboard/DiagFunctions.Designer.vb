@@ -42,7 +42,7 @@ Namespace UI.Dialogs
             Me.lv.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.lv.BorderStyle = System.Windows.Forms.BorderStyle.None
             Me.lv.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColName, Me.ColDescription})
-            Me.lv.Font = New System.Drawing.Font(OpenSans, 11.0!)
+            Me.lv.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.0!)
             Me.lv.ForeColor = System.Drawing.Color.White
             Me.lv.FullRowSelect = True
             Me.lv.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
@@ -93,7 +93,7 @@ Namespace UI.Dialogs
             Me.BtnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnCancel.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.0!)
             Me.BtnCancel.ForeColor = System.Drawing.Color.White
             Me.BtnCancel.Location = New System.Drawing.Point(1071, 0)
             Me.BtnCancel.Name = "BtnCancel"
@@ -109,9 +109,9 @@ Namespace UI.Dialogs
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.TbSearch.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
             Me.TbSearch.BorderStyle = System.Windows.Forms.BorderStyle.None
-            Me.TbSearch.Font = New System.Drawing.Font(OpenSans, 14.0!)
+            Me.TbSearch.Font = New System.Drawing.Font("Open Sans Light", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(3, Byte))
             Me.TbSearch.ForeColor = System.Drawing.Color.Gainsboro
-            Me.TbSearch.Location = New System.Drawing.Point(11, 9)
+            Me.TbSearch.Location = New System.Drawing.Point(11, 12)
             Me.TbSearch.Name = "TbSearch"
             Me.TbSearch.Size = New System.Drawing.Size(1054, 26)
             Me.TbSearch.TabIndex = 2
@@ -141,7 +141,7 @@ Namespace UI.Dialogs
             Me.ClientSize = New System.Drawing.Size(1231, 591)
             Me.Controls.Add(Me.PnlSearch)
             Me.Controls.Add(Me.lv)
-            Me.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.0!)
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
             Me.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
             Me.MaximizeBox = False

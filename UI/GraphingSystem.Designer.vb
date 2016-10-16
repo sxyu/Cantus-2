@@ -60,11 +60,11 @@
             Me.BtnPrevFn = New System.Windows.Forms.Button()
             Me.BtnAdd = New System.Windows.Forms.Button()
             Me.PnlInput = New System.Windows.Forms.Panel()
-            Me.Tb = New System.Windows.Forms.TextBox()
+            Me.Tb = New ScintillaNET.Scintilla()
             Me.LbFx = New System.Windows.Forms.Label()
             Me.TmrTraceUpdate = New System.Windows.Forms.Timer(Me.components)
             Me.TmrDrag = New System.Windows.Forms.Timer(Me.components)
-            Me.tt = New System.Windows.Forms.ToolTip(Me.components)
+            Me.Tt = New System.Windows.Forms.ToolTip(Me.components)
             Me.BtnFnDel = New System.Windows.Forms.Button()
             Me.PnlFnType = New System.Windows.Forms.Panel()
             Me.PnlFnTypeSelector = New System.Windows.Forms.Panel()
@@ -161,7 +161,7 @@
             Me.BtnScale.TabIndex = 4
             Me.BtnScale.TabStop = False
             Me.BtnScale.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            Me.tt.SetToolTip(Me.BtnScale, "Left click to adjust the range graphed on the window" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right click to reset to def" &
+            Me.Tt.SetToolTip(Me.BtnScale, "Left click to adjust the range graphed on the window" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Right click to reset to def" &
         "ault (centered) view" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Middle click to go to first quadrant view")
             Me.BtnScale.UseVisualStyleBackColor = False
             '
@@ -193,7 +193,7 @@
             Me.TbWBot.Name = "TbWBot"
             Me.TbWBot.Size = New System.Drawing.Size(156, 35)
             Me.TbWBot.TabIndex = 12
-            Me.tt.SetToolTip(Me.TbWBot, "Minimum Y (Expression)")
+            Me.Tt.SetToolTip(Me.TbWBot, "Minimum Y (Expression)")
             '
             'TbWLft
             '
@@ -203,7 +203,7 @@
             Me.TbWLft.Name = "TbWLft"
             Me.TbWLft.Size = New System.Drawing.Size(156, 35)
             Me.TbWLft.TabIndex = 14
-            Me.tt.SetToolTip(Me.TbWLft, "Minimum X (Expression)")
+            Me.Tt.SetToolTip(Me.TbWLft, "Minimum X (Expression)")
             '
             'TbWTop
             '
@@ -213,7 +213,7 @@
             Me.TbWTop.Name = "TbWTop"
             Me.TbWTop.Size = New System.Drawing.Size(156, 35)
             Me.TbWTop.TabIndex = 10
-            Me.tt.SetToolTip(Me.TbWTop, "Maximum Y (Expression)")
+            Me.Tt.SetToolTip(Me.TbWTop, "Maximum Y (Expression)")
             '
             'TbWRht
             '
@@ -223,7 +223,7 @@
             Me.TbWRht.Name = "TbWRht"
             Me.TbWRht.Size = New System.Drawing.Size(156, 35)
             Me.TbWRht.TabIndex = 16
-            Me.tt.SetToolTip(Me.TbWRht, "Maximum X (Expression)")
+            Me.Tt.SetToolTip(Me.TbWRht, "Maximum X (Expression)")
             '
             'BtnWOK
             '
@@ -243,7 +243,7 @@
             Me.BtnWOK.TabIndex = 20
             Me.BtnWOK.TabStop = False
             Me.BtnWOK.Text = "Update"
-            Me.tt.SetToolTip(Me.BtnWOK, "Update the Window Bounds (Enter)")
+            Me.Tt.SetToolTip(Me.BtnWOK, "Update the Window Bounds (Enter)")
             Me.BtnWOK.UseVisualStyleBackColor = False
             '
             'BtnWCancel
@@ -264,7 +264,7 @@
             Me.BtnWCancel.TabIndex = 18
             Me.BtnWCancel.TabStop = False
             Me.BtnWCancel.Text = "Cancel"
-            Me.tt.SetToolTip(Me.BtnWCancel, "Cancel Changes (Esc)")
+            Me.Tt.SetToolTip(Me.BtnWCancel, "Cancel Changes (Esc)")
             Me.BtnWCancel.UseVisualStyleBackColor = False
             '
             'LbWLft
@@ -352,7 +352,7 @@
             Me.BtnWClose.TabIndex = 21
             Me.BtnWClose.TabStop = False
             Me.BtnWClose.Text = "X"
-            Me.tt.SetToolTip(Me.BtnWClose, "Close (Esc)")
+            Me.Tt.SetToolTip(Me.BtnWClose, "Close (Esc)")
             Me.BtnWClose.UseVisualStyleBackColor = False
             '
             'LbWindow
@@ -417,7 +417,7 @@
             Me.NpdTVal.Name = "NpdTVal"
             Me.NpdTVal.Size = New System.Drawing.Size(156, 46)
             Me.NpdTVal.TabIndex = 4
-            Me.tt.SetToolTip(Me.NpdTVal, "Value to Trace At (Expression)")
+            Me.Tt.SetToolTip(Me.NpdTVal, "Value to Trace At (Expression)")
             '
             'BtnTNext
             '
@@ -437,7 +437,7 @@
             Me.BtnTNext.TabIndex = 5
             Me.BtnTNext.TabStop = False
             Me.BtnTNext.Text = "Find Crit Pts"
-            Me.tt.SetToolTip(Me.BtnTNext, "Find zeros, maxima, minima, and intercepts" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Enter)")
+            Me.Tt.SetToolTip(Me.BtnTNext, "Find zeros, maxima, minima, and intercepts" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Enter)")
             Me.BtnTNext.UseVisualStyleBackColor = False
             '
             'BtnTrace
@@ -457,7 +457,7 @@
             Me.BtnTrace.TabIndex = 1
             Me.BtnTrace.TabStop = False
             Me.BtnTrace.Text = "Trace"
-            Me.tt.SetToolTip(Me.BtnTrace, "Trace this graph (Alt+T)")
+            Me.Tt.SetToolTip(Me.BtnTrace, "Trace this graph (Alt+T)")
             Me.BtnTrace.UseVisualStyleBackColor = False
             '
             'Canvas
@@ -488,7 +488,7 @@
             Me.BtnGraph.TabIndex = 0
             Me.BtnGraph.TabStop = False
             Me.BtnGraph.Text = "Graph"
-            Me.tt.SetToolTip(Me.BtnGraph, "Update the graph of this function (Alt+Enter)")
+            Me.Tt.SetToolTip(Me.BtnGraph, "Update the graph of this function (Alt+Enter)")
             Me.BtnGraph.UseVisualStyleBackColor = False
             '
             'BtnNextFn
@@ -509,7 +509,7 @@
             Me.BtnNextFn.TabIndex = 9
             Me.BtnNextFn.TabStop = False
             Me.BtnNextFn.Text = "▼"
-            Me.tt.SetToolTip(Me.BtnNextFn, "Go to next function (Alt+Down)")
+            Me.Tt.SetToolTip(Me.BtnNextFn, "Go to next function (Alt+Down)")
             Me.BtnNextFn.UseVisualStyleBackColor = False
             '
             'BtnPrevFn
@@ -530,7 +530,7 @@
             Me.BtnPrevFn.TabIndex = 8
             Me.BtnPrevFn.TabStop = False
             Me.BtnPrevFn.Text = "▲"
-            Me.tt.SetToolTip(Me.BtnPrevFn, "Go to previous function (Alt+Up)")
+            Me.Tt.SetToolTip(Me.BtnPrevFn, "Go to previous function (Alt+Up)")
             Me.BtnPrevFn.UseVisualStyleBackColor = False
             '
             'BtnAdd
@@ -551,7 +551,7 @@
             Me.BtnAdd.TabIndex = 2
             Me.BtnAdd.TabStop = False
             Me.BtnAdd.Text = "+"
-            Me.tt.SetToolTip(Me.BtnAdd, "Add a new function (Alt+A or Alt++)")
+            Me.Tt.SetToolTip(Me.BtnAdd, "Add a new function (Alt+A or Alt++)")
             Me.BtnAdd.UseVisualStyleBackColor = False
             '
             'PnlInput
@@ -559,7 +559,7 @@
             Me.PnlInput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.PnlInput.BackColor = System.Drawing.Color.Gainsboro
+            Me.PnlInput.BackColor = Color.FromArgb(34, 34, 34)
             Me.PnlInput.Controls.Add(Me.Tb)
             Me.PnlInput.Location = New System.Drawing.Point(159, -3)
             Me.PnlInput.Name = "PnlInput"
@@ -568,7 +568,6 @@
             '
             'Tb
             '
-            Me.Tb.AcceptsTab = True
             Me.Tb.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -577,12 +576,9 @@
             Me.Tb.Cursor = System.Windows.Forms.Cursors.Arrow
             Me.Tb.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
             Me.Tb.ForeColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer))
-            Me.Tb.HideSelection = False
-            Me.Tb.Location = New System.Drawing.Point(7, 8)
-            Me.Tb.Multiline = True
+            Me.Tb.Location = New System.Drawing.Point(0, 8)
             Me.Tb.Name = "Tb"
-            Me.Tb.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal
-            Me.Tb.Size = New System.Drawing.Size(673, 53)
+            Me.Tb.Size = New System.Drawing.Size(680, 53)
             Me.Tb.TabIndex = 0
             '
             'LbFx
@@ -599,7 +595,7 @@
             Me.LbFx.TabIndex = 3
             Me.LbFx.Text = "f(x) = "
             Me.LbFx.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            Me.tt.SetToolTip(Me.LbFx, "Click to change function type")
+            Me.Tt.SetToolTip(Me.LbFx, "Click to change function type")
             '
             'TmrTraceUpdate
             '
@@ -627,7 +623,7 @@
             Me.BtnFnDel.TabIndex = 11
             Me.BtnFnDel.TabStop = False
             Me.BtnFnDel.Text = "✗"
-            Me.tt.SetToolTip(Me.BtnFnDel, "Delete Function")
+            Me.Tt.SetToolTip(Me.BtnFnDel, "Delete Function")
             Me.BtnFnDel.UseVisualStyleBackColor = False
             '
             'PnlFnType
@@ -953,7 +949,7 @@
         Friend WithEvents Split As SplitContainer
         Friend WithEvents BtnAdd As Button
         Friend WithEvents BtnGraph As Button
-        Friend WithEvents Tb As TextBox
+        Friend WithEvents Tb As ScintillaNET.Scintilla
         Friend WithEvents PnlInput As Panel
         Friend WithEvents LbFx As Label
         Friend WithEvents Canvas As PictureBox
@@ -964,7 +960,7 @@
         Friend WithEvents BtnTNext As Button
         Friend WithEvents BtnScale As Button
         Friend WithEvents TmrDrag As Timer
-        Friend WithEvents tt As ToolTip
+        Friend WithEvents Tt As ToolTip
         Friend WithEvents BtnNextFn As Button
         Friend WithEvents BtnPrevFn As Button
         Friend WithEvents PnlFnType As Panel
