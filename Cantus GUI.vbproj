@@ -308,9 +308,6 @@
   <ItemGroup>
     <None Include="Resources\Untitled.png" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bigdecimal.cs" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>

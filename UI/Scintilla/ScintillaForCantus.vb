@@ -99,7 +99,7 @@ Namespace UI.ScintillaForCantus
         ''' </summary>
         Private _inlineKeywords As New HashSet(Of String)((
                           "import load static let public private static global as is" &
-                        " continue return break throw or and xor not this ans prevans").Split(" "c))
+                        " continue return break throw or and xor not this ans prevans then").Split(" "c))
 
         ''' <summary>
         ''' A hashset of internal types
@@ -456,7 +456,7 @@ Namespace UI.ScintillaForCantus
                         If Not nsMode Then
                             autoCList.AddRange(("class function namespace if else elif for repeat return throw continue private public " &
                                            "let static global ref deref undefined null " &
-                                           "switch case run try catch finally while until " &
+                                           "switch case run try catch finally while until then " &
                                            "with in step to choose and or xor not ans prevans as is " &
                                            "text number date boolean matrix tuple set hashset linkedlist reference function " &
                                            "true false OUTPUT ANGLEREPR SPACESPERTAB EXPLICIT SIGFIGS").Split(" "c))

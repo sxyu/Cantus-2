@@ -5,37 +5,31 @@ created By Alex Yu 2015-16
 https://github.com/sxyu/Cantus-GUI
 
 *********************************************************************************************
-Credits
+What's new in 2.6.0.144
 *********************************************************************************************
-This project wouldn't have been possible without the following:
-
-Scintilla: Textbox with syntax highlighting, autocompletion, etc. 
-by antoniolinares, johnsoonj, kapix93, nyamatongwe, other contributors
-http://www.scintilla.org/
-License: http://www.scintilla.org/License.txt
-
-Scintilla.NET: .NET control, wrapper & bindings for Scintilla:  by Jacob Slusser (License: MIT)
-https://github.com/jacobslusser/ScintillaNET
-
-BigDecimal Class: .Net arbitrary precison class
-By Jan Christoph Bernack (contact: jc.bernack at googlemail.com)
-Found: http://stackoverflow.com/a/4524254
-
-EmbeddedAssembly Class: Class to simplify embedding dlls within the executable by Adriancs
-Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
+-Fixed 'then' chaining for inline statements:
+  repeat 3 then repeat 4: print("hello ")
+-Fixed variable access within classes
+-Fixed a bug where comparisons between two variables inside an if/while statement
+  using a single equal sign always evaluated to false
+-Fixed a small bug where the lambda function `x=>x` when called
+  anonymously would return a reference to the input value
 
 *********************************************************************************************
-What's new in 2.6.0.141-143
+New from in 2.6.0.141-143
 *********************************************************************************************
--Welcome to our first Beta build! 
-  The program is now stable enough to graduate from the Alpha stage.
+Welcome to our first Beta build! 
+I feel that the project is now stable enough for it to graduate from the Alpha stage.
+So welcome to the Beta! You'll see that there're lots of new features. Please have a look around.
+
 -Chemistry: 
   -implemented balance(,) for balancing equations: 
     balance("H2+O2", "H2O") 
     # prints 2 H2 + O2 = 2 H2O 
     # then returns [2, 1, 2]
-  -charges() now supports polyatomic ions: charges("PO3") # gives [-3]
+	This makes use of the nullspace() function, which has also been updated.
 
+  -charges() now supports polyatomic ions: charges("PO3") # gives [-3]
   -polyionname() is a new function for looking up the names of polyatomic ions:
     polyionname("PO3") # gives 'phosphate'
   -soluble() now infers the charge of the ion if not specified:
@@ -83,6 +77,28 @@ What's new in 2.6.0.141-143
 -Moderate evaluation speed enhancements
 -Other minor changes
 
+*********************************************************************************************
+Credits
+*********************************************************************************************
+This project wouldn't have been possible without the following:
+
+Scintilla: Textbox with syntax highlighting, autocompletion, etc. 
+by antoniolinares, johnsoonj, kapix93, nyamatongwe, other contributors
+http://www.scintilla.org/
+License: http://www.scintilla.org/License.txt
+
+Scintilla.NET: .NET control, wrapper & bindings for Scintilla:  by Jacob Slusser (License: MIT)
+https://github.com/jacobslusser/ScintillaNET
+
+BigDecimal Class: .Net arbitrary precison class
+By Jan Christoph Bernack (contact: jc.bernack at googlemail.com)
+Found: http://stackoverflow.com/a/4524254
+
+EmbeddedAssembly Class: Class to simplify embedding dlls within the executable by Adriancs
+Found: http://www.codeproject.com/Articles/528178/Load-DLL-From-Embedded-Resource 
+
+*********************************************************************************************
+Update log from older releases
 *********************************************************************************************
 New from 2.5.2.140
 *********************************************************************************************
