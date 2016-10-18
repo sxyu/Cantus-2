@@ -16,7 +16,7 @@ What's new in 2.6.0.144
   anonymously would return a reference to the input value
 
 *********************************************************************************************
-New from in 2.6.0.141-143
+New from 2.6.0.141-143
 *********************************************************************************************
 Welcome to our first Beta build! 
 I feel that the project is now stable enough for it to graduate from the Alpha stage.
