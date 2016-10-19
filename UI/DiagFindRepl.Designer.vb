@@ -41,7 +41,7 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.TbFind.Location = New System.Drawing.Point(21, 39)
             Me.TbFind.Name = "TbFind"
-            Me.TbFind.Size = New System.Drawing.Size(536, 24)
+            Me.TbFind.Size = New System.Drawing.Size(536, 28)
             Me.TbFind.TabIndex = 0
             '
             'Label1
@@ -49,7 +49,7 @@
             Me.Label1.AutoSize = True
             Me.Label1.Location = New System.Drawing.Point(17, 13)
             Me.Label1.Name = "Label1"
-            Me.Label1.Size = New System.Drawing.Size(36, 18)
+            Me.Label1.Size = New System.Drawing.Size(36, 17)
             Me.Label1.TabIndex = 1
             Me.Label1.Text = "Find"
             '
@@ -58,7 +58,7 @@
             Me.Label2.AutoSize = True
             Me.Label2.Location = New System.Drawing.Point(17, 83)
             Me.Label2.Name = "Label2"
-            Me.Label2.Size = New System.Drawing.Size(96, 18)
+            Me.Label2.Size = New System.Drawing.Size(96, 17)
             Me.Label2.TabIndex = 3
             Me.Label2.Text = "Replace With"
             '
@@ -68,7 +68,7 @@
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.TbReplace.Location = New System.Drawing.Point(21, 109)
             Me.TbReplace.Name = "TbReplace"
-            Me.TbReplace.Size = New System.Drawing.Size(536, 24)
+            Me.TbReplace.Size = New System.Drawing.Size(536, 28)
             Me.TbReplace.TabIndex = 1
             '
             'BtnCancel
@@ -81,7 +81,7 @@
             Me.BtnCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnCancel.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnCancel.ForeColor = System.Drawing.Color.White
             Me.BtnCancel.Location = New System.Drawing.Point(266, 205)
             Me.BtnCancel.Name = "BtnCancel"
@@ -101,7 +101,7 @@
             Me.BtnFind.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnFind.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnFind.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnFind.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnFind.ForeColor = System.Drawing.Color.White
             Me.BtnFind.Location = New System.Drawing.Point(365, 205)
             Me.BtnFind.Name = "BtnFind"
@@ -121,7 +121,7 @@
             Me.BtnRepl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(65, Byte), Integer))
             Me.BtnRepl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer), CType(CType(55, Byte), Integer))
             Me.BtnRepl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnRepl.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnRepl.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnRepl.ForeColor = System.Drawing.Color.White
             Me.BtnRepl.Location = New System.Drawing.Point(464, 205)
             Me.BtnRepl.Name = "BtnRepl"
@@ -136,7 +136,7 @@
             Me.CbRegex.AutoSize = True
             Me.CbRegex.Location = New System.Drawing.Point(21, 157)
             Me.CbRegex.Name = "CbRegex"
-            Me.CbRegex.Size = New System.Drawing.Size(213, 22)
+            Me.CbRegex.Size = New System.Drawing.Size(212, 21)
             Me.CbRegex.TabIndex = 2
             Me.CbRegex.Text = "Enable Regular E&xpressions"
             Me.CbRegex.UseVisualStyleBackColor = True
@@ -148,7 +148,7 @@
             Me.LbMatchCount.ForeColor = System.Drawing.Color.Gainsboro
             Me.LbMatchCount.Location = New System.Drawing.Point(17, 215)
             Me.LbMatchCount.Name = "LbMatchCount"
-            Me.LbMatchCount.Size = New System.Drawing.Size(111, 18)
+            Me.LbMatchCount.Size = New System.Drawing.Size(108, 17)
             Me.LbMatchCount.TabIndex = 6
             Me.LbMatchCount.Text = "Matches Found"
             Me.LbMatchCount.Visible = False
@@ -158,9 +158,9 @@
             Me.CbCase.AutoSize = True
             Me.CbCase.Location = New System.Drawing.Point(246, 157)
             Me.CbCase.Name = "CbCase"
-            Me.CbCase.Size = New System.Drawing.Size(125, 22)
+            Me.CbCase.Size = New System.Drawing.Size(125, 21)
             Me.CbCase.TabIndex = 3
-            Me.CbCase.Text = "Case Sensitive"
+            Me.CbCase.Text = "Case &Sensitive"
             Me.CbCase.UseVisualStyleBackColor = True
             '
             'DiagFindRepl
@@ -180,7 +180,7 @@
             Me.Controls.Add(Me.TbFind)
             Me.Controls.Add(Me.Label2)
             Me.Controls.Add(Me.Label1)
-            Me.Font = New System.Drawing.Font(OpenSansLight, 11.25!)
+            Me.Font = New System.Drawing.Font("Open Sans Light", 11.25!)
             Me.ForeColor = System.Drawing.Color.White
             Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)

@@ -251,7 +251,7 @@ Namespace UI
             End If
         End Sub
 #End Region
-#Region "Shared functions"
+#Region "Common Functions"
         ''' <summary>
         ''' Send the event to asynchronously evaluate the expression
         ''' </summary>
@@ -607,7 +607,7 @@ Namespace UI
             End Try
         End Sub
 #End Region
-#Region "main buttons"
+#Region "Main Buttons"
         Private Sub BtnCalc_Click(sender As Object, e As System.EventArgs) Handles BtnEval.Click
             Tb.Focus()
             EvaluateExpr()
@@ -804,9 +804,9 @@ Namespace UI
         Private Sub BtnSettings_Click(sender As Object, e As EventArgs) Handles BtnSettings.Click
             If PnlSettings.Left > 0 Then
                 PnlTb.Focus()
-                BtnAngleRepr.Text = _eval.AngleMode.ToString()
-                BtnOutputFormat.Text = _eval.OutputMode.ToString()
-                If _eval.ExplicitMode Then
+                BtnAngleRepr.Text = RootEvaluator.AngleMode.ToString()
+                BtnOutputFormat.Text = RootEvaluator.OutputMode.ToString()
+                If RootEvaluator.ExplicitMode Then
                     BtnExplicit.BackColor = BtnEval.BackColor
                     BtnExplicit.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
                 Else
@@ -814,7 +814,7 @@ Namespace UI
                     BtnExplicit.FlatAppearance.MouseDownBackColor = BtnX.FlatAppearance.MouseDownBackColor
                 End If
                 BtnExplicit.FlatAppearance.MouseOverBackColor = BtnExplicit.BackColor
-                If _eval.SignificantMode Then
+                If RootEvaluator.SignificantMode Then
                     BtnSigFigs.BackColor = BtnEval.BackColor
                     BtnSigFigs.FlatAppearance.MouseDownBackColor = BtnEval.FlatAppearance.MouseDownBackColor
                 Else
@@ -997,8 +997,9 @@ Namespace UI
             Right = 8
             None = 0
         End Enum
+
         Dim _scaleSide As ScaleSide = ScaleSide.None
-        Friend Sub FrmEditor_scale_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown
+        Friend Sub FrmEditor_Scale_MouseDown(sender As Object, e As MouseEventArgs) Handles MyBase.MouseDown
             Dim dist As Integer() = {e.Y, Me.Height - e.Y, e.X, Me.Width - e.X}
             Dim MAX_DIST As Integer = 15
             _scaleSide = ScaleSide.None
@@ -1009,7 +1010,7 @@ Namespace UI
             Next
         End Sub
 
-        Friend Sub FrmEditor_scale_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove
+        Friend Sub FrmEditor_Scale_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove
             If _scaleSide = ScaleSide.None Then Return
 
             If (_scaleSide And ScaleSide.Top) <> 0 Then
@@ -1031,7 +1032,7 @@ Namespace UI
             End If
         End Sub
 
-        Friend Sub FrmEditor_scale_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp
+        Friend Sub FrmEditor_Scale_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp
             _scaleSide = ScaleSide.None
             My.Settings.Position = String.Join(",", DirectCast({Me.Left, Me.Top, Me.Width, Me.Height, Me.WindowState,
                                                Split.SplitterDistance}, Object()))
@@ -1039,14 +1040,14 @@ Namespace UI
         End Sub
 
         Private Sub BtnOutputFormat_Click(sender As Object, e As EventArgs) Handles BtnOutputFormat.Click
-            If _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific Then
-                _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Raw
+            If RootEvaluator.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific Then
+                RootEvaluator.OutputMode = Core.CantusEvaluator.OutputFormat.Raw
             Else
-                _eval.OutputMode = CType(CInt(_eval.OutputMode) + 1, Core.CantusEvaluator.OutputFormat)
+                RootEvaluator.OutputMode = CType(CInt(RootEvaluator.OutputMode) + 1, Core.CantusEvaluator.OutputFormat)
             End If
-            If _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Math Then
+            If RootEvaluator.OutputMode = Core.CantusEvaluator.OutputFormat.Math Then
                 BtnOutputFormat.Text = "Math"
-            ElseIf _eval.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific Then
+            ElseIf RootEvaluator.OutputMode = Core.CantusEvaluator.OutputFormat.Scientific Then
                 BtnOutputFormat.Text = "Scientific"
             Else
                 BtnOutputFormat.Text = "Raw"
@@ -1055,14 +1056,14 @@ Namespace UI
         End Sub
 
         Private Sub BtnAngleRep_Click(sender As Object, e As EventArgs) Handles BtnAngleRepr.Click
-            If _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Gradian Then
-                _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree
+            If RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Gradian Then
+                RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree
             Else
-                _eval.AngleMode = CType(CInt(_eval.AngleMode) + 1, Core.CantusEvaluator.AngleRepresentation)
+                RootEvaluator.AngleMode = CType(CInt(RootEvaluator.AngleMode) + 1, Core.CantusEvaluator.AngleRepresentation)
             End If
-            If _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Radian Then
+            If RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Radian Then
                 BtnAngleRepr.Text = "Radian"
-            ElseIf _eval.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree Then
+            ElseIf RootEvaluator.AngleMode = Core.CantusEvaluator.AngleRepresentation.Degree Then
                 BtnAngleRepr.Text = "Degree"
             Else
                 BtnAngleRepr.Text = "Gradian"
@@ -1099,13 +1100,13 @@ Namespace UI
             Dim Btn As Button = DirectCast(sender, Button)
 
             If Btn.Tag.ToString().EndsWith("E") Then
-                _eval.ExplicitMode = Not _eval.ExplicitMode
-                mode = _eval.ExplicitMode
+                RootEvaluator.ExplicitMode = Not RootEvaluator.ExplicitMode
+                mode = RootEvaluator.ExplicitMode
             Else
-                _eval.SignificantMode = Not _eval.SignificantMode
-                mode = _eval.SignificantMode
-                If mode AndAlso _eval.OutputMode = OutputFormat.Math Then
-                    _eval.OutputMode = OutputFormat.Raw
+                RootEvaluator.SignificantMode = Not RootEvaluator.SignificantMode
+                mode = RootEvaluator.SignificantMode
+                If mode AndAlso RootEvaluator.OutputMode = OutputFormat.Math Then
+                    RootEvaluator.OutputMode = OutputFormat.Raw
                     BtnOutputFormat.Text = "Raw"
                 End If
             End If

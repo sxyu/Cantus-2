@@ -5,7 +5,15 @@ created By Alex Yu 2015-16
 https://github.com/sxyu/Cantus-GUI
 
 *********************************************************************************************
-What's new in 2.6.0.144
+What's new in 2.6.0.145
+*********************************************************************************************
+-Conclusive fix for rref() function
+-nullspace() no longer outputs full internal exception
+-Find and replace: keyboard shortcut for "case sensitive" option
+-Minor fixes
+
+*********************************************************************************************
+New from 2.6.0.144
 *********************************************************************************************
 -Fixed 'then' chaining for inline statements:
   repeat 3 then repeat 4: print("hello ")
