@@ -300,7 +300,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cantus\Cantus.csproj">
+    <ProjectReference Include="..\Cantus-Core\Cantus.csproj">
       <Project>{19ff193a-1165-4779-b0be-1b7b27d02e8f}</Project>
       <Name>Cantus</Name>
     </ProjectReference>

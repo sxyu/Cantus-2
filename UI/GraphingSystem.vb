@@ -340,7 +340,7 @@ Namespace UI.Graphing
                         Dim hstep As Double = SelectScale(_scaleBackup.X)
                         Dim i As Double = 0
                         Dim prev As Double = Double.NaN
-                        Dim delta As Double = 0.5
+                        Dim delta As Double = 0.05
 
                         While i <= WID
                             SetX(ccfx(i, True))
@@ -351,9 +351,9 @@ Namespace UI.Graphing
                             Dim x As Double = i
                             If Double.IsNaN(prev) OrElse Double.IsNaN(res) OrElse y < 0 OrElse y > HIGH OrElse Math.Abs(y - prev) > HIGH / 2 Then
                                 If preview Then
-                                    delta = 5
+                                    delta = 3
                                 Else
-                                    delta = 2
+                                    delta = 1
                                 End If
                                 i += delta
                                 If pts.Count > 1 Then
@@ -363,9 +363,9 @@ Namespace UI.Graphing
                             Else
                                 Dim inner As Double = 100 + Math.Abs((y - prev) / delta)
                                 If preview Then
-                                    delta = Math.Max(Math.Log(inner) / Math.Log(8) * 2, 0.001)
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(2), 0.001)
                                 Else
-                                    delta = Math.Max(Math.Log(inner) / Math.Log(19) * 0.8, 0.001)
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(1.1) * 0.01, 0.00005)
                                 End If
                                 If y < HIGH / 4 OrElse y > HIGH / 4 * 3 Then
                                     delta = Math.Max(delta, 2)
@@ -385,7 +385,7 @@ Namespace UI.Graphing
                         Dim vstep As Double = SelectScale(_scaleBackup.Y)
                         Dim i As Double = 0
                         Dim prev As Double = Double.NaN
-                        Dim delta As Double = 0.5
+                        Dim delta As Double = 0.05
 
                         While i <= HIGH
                             SetY(ccfy(i, True))
@@ -394,9 +394,9 @@ Namespace UI.Graphing
                             Dim y As Double = i
                             If Double.IsNaN(prev) OrElse Double.IsNaN(res) OrElse x < 0 OrElse x > WID Then
                                 If preview Then
-                                    delta = 5
+                                    delta = 3
                                 Else
-                                    delta = 2
+                                    delta = 1
                                 End If
                                 i += delta
                                 If pts.Count > 1 Then
@@ -407,9 +407,9 @@ Namespace UI.Graphing
                             Else
                                 Dim inner As Double = 100 + Math.Abs((x - prev) / delta)
                                 If preview Then
-                                    delta = Math.Max(Math.Log(inner) / Math.Log(8) * 2, 0.001)
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(2), 0.001)
                                 Else
-                                    delta = Math.Max(Math.Log(inner) / Math.Log(19) * 0.8, 0.001)
+                                    delta = Math.Max(Math.Log(inner) / Math.Log(1.1) * 0.01, 0.00005)
                                 End If
                                 If x < WID / 4 OrElse x > WID / 4 * 3 Then
                                     delta = Math.Max(delta, 2)
@@ -514,9 +514,9 @@ Namespace UI.Graphing
                             Dim resx As Double = resr * Math.Cos(i)
                             Dim resy As Double = resr * Math.Sin(i)
                             If preview Then
-                                i += (tend - tstart) / 500 / Math.Max(Math.Log10((tend - tstart) / 6 / Math.PI), 0.5)
+                                i += (tend - tstart) / 1500 / Math.Max(Math.Log10((tend - tstart) / 6 / Math.PI), 0.5)
                             Else
-                                i += (tend - tstart) / 2500 / Math.Max(Math.Log10((tend - tstart) / Math.PI), 1)
+                                i += (tend - tstart) / 10000 / Math.Max(Math.Log10((tend - tstart) / Math.PI), 1)
                             End If
                             Dim y As Double = cfcy(resy, True)
                             Dim x As Double = cfcx(resx, True)
@@ -536,8 +536,8 @@ Namespace UI.Graphing
                         Dim deltax As Double = cdfcx(hstep)
                         Dim deltay As Double = cdfcy(vstep)
                         If preview Then
-                            deltax *= 2
-                            deltay *= 2
+                            deltax *= 3
+                            deltay *= 3
                         End If
                         Dim offsetx As Double = (center.X + WID / 2) Mod (deltax)
                         Dim offsety As Double = (center.Y - HIGH / 2) Mod (deltay)
@@ -589,20 +589,19 @@ Namespace UI.Graphing
             End If
         End Sub
 
+        Dim sui As New Font(OpenSans, 15)
+        Dim hstep As Double
+        Dim vstep As Double
+
         Private Sub PaintAxes(g As Graphics, center As Coord)
             Using p As New Pen(Color.FromArgb(60, 60, 60), 1)
                 Using b As New SolidBrush(Color.FromArgb(100, 100, 100))
-                    Dim sui As New Font(OpenSans, 15)
-
-                    Dim hstep As Double = SelectScale(_scaleBackup.X)
 
                     Dim offset As Double = center.X Mod (hstep * SCREENFACT / _scaleBackup.X)
                     For i As Double = 0 To WID \ 2 Step hstep * SCREENFACT / _scaleBackup.X
                         g.DrawLine(p, CSng(WID / 2 + offset + i), 0, CSng(WID / 2 + offset + i), HIGH)
                         g.DrawLine(p, CSng(WID / 2 + offset - i), 0, CSng(WID / 2 + offset - i), HIGH)
                     Next
-
-                    Dim vstep As Double = SelectScale(_scaleBackup.Y)
 
                     offset = center.Y Mod (vstep * SCREENFACT / _scaleBackup.Y)
                     For i As Double = 0 To HIGH \ 2 Step vstep * SCREENFACT / _scaleBackup.Y
@@ -657,6 +656,10 @@ Namespace UI.Graphing
             g.CompositingQuality = CompositingQuality.HighSpeed
 
             _scaleBackup = _scale
+
+            hstep = SelectScale(_scaleBackup.X)
+            vstep = SelectScale(_scaleBackup.Y)
+
             _centerBackup = New Coord(_loc.X, _loc.Y)
 
             ' draw the grid

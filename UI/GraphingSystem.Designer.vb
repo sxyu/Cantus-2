@@ -138,7 +138,7 @@
             Me.Split.Panel2.Controls.Add(Me.PnlInput)
             Me.Split.Panel2.Controls.Add(Me.LbFx)
             Me.Split.Size = New System.Drawing.Size(984, 661)
-            Me.Split.SplitterDistance = 601
+            Me.Split.SplitterDistance = 602
             Me.Split.SplitterWidth = 3
             Me.Split.TabIndex = 0
             '
@@ -151,7 +151,7 @@
             Me.BtnScale.FlatAppearance.MouseDownBackColor = System.Drawing.Color.SlateBlue
             Me.BtnScale.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateBlue
             Me.BtnScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnScale.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.BtnScale.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.BtnScale.ForeColor = System.Drawing.Color.White
             Me.BtnScale.Image = CType(resources.GetObject("BtnScale.Image"), System.Drawing.Image)
             Me.BtnScale.Location = New System.Drawing.Point(11, 11)
@@ -188,7 +188,7 @@
             'TbWBot
             '
             Me.TbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-            Me.TbWBot.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWBot.Font = New System.Drawing.Font("Open Sans Light", 15.0!)
             Me.TbWBot.Location = New System.Drawing.Point(156, 212)
             Me.TbWBot.Name = "TbWBot"
             Me.TbWBot.Size = New System.Drawing.Size(156, 35)
@@ -198,7 +198,7 @@
             'TbWLft
             '
             Me.TbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
-            Me.TbWLft.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWLft.Font = New System.Drawing.Font("Open Sans Light", 15.0!)
             Me.TbWLft.Location = New System.Drawing.Point(25, 147)
             Me.TbWLft.Name = "TbWLft"
             Me.TbWLft.Size = New System.Drawing.Size(156, 35)
@@ -208,7 +208,7 @@
             'TbWTop
             '
             Me.TbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
-            Me.TbWTop.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWTop.Font = New System.Drawing.Font("Open Sans Light", 15.0!)
             Me.TbWTop.Location = New System.Drawing.Point(156, 85)
             Me.TbWTop.Name = "TbWTop"
             Me.TbWTop.Size = New System.Drawing.Size(156, 35)
@@ -218,7 +218,7 @@
             'TbWRht
             '
             Me.TbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
-            Me.TbWRht.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.TbWRht.Font = New System.Drawing.Font("Open Sans Light", 15.0!)
             Me.TbWRht.Location = New System.Drawing.Point(289, 147)
             Me.TbWRht.Name = "TbWRht"
             Me.TbWRht.Size = New System.Drawing.Size(156, 35)
@@ -234,7 +234,7 @@
             Me.BtnWOK.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(210, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.BtnWOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(10, Byte), Integer))
             Me.BtnWOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnWOK.Font = New System.Drawing.Font(OpenSans, 11.0!)
+            Me.BtnWOK.Font = New System.Drawing.Font("Open Sans", 11.0!)
             Me.BtnWOK.ForeColor = System.Drawing.Color.White
             Me.BtnWOK.Location = New System.Drawing.Point(368, 256)
             Me.BtnWOK.Margin = New System.Windows.Forms.Padding(2)
@@ -255,7 +255,7 @@
             Me.BtnWCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.BtnWCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.BtnWCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnWCancel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnWCancel.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnWCancel.ForeColor = System.Drawing.Color.White
             Me.BtnWCancel.Location = New System.Drawing.Point(272, 253)
             Me.BtnWCancel.Margin = New System.Windows.Forms.Padding(2)
@@ -271,7 +271,7 @@
             '
             Me.LbWLft.Anchor = System.Windows.Forms.AnchorStyles.Left
             Me.LbWLft.AutoSize = True
-            Me.LbWLft.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWLft.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
             Me.LbWLft.Location = New System.Drawing.Point(80, 117)
             Me.LbWLft.Name = "LbWLft"
             Me.LbWLft.Size = New System.Drawing.Size(49, 22)
@@ -282,7 +282,7 @@
             '
             Me.LbWRht.Anchor = System.Windows.Forms.AnchorStyles.Right
             Me.LbWRht.AutoSize = True
-            Me.LbWRht.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWRht.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
             Me.LbWRht.Location = New System.Drawing.Point(341, 119)
             Me.LbWRht.Name = "LbWRht"
             Me.LbWRht.Size = New System.Drawing.Size(52, 22)
@@ -293,7 +293,7 @@
             '
             Me.LbWBot.Anchor = System.Windows.Forms.AnchorStyles.Bottom
             Me.LbWBot.AutoSize = True
-            Me.LbWBot.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWBot.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
             Me.LbWBot.Location = New System.Drawing.Point(211, 182)
             Me.LbWBot.Name = "LbWBot"
             Me.LbWBot.Size = New System.Drawing.Size(48, 22)
@@ -304,7 +304,7 @@
             '
             Me.LbWTop.Anchor = System.Windows.Forms.AnchorStyles.Top
             Me.LbWTop.AutoSize = True
-            Me.LbWTop.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWTop.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
             Me.LbWTop.Location = New System.Drawing.Point(211, 56)
             Me.LbWTop.Name = "LbWTop"
             Me.LbWTop.Size = New System.Drawing.Size(51, 22)
@@ -326,7 +326,7 @@
             '
             'LbWLogo
             '
-            Me.LbWLogo.Font = New System.Drawing.Font(OpenSansLight, 16.0!)
+            Me.LbWLogo.Font = New System.Drawing.Font("Open Sans Light", 16.0!)
             Me.LbWLogo.Image = CType(resources.GetObject("LbWLogo.Image"), System.Drawing.Image)
             Me.LbWLogo.Location = New System.Drawing.Point(16, 7)
             Me.LbWLogo.Name = "LbWLogo"
@@ -343,7 +343,7 @@
             Me.BtnWClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.BtnWClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.BtnWClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnWClose.Font = New System.Drawing.Font(OpenSansLight, 9.0!)
+            Me.BtnWClose.Font = New System.Drawing.Font("Open Sans Light", 9.0!)
             Me.BtnWClose.ForeColor = System.Drawing.Color.White
             Me.BtnWClose.Location = New System.Drawing.Point(423, 2)
             Me.BtnWClose.Margin = New System.Windows.Forms.Padding(2)
@@ -358,7 +358,7 @@
             'LbWindow
             '
             Me.LbWindow.AutoSize = True
-            Me.LbWindow.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbWindow.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
             Me.LbWindow.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.LbWindow.Location = New System.Drawing.Point(48, 12)
             Me.LbWindow.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
@@ -384,7 +384,7 @@
             'LbTrace
             '
             Me.LbTrace.AutoSize = True
-            Me.LbTrace.Font = New System.Drawing.Font(OpenSansLight, 12.0!)
+            Me.LbTrace.Font = New System.Drawing.Font("Open Sans Light", 12.0!)
             Me.LbTrace.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.LbTrace.Location = New System.Drawing.Point(10, 9)
             Me.LbTrace.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
@@ -411,7 +411,7 @@
             Me.NpdTVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.NpdTVal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-            Me.NpdTVal.Font = New System.Drawing.Font(OpenSansLight, 15.0!)
+            Me.NpdTVal.Font = New System.Drawing.Font("Open Sans Light", 15.0!)
             Me.NpdTVal.Location = New System.Drawing.Point(0, 41)
             Me.NpdTVal.Multiline = True
             Me.NpdTVal.Name = "NpdTVal"
@@ -428,7 +428,7 @@
             Me.BtnTNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DimGray
             Me.BtnTNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray
             Me.BtnTNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnTNext.Font = New System.Drawing.Font(OpenSansLight, 7.0!)
+            Me.BtnTNext.Font = New System.Drawing.Font("Open Sans Light", 7.0!)
             Me.BtnTNext.ForeColor = System.Drawing.Color.White
             Me.BtnTNext.Location = New System.Drawing.Point(156, 41)
             Me.BtnTNext.Margin = New System.Windows.Forms.Padding(2)
@@ -466,7 +466,7 @@
             Me.Canvas.Dock = System.Windows.Forms.DockStyle.Fill
             Me.Canvas.Location = New System.Drawing.Point(0, 0)
             Me.Canvas.Name = "Canvas"
-            Me.Canvas.Size = New System.Drawing.Size(984, 601)
+            Me.Canvas.Size = New System.Drawing.Size(984, 602)
             Me.Canvas.TabIndex = 0
             Me.Canvas.TabStop = False
             '
@@ -500,7 +500,7 @@
             Me.BtnNextFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.BtnNextFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.BtnNextFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnNextFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnNextFn.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnNextFn.ForeColor = System.Drawing.Color.Silver
             Me.BtnNextFn.Location = New System.Drawing.Point(0, 30)
             Me.BtnNextFn.Margin = New System.Windows.Forms.Padding(2)
@@ -521,7 +521,7 @@
             Me.BtnPrevFn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.BtnPrevFn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.BtnPrevFn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnPrevFn.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnPrevFn.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnPrevFn.ForeColor = System.Drawing.Color.Silver
             Me.BtnPrevFn.Location = New System.Drawing.Point(0, 0)
             Me.BtnPrevFn.Margin = New System.Windows.Forms.Padding(2)
@@ -559,7 +559,7 @@
             Me.PnlInput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.PnlInput.BackColor = Color.FromArgb(34, 34, 34)
+            Me.PnlInput.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer), CType(CType(34, Byte), Integer))
             Me.PnlInput.Controls.Add(Me.Tb)
             Me.PnlInput.Location = New System.Drawing.Point(159, -3)
             Me.PnlInput.Name = "PnlInput"
@@ -574,7 +574,7 @@
             Me.Tb.BackColor = System.Drawing.Color.Gainsboro
             Me.Tb.BorderStyle = System.Windows.Forms.BorderStyle.None
             Me.Tb.Cursor = System.Windows.Forms.Cursors.Arrow
-            Me.Tb.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.Tb.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.Tb.ForeColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.Tb.Location = New System.Drawing.Point(0, 8)
             Me.Tb.Name = "Tb"
@@ -588,7 +588,7 @@
             Me.LbFx.AutoEllipsis = True
             Me.LbFx.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
             Me.LbFx.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.LbFx.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbFx.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.LbFx.Location = New System.Drawing.Point(32, 0)
             Me.LbFx.Name = "LbFx"
             Me.LbFx.Size = New System.Drawing.Size(123, 60)
@@ -614,7 +614,7 @@
             Me.BtnFnDel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
             Me.BtnFnDel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
             Me.BtnFnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-            Me.BtnFnDel.Font = New System.Drawing.Font(OpenSansLight, 11.0!)
+            Me.BtnFnDel.Font = New System.Drawing.Font("Open Sans Light", 11.0!)
             Me.BtnFnDel.ForeColor = System.Drawing.Color.Salmon
             Me.BtnFnDel.Location = New System.Drawing.Point(171, 270)
             Me.BtnFnDel.Margin = New System.Windows.Forms.Padding(2)
@@ -670,7 +670,7 @@
             '
             Me.LbOptInverseR.AutoSize = True
             Me.LbOptInverseR.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptInverseR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptInverseR.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.LbOptInverseR.Location = New System.Drawing.Point(98, 9)
             Me.LbOptInverseR.Name = "LbOptInverseR"
             Me.LbOptInverseR.Size = New System.Drawing.Size(118, 26)
@@ -682,7 +682,7 @@
             '
             Me.LbOptInverseL.AutoSize = True
             Me.LbOptInverseL.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptInverseL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptInverseL.Font = New System.Drawing.Font("Open Sans", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.LbOptInverseL.Location = New System.Drawing.Point(7, 7)
             Me.LbOptInverseL.Name = "LbOptInverseL"
             Me.LbOptInverseL.Size = New System.Drawing.Size(75, 28)
@@ -707,19 +707,19 @@
             '
             Me.LbOptOriginRayR.AutoSize = True
             Me.LbOptOriginRayR.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptOriginRayR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
-            Me.LbOptOriginRayR.Location = New System.Drawing.Point(107, 9)
+            Me.LbOptOriginRayR.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
+            Me.LbOptOriginRayR.Location = New System.Drawing.Point(157, 9)
             Me.LbOptOriginRayR.Name = "LbOptOriginRayR"
-            Me.LbOptOriginRayR.Size = New System.Drawing.Size(104, 26)
+            Me.LbOptOriginRayR.Size = New System.Drawing.Size(58, 26)
             Me.LbOptOriginRayR.TabIndex = 14
             Me.LbOptOriginRayR.Tag = "6"
-            Me.LbOptOriginRayR.Text = "Ray / Angle"
+            Me.LbOptOriginRayR.Text = "Angle"
             '
             'LbOptOriginRayL
             '
             Me.LbOptOriginRayL.AutoSize = True
             Me.LbOptOriginRayL.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptOriginRayL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptOriginRayL.Font = New System.Drawing.Font("Open Sans", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.LbOptOriginRayL.Location = New System.Drawing.Point(6, 7)
             Me.LbOptOriginRayL.Name = "LbOptOriginRayL"
             Me.LbOptOriginRayL.Size = New System.Drawing.Size(28, 28)
@@ -744,7 +744,7 @@
             '
             Me.LbOptPolarR.AutoSize = True
             Me.LbOptPolarR.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptPolarR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptPolarR.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.LbOptPolarR.Location = New System.Drawing.Point(164, 9)
             Me.LbOptPolarR.Name = "LbOptPolarR"
             Me.LbOptPolarR.Size = New System.Drawing.Size(55, 26)
@@ -756,7 +756,7 @@
             '
             Me.LbOptPolarL.AutoSize = True
             Me.LbOptPolarL.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptPolarL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptPolarL.Font = New System.Drawing.Font("Open Sans", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.LbOptPolarL.Location = New System.Drawing.Point(7, 7)
             Me.LbOptPolarL.Name = "LbOptPolarL"
             Me.LbOptPolarL.Size = New System.Drawing.Size(40, 28)
@@ -781,7 +781,7 @@
             '
             Me.LbOptParametricR.AutoSize = True
             Me.LbOptParametricR.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptParametricR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptParametricR.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.LbOptParametricR.Location = New System.Drawing.Point(113, 9)
             Me.LbOptParametricR.Name = "LbOptParametricR"
             Me.LbOptParametricR.Size = New System.Drawing.Size(103, 26)
@@ -793,7 +793,7 @@
             '
             Me.LbOptParametricL.AutoSize = True
             Me.LbOptParametricL.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptParametricL.Font = New System.Drawing.Font(OpenSans, 13.75!)
+            Me.LbOptParametricL.Font = New System.Drawing.Font("Open Sans", 13.75!)
             Me.LbOptParametricL.Location = New System.Drawing.Point(5, 10)
             Me.LbOptParametricL.Name = "LbOptParametricL"
             Me.LbOptParametricL.Size = New System.Drawing.Size(102, 26)
@@ -819,7 +819,7 @@
             '
             Me.LbOptCartesianR.AutoSize = True
             Me.LbOptCartesianR.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptCartesianR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptCartesianR.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.LbOptCartesianR.Location = New System.Drawing.Point(124, 9)
             Me.LbOptCartesianR.Name = "LbOptCartesianR"
             Me.LbOptCartesianR.Size = New System.Drawing.Size(91, 26)
@@ -831,7 +831,7 @@
             '
             Me.LbOptCartesianL.AutoSize = True
             Me.LbOptCartesianL.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptCartesianL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptCartesianL.Font = New System.Drawing.Font("Open Sans", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.LbOptCartesianL.Location = New System.Drawing.Point(7, 7)
             Me.LbOptCartesianL.Name = "LbOptCartesianL"
             Me.LbOptCartesianL.Size = New System.Drawing.Size(75, 28)
@@ -856,19 +856,19 @@
             '
             Me.LbOptDifferentialR.AutoSize = True
             Me.LbOptDifferentialR.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptDifferentialR.Font = New System.Drawing.Font(OpenSansLight, 14.0!)
+            Me.LbOptDifferentialR.Font = New System.Drawing.Font("Open Sans Light", 14.0!)
             Me.LbOptDifferentialR.Location = New System.Drawing.Point(113, 10)
             Me.LbOptDifferentialR.Name = "LbOptDifferentialR"
             Me.LbOptDifferentialR.Size = New System.Drawing.Size(102, 26)
             Me.LbOptDifferentialR.TabIndex = 12
             Me.LbOptDifferentialR.Tag = "5"
-            Me.LbOptDifferentialR.Text = "Differential"
+            Me.LbOptDifferentialR.Text = "Slope Field"
             '
             'LbOptDifferentialL
             '
             Me.LbOptDifferentialL.AutoSize = True
             Me.LbOptDifferentialL.BackColor = System.Drawing.Color.Transparent
-            Me.LbOptDifferentialL.Font = New System.Drawing.Font(OpenSans, 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.LbOptDifferentialL.Font = New System.Drawing.Font("Open Sans", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
             Me.LbOptDifferentialL.Location = New System.Drawing.Point(6, 8)
             Me.LbOptDifferentialL.Name = "LbOptDifferentialL"
             Me.LbOptDifferentialL.Size = New System.Drawing.Size(73, 28)
@@ -909,7 +909,7 @@
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
             Me.Controls.Add(Me.PnlFnType)
             Me.Controls.Add(Me.Split)
-            Me.Font = New System.Drawing.Font(OpenSansLight, 10.0!)
+            Me.Font = New System.Drawing.Font("Open Sans Light", 10.0!)
             Me.ForeColor = System.Drawing.Color.White
             Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
             Me.Name = "GraphingSystem"
@@ -926,7 +926,6 @@
             Me.PnlTrace.PerformLayout()
             CType(Me.Canvas, System.ComponentModel.ISupportInitialize).EndInit()
             Me.PnlInput.ResumeLayout(False)
-            Me.PnlInput.PerformLayout()
             Me.PnlFnType.ResumeLayout(False)
             Me.PnlFnType.PerformLayout()
             Me.PnlFnTypeSelector.ResumeLayout(False)
