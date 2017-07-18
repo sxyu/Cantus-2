@@ -1,13 +1,21 @@
 ﻿Welcome to Cantus Version {ver}!
 
 Cantus is a powerful yet lightweight mathematical language and expression evaluator 
-created By Alex Yu 2015-16
+created By Alex Yu 2015-17
 https://github.com/sxyu/Cantus-GUI
+
+*********************************************************************************************
+What's new in 2.6.1.147
+*********************************************************************************************
+-Fixed several calculus & linear algebra functions
+-Fixed a bug which slowed down multiplication without explicit * signs
+-Fixed a bug where names of internal functions could not be reused as variable names
+-Slightly improved precision of graphing system
 
 *********************************************************************************************
 What's new in 2.6.0.145
 *********************************************************************************************
--Conclusive fix for rref() function
+-Fix for rref() function
 -nullspace() no longer outputs full internal exception
 -Find and replace: keyboard shortcut for "case sensitive" option
 -Minor fixes

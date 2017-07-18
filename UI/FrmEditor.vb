@@ -145,6 +145,8 @@ Namespace UI
             Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
 
             _eval = Globals.RootEvaluator
+            AddHandler _eval.ExitRequested, AddressOf ExitRequested
+
             ' set up modes
             If _eval.OutputMode = OutputFormat.Math Then
                 BtnOutputFormat.Text = "MathO"
@@ -189,6 +191,10 @@ Namespace UI
             Catch
             End Try
             SplashScreen.Close()
+        End Sub
+
+        Private Sub ExitRequested(sender As Object, e As EventArgs)
+            Me.Close()
         End Sub
 
         Dim deactivated As Boolean = False

@@ -145,7 +145,7 @@
             Me.LbNote.ForeColor = System.Drawing.Color.Gainsboro
             Me.LbNote.Location = New System.Drawing.Point(12, 14)
             Me.LbNote.Name = "LbNote"
-            Me.LbNote.Size = New System.Drawing.Size(559, 17)
+            Me.LbNote.Size = New System.Drawing.Size(600, 20)
             Me.LbNote.TabIndex = 0
             Me.LbNote.Text = "Tip: Click the ""What's New | Docs"" link  in the settings pane later on to view th" &
     "is dialog"
@@ -193,7 +193,7 @@
             'DiagFeatureList
             '
             Me.AcceptButton = Me.BtnClose
-            Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 17.0!)
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
             Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
             Me.CancelButton = Me.BtnClose
@@ -201,7 +201,7 @@
             Me.Controls.Add(Me.Wb)
             Me.Controls.Add(Me.PnlBottom)
             Me.Controls.Add(Me.Tb)
-            Me.Font = New System.Drawing.Font(OpenSans, 11.0!)
+            Me.Font = New System.Drawing.Font("Open Sans", 11.0!)
             Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
             Me.MaximizeBox = False
             Me.MinimizeBox = False
@@ -210,6 +210,7 @@
             Me.ShowInTaskbar = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
             Me.Text = "Welcome to Cantus"
+            Me.TopMost = True
             Me.PnlBottom.ResumeLayout(False)
             Me.PnlNote.ResumeLayout(False)
             Me.PnlNote.PerformLayout()
